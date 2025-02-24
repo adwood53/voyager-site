@@ -1,52 +1,221 @@
-/* 1) Preconnects for performance (optional, but recommended) */
-@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Afacad:ital,wght@0,400..700;1,400..700&family=Sacramento&display=swap');
+/* Preconnects for performance (optional, but recommended) */
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap');
+
+/* Font Face Declarations for Labora */
+@font-face {
+  font-family: 'Labora';
+  src: url('/fonts/Labora-Regular.otf') format('opentype'),
+       url('/fonts/Labora-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Labora';
+  src: url('/fonts/Labora-Italic.otf') format('opentype'),
+       url('/fonts/Labora-Italic.ttf') format('truetype');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
 
 /* Tailwind Directives */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* 2) Root-level CSS variables mapping brand colors and fonts */
+/* Root-level CSS variables mapping brand colours and fonts */
 :root {
-  /* Colors from colours.txt */
-  --background: #E6E7D9;      /* Light-Primary */
-  --foreground: #252523;      /* Dark-Accent */
-  --primary: #FF3C00;         /* Brand-Primary */
-  --accent: #FF914D;          /* Brand-Accent */
-  --text-light: #FFFFFF;      /* Text-Light */
-  --dark-primary: #000000;    /* Dark-Primary */
+  /* Colours */
+  --background-light: #E6E7D9;                                              /* Light-Primary */
+  --background-dark: #252523;                                               /* Dark-Accent */
+  --primary: #E79023;                                                       /* Brand-Primary */
+  --primary-gradient: linear-gradient(315deg, #e79023 0%, #a6620c 100%);    /* Brand-Gradient */
+  --accent: #a6620c;                                                        /* Brand-Accent */
+  --alt-primary: #7466E2;                                                   /* Brand-Alt-Primary */
+  --alt-accent: #6055B5;                                                    /* Brand-Alt-Accent */
+  --text-light: #FFFFFF;                                                    /* Text-Light */
+  --text-dark: #000000;                                                     /* Text-Dark */
+  --error: #DC3D1C;                                                         /* Error */
+  --confirm: #3DC81C;                                                       /* Confirm */
+  --link: #55A9D0;                                                          /* Link */
+  --dark-bg: #121212;                                                       /* Dark background */
+  --dark-card: #1E1E1E;                                                     /* Card background */
 
-  /* Fonts
-     - Archivo Black is standing in for “Archive Black.”
-     - Afacad is pulled from your shared Google Fonts link.
-     - Sacramento is used for accent text.
-  */
-  --font-heading: 'Archivo Black', sans-serif;
-  --font-subheading: 'Afacad', sans-serif;
-  --font-accent: 'Sacramento', cursive;
-  --font-body: 'Inter', sans-serif; /* keep “Inter” or swap for something else if preferred */
+  /* Fonts */ 
+  --font-heading: 'Labora', sans-serif;                                     /* Labora font for headings */
+  --font-body: 'Quicksand', sans-serif;                                     /* Quicksand font for body */
+  --line-height-base: 1.6;                                                  /* Line-height */
+}
 
-  --line-height-base: 1.6;
+/* Dark mode - using backgroundDark as the base */
+.dark-mode {
+  --background: var(--background-dark);
+  --foreground: var(--text-light);
 }
 
 /* 3) Body & base styles */
 body {
   font-family: var(--font-body);
   line-height: var(--line-height-base);
-  background-color: var(--background);
-  color: var(--foreground);
+  background-color: #121212; /* Dark background for white label page */
+  color: var(--text-light);
   margin: 0;
   padding: 0;
+  overflow-x: hidden;
 }
 
 /* Basic link styles */
 a {
-  color: var(--primary);
-  text-decoration: underline;
+  color: var(--link);
+  text-decoration: none;
+  transition: all 0.2s ease;
 }
 
 /* Basic image reset */
 img {
   display: block;
   max-width: 100%;
+}
+
+/* Custom layer components for Voyager Immersive */
+@layer components {
+  .container-voyager {
+    @apply container mx-auto px-4 md:px-8 max-w-7xl;
+  }
+  
+  .btn-voyager {
+    @apply inline-flex items-center justify-center px-6 py-3 font-medium rounded-md transition-all duration-300;
+  }
+  
+  .btn-primary {
+    @apply btn-voyager bg-primary text-textLight hover:bg-accent focus:ring-2 focus:ring-primary focus:ring-opacity-50;
+  }
+  
+  .btn-secondary {
+    @apply btn-voyager border border-primary text-primary hover:bg-primary hover:bg-opacity-10;
+  }
+  
+  .btn-alt {
+    @apply btn-voyager bg-altPrimary text-textLight hover:bg-altAccent focus:ring-2 focus:ring-altPrimary focus:ring-opacity-50;
+  }
+  
+  .card-voyager {
+    @apply bg-darkCard rounded-lg overflow-hidden border border-primary border-opacity-20 hover:border-opacity-50 transition-all duration-300 transform hover:scale-[1.02] hover:shadow-lg;
+  }
+  
+  .heading-voyager {
+    @apply font-heading font-bold;
+  }
+  
+  .section-voyager {
+    @apply py-20 md:py-32;
+  }
+
+  .custom-tooltip {
+    @apply absolute bg-darkCard p-2 rounded-md text-textLight text-sm border border-primary border-opacity-30 shadow-lg opacity-0 transition-opacity duration-300 z-50 pointer-events-none;
+  }
+
+  .has-tooltip:hover .custom-tooltip {
+    @apply opacity-100;
+  }
+  
+  /* Glitch effect for buttons */
+  .glitch-effect {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .glitch-effect:hover::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: linear-gradient(120deg, transparent 10%, rgba(231, 144, 35, 0.2) 10%, rgba(231, 144, 35, 0.2) 14%, transparent 14%);
+    animation: glitch 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both infinite;
+    pointer-events: none;
+  }
+
+  /* 3D Hover Effect */
+  .hover-3d {
+    @apply transition-all duration-300 transform;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  }
+
+  .hover-3d:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 15px 30px rgba(231, 144, 35, 0.2);
+  }
+
+  /* Glow Effect */
+  .glow-effect {
+    @apply transition-all duration-300;
+  }
+
+  .glow-effect:hover {
+    box-shadow: 0 0 15px rgba(231, 144, 35, 0.5);
+  }
+
+  /* Parallax Container */
+  .parallax-container {
+    @apply overflow-hidden relative;
+    perspective: 1000px;
+  }
+
+  /* Parallax Element */
+  .parallax-element {
+    @apply relative;
+    transform-style: preserve-3d;
+  }
+}
+
+/* Custom keyframes for animations */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-100%); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 5px rgba(231, 144, 35, 0.5); }
+  50% { box-shadow: 0 0 20px rgba(231, 144, 35, 0.8); }
+}
+
+@keyframes glitch {
+  0% { transform: translate(0); }
+  25% { transform: translate(-5px, 5px); }
+  50% { transform: translate(-5px, -5px); }
+  75% { transform: translate(5px, 5px); }
+  100% { transform: translate(5px, -5px); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes rotate3d {
+  0% { transform: rotateY(0deg); }
+  50% { transform: rotateY(10deg); }
+  100% { transform: rotateY(0deg); }
+}
+
+/* Custom scrollbar for webkit browsers */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #121212;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(231, 144, 35, 0.3);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(231, 144, 35, 0.5);
 }
