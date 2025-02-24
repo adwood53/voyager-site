@@ -1,0 +1,12 @@
+Fonts:
+HEADING – Archive Black – Bold – All Caps
+Accent - Sacramento
+SubHeading – Afacad Bold
+Accent – Afacad
+Colours:
+Brand-Primary – #FF3C00
+Brand-Accent – #FF914D
+Light-Primary – #E6E7D9
+Text-Light – #FFFFFF
+Dark-Primary – #000000
+Dark-Accent – #252523

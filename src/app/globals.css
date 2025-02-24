@@ -1,0 +1,52 @@
+/* 1) Preconnects for performance (optional, but recommended) */
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Afacad:ital,wght@0,400..700;1,400..700&family=Sacramento&display=swap');
+
+/* Tailwind Directives */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 2) Root-level CSS variables mapping brand colors and fonts */
+:root {
+  /* Colors from colours.txt */
+  --background: #E6E7D9;      /* Light-Primary */
+  --foreground: #252523;      /* Dark-Accent */
+  --primary: #FF3C00;         /* Brand-Primary */
+  --accent: #FF914D;          /* Brand-Accent */
+  --text-light: #FFFFFF;      /* Text-Light */
+  --dark-primary: #000000;    /* Dark-Primary */
+
+  /* Fonts
+     - Archivo Black is standing in for “Archive Black.”
+     - Afacad is pulled from your shared Google Fonts link.
+     - Sacramento is used for accent text.
+  */
+  --font-heading: 'Archivo Black', sans-serif;
+  --font-subheading: 'Afacad', sans-serif;
+  --font-accent: 'Sacramento', cursive;
+  --font-body: 'Inter', sans-serif; /* keep “Inter” or swap for something else if preferred */
+
+  --line-height-base: 1.6;
+}
+
+/* 3) Body & base styles */
+body {
+  font-family: var(--font-body);
+  line-height: var(--line-height-base);
+  background-color: var(--background);
+  color: var(--foreground);
+  margin: 0;
+  padding: 0;
+}
+
+/* Basic link styles */
+a {
+  color: var(--primary);
+  text-decoration: underline;
+}
+
+/* Basic image reset */
+img {
+  display: block;
+  max-width: 100%;
+}

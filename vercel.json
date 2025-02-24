@@ -1,0 +1,15 @@
+{
+    "rewrites": [
+      {
+        "source": "/(.*)",
+        "destination": "/studio/$1",
+        "has": [
+          {
+            "type": "host",
+            "value": "studio.website.com"
+          }
+        ]
+      }
+    ]
+  }
+  
