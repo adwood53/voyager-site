@@ -10,6 +10,7 @@ import {
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useRef } from 'react';
 import Image from 'next/image';
+import FlexGrid from './FlexGrid';
 
 export default function ServicesSection() {
   const sectionRef = useRef(null);
@@ -86,7 +87,7 @@ export default function ServicesSection() {
       ref={sectionRef}
       className="py-24 bg-backgroundDark/95 relative"
     >
-      {/* Animated background gradient */}
+      {/* Background elements */}
       <div className="absolute inset-0 overflow-hidden">
         <motion.div
           animate={{
@@ -131,17 +132,17 @@ export default function ServicesSection() {
           </motion.p>
         </div>
 
-        <motion.div
-          variants={container}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+        {/* Using the FlexGrid component */}
+        <FlexGrid
+          columns={{ sm: 1, md: 2, lg: 3 }}
+          gap="8"
+          animate={true}
+          container={container}
+          item={item}
         >
           {services.map((service, index) => (
             <motion.div
               key={index}
-              variants={item}
               whileHover={{
                 y: -10,
                 transition: { duration: 0.2 },
@@ -180,7 +181,7 @@ export default function ServicesSection() {
               </Card>
             </motion.div>
           ))}
-        </motion.div>
+        </FlexGrid>
 
         <motion.div
           initial={{ opacity: 0 }}

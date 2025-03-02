@@ -3,6 +3,7 @@
 import { Card, CardBody, Button, Link, Tooltip } from '@heroui/react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useRef } from 'react';
+import FlexGrid from './FlexGrid';
 
 export default function BenefitsSection() {
   const sectionRef = useRef(null);
@@ -55,6 +56,7 @@ export default function BenefitsSection() {
     },
   ];
 
+  // Define animation variants
   const container = {
     hidden: { opacity: 0 },
     show: {
@@ -134,45 +136,44 @@ export default function BenefitsSection() {
           </motion.p>
         </div>
 
-        <motion.div
-          variants={container}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 place-items-center"
+        {/* Using the FlexGrid component with equalHeight set to true */}
+        <FlexGrid
+          columns={{ sm: 1, md: 2, lg: 3 }}
+          gap="8"
+          animate={true}
+          container={container}
+          item={item}
+          equalHeight={true}
         >
           {benefits.map((benefit, index) => (
-            <motion.div
+            <Tooltip
               key={index}
-              variants={item}
-              whileHover={{
-                y: -10,
-                transition: { duration: 0.2 },
-              }}
-              className={
-                index >= 3 && benefits.length % 3 === 2
-                  ? 'col-span-1 md:col-span-1 lg:col-span-1 lg:col-start-2'
-                  : ''
-              }
+              content={`Learn more about ${benefit.title}`}
             >
-              <Tooltip content={`Learn more about ${benefit.title}`}>
+              <motion.div
+                whileHover={{
+                  y: -10,
+                  transition: { duration: 0.2 },
+                }}
+                className="h-full"
+              >
                 <Card className="card-voyager h-full bg-darkCard border border-primary border-opacity-20 hover:border-opacity-50 transition-all duration-300 hover:shadow-glow-sm hover-3d">
-                  <CardBody>
+                  <CardBody className="h-full flex flex-col">
                     <div className="text-4xl mb-4 animate-float">
                       {benefit.icon}
                     </div>
                     <h3 className="font-subheading text-2xl text-primary mb-3">
                       {benefit.title}
                     </h3>
-                    <p className="text-textLight opacity-70">
+                    <p className="text-textLight opacity-70 flex-grow">
                       {benefit.description}
                     </p>
                   </CardBody>
                 </Card>
-              </Tooltip>
-            </motion.div>
+              </motion.div>
+            </Tooltip>
           ))}
-        </motion.div>
+        </FlexGrid>
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
