@@ -92,12 +92,12 @@ export default function ContactSection() {
                       Get Started
                     </h2>
                     <p className="text-textLight opacity-90 mb-4">
-                      Let's Make Something Unreal
+                      Let&apos;s Make Something Unreal
                     </p>
                     <p className="text-textLight opacity-80 text-sm">
                       No lengthy applications, no complex contracts.
                       If you want to deliver cutting-edge immersive
-                      experiences, we'll make it happen.
+                      experiences, we&apos;ll make it happen.
                     </p>
 
                     <div className="mt-8 bg-darkBg bg-opacity-20 p-5 rounded-lg backdrop-blur-sm">

@@ -163,7 +163,7 @@ export default function EasterEgg() {
 
             <div className="mt-4">
               <h3 className="text-xl font-medium text-primary mb-4">
-                What you're experiencing:
+                What you&apos;re experiencing:
               </h3>
               <p className="text-textLight opacity-80 mb-6">
                 This is a preview of how our AR experiences work. In a

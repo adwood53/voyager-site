@@ -105,7 +105,8 @@ export default function StudioSection() {
                   white-label partners.
                 </strong>{' '}
                 Whether you need high-end productions, virtual sets,
-                or next-level content creation, we've got you covered.
+                or next-level content creation, we&apos;ve got you
+                covered.
               </p>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
