@@ -17,7 +17,8 @@ export default function VoyagerNavbar() {
 
   useEffect(() => {
     const handleScroll = () => {
-      const isScrolled = window.scrollY > 10;
+      // Only set scrolled to true when we're significantly down the page (e.g., 50px)
+      const isScrolled = window.scrollY > 50;
       if (isScrolled !== scrolled) {
         setScrolled(isScrolled);
       }
@@ -35,7 +36,8 @@ export default function VoyagerNavbar() {
       className="fixed top-0 w-full z-50"
     >
       <Navbar
-        isBordered={scrolled}
+        // Remove isBordered prop entirely or set to false explicitly
+        isBordered={false}
         className={`w-full transition-all duration-500 ${
           scrolled
             ? 'bg-darkBg bg-opacity-90 backdrop-blur-md shadow-md'
@@ -43,6 +45,7 @@ export default function VoyagerNavbar() {
         }`}
         maxWidth="2xl"
       >
+        {/* Rest of the navbar code remains unchanged */}
         <NavbarBrand className="flex-grow-0">
           <Link
             href="/"

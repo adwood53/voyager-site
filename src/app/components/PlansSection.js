@@ -103,13 +103,11 @@ export default function PlansSection() {
           >
             <Card className="card-voyager h-full bg-darkCard border border-primary border-opacity-20 transition-all hover:shadow-glow w-full flex flex-col">
               <CardHeader className="pb-0 pt-6 px-6 flex-shrink-0">
-                <h3 className="font-heading text-2xl text-textLight mb-3">
-                  FREE White-Label Partner
-                </h3>
-                <div className="flex justify-between items-baseline">
-                  <p className="text-4xl font-bold text-primary mb-4">
-                    £0
-                  </p>
+                {/* Modified header layout for free plan */}
+                <div className="flex justify-between items-start">
+                  <h3 className="font-heading text-2xl text-textLight mb-3">
+                    FREE White-Label Partner
+                  </h3>
                 </div>
               </CardHeader>
               <CardBody className="py-6 flex-grow">
@@ -166,16 +164,19 @@ export default function PlansSection() {
                 MOST POPULAR
               </div>
               <CardHeader className="pb-0 pt-6 px-6 flex-shrink-0">
-                <h3 className="font-heading text-2xl text-textLight mb-3">
-                  PRO White-Label Partner
-                </h3>
-                <div className="flex justify-between items-baseline">
-                  <p className="text-4xl font-bold text-primary mb-1">
-                    £799
-                  </p>
-                  <p className="text-sm text-textLight opacity-60">
-                    One-Time Fee
-                  </p>
+                {/* Modified header layout for pro plan */}
+                <div className="flex justify-between items-start">
+                  <h3 className="font-heading text-2xl text-textLight mb-3">
+                    PRO White-Label Partner
+                  </h3>
+                  <div className="flex flex-col items-end">
+                    <p className="text-4xl font-bold text-primary">
+                      £799
+                    </p>
+                    <p className="text-sm text-textLight opacity-60">
+                      One-Time Fee
+                    </p>
+                  </div>
                 </div>
               </CardHeader>
               <CardBody className="py-6 flex-grow">
