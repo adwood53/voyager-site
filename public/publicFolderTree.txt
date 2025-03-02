@@ -1,0 +1,26 @@
+-----------------------------------------------------
+ Public Folder Tree for Your Next.js Project
+-----------------------------------------------------
+
+This file lists all subfolders and files under the:
+D:\Work\AlphaX\Codebase\Voyager Website\voyager-site\public
+
+-----------------------------------------------------
+
+Folder PATH listing for volume Tertiary Drive
+Volume serial number is 000000FA 4257:C030
+D:\WORK\ALPHAX\CODEBASE\VOYAGER WEBSITE\VOYAGER-SITE\PUBLIC
+|   favicon.ico
+|   generatePublicTree.bat
+|   placeholder-avatar.jpg
+|   placeholder.jpg
+|   publicFolderTree.txt
+|   Voyager Logo V1.png
+|   Voyager-Box-Logo.png
+|   
+\---fonts
+        Labora-Italic.otf
+        Labora-Italic.ttf
+        Labora-Regular.otf
+        Labora-Regular.ttf
+        
