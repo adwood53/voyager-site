@@ -23,7 +23,8 @@ export default function HeroSection() {
   return (
     <section
       ref={containerRef}
-      className="relative min-h-screen flex items-center overflow-hidden bg-darkBg"
+      className="relative min-h-[calc(100vh-4rem)] lg:min-h-[calc(100vh-4rem)] flex items-center overflow-hidden bg-darkBg"
+      style={{ marginTop: '0' }}
     >
       {/* Cinematic video background with parallax effect */}
       <motion.div className="absolute inset-0 z-0" style={{ y: bgY }}>

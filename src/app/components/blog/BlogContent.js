@@ -5,10 +5,11 @@ import { Card, CardBody } from '@heroui/react';
 import Image from 'next/image';
 import { PortableText } from '@portabletext/react';
 
-export default function BlogContent({ post, loading }) {
-  // Custom PortableText components for rendering rich content
+export default function BlogContent({ post }) {
+  // Component for rendering portable text content with proper styling
   const components = {
     block: {
+      // Style different block types
       h1: ({ children }) => (
         <h1 className="text-3xl font-heading text-primary mb-4">
           {children}
@@ -109,36 +110,14 @@ export default function BlogContent({ post, loading }) {
     },
   };
 
-  // Loading state
-  if (loading) {
-    return (
-      <div className="container-voyager py-8">
-        <Card className="card-voyager bg-gradient-to-br from-backgroundDark to-darkBg border border-primary border-opacity-40 w-full">
-          <CardBody className="py-8 px-6">
-            <div className="animate-pulse">
-              <div className="h-8 bg-primary bg-opacity-20 rounded mb-4 w-3/4"></div>
-              <div className="h-4 bg-primary bg-opacity-10 rounded mb-2 w-1/4"></div>
-              <div className="h-64 bg-primary bg-opacity-10 rounded my-6"></div>
-              <div className="space-y-2">
-                <div className="h-4 bg-primary bg-opacity-10 rounded w-full"></div>
-                <div className="h-4 bg-primary bg-opacity-10 rounded w-full"></div>
-                <div className="h-4 bg-primary bg-opacity-10 rounded w-3/4"></div>
-              </div>
-            </div>
-          </CardBody>
-        </Card>
-      </div>
-    );
-  }
-
-  // Error or no post data
+  // No post data
   if (!post) {
     return (
       <div className="container-voyager py-8">
         <Card className="card-voyager bg-gradient-to-br from-backgroundDark to-darkBg border border-primary border-opacity-40 w-full">
           <CardBody className="py-8 px-6">
             <p className="text-textLight opacity-80">
-              Post not found or is still loading...
+              Post not found.
             </p>
           </CardBody>
         </Card>

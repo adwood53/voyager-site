@@ -137,6 +137,17 @@ export default function VoyagerNavbar() {
                     Plans
                   </Link>
                 </NavbarItem>
+                <NavbarItem
+                  className="list-none"
+                  style={{ listStyle: 'none' }}
+                >
+                  <Link
+                    href="/blog"
+                    className="text-textLight hover:text-primary transition-colors text-base font-medium"
+                  >
+                    Blog
+                  </Link>
+                </NavbarItem>
               </div>
             </div>
           </div>
@@ -208,6 +219,17 @@ export default function VoyagerNavbar() {
                     className="text-textLight hover:text-primary transition-colors text-lg font-medium"
                   >
                     Plans
+                  </Link>
+                </NavbarItem>
+                <NavbarItem
+                  className="list-none"
+                  style={{ listStyle: 'none' }}
+                >
+                  <Link
+                    href="/blog"
+                    className="text-textLight hover:text-primary transition-colors text-lg font-medium"
+                  >
+                    Blog
                   </Link>
                 </NavbarItem>
               </div>
