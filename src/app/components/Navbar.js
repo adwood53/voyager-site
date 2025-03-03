@@ -21,7 +21,6 @@ export default function VoyagerNavbar() {
         setScrolled(isScrolled);
       }
     };
-
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, [scrolled]);
@@ -31,7 +30,7 @@ export default function VoyagerNavbar() {
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.5, ease: 'easeOut' }}
-      className="fixed top-0 w-full z-50"
+      className="fixed top-0 left-0 w-full z-50"
     >
       <Navbar
         isBordered={false}
@@ -40,11 +39,112 @@ export default function VoyagerNavbar() {
             ? 'bg-darkBg bg-opacity-90 backdrop-blur-md shadow-md'
             : 'bg-transparent'
         }`}
-        maxWidth="2xl"
       >
-        <div className="flex items-center w-full relative">
-          {/* Left Brand */}
-          <div className="flex-1">
+        {/* MOBILE LAYOUT (<1024px) */}
+        <div className="lg:hidden w-full">
+          {/* Top Row: Logo (left) & Buttons (right) */}
+          <div className="flex justify-between items-center px-4 py-2 w-full">
+            <div>
+              <NavbarBrand>
+                <Link
+                  href="/"
+                  className="flex items-center gap-2 hover:opacity-90 transition-opacity"
+                >
+                  <Image
+                    src="/Voyager-Box-Logo.png"
+                    alt="Voyager Logo"
+                    width={44}
+                    height={44}
+                    className="rounded-md"
+                  />
+                  <div className="font-heading text-2xl font-bold">
+                    <span className="text-primary">VOYAGER</span>
+                  </div>
+                </Link>
+              </NavbarBrand>
+            </div>
+            <div className="flex items-center gap-2">
+              <NavbarItem
+                className="list-none"
+                style={{ listStyle: 'none' }}
+              >
+                <Button
+                  as={Link}
+                  href="https://configurator.voyagervrlab.co.uk"
+                  className="text-primary font-medium px-3 py-1 text-sm hover:text-accent transition-all duration-300"
+                >
+                  Login!
+                </Button>
+              </NavbarItem>
+              <NavbarItem
+                className="list-none"
+                style={{ listStyle: 'none' }}
+              >
+                <Button
+                  as={Link}
+                  href="#signup"
+                  className="bg-primary text-textLight font-medium px-3 py-1 text-sm rounded-md hover:bg-accent transition-all duration-300"
+                >
+                  Join!
+                </Button>
+              </NavbarItem>
+            </div>
+          </div>
+          {/* Bottom Row: Navigation Links */}
+          <div className="flex justify-center border-t border-gray-700 px-4 py-2">
+            <div className="flex gap-4">
+              <NavbarItem
+                className="list-none"
+                style={{ listStyle: 'none' }}
+              >
+                <Link
+                  href="#benefits"
+                  className="text-textLight hover:text-primary transition-colors text-base font-medium"
+                >
+                  Benefits
+                </Link>
+              </NavbarItem>
+              <NavbarItem
+                className="list-none"
+                style={{ listStyle: 'none' }}
+              >
+                <Link
+                  href="#services"
+                  className="text-textLight hover:text-primary transition-colors text-base font-medium"
+                >
+                  Services
+                </Link>
+              </NavbarItem>
+              <NavbarItem
+                className="list-none"
+                style={{ listStyle: 'none' }}
+              >
+                <Link
+                  href="#studio"
+                  className="text-textLight hover:text-primary transition-colors text-base font-medium"
+                >
+                  Studio
+                </Link>
+              </NavbarItem>
+              <NavbarItem
+                className="list-none"
+                style={{ listStyle: 'none' }}
+              >
+                <Link
+                  href="#plans"
+                  className="text-textLight hover:text-primary transition-colors text-base font-medium"
+                >
+                  Plans
+                </Link>
+              </NavbarItem>
+            </div>
+          </div>
+        </div>
+
+        {/* DESKTOP LAYOUT (>=1024px) */}
+        <div className="hidden lg:grid grid-cols-3 items-center w-full px-6 py-2">
+          {/* Left: Logo */}
+          <div className="flex items-center">
             <NavbarBrand>
               <Link
                 href="/"
@@ -55,7 +155,7 @@ export default function VoyagerNavbar() {
                   alt="Voyager Logo"
                   width={44}
                   height={44}
-                  className="rounded-md glow-effect"
+                  className="rounded-md"
                 />
                 <div className="font-heading text-2xl font-bold">
                   <span className="text-primary">VOYAGER</span>
@@ -63,60 +163,78 @@ export default function VoyagerNavbar() {
               </Link>
             </NavbarBrand>
           </div>
-
-          {/* Center Nav Links - absolutely positioned */}
-          <div className="hidden sm:flex gap-8 absolute left-1/2 transform -translate-x-1/2 list-none">
-            <NavbarItem className="list-none">
-              <Link
-                href="#benefits"
-                className="text-textLight hover:text-primary transition-colors text-lg font-medium"
+          {/* Center: Navigation Links (using flex to center) */}
+          <div className="flex justify-center">
+            <div className="flex gap-8">
+              <NavbarItem
+                className="list-none"
+                style={{ listStyle: 'none' }}
               >
-                Benefits
-              </Link>
-            </NavbarItem>
-            <NavbarItem className="list-none">
-              <Link
-                href="#services"
-                className="text-textLight hover:text-primary transition-colors text-lg font-medium"
+                <Link
+                  href="#benefits"
+                  className="text-textLight hover:text-primary transition-colors text-lg font-medium"
+                >
+                  Benefits
+                </Link>
+              </NavbarItem>
+              <NavbarItem
+                className="list-none"
+                style={{ listStyle: 'none' }}
               >
-                Services
-              </Link>
-            </NavbarItem>
-            <NavbarItem className="list-none">
-              <Link
-                href="#studio"
-                className="text-textLight hover:text-primary transition-colors text-lg font-medium"
+                <Link
+                  href="#services"
+                  className="text-textLight hover:text-primary transition-colors text-lg font-medium"
+                >
+                  Services
+                </Link>
+              </NavbarItem>
+              <NavbarItem
+                className="list-none"
+                style={{ listStyle: 'none' }}
               >
-                Studio
-              </Link>
-            </NavbarItem>
-            <NavbarItem className="list-none">
-              <Link
-                href="#plans"
-                className="text-textLight hover:text-primary transition-colors text-lg font-medium"
+                <Link
+                  href="#studio"
+                  className="text-textLight hover:text-primary transition-colors text-lg font-medium"
+                >
+                  Studio
+                </Link>
+              </NavbarItem>
+              <NavbarItem
+                className="list-none"
+                style={{ listStyle: 'none' }}
               >
-                Plans
-              </Link>
-            </NavbarItem>
+                <Link
+                  href="#plans"
+                  className="text-textLight hover:text-primary transition-colors text-lg font-medium"
+                >
+                  Plans
+                </Link>
+              </NavbarItem>
+            </div>
           </div>
-
-          {/* Right Buttons */}
-          <div className="flex-1 flex justify-end list-none">
+          {/* Right: Buttons */}
+          <div className="flex justify-end">
             <div className="flex items-center gap-4">
-              <NavbarItem className="list-none">
+              <NavbarItem
+                className="list-none"
+                style={{ listStyle: 'none' }}
+              >
                 <Button
                   as={Link}
-                  href="#"
-                  className="text-primary font-medium px-6 py-2 hover:text-accent transition-all duration-300 hover:scale-105 transform"
+                  href="https://configurator.voyagervrlab.co.uk"
+                  className="text-primary font-medium px-6 py-2 hover:text-accent transition-all duration-300"
                 >
                   Partner Login
                 </Button>
               </NavbarItem>
-              <NavbarItem className="list-none">
+              <NavbarItem
+                className="list-none"
+                style={{ listStyle: 'none' }}
+              >
                 <Button
                   as={Link}
                   href="#signup"
-                  className="bg-primary text-textLight font-medium px-6 py-2 rounded-md hover:bg-accent transition-all duration-300 hover:scale-105 transform hover:shadow-glow"
+                  className="bg-primary text-textLight font-medium px-6 py-2 rounded-md hover:bg-accent transition-all duration-300"
                 >
                   Join For Free
                 </Button>

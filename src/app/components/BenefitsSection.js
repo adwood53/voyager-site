@@ -33,7 +33,7 @@ export default function BenefitsSection() {
     {
       title: 'We Handle the Tech',
       description:
-        'Augmented reality, VR, gamification, virtual productions—we do it all, under your brand.',
+        'Augmented reality, VR, gamification, virtual productions. We do it all, under your brand.',
       icon: '🔧',
     },
     {
@@ -45,7 +45,7 @@ export default function BenefitsSection() {
     {
       title: 'Automated Quoting & Booking System',
       description:
-        'Streamline your sales process—your own branded quoting and booking platform.',
+        'Streamline your sales process, your own branded quoting and booking platform.',
       icon: '📊',
     },
     {
