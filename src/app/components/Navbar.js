@@ -106,8 +106,17 @@ export default function VoyagerNavbar() {
           <NavbarItem>
             <Button
               as={Link}
+              href="#"
+              className="text-primary font-medium px-6 py-2 hover:text-accent transition-all duration-300 hover:scale-105 transform"
+            >
+              Partner Login
+            </Button>
+          </NavbarItem>
+          <NavbarItem>
+            <Button
+              as={Link}
               href="#signup"
-              className="bg-primary text-textLight font-medium px-6 py-3 rounded-md hover:bg-accent transition-all duration-300 hover:scale-105 transform hover:shadow-glow"
+              className="bg-primary text-textLight font-medium px-6 py-2 rounded-md hover:bg-accent transition-all duration-300 hover:scale-105 transform hover:shadow-glow"
             >
               Join For Free
             </Button>
