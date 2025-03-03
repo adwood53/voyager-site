@@ -94,20 +94,30 @@ export default function PlansSection() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
           {/* Free Plan */}
           <motion.div
-            initial={{ opacity: 0, x: -50 }}
+            initial={{ opacity: 0, x: 50 }}
             whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
             viewport={{ once: true }}
             whileHover={{ y: -10 }}
             className="h-full flex"
           >
-            <Card className="card-voyager h-full bg-darkCard border border-primary border-opacity-20 transition-all hover:shadow-glow w-full flex flex-col">
+            <Card className="card-voyager h-full bg-gradient-to-br from-backgroundDark to-darkBg border border-primary border-opacity-40 transition-all hover:shadow-glow-lg w-full flex flex-col">
+              <div className="absolute top-0 right-0 bg-primary text-textLight px-4 text-sm font-bold rounded-bl-lg">
+                STANDARD
+              </div>
               <CardHeader className="pb-0 pt-6 px-6 flex-shrink-0">
-                {/* Modified header layout for free plan */}
-                <div className="flex justify-between items-start">
-                  <h3 className="font-heading text-2xl text-textLight mb-3">
-                    FREE White-Label Partner
+                <div className="flex-1">
+                  <h3 className="font-heading text-2xl text-textLight">
+                    FREE Immersive Reseller
                   </h3>
+                </div>
+                <div className="flex flex-col items-end self-start">
+                  <p className="text-4xl font-bold text-primary">
+                    FREE
+                  </p>
+                  <p className="text-sm text-textLight opacity-60">
+                    Upgradeable
+                  </p>
                 </div>
               </CardHeader>
               <CardBody className="py-6 flex-grow">
@@ -160,25 +170,25 @@ export default function PlansSection() {
             className="h-full flex"
           >
             <Card className="card-voyager h-full bg-gradient-to-br from-backgroundDark to-darkBg border border-primary border-opacity-40 transition-all hover:shadow-glow-lg w-full flex flex-col">
-              <div className="absolute top-0 right-0 bg-primary text-textLight px-4 py-1 text-sm font-bold rounded-bl-lg">
+              <div className="absolute top-0 right-0 bg-primary text-textLight px-4 text-sm font-bold rounded-bl-lg">
                 MOST POPULAR
               </div>
               <CardHeader className="pb-0 pt-6 px-6 flex-shrink-0">
-                {/* Modified header layout for pro plan */}
-                <div className="flex justify-between items-start">
-                  <h3 className="font-heading text-2xl text-textLight mb-3">
+                <div className="flex-1">
+                  <h3 className="font-heading text-2xl text-textLight">
                     PRO White-Label Partner
                   </h3>
-                  <div className="flex flex-col items-end">
-                    <p className="text-4xl font-bold text-primary">
-                      £799
-                    </p>
-                    <p className="text-sm text-textLight opacity-60">
-                      One-Time Fee
-                    </p>
-                  </div>
+                </div>
+                <div className="flex flex-col items-end self-start">
+                  <p className="text-4xl font-bold text-primary">
+                    £799
+                  </p>
+                  <p className="text-sm text-textLight opacity-60">
+                    One-Time Fee
+                  </p>
                 </div>
               </CardHeader>
+
               <CardBody className="py-6 flex-grow">
                 <div className="mb-4">
                   <p className="font-medium">

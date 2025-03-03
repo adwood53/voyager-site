@@ -90,10 +90,7 @@ export default function HeroSection() {
               initial={{ width: 0 }}
               animate={{ width: '100%' }}
               transition={{ duration: 1, delay: 1 }}
-            >
-              # Contract: {'{'}White_Label_Partner{'}'} {'<'}= {'{'}
-              YOUR_BRANDING{'}'}
-            </motion.div>
+            ></motion.div>
           </motion.div>
 
           <motion.h1
@@ -118,7 +115,7 @@ export default function HeroSection() {
             transition={{ duration: 0.8, delay: 1 }}
           >
             You bring the clients. We bring the immersive tech. From
-            AR and VR to interactive events and gamification—our
+            AR and VR to interactive events and gamification. Our
             white-label solutions help you sell bigger, without the
             overhead.
           </motion.p>

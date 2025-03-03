@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import {
   Navbar,
   NavbarBrand,
-  NavbarContent,
   NavbarItem,
   Button,
   Link,
@@ -17,7 +16,6 @@ export default function VoyagerNavbar() {
 
   useEffect(() => {
     const handleScroll = () => {
-      // Only set scrolled to true when we're significantly down the page (e.g., 50px)
       const isScrolled = window.scrollY > 50;
       if (isScrolled !== scrolled) {
         setScrolled(isScrolled);
@@ -36,7 +34,6 @@ export default function VoyagerNavbar() {
       className="fixed top-0 w-full z-50"
     >
       <Navbar
-        // Remove isBordered prop entirely or set to false explicitly
         isBordered={false}
         className={`w-full transition-all duration-500 ${
           scrolled
@@ -45,83 +42,88 @@ export default function VoyagerNavbar() {
         }`}
         maxWidth="2xl"
       >
-        {/* Rest of the navbar code remains unchanged */}
-        <NavbarBrand className="flex-grow-0">
-          <Link
-            href="/"
-            className="flex items-center gap-2 hover:opacity-90 transition-opacity"
-          >
-            <Image
-              src="/Voyager-Box-Logo.png"
-              alt="Voyager Logo"
-              width={44}
-              height={44}
-              className="rounded-md glow-effect"
-            />
-            <div className="font-heading text-2xl font-bold">
-              <span className="text-primary">VOYAGER</span>
+        <div className="flex items-center w-full relative">
+          {/* Left Brand */}
+          <div className="flex-1">
+            <NavbarBrand>
+              <Link
+                href="/"
+                className="flex items-center gap-2 hover:opacity-90 transition-opacity"
+              >
+                <Image
+                  src="/Voyager-Box-Logo.png"
+                  alt="Voyager Logo"
+                  width={44}
+                  height={44}
+                  className="rounded-md glow-effect"
+                />
+                <div className="font-heading text-2xl font-bold">
+                  <span className="text-primary">VOYAGER</span>
+                </div>
+              </Link>
+            </NavbarBrand>
+          </div>
+
+          {/* Center Nav Links - absolutely positioned */}
+          <div className="hidden sm:flex gap-8 absolute left-1/2 transform -translate-x-1/2 list-none">
+            <NavbarItem className="list-none">
+              <Link
+                href="#benefits"
+                className="text-textLight hover:text-primary transition-colors text-lg font-medium"
+              >
+                Benefits
+              </Link>
+            </NavbarItem>
+            <NavbarItem className="list-none">
+              <Link
+                href="#services"
+                className="text-textLight hover:text-primary transition-colors text-lg font-medium"
+              >
+                Services
+              </Link>
+            </NavbarItem>
+            <NavbarItem className="list-none">
+              <Link
+                href="#studio"
+                className="text-textLight hover:text-primary transition-colors text-lg font-medium"
+              >
+                Studio
+              </Link>
+            </NavbarItem>
+            <NavbarItem className="list-none">
+              <Link
+                href="#plans"
+                className="text-textLight hover:text-primary transition-colors text-lg font-medium"
+              >
+                Plans
+              </Link>
+            </NavbarItem>
+          </div>
+
+          {/* Right Buttons */}
+          <div className="flex-1 flex justify-end list-none">
+            <div className="flex items-center gap-4">
+              <NavbarItem className="list-none">
+                <Button
+                  as={Link}
+                  href="#"
+                  className="text-primary font-medium px-6 py-2 hover:text-accent transition-all duration-300 hover:scale-105 transform"
+                >
+                  Partner Login
+                </Button>
+              </NavbarItem>
+              <NavbarItem className="list-none">
+                <Button
+                  as={Link}
+                  href="#signup"
+                  className="bg-primary text-textLight font-medium px-6 py-2 rounded-md hover:bg-accent transition-all duration-300 hover:scale-105 transform hover:shadow-glow"
+                >
+                  Join For Free
+                </Button>
+              </NavbarItem>
             </div>
-          </Link>
-        </NavbarBrand>
-
-        <NavbarContent
-          className="hidden sm:flex flex-grow justify-center gap-8"
-          justify="center"
-        >
-          <NavbarItem>
-            <Link
-              href="#benefits"
-              className="text-textLight hover:text-primary transition-colors text-lg font-medium"
-            >
-              Benefits
-            </Link>
-          </NavbarItem>
-          <NavbarItem>
-            <Link
-              href="#services"
-              className="text-textLight hover:text-primary transition-colors text-lg font-medium"
-            >
-              Services
-            </Link>
-          </NavbarItem>
-          <NavbarItem>
-            <Link
-              href="#studio"
-              className="text-textLight hover:text-primary transition-colors text-lg font-medium"
-            >
-              Studio
-            </Link>
-          </NavbarItem>
-          <NavbarItem>
-            <Link
-              href="#plans"
-              className="text-textLight hover:text-primary transition-colors text-lg font-medium"
-            >
-              Plans
-            </Link>
-          </NavbarItem>
-        </NavbarContent>
-
-        <NavbarContent justify="end" className="flex-grow-0">
-          <NavbarItem>
-            <Button
-              as={Link}
-              href="#"
-              className="text-primary font-medium px-6 py-2 hover:text-accent transition-all duration-300 hover:scale-105 transform"
-            >
-              Partner Login
-            </Button>
-          </NavbarItem>
-          <NavbarItem>
-            <Button
-              as={Link}
-              href="#signup"
-              className="bg-primary text-textLight font-medium px-6 py-2 rounded-md hover:bg-accent transition-all duration-300 hover:scale-105 transform hover:shadow-glow"
-            >
-              Join For Free
-            </Button>
-          </NavbarItem>
-        </NavbarContent>
+          </div>
+        </div>
       </Navbar>
     </motion.div>
   );
