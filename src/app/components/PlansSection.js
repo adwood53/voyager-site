@@ -103,7 +103,7 @@ export default function PlansSection() {
           >
             <Card className="card-voyager h-full bg-gradient-to-br from-backgroundDark to-darkBg border border-primary border-opacity-40 transition-all hover:shadow-glow-lg w-full flex flex-col">
               <div className="absolute top-0 right-0 bg-primary text-textLight px-4 text-sm font-bold rounded-bl-lg">
-                STANDARD
+                STANDARD PLAN
               </div>
               <CardHeader className="pb-0 pt-6 px-6 flex-shrink-0">
                 <div className="flex-1">

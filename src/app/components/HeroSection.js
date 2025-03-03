@@ -23,7 +23,7 @@ export default function HeroSection() {
   return (
     <section
       ref={containerRef}
-      className="relative min-h-screen flex items-center overflow-hidden bg-darkBg pt-20"
+      className="relative min-h-screen flex items-center overflow-hidden bg-darkBg"
     >
       {/* Cinematic video background with parallax effect */}
       <motion.div className="absolute inset-0 z-0" style={{ y: bgY }}>
@@ -38,7 +38,7 @@ export default function HeroSection() {
       </motion.div>
 
       {/* Floating particles/elements for depth */}
-      {[...Array(8)].map((_, i) => (
+      {[...Array(12)].map((_, i) => (
         <motion.div
           key={i}
           className="absolute rounded-full z-10"

@@ -1,302 +1,445 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { Button, Link, Card, CardBody } from '@heroui/react';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
-import { groq } from 'next-sanity';
 import { sanityClient } from '@/src/lib/sanity';
 
-import {
-  Card,
-  CardHeader,
-  CardBody,
-  CardFooter,
-  Button,
-} from '@heroui/react';
-import { ArrowRightIcon } from '@heroicons/react/24/outline';
-
-/**
- * NewsCarousel Component
- * Displays a carousel of recent blog posts with "Test Blog" category
- * with improved readability and colors matching the design image
- */
-export default function NewsCarousel() {
-  const [blogPosts, setBlogPosts] = useState([]);
-  const [loading, setLoading] = useState(true);
+export default function NewsCarousel({
+  title = 'Latest News',
+  categoryId = null, // Optional category ID to filter by
+  limit = 5, // Number of posts to fetch
+  subtitle = 'Stay updated with the latest from our immersive technology world',
+}) {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const router = useRouter();
+  const [autoplay, setAutoplay] = useState(true);
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
   const carouselRef = useRef(null);
+  const timeoutRef = useRef(null);
 
-  // Fetch blog posts for carousel
+  const sectionRef = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ['start end', 'end start'],
+  });
+
+  const opacity = useTransform(
+    scrollYProgress,
+    [0, 0.2, 0.8, 1],
+    [0, 1, 1, 0]
+  );
+  const y = useTransform(
+    scrollYProgress,
+    [0, 0.2, 0.8, 1],
+    [100, 0, 0, -100]
+  );
+
+  // Fetch posts from Sanity
   useEffect(() => {
-    const query = groq`
-      *[_type == "post" && "News" in categories[]->title] | order(publishedAt desc)[0...5]{
-        title,
-        excerpt,
-        "slug": slug.current,
-        mainImage {
-          asset->{
-            url
-          }
-        },
-        publishedAt,
-        categories[]->{
-          _id,
-          title
+    const fetchPosts = async () => {
+      setLoading(true);
+      try {
+        // Build query based on whether categoryId is provided
+        let query = `*[_type == "post"`;
+
+        // Add category filter if categoryId is provided
+        if (categoryId) {
+          query += ` && $categoryId in categories[]->_id`;
         }
+
+        // Complete the query
+        query += `] | order(publishedAt desc)[0...${limit}]{
+          _id,
+          title,
+          slug,
+          excerpt,
+          publishedAt,
+          mainImage{asset->{url}},
+          "categories": categories[]->{ _id, title },
+          "author": author->{ _id, name, profileImage{asset->{url}} }
+        }`;
+
+        // Execute the query
+        const postsData = await sanityClient.fetch(
+          query,
+          categoryId ? { categoryId } : {}
+        );
+
+        // Process the posts data
+        if (postsData) {
+          const processedPosts = postsData.map((post) => {
+            // Format slug
+            if (post.slug) {
+              post.slug = post.slug.current;
+            }
+
+            // Format mainImage URL if it exists
+            if (post.mainImage?.asset?.url) {
+              post.mainImage = post.mainImage.asset.url;
+            }
+
+            // Format author profile image if it exists
+            if (post.author?.profileImage?.asset?.url) {
+              post.author.profileImage =
+                post.author.profileImage.asset.url;
+            }
+
+            return post;
+          });
+
+          setPosts(processedPosts);
+        }
+      } catch (error) {
+        console.error(
+          'Error fetching blog posts for carousel:',
+          error
+        );
+      } finally {
+        setLoading(false);
       }
-    `;
+    };
 
-    sanityClient
-      .fetch(query)
-      .then((data) => {
-        setBlogPosts(data);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error('Error fetching blog posts:', error);
-        setLoading(false);
-        // Provide fallback data in case of error
-        setBlogPosts([]);
-      });
-  }, []);
+    fetchPosts();
+  }, [categoryId, limit]);
 
-  // Carousel navigation functions
+  // Reset autoplay countdown when slide changes
+  useEffect(() => {
+    if (autoplay && posts.length > 0) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = setTimeout(() => {
+        nextSlide();
+      }, 5000); // 5 seconds per slide
+    }
+    return () => clearTimeout(timeoutRef.current);
+  }, [currentSlide, autoplay, posts.length]);
+
+  // Pause autoplay when user interacts with carousel
+  const pauseAutoplay = () => {
+    setAutoplay(false);
+    // Resume after 10 seconds of inactivity
+    clearTimeout(timeoutRef.current);
+    timeoutRef.current = setTimeout(() => {
+      setAutoplay(true);
+    }, 10000);
+  };
+
   const nextSlide = () => {
-    if (!blogPosts.length) return;
-    setCurrentSlide((prev) =>
-      prev === blogPosts.length - 1 ? 0 : prev + 1
-    );
+    if (posts.length > 0) {
+      setCurrentSlide((prev) => (prev + 1) % posts.length);
+    }
   };
 
   const prevSlide = () => {
-    if (!blogPosts.length) return;
-    setCurrentSlide((prev) =>
-      prev === 0 ? blogPosts.length - 1 : prev - 1
-    );
+    if (posts.length > 0) {
+      setCurrentSlide(
+        (prev) => (prev - 1 + posts.length) % posts.length
+      );
+    }
   };
 
-  // Function to navigate to blog post
-  function handleReadMore(slug) {
-    router.push(`/blog/${slug}`);
-  }
-
-  // Function to view all blog posts
-  function handleViewAllPosts() {
-    router.push('/blog');
-  }
+  const goToSlide = (index) => {
+    setCurrentSlide(index);
+    pauseAutoplay();
+  };
 
   // Format date for display
   const formatDate = (dateString) => {
     if (!dateString) return '';
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-GB', {
+    return new Date(dateString).toLocaleDateString('en-GB', {
       day: 'numeric',
       month: 'long',
       year: 'numeric',
     });
   };
 
-  return (
-    <div className="relative w-full">
-      {/* Loading state */}
-      {loading && (
-        <div className="flex justify-center items-center min-h-[300px]">
-          <div className="animate-pulse text-center">
-            <p className="text-darkPrimary">Loading latest news...</p>
-          </div>
-        </div>
-      )}
+  // Only render if we have posts
+  if (!posts || posts.length === 0) {
+    if (!loading) return null; // Don't render anything if we have no posts and we're done loading
 
-      {/* Empty state */}
-      {!loading && blogPosts.length === 0 && (
-        <div className="flex justify-center items-center min-h-[300px]">
+    // Optional loading state
+    return (
+      <section
+        id="news"
+        ref={sectionRef}
+        className="py-24 bg-darkBg relative overflow-hidden"
+      >
+        <div className="container-voyager">
           <div className="text-center">
-            <p className="text-darkPrimary mb-4">
-              No news articles available yet.
-            </p>
-            <Button
-              className="bg-primary text-textLight hover:bg-accent transition-colors"
-              onClick={handleViewAllPosts}
-            >
-              Visit Our Blog
-            </Button>
+            <h2 className="heading-voyager text-4xl md:text-5xl text-textLight mb-6">
+              Loading <span className="text-primary">{title}</span>...
+            </h2>
           </div>
         </div>
-      )}
+      </section>
+    );
+  }
 
-      {/* Carousel content */}
-      {!loading && blogPosts.length > 0 && (
+  return (
+    <section
+      id="news"
+      ref={sectionRef}
+      className="py-24 bg-darkBg relative overflow-hidden"
+    >
+      {/* Background elements */}
+      <div className="absolute inset-0 overflow-hidden">
+        <motion.div
+          className="absolute top-0 right-0 w-96 h-96 bg-primary rounded-full filter blur-3xl opacity-5"
+          animate={{
+            scale: [1, 1.2, 1],
+            x: [0, -20, 0],
+            opacity: [0.05, 0.08, 0.05],
+          }}
+          transition={{
+            duration: 15,
+            repeat: Infinity,
+            repeatType: 'mirror',
+          }}
+        />
+        <motion.div
+          className="absolute bottom-0 left-0 w-64 h-64 bg-altPrimary rounded-full filter blur-3xl opacity-5"
+          animate={{
+            scale: [1, 1.3, 1],
+            y: [0, -30, 0],
+            opacity: [0.05, 0.08, 0.05],
+          }}
+          transition={{
+            duration: 18,
+            repeat: Infinity,
+            repeatType: 'mirror',
+          }}
+        />
+      </div>
+
+      <motion.div
+        className="container-voyager relative z-10"
+        style={{ opacity, y }}
+      >
+        <div className="text-center mb-12">
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            viewport={{ once: true }}
+            className="heading-voyager text-4xl md:text-5xl text-textLight mb-6"
+          >
+            {title.split(' ').map((word, i, arr) => (
+              <span key={i}>
+                {i === arr.length - 1 ? (
+                  <span className="text-primary">{word}</span>
+                ) : (
+                  `${word} `
+                )}
+              </span>
+            ))}
+          </motion.h2>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            viewport={{ once: true }}
+            className="text-xl text-textLight opacity-80 max-w-3xl mx-auto"
+          >
+            {subtitle}
+          </motion.p>
+        </div>
+
         <div className="relative" ref={carouselRef}>
-          {/* Current slide */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* Feature post (takes 2 columns) */}
-            <Card className="md:col-span-2 bg-black text-textLight shadow-lg hover:shadow-xl transition-all">
-              <div className="grid grid-cols-1 md:grid-cols-2 h-full">
-                {/* Image side */}
-                <div className="relative h-64 md:h-auto">
-                  {blogPosts[currentSlide]?.mainImage?.asset?.url ? (
-                    <Image
-                      src={
-                        blogPosts[currentSlide].mainImage.asset.url
-                      }
-                      alt={blogPosts[currentSlide].title}
-                      fill
-                      className="object-cover"
-                      priority
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center bg-black">
-                      <p className="text-textLight">
-                        No image available
-                      </p>
-                    </div>
-                  )}
-                </div>
-
-                {/* Content side */}
-                <div className="flex flex-col p-6">
-                  <h3 className="text-xl font-semibold mb-2 text-textLight">
-                    {blogPosts[currentSlide].title}
-                  </h3>
-                  <p className="text-sm text-gray-300 mb-2">
-                    {formatDate(blogPosts[currentSlide].publishedAt)}
-                  </p>
-                  <div className="mb-4">
-                    {blogPosts[currentSlide].categories?.map(
-                      (cat) => (
-                        <span
-                          key={cat._id}
-                          className="inline-block bg-primary text-white text-xs px-2 py-1 rounded mr-2 mb-2"
-                        >
-                          {cat.title}
-                        </span>
-                      )
-                    )}
-                  </div>
-                  <p className="text-sm mb-4 flex-grow text-textLight">
-                    {blogPosts[currentSlide].excerpt ||
-                      'Read more about this article on our blog...'}
-                  </p>
-                  <Button
-                    type="button"
-                    onClick={() =>
-                      handleReadMore(blogPosts[currentSlide].slug)
-                    }
-                    className="mt-auto bg-primary text-textLight hover:bg-accent
-                             transition-colors px-4 py-2 flex items-center gap-2 w-fit"
+          {/* Carousel container */}
+          <div className="overflow-hidden rounded-lg shadow-glow-sm border border-primary border-opacity-20">
+            <div
+              className="relative transition-transform duration-500 ease-in-out h-[500px] md:h-[600px]"
+              style={{
+                transform: `translateX(-${currentSlide * 100}%)`,
+              }}
+            >
+              <div className="flex">
+                {posts.map((post, index) => (
+                  <div
+                    key={post._id || index}
+                    className="min-w-full relative"
+                    style={{
+                      left: `${index * 100}%`,
+                      position: 'absolute',
+                      width: '100%',
+                      height: '100%',
+                    }}
                   >
-                    Read More
-                    <ArrowRightIcon className="h-5 w-5" />
-                  </Button>
-                </div>
-              </div>
-            </Card>
-
-            {/* Next post preview (1 column) */}
-            <Card className="bg-white border border-gray-200 text-darkPrimary shadow-lg hover:shadow-xl transition-all">
-              <CardHeader className="p-4 border-b border-gray-200 bg-gray-50">
-                <h3 className="text-lg font-semibold text-darkPrimary">
-                  Coming Up Next
-                </h3>
-              </CardHeader>
-              <CardBody className="p-4 flex flex-col h-full">
-                {blogPosts.length > 1 ? (
-                  <>
-                    <div className="relative h-36 mb-4">
-                      {blogPosts[
-                        (currentSlide + 1) % blogPosts.length
-                      ]?.mainImage?.asset?.url ? (
+                    {/* Background Image */}
+                    <div className="absolute inset-0">
+                      {post.mainImage ? (
                         <Image
-                          src={
-                            blogPosts[
-                              (currentSlide + 1) % blogPosts.length
-                            ].mainImage.asset.url
-                          }
-                          alt={
-                            blogPosts[
-                              (currentSlide + 1) % blogPosts.length
-                            ].title
-                          }
+                          src={post.mainImage}
+                          alt={post.title}
                           fill
                           className="object-cover"
                         />
                       ) : (
-                        <div className="w-full h-full flex items-center justify-center bg-gray-100">
-                          <p className="text-darkPrimary">
-                            No image available
-                          </p>
-                        </div>
+                        <div className="w-full h-full bg-darkCard"></div>
                       )}
+                      <div className="absolute inset-0 bg-gradient-to-t from-darkBg via-darkBg/70 to-transparent"></div>
                     </div>
-                    <h4 className="text-lg font-medium mb-2 text-darkPrimary">
-                      {
-                        blogPosts[
-                          (currentSlide + 1) % blogPosts.length
-                        ].title
-                      }
-                    </h4>
-                    <p className="text-sm text-gray-600 mb-auto">
-                      {formatDate(
-                        blogPosts[
-                          (currentSlide + 1) % blogPosts.length
-                        ].publishedAt
-                      )}
-                    </p>
-                  </>
-                ) : (
-                  <p className="italic text-gray-600 flex-grow flex items-center justify-center">
-                    No additional posts available
-                  </p>
-                )}
-              </CardBody>
-              <CardFooter className="p-4 border-t border-gray-200 bg-gray-50">
-                <div className="flex justify-between w-full">
-                  <Button
-                    type="button"
-                    onClick={prevSlide}
-                    className="bg-gray-100 hover:bg-gray-200 text-darkPrimary
-                               transition-colors p-2 rounded-full"
-                  >
-                    <Image
-                      src="/icons/LeftArrow.svg"
-                      alt="Previous"
-                      width={24}
-                      height={24}
-                    />
-                  </Button>
-                  <Button
-                    type="button"
-                    onClick={nextSlide}
-                    className="bg-gray-100 hover:bg-gray-200 text-darkPrimary
-                               transition-colors p-2 rounded-full"
-                  >
-                    <Image
-                      src="/icons/RightArrow.svg"
-                      alt="Next"
-                      width={24}
-                      height={24}
-                    />
-                  </Button>
-                </div>
-              </CardFooter>
-            </Card>
+
+                    {/* Content */}
+                    <div className="absolute inset-0 flex flex-col justify-end p-6 md:p-12">
+                      <Card className="card-voyager bg-darkCard bg-opacity-80 backdrop-blur-sm border border-primary border-opacity-30 w-full md:w-2/3 lg:w-1/2 ml-auto mr-auto md:ml-0 md:mr-auto">
+                        <CardBody className="p-6">
+                          {post.categories &&
+                            post.categories.length > 0 && (
+                              <div className="flex flex-wrap gap-2 mb-3">
+                                {post.categories
+                                  .slice(0, 2)
+                                  .map((category) => (
+                                    <span
+                                      key={category._id}
+                                      className="px-3 py-1 bg-primary bg-opacity-20 text-primary text-sm rounded-full"
+                                    >
+                                      {category.title}
+                                    </span>
+                                  ))}
+                              </div>
+                            )}
+
+                          <h3 className="text-2xl md:text-3xl font-heading text-primary mb-4">
+                            {post.title}
+                          </h3>
+
+                          <p className="text-textLight opacity-80 mb-4 line-clamp-3">
+                            {post.excerpt}
+                          </p>
+
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-4">
+                              {post.author && (
+                                <div className="flex items-center gap-2">
+                                  {post.author.profileImage ? (
+                                    <Image
+                                      src={post.author.profileImage}
+                                      alt={post.author.name}
+                                      width={30}
+                                      height={30}
+                                      className="rounded-full"
+                                    />
+                                  ) : (
+                                    <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-textLight">
+                                      {post.author.name?.charAt(0) ||
+                                        'A'}
+                                    </div>
+                                  )}
+                                  <span className="text-sm text-textLight opacity-70">
+                                    {post.author.name}
+                                  </span>
+                                </div>
+                              )}
+
+                              {post.publishedAt && (
+                                <div className="text-sm text-textLight opacity-70">
+                                  {formatDate(post.publishedAt)}
+                                </div>
+                              )}
+                            </div>
+
+                            <Button
+                              as={Link}
+                              href={`/blog/${post.slug}`}
+                              className="bg-primary text-textLight font-medium hover:bg-accent px-4 py-2 rounded-md transition-all hover:shadow-glow text-sm"
+                            >
+                              Read More →
+                            </Button>
+                          </div>
+                        </CardBody>
+                      </Card>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
 
-          {/* View all blogs button */}
-          <div className="flex justify-center mt-8">
+          {/* Navigation buttons */}
+          <div className="absolute inset-0 flex items-center justify-between pointer-events-none">
             <Button
-              type="button"
-              onClick={handleViewAllPosts}
-              className="bg-primary text-textLight hover:bg-accent
-                       transition-colors px-6 py-3 flex items-center gap-2"
+              onClick={() => {
+                prevSlide();
+                pauseAutoplay();
+              }}
+              className="ml-4 w-12 h-12 rounded-full bg-darkBg bg-opacity-60 backdrop-blur-sm text-textLight hover:bg-primary transition-all pointer-events-auto"
+              aria-label="Previous slide"
             >
-              View All News
-              <ArrowRightIcon className="h-5 w-5" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                className="w-6 h-6"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M15 19l-7-7 7-7"
+                />
+              </svg>
+            </Button>
+            <Button
+              onClick={() => {
+                nextSlide();
+                pauseAutoplay();
+              }}
+              className="mr-4 w-12 h-12 rounded-full bg-darkBg bg-opacity-60 backdrop-blur-sm text-textLight hover:bg-primary transition-all pointer-events-auto"
+              aria-label="Next slide"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                className="w-6 h-6"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 5l7 7-7 7"
+                />
+              </svg>
             </Button>
           </div>
+
+          {/* Indicators */}
+          <div className="flex justify-center gap-2 mt-6">
+            {posts.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => goToSlide(index)}
+                className={`w-3 h-3 rounded-full transition-all ${
+                  currentSlide === index
+                    ? 'bg-primary shadow-glow-sm w-8'
+                    : 'bg-textLight bg-opacity-30 hover:bg-opacity-50'
+                }`}
+                aria-label={`Go to slide ${index + 1}`}
+              />
+            ))}
+          </div>
         </div>
-      )}
-    </div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.5 }}
+          viewport={{ once: true }}
+          className="mt-10 text-center"
+        >
+          <Button
+            as={Link}
+            href="/blog"
+            className="bg-primary text-textLight font-medium hover:bg-accent px-6 py-3 rounded-md transition-all hover:scale-105 transform hover:shadow-glow"
+          >
+            View All Posts →
+          </Button>
+        </motion.div>
+      </motion.div>
+    </section>
   );
 }
