@@ -104,7 +104,8 @@ export default function BlogPost({ params }) {
               Something went wrong
             </h1>
             <p className="text-textLight opacity-80">
-              We couldn't load this blog post. Please try again later.
+              We couldn&#39;t load this blog post. Please try again
+              later.
             </p>
           </div>
         </div>
