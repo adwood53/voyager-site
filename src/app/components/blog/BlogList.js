@@ -1,19 +1,12 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { Button } from '@heroui/react';
 import BlogCard from './BlogCard';
 import FlexGrid from '../FlexGrid';
 import { useSearchParams, useRouter } from 'next/navigation';
 
 export default function BlogList({ posts = [] }) {
-  // For debugging
-  console.log(
-    'RENDER: BlogList component with',
-    posts.length,
-    'posts'
-  );
-
   // Store both the selected category ID and filtered posts in state
   const [categoryId, setCategoryId] = useState('all');
   const [visiblePosts, setVisiblePosts] = useState([]);
@@ -23,13 +16,22 @@ export default function BlogList({ posts = [] }) {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  // Get all unique categories from posts
-  const allCategories = getAllCategories(posts);
+  // Get all unique categories from posts - memoized to prevent recalculation on every render
+  const allCategories = useMemo(
+    () => getAllCategories(posts),
+    [posts]
+  );
 
-  // Initialize from URL and set up category/filtering
+  // Create a memoized filter function to prevent unnecessary re-renders
+  const filterPosts = useCallback(
+    (categoryId) => {
+      return filterPostsByCategory(posts, categoryId);
+    },
+    [posts]
+  );
+
+  // Initialize from URL and set up category/filtering - runs only once on mount
   useEffect(() => {
-    console.log('EFFECT: Initial setup and URL check');
-
     // Check URL for category
     const categoryParam = searchParams.get('category');
     let initialCategoryId = 'all';
@@ -48,40 +50,23 @@ export default function BlogList({ posts = [] }) {
     // Set the initial category
     setCategoryId(initialCategoryId);
 
-    // Do initial filtering
-    const filtered = filterPostsByCategory(posts, initialCategoryId);
-    console.log(
-      'INITIAL: Filtered to',
-      filtered.length,
-      'posts for category',
-      initialCategoryId
-    );
-    setVisiblePosts(filtered);
+    // Initial filtering is now handled by the second useEffect
   }, [searchParams, allCategories]);
 
   // Re-filter when posts or category changes
   useEffect(() => {
-    console.log('EFFECT: Posts or category changed');
-
     // Filter posts based on selected category
-    const filtered = filterPostsByCategory(posts, categoryId);
-    console.log(
-      'FILTER: Found',
-      filtered.length,
-      'posts for category',
-      categoryId
-    );
+    const filtered = filterPosts(categoryId);
 
     // Update visible posts
     setVisiblePosts(filtered);
 
     // Reset pagination when category changes
     setVisibleCount(6);
-  }, [posts, categoryId]);
+  }, [categoryId, filterPosts]);
 
   // Handle category selection
   function handleCategoryChange(newCategoryId) {
-    console.log('CLICK: Changing category to', newCategoryId);
     if (newCategoryId === categoryId) return;
 
     // Update category
@@ -110,13 +95,6 @@ export default function BlogList({ posts = [] }) {
 
   // Posts to display based on pagination
   const displayedPosts = visiblePosts.slice(0, visibleCount);
-
-  // For debugging
-  console.log(
-    'RENDER OUTPUT:',
-    displayedPosts.length,
-    'posts showing'
-  );
 
   return (
     <div className="container-voyager py-8">
