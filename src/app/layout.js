@@ -1,12 +1,11 @@
-/**
- * File: src/app/layout.js
- */
+// src/app/layout.js
 import { Quicksand } from 'next/font/google';
 import localFont from 'next/font/local';
 import React from 'react';
 import './globals.css';
 import Script from 'next/script';
 import ClientWrapper from '@/src/app/components/ClientWrapper';
+import { ClerkProvider } from '@clerk/nextjs';
 
 const SITE_NAME = 'Social Innovation People';
 const BASE_URL = 'https://www.socialinnovationpeople.co.uk';
@@ -92,28 +91,30 @@ export const viewport = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en-GB">
-      <head>
-        <Script
-          strategy="afterInteractive"
-          src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"
-        />
-        <Script strategy="afterInteractive" id="ga-script">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-XXXXXXXXXX', {
-              page_path: window.location.pathname,
-            });
-          `}
-        </Script>
-      </head>
-      <body
-        className={`${quicksand.variable} ${labora.variable} font-body`}
-      >
-        <ClientWrapper>{children}</ClientWrapper>
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="en-GB">
+        <head>
+          <Script
+            strategy="afterInteractive"
+            src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"
+          />
+          <Script strategy="afterInteractive" id="ga-script">
+            {`
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-XXXXXXXXXX', {
+                page_path: window.location.pathname,
+              });
+            `}
+          </Script>
+        </head>
+        <body
+          className={`${quicksand.variable} ${labora.variable} font-body`}
+        >
+          <ClientWrapper>{children}</ClientWrapper>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }
