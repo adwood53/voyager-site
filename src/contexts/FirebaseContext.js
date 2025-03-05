@@ -1,3 +1,5 @@
+'use client';
+
 import React, { createContext, useContext } from 'react';
 import { useUser, useOrganization } from '@clerk/nextjs';
 import { useFirebaseData } from './useFirebaseData';
