@@ -1,84 +1,68 @@
-'use client';
-
-import {
-  createContext,
-  useContext,
-  useState,
-  useEffect,
-} from 'react';
-import { useUser, useOrganization } from '@clerk/nextjs';
-import {
-  getUserByClerkId,
-  getOrganizationByClerkId,
-} from '@/src/lib/firestore';
-
-// Create context
-const FirebaseContext = createContext(null);
-
-// Provider component
-export function FirebaseProvider({ children }) {
-  const { user: clerkUser, isLoaded: isUserLoaded } = useUser();
-  const { organization: clerkOrg, isLoaded: isOrgLoaded } =
-    useOrganization();
-
-  const [firestoreUser, setFirestoreUser] = useState(null);
-  const [firestoreOrg, setFirestoreOrg] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    async function loadData() {
-      if (!isUserLoaded || (clerkOrg && !isOrgLoaded)) {
-        return;
-      }
-
-      setLoading(true);
-
-      try {
-        // Load user data if authenticated
-        if (clerkUser) {
-          const userData = await getUserByClerkId(clerkUser.id);
-          setFirestoreUser(userData);
-        } else {
-          setFirestoreUser(null);
-        }
-
-        // Load organization data if in org context
-        if (clerkOrg) {
-          const orgData = await getOrganizationByClerkId(clerkOrg.id);
-          setFirestoreOrg(orgData);
-        } else {
-          setFirestoreOrg(null);
-        }
-      } catch (error) {
-        console.error('Error loading Firestore data:', error);
-      } finally {
-        setLoading(false);
-      }
+useEffect(() => {
+  async function loadData() {
+    if (!isUserLoaded || (clerkOrg && !isOrgLoaded)) {
+      return;
     }
 
-    loadData();
-  }, [clerkUser, clerkOrg, isUserLoaded, isOrgLoaded]);
+    setLoading(true);
 
-  return (
-    <FirebaseContext.Provider
-      value={{
-        user: firestoreUser,
-        organization: firestoreOrg,
-        loading,
-      }}
-    >
-      {children}
-    </FirebaseContext.Provider>
-  );
-}
+    try {
+      // Load user data if authenticated
+      if (clerkUser) {
+        const userData = await getUserByClerkId(clerkUser.id);
+        setFirestoreUser(userData);
+      } else {
+        setFirestoreUser(null);
+      }
 
-// Custom hook to use the context
-export function useFirebase() {
-  const context = useContext(FirebaseContext);
-  if (!context) {
-    throw new Error(
-      'useFirebase must be used within a FirebaseProvider'
-    );
+      // Load organization data if in org context
+      if (clerkOrg) {
+        // Try to get organization by Clerk ID
+        let orgData = await getOrganizationByClerkId(clerkOrg.id);
+
+        // If organization doesn't exist yet, check if we need to create it
+        if (!orgData && clerkOrg) {
+          console.log(
+            'Organization not found in Firestore, creating new record...'
+          );
+
+          try {
+            // Extract organization details from Clerk
+            const newOrgData = {
+              clerkOrgId: clerkOrg.id,
+              name: clerkOrg.name,
+              slug: clerkOrg.slug || '',
+              subdomain: clerkOrg.slug || '',
+              logo: clerkOrg.imageUrl || '',
+              primaryColor: '#E79023', // Default Voyager primary
+              secondaryColor: '#a6620c', // Default Voyager accent
+              members: [],
+              createdAt: new Date().toISOString(),
+            };
+
+            // Use the firestore function to create the organization
+            // This is commented out as we don't want to auto-create orgs in context
+            // This would be handled by the webhook instead
+            // const createdOrg = await createOrganization(newOrgData);
+            // orgData = createdOrg;
+          } catch (createError) {
+            console.error(
+              'Error creating organization in Firestore:',
+              createError
+            );
+          }
+        }
+
+        setFirestoreOrg(orgData);
+      } else {
+        setFirestoreOrg(null);
+      }
+    } catch (error) {
+      console.error('Error loading Firestore data:', error);
+    } finally {
+      setLoading(false);
+    }
   }
-  return context;
-}
+
+  loadData();
+}, [clerkUser, clerkOrg, isUserLoaded, isOrgLoaded]);

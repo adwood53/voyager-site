@@ -70,7 +70,7 @@ export default function VoyagerNavbar() {
                 >
                   <Button
                     as={Link}
-                    href="https://configurator.voyagervrlab.co.uk"
+                    href="/partner"
                     className="text-primary font-medium px-3 py-1 text-sm hover:text-accent transition-all duration-300"
                   >
                     Login!
@@ -243,7 +243,7 @@ export default function VoyagerNavbar() {
                 >
                   <Button
                     as={Link}
-                    href="https://configurator.voyagervrlab.co.uk"
+                    href="/partner"
                     className="text-primary font-medium px-6 py-2 hover:text-accent transition-all duration-300"
                   >
                     Partner Login
