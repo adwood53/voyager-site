@@ -151,7 +151,7 @@ export default function SignInPage() {
               Partner Sign In
             </h1>
             <p className="text-textLight opacity-70">
-              Sign in to access your organization's resources
+              Sign in to access your organization&#39;s resources
             </p>
             {orgDetails && (
               <p className="mt-2 text-primary text-sm">

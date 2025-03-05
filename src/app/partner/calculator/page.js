@@ -205,8 +205,8 @@ export default function ProjectCalculator() {
             <CardBody>
               <p className="text-textLight opacity-80 mb-6">
                 Use this simple calculator to estimate project costs
-                for your clients. You'll earn 15% commission on all
-                projects.
+                for your clients. You&#39;ll earn 15% commission on
+                all projects.
               </p>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">

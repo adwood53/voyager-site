@@ -1,68 +1,46 @@
-useEffect(() => {
-  async function loadData() {
-    if (!isUserLoaded || (clerkOrg && !isOrgLoaded)) {
-      return;
-    }
+import React, { createContext, useContext } from 'react';
+import { useUser, useOrganization } from '@clerk/nextjs';
+import { useFirebaseData } from './useFirebaseData';
 
-    setLoading(true);
+// Create the context
+const FirebaseContext = createContext();
 
-    try {
-      // Load user data if authenticated
-      if (clerkUser) {
-        const userData = await getUserByClerkId(clerkUser.id);
-        setFirestoreUser(userData);
-      } else {
-        setFirestoreUser(null);
-      }
+// Provider component
+export function FirebaseProvider({ children }) {
+  const { user: clerkUser } = useUser();
+  const { organization: clerkOrg } = useOrganization();
 
-      // Load organization data if in org context
-      if (clerkOrg) {
-        // Try to get organization by Clerk ID
-        let orgData = await getOrganizationByClerkId(clerkOrg.id);
+  // Use the custom hook to load Firebase data
+  const { user, organization, loading } = useFirebaseData(
+    clerkUser,
+    clerkOrg,
+    clerkUser !== undefined,
+    clerkOrg !== undefined
+  );
 
-        // If organization doesn't exist yet, check if we need to create it
-        if (!orgData && clerkOrg) {
-          console.log(
-            'Organization not found in Firestore, creating new record...'
-          );
+  // Provide the context value
+  const contextValue = {
+    user,
+    organization,
+    loading,
+  };
 
-          try {
-            // Extract organization details from Clerk
-            const newOrgData = {
-              clerkOrgId: clerkOrg.id,
-              name: clerkOrg.name,
-              slug: clerkOrg.slug || '',
-              subdomain: clerkOrg.slug || '',
-              logo: clerkOrg.imageUrl || '',
-              primaryColor: '#E79023', // Default Voyager primary
-              secondaryColor: '#a6620c', // Default Voyager accent
-              members: [],
-              createdAt: new Date().toISOString(),
-            };
+  return (
+    <FirebaseContext.Provider value={contextValue}>
+      {children}
+    </FirebaseContext.Provider>
+  );
+}
 
-            // Use the firestore function to create the organization
-            // This is commented out as we don't want to auto-create orgs in context
-            // This would be handled by the webhook instead
-            // const createdOrg = await createOrganization(newOrgData);
-            // orgData = createdOrg;
-          } catch (createError) {
-            console.error(
-              'Error creating organization in Firestore:',
-              createError
-            );
-          }
-        }
+// Custom hook to use the Firebase context
+export function useFirebase() {
+  const context = useContext(FirebaseContext);
 
-        setFirestoreOrg(orgData);
-      } else {
-        setFirestoreOrg(null);
-      }
-    } catch (error) {
-      console.error('Error loading Firestore data:', error);
-    } finally {
-      setLoading(false);
-    }
+  if (context === undefined) {
+    throw new Error(
+      'useFirebase must be used within a FirebaseProvider'
+    );
   }
 
-  loadData();
-}, [clerkUser, clerkOrg, isUserLoaded, isOrgLoaded]);
+  return context;
+}
