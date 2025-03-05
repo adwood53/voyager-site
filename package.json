@@ -22,6 +22,7 @@
     "@heroicons/react": "^2.2.0",
     "@heroui/react": "^2.6.14",
     "@sanity/client": "^6.28.0",
+    "firebase": "^11.4.0",
     "framer-motion": "^12.4.3",
     "next": "15.1.7",
     "next-sanity": "^9.8.57",

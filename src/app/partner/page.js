@@ -1,4 +1,4 @@
-// src/app/dashboard/page.js
+// src/app/partner/page.js
 import { currentUser, useOrganization } from '@clerk/nextjs';
 import { redirect } from 'next/navigation';
 import Image from 'next/image';
@@ -6,7 +6,7 @@ import { Card, CardBody, CardHeader } from '@heroui/react';
 import PartnerNavbar from '@/src/app/components/PartnerNavbar';
 import { getOrgDetails } from '@/src/lib/organizations';
 
-export default async function Dashboard() {
+export default async function Partner() {
   const user = await currentUser();
 
   if (!user) {
@@ -84,7 +84,7 @@ export default async function Dashboard() {
                 white-label resources.
               </p>
 
-              {/* Dashboard content - customize as needed */}
+              {/* Partner content - customize as needed */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="bg-darkBg p-4 rounded-md border border-primary border-opacity-10 hover:border-opacity-30 transition-all">
                   <h2 className="text-xl text-primary mb-2">
