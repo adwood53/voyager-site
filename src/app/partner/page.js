@@ -1,5 +1,6 @@
 // src/app/partner/page.js
-import { auth } from '@clerk/nextjs';
+// For Clerk v6.x
+import { getAuth } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
 import Image from 'next/image';
 import { Card, CardBody, CardHeader } from '@heroui/react';
@@ -7,7 +8,7 @@ import PartnerNavbar from '@/src/app/components/PartnerNavbar';
 import { getOrgDetails } from '@/src/lib/organizations';
 
 export default async function Partner() {
-  const { userId, sessionId, orgId } = auth();
+  const { userId, sessionId, orgId } = getAuth();
 
   if (!userId) {
     redirect('/sign-in');
@@ -75,9 +76,9 @@ export default async function Partner() {
             </CardHeader>
             <CardBody>
               <p className="text-textLight opacity-80 mb-6">
-                This is your organization's Voyager portal. From here
-                you can manage your immersive projects and access your
-                white-label resources.
+                This is your organization&apos;s Voyager portal. From
+                here you can manage your immersive projects and access
+                your white-label resources.
               </p>
 
               {/* Partner content - customize as needed */}
