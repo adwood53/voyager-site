@@ -1,12 +1,22 @@
 // src/app/components/PartnerNavbar.js
 'use client';
 
-import { useState } from 'react';
-import { UserButton } from '@clerk/nextjs';
+import { useState, useEffect } from 'react';
+import { useUser, UserButton } from '@clerk/nextjs';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 export default function PartnerNavbar({ orgDetails }) {
   const [activePage, setActivePage] = useState('dashboard');
+  const { user, isLoaded, isSignedIn } = useUser();
+  const router = useRouter();
+
+  // Check if user is signed in
+  useEffect(() => {
+    if (isLoaded && !isSignedIn) {
+      router.push('/sign-in');
+    }
+  }, [isLoaded, isSignedIn, router]);
 
   return (
     <nav className="bg-darkBg border-b border-primary border-opacity-10">

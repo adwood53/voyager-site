@@ -1,39 +1,29 @@
 // src/app/partner/page.js
-// For Clerk v6.x
-import { getAuth } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
 import Image from 'next/image';
 import { Card, CardBody, CardHeader } from '@heroui/react';
 import PartnerNavbar from '@/src/app/components/PartnerNavbar';
-import { getOrgDetails } from '@/src/lib/organizations';
+
+// Remove the static page generation for this route
+export const dynamic = 'force-dynamic';
 
 export default async function Partner() {
-  const { userId, sessionId, orgId } = getAuth();
-
-  if (!userId) {
-    redirect('/sign-in');
-  }
-
-  // Get organization details from hostname or URL parameters
-  const orgDetails = await getOrgDetails();
-
+  // We'll check auth client-side instead of during build
   return (
     <div className="min-h-screen bg-darkBg flex flex-col">
       {/* Organization branding header */}
       <header className="w-full p-4 bg-darkCard border-b border-primary border-opacity-20">
         <div className="container mx-auto flex justify-between items-center">
           {/* Organization logo */}
-          {orgDetails?.logo && (
-            <div>
-              <Image
-                src={orgDetails.logo}
-                alt={orgDetails.name || 'Partner'}
-                width={180}
-                height={60}
-                className="object-contain"
-              />
-            </div>
-          )}
+          <div>
+            <Image
+              src="/Voyager-Box-Logo.png"
+              alt="Partner"
+              width={180}
+              height={60}
+              className="object-contain"
+            />
+          </div>
 
           {/* Voyager logo */}
           <div className="flex items-center">
@@ -55,7 +45,7 @@ export default async function Partner() {
       </header>
 
       {/* Partner portal navigation */}
-      <PartnerNavbar orgDetails={orgDetails} />
+      <PartnerNavbar />
 
       {/* Main content */}
       <main className="flex-1 p-6">
@@ -68,7 +58,7 @@ export default async function Partner() {
                 </h1>
                 <div className="text-right">
                   <p className="text-textLight opacity-80">
-                    {orgDetails?.name || 'Partner Organization'}
+                    Partner Organization
                   </p>
                   <p className="text-primary text-sm">Member</p>
                 </div>
