@@ -1,5 +1,5 @@
 // src/app/partner/page.js
-import { currentUser, useOrganization } from '@clerk/nextjs';
+import { auth } from '@clerk/nextjs';
 import { redirect } from 'next/navigation';
 import Image from 'next/image';
 import { Card, CardBody, CardHeader } from '@heroui/react';
@@ -7,9 +7,9 @@ import PartnerNavbar from '@/src/app/components/PartnerNavbar';
 import { getOrgDetails } from '@/src/lib/organizations';
 
 export default async function Partner() {
-  const user = await currentUser();
+  const { userId, sessionId, orgId } = auth();
 
-  if (!user) {
+  if (!userId) {
     redirect('/sign-in');
   }
 
@@ -63,25 +63,21 @@ export default async function Partner() {
             <CardHeader className="border-b border-primary border-opacity-10 pb-4">
               <div className="flex justify-between items-center">
                 <h1 className="heading-voyager text-2xl md:text-3xl text-primary">
-                  Welcome,{' '}
-                  {user.firstName || user.username || 'Partner'}
+                  Welcome, Partner
                 </h1>
                 <div className="text-right">
                   <p className="text-textLight opacity-80">
                     {orgDetails?.name || 'Partner Organization'}
                   </p>
-                  <p className="text-primary text-sm">
-                    {user.organizationMemberships[0]?.role ||
-                      'Member'}
-                  </p>
+                  <p className="text-primary text-sm">Member</p>
                 </div>
               </div>
             </CardHeader>
             <CardBody>
               <p className="text-textLight opacity-80 mb-6">
-                This is your organization&#39;s Voyager portal. From
-                here you can manage your immersive projects and access
-                your white-label resources.
+                This is your organization's Voyager portal. From here
+                you can manage your immersive projects and access your
+                white-label resources.
               </p>
 
               {/* Partner content - customize as needed */}
