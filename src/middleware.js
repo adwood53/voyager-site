@@ -1,12 +1,18 @@
-import { clerkMiddleware } from '@clerk/nextjs/server';
+// src/middleware.js
+import { authMiddleware } from '@clerk/nextjs';
 
-export default clerkMiddleware();
+export default authMiddleware({
+  publicRoutes: [
+    '/',
+    '/blog(.*)',
+    '/sign-in(.*)',
+    '/api/webhook(.*)',
+    '/studio(.*)',
+  ],
+  // Enable organization features
+  tokenVerificationClaims: ['org_id', 'org_role', 'org_slug'],
+});
 
 export const config = {
-  matcher: [
-    // Skip Next.js internals and all static files, unless found in search params
-    '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
-    // Always run for API routes
-    '/(api|trpc)(.*)',
-  ],
+  matcher: ['/((?!_next|public|favicon.ico|assets).*)'],
 };
