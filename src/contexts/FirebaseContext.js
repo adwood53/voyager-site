@@ -10,7 +10,7 @@ import { useUser, useOrganization } from '@clerk/nextjs';
 import {
   getUserByClerkId,
   getOrganizationByClerkId,
-} from '@/lib/firestore';
+} from '@/src/lib/firestore';
 
 // Create context
 const FirebaseContext = createContext(null);

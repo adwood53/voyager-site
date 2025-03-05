@@ -5,7 +5,7 @@ import {
   createOrganization,
   updateOrganization,
   getOrganizationByClerkId,
-} from '@/lib/firestore';
+} from '@/src/lib/firestore';
 
 export async function POST(req) {
   // Get the signature and timestamp from the headers
