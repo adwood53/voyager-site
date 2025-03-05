@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { Button, Link, Card, CardBody } from '@heroui/react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import Image from 'next/image';
@@ -104,6 +104,22 @@ export default function NewsCarousel({
     fetchPosts();
   }, [categoryId, limit]);
 
+  // Memoize the nextSlide function
+  const nextSlide = useCallback(() => {
+    if (posts.length > 0) {
+      setCurrentSlide((prev) => (prev + 1) % posts.length);
+    }
+  }, [posts.length]);
+
+  // Memoize the prevSlide function for consistency
+  const prevSlide = useCallback(() => {
+    if (posts.length > 0) {
+      setCurrentSlide(
+        (prev) => (prev - 1 + posts.length) % posts.length
+      );
+    }
+  }, [posts.length]);
+
   // Reset autoplay countdown when slide changes
   useEffect(() => {
     if (autoplay && posts.length > 0) {
@@ -113,7 +129,7 @@ export default function NewsCarousel({
       }, 5000); // 5 seconds per slide
     }
     return () => clearTimeout(timeoutRef.current);
-  }, [currentSlide, autoplay, posts.length]);
+  }, [currentSlide, autoplay, posts.length, nextSlide]);
 
   // Pause autoplay when user interacts with carousel
   const pauseAutoplay = () => {
@@ -123,20 +139,6 @@ export default function NewsCarousel({
     timeoutRef.current = setTimeout(() => {
       setAutoplay(true);
     }, 10000);
-  };
-
-  const nextSlide = () => {
-    if (posts.length > 0) {
-      setCurrentSlide((prev) => (prev + 1) % posts.length);
-    }
-  };
-
-  const prevSlide = () => {
-    if (posts.length > 0) {
-      setCurrentSlide(
-        (prev) => (prev - 1 + posts.length) % posts.length
-      );
-    }
   };
 
   const goToSlide = (index) => {
