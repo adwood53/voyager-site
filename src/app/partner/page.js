@@ -79,9 +79,9 @@ export default async function Partner() {
             </CardHeader>
             <CardBody>
               <p className="text-textLight opacity-80 mb-6">
-                This is your organization's Voyager portal. From here
-                you can manage your immersive projects and access your
-                white-label resources.
+                This is your organization&#39;s Voyager portal. From
+                here you can manage your immersive projects and access
+                your white-label resources.
               </p>
 
               {/* Partner content - customize as needed */}
