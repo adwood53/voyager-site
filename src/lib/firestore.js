@@ -27,6 +27,7 @@ export async function getOrganizationByClerkId(clerkOrgId) {
       collection(db, 'organizations'),
       where('clerkOrgId', '==', clerkOrgId)
     );
+
     const querySnapshot = await getDocs(q);
 
     if (querySnapshot.empty) {
@@ -88,6 +89,8 @@ export async function createOrganization(orgData) {
       borderColor: orgData.borderColor || '#E2E8F0',
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp(),
+      // Add this field for admin tracking
+      adminIds: [],
     };
 
     await setDoc(orgRef, finalOrgData);
@@ -101,7 +104,12 @@ export async function createOrganization(orgData) {
       });
     }
 
-    return orgRef.id;
+    return {
+      id: orgRef.id,
+      ...finalOrgData,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
   } catch (error) {
     console.error('Error creating organization:', error);
     throw error;
@@ -128,11 +136,14 @@ export async function updateOrganization(orgId, orgData) {
     // Preserve existing data that's not being updated
     const currentData = orgDoc.data();
 
-    // Update existing organization
-    await updateDoc(orgRef, {
+    // Update timestamp
+    const updateData = {
       ...orgData,
       updatedAt: serverTimestamp(),
-    });
+    };
+
+    // Update existing organization
+    await updateDoc(orgRef, updateData);
 
     console.log(`Organization updated: ${orgId}`);
 
@@ -144,7 +155,13 @@ export async function updateOrganization(orgId, orgData) {
       });
     }
 
-    return orgId;
+    // Return the updated object with the id
+    return {
+      id: orgId,
+      ...currentData,
+      ...orgData,
+      updatedAt: new Date().toISOString(),
+    };
   } catch (error) {
     console.error('Error updating organization:', error);
     throw error;
@@ -230,10 +247,14 @@ export async function createOrUpdateUser(userData) {
     if (existingUser) {
       // Update existing user
       const userRef = doc(db, 'users', existingUser.id);
-      await updateDoc(userRef, {
+
+      // Add updated timestamp
+      const updateData = {
         ...userData,
         updatedAt: serverTimestamp(),
-      });
+      };
+
+      await updateDoc(userRef, updateData);
       console.log(`User updated: ${existingUser.id}`);
 
       // Log analytics event if available
@@ -244,15 +265,26 @@ export async function createOrUpdateUser(userData) {
         });
       }
 
-      return existingUser.id;
+      // Return the updated user
+      return {
+        id: existingUser.id,
+        ...existingUser,
+        ...userData,
+        updatedAt: new Date().toISOString(),
+      };
     } else {
       // Create new user
       const userRef = doc(collection(db, 'users'));
-      await setDoc(userRef, {
+
+      // Add timestamps
+      const newUserData = {
         ...userData,
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
-      });
+        organizationIds: userData.organizationIds || {},
+      };
+
+      await setDoc(userRef, newUserData);
       console.log(`User created: ${userRef.id}`);
 
       // Log analytics event if available
@@ -263,7 +295,13 @@ export async function createOrUpdateUser(userData) {
         });
       }
 
-      return userRef.id;
+      // Return the new user
+      return {
+        id: userRef.id,
+        ...newUserData,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
     }
   } catch (error) {
     console.error('Error creating/updating user:', error);
@@ -278,7 +316,7 @@ export async function getUsersByOrganization(orgId) {
 
     const q = query(
       collection(db, 'users'),
-      where('organizationId', '==', orgId)
+      where('organizationIds.' + orgId, '==', true)
     );
     const querySnapshot = await getDocs(q);
 

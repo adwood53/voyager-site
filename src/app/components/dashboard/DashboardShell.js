@@ -1,3 +1,4 @@
+// src/app/components/dashboard/DashboardShell.js
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -25,20 +26,15 @@ const DASHBOARD_ROUTES = {
   MERCHANDISE: 'merchandise',
 };
 
-export default function DashboardShell({ children }) {
+export default function DashboardShell() {
   const router = useRouter();
   const pathname = usePathname();
-  const { user, isSignedIn, isLoaded: clerkLoaded } = useUser();
-  const {
-    organization: clerkOrg,
-    membership,
-    isLoaded: clerkOrgLoaded,
-  } = useOrganization();
-
+  const { user, isSignedIn, isLoaded } = useUser();
+  const { organization, membership } = useOrganization();
   const {
     organization: firestoreOrg,
-    loading: firestoreLoading,
-    error: firestoreError,
+    loading,
+    error,
   } = useFirebase();
 
   // State for profile panel visibility
@@ -49,17 +45,26 @@ export default function DashboardShell({ children }) {
     DASHBOARD_ROUTES.HOME
   );
 
-  // Check if user is admin based ONLY on Clerk (not dependent on Firestore)
+  // Check if user is admin based on Clerk membership
   const isAdmin =
-    membership?.role === 'admin' || membership?.role === 'owner';
+    membership?.role === 'admin' ||
+    membership?.role === 'org:admin' ||
+    membership?.role === 'owner';
 
-  // Determine if we are waiting for authentication
-  const waitingForAuth = !clerkLoaded;
+  // Debug admin status
+  useEffect(() => {
+    console.log('Admin detection:', {
+      membershipRole: membership?.role,
+      isAdmin,
+      orgId: organization?.id,
+      firestoreOrgId: firestoreOrg?.id,
+    });
+  }, [membership, isAdmin, organization, firestoreOrg]);
 
-  // Get organization branding - fallback to defaults if Firestore has errors
+  // Get organization branding
   const brandColors = {
-    primary: firestoreOrg?.primaryColor || '#2563EB',
-    secondary: firestoreOrg?.secondaryColor || '#10B981',
+    primary: firestoreOrg?.primaryColor || '#E79023',
+    secondary: firestoreOrg?.secondaryColor || '#a6620c',
     accent: firestoreOrg?.accentColor || '#7C3AED',
     text: firestoreOrg?.textColor || '#1F2937',
     background: firestoreOrg?.bgColor || '#F9FAFB',
@@ -69,13 +74,19 @@ export default function DashboardShell({ children }) {
 
   // Redirect if not signed in
   useEffect(() => {
-    if (clerkLoaded && !isSignedIn) {
+    if (isLoaded && !isSignedIn) {
       router.push('/sign-in');
     }
-  }, [clerkLoaded, isSignedIn, router]);
+  }, [isLoaded, isSignedIn, router]);
 
   // Handle navigation changes
   const handleNavigate = (routeKey) => {
+    // If trying to access admin route but not admin, don't allow
+    if (routeKey === DASHBOARD_ROUTES.ADMIN && !isAdmin) {
+      console.warn('Non-admin attempted to access admin panel');
+      return;
+    }
+
     setActivePanel(routeKey);
 
     // Close profile panel when changing routes
@@ -89,19 +100,40 @@ export default function DashboardShell({ children }) {
     setProfileExpanded(!profileExpanded);
   };
 
-  // If still waiting for Clerk auth, show loading screen
-  if (waitingForAuth) {
+  // If still loading, show loading screen
+  if (!isLoaded || loading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-50">
         <div className="text-center">
           <div
             className="w-16 h-16 border-4 border-t-transparent rounded-full animate-spin mx-auto mb-4"
             style={{
-              borderColor: '#2563EB',
+              borderColor: brandColors.primary,
               borderTopColor: 'transparent',
             }}
           />
-          <p className="text-gray-600">Authenticating...</p>
+          <p className="text-gray-600">Loading dashboard...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error message if there was a loading error
+  if (error) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gray-50">
+        <div className="text-center max-w-md p-6 bg-white rounded-lg shadow-md">
+          <div className="text-red-500 text-5xl mb-4">⚠️</div>
+          <h2 className="text-xl font-semibold text-gray-800 mb-4">
+            Error Loading Dashboard
+          </h2>
+          <p className="text-gray-600 mb-6">{error}</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+          >
+            Refresh Page
+          </button>
         </div>
       </div>
     );
@@ -123,6 +155,7 @@ export default function DashboardShell({ children }) {
   const renderPanel = () => {
     switch (activePanel) {
       case DASHBOARD_ROUTES.ADMIN:
+        // Only show admin panel if user is admin
         return isAdmin ? <AdminDashboard /> : <HomePanel />;
       case DASHBOARD_ROUTES.SETTINGS:
         return <SettingsPanel isAdmin={isAdmin} />;
@@ -137,46 +170,14 @@ export default function DashboardShell({ children }) {
     }
   };
 
-  // Show error notification if there's a Firestore error but continue with the app
-  const firestoreErrorDisplay = firestoreError ? (
-    <div className="fixed bottom-4 right-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded z-50 max-w-md shadow-lg">
-      <div className="flex items-center">
-        <div className="py-1 mr-2">
-          <svg
-            className="h-6 w-6 text-red-500"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-            />
-          </svg>
-        </div>
-        <div>
-          <p className="font-bold">Data Sync Error</p>
-          <p className="text-sm">
-            Some features may be limited due to a connection error.
-            Using default settings.
-          </p>
-        </div>
-      </div>
-    </div>
-  ) : null;
-
   return (
     <div
       className="dashboard-shell flex flex-col h-screen overflow-hidden bg-gray-50"
       style={brandingStyles}
     >
-      {firestoreErrorDisplay}
-
       {/* Title Bar with organization and Voyager logos */}
       <TitleBar
-        organization={firestoreOrg || clerkOrg}
+        organization={firestoreOrg || organization}
         toggleProfilePanel={toggleProfilePanel}
       />
 
@@ -200,7 +201,7 @@ export default function DashboardShell({ children }) {
           expanded={profileExpanded}
           onToggle={toggleProfilePanel}
           user={user}
-          organization={clerkOrg}
+          organization={organization}
           firestoreOrg={firestoreOrg}
         />
       </div>
@@ -208,23 +209,22 @@ export default function DashboardShell({ children }) {
   );
 }
 
-// Helper function to convert hex color to rgb format for CSS variables
+// Utility function to convert hex color to RGB
 function hexToRgb(hex) {
-  // Default if no hex provided
-  if (!hex) return '37, 99, 235';
+  if (!hex) return '37, 99, 235'; // Default blue if no hex
 
-  // Remove the # if present
+  // Remove # if present
   hex = hex.replace('#', '');
 
-  // Handle both 3 and 6 character hex codes
-  if (hex.length === 3) {
-    hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
-  }
-
-  // Convert to RGB
+  // Parse the hex values
   const r = parseInt(hex.substring(0, 2), 16);
   const g = parseInt(hex.substring(2, 4), 16);
   const b = parseInt(hex.substring(4, 6), 16);
+
+  // Check for valid values
+  if (isNaN(r) || isNaN(g) || isNaN(b)) {
+    return '37, 99, 235'; // Default blue if parsing fails
+  }
 
   return `${r}, ${g}, ${b}`;
 }

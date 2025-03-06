@@ -1,3 +1,4 @@
+// src/app/components/dashboard/panels/AdminDashboard.js
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -10,45 +11,104 @@ import {
   Tabs,
   Tab,
 } from '@heroui/react';
-import { useOrganization } from '@clerk/nextjs';
+import { useOrganization, useUser } from '@clerk/nextjs'; // Add useUser import
 import { useFirebase } from '@/src/contexts/FirebaseContext';
 import { updateOrganization } from '@/src/lib/firestore';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 export default function AdminDashboard() {
-  const { organization } = useOrganization();
+  const router = useRouter();
+  const { user: clerkUser } = useUser(); // Get the user from Clerk
+  const { organization, membership } = useOrganization();
   const {
     organization: firestoreOrg,
     loading,
-    error,
     reload,
   } = useFirebase();
   const [isSaving, setIsSaving] = useState(false);
   const [message, setMessage] = useState('');
 
+  // Verify admin status - fixed to use clerkUser instead of undefined user
+  const isAdmin = Boolean(
+    membership?.role === 'admin' ||
+      membership?.role === 'org:admin' ||
+      membership?.role === 'owner' ||
+      firestoreOrg?.adminIds?.includes(clerkUser?.id)
+  );
+
+  // Security - redirect non-admins
+  useEffect(() => {
+    // If clearly not an admin when data is loaded, redirect to home
+    if (membership && !isAdmin && !loading) {
+      console.log(
+        'Non-admin attempting to access admin dashboard, redirecting...'
+      );
+      router.push('/partner');
+    }
+  }, [isAdmin, membership, loading, router]);
+
   // Form state for organisation settings
   const [formData, setFormData] = useState({
-    primaryColor: '#E79023',
-    secondaryColor: '#a6620c',
-    textColor: '#333333',
-    bgColor: '#FFFFFF',
-    cardBgColor: '#F8F9FA',
-    borderColor: '#E2E8F0',
+    primaryColor: firestoreOrg?.primaryColor || '#2563EB',
+    secondaryColor: firestoreOrg?.secondaryColor || '#10B981',
+    textColor: firestoreOrg?.textColor || '#1F2937',
+    bgColor: firestoreOrg?.bgColor || '#F9FAFB',
+    cardBgColor: firestoreOrg?.cardBgColor || '#FFFFFF',
+    borderColor: firestoreOrg?.borderColor || '#E5E7EB',
   });
 
   // Update form data when Firestore org data loads
   useEffect(() => {
     if (firestoreOrg) {
       setFormData({
-        primaryColor: firestoreOrg.primaryColor || '#E79023',
-        secondaryColor: firestoreOrg.secondaryColor || '#a6620c',
-        textColor: firestoreOrg.textColor || '#333333',
-        bgColor: firestoreOrg.bgColor || '#FFFFFF',
-        cardBgColor: firestoreOrg.cardBgColor || '#F8F9FA',
-        borderColor: firestoreOrg.borderColor || '#E2E8F0',
+        primaryColor: firestoreOrg.primaryColor || '#2563EB',
+        secondaryColor: firestoreOrg.secondaryColor || '#10B981',
+        textColor: firestoreOrg.textColor || '#1F2937',
+        bgColor: firestoreOrg.bgColor || '#F9FAFB',
+        cardBgColor: firestoreOrg.cardBgColor || '#FFFFFF',
+        borderColor: firestoreOrg.borderColor || '#E5E7EB',
       });
     }
   }, [firestoreOrg]);
+
+  // If still loading, show loading state
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-full">
+        <div className="text-center">
+          <div className="w-12 h-12 border-4 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading admin dashboard...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // If not admin, show access denied
+  if (!isAdmin) {
+    return (
+      <div className="max-w-lg mx-auto mt-12 p-6 bg-red-50 rounded-lg border border-red-200 text-center">
+        <div className="text-red-500 text-4xl mb-4">⚠️</div>
+        <h2 className="text-2xl font-bold text-red-700 mb-4">
+          Access Denied
+        </h2>
+        <p className="text-gray-700 mb-4">
+          You do not have permission to access the admin dashboard.
+          Please contact your organization administrator.
+        </p>
+        <Button
+          color="primary"
+          onClick={() => router.push('/partner')}
+          style={{
+            backgroundColor: 'var(--primary-color, #2563EB)',
+            color: '#FFFFFF',
+          }}
+        >
+          Return to Dashboard
+        </Button>
+      </div>
+    );
+  }
 
   // Handle form field changes
   const handleChange = (e) => {
@@ -66,7 +126,7 @@ export default function AdminDashboard() {
     setMessage('');
 
     try {
-      if (firestoreOrg && !firestoreOrg.id?.startsWith('temp-')) {
+      if (firestoreOrg) {
         await updateOrganization(firestoreOrg.id, {
           ...formData,
           name: organization?.name || firestoreOrg.name,
@@ -82,11 +142,7 @@ export default function AdminDashboard() {
           window.location.reload();
         }, 1500);
       } else {
-        setMessage(
-          error
-            ? 'Error: Database connection issue. Settings will be applied temporarily.'
-            : 'Error: Organisation data not found'
-        );
+        setMessage('Error: Organisation data not found');
       }
     } catch (error) {
       console.error('Error updating organisation settings:', error);
@@ -128,39 +184,6 @@ export default function AdminDashboard() {
           Manage your organisation settings and configurations
         </p>
       </div>
-
-      {/* Database error notification if applicable */}
-      {error && (
-        <div className="mb-6 p-4 bg-yellow-50 border border-yellow-300 rounded-md">
-          <div className="flex">
-            <div className="flex-shrink-0">
-              <svg
-                className="h-5 w-5 text-yellow-400"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            </div>
-            <div className="ml-3">
-              <h3 className="text-sm font-medium text-yellow-800">
-                Database Connection Issue
-              </h3>
-              <div className="mt-2 text-sm text-yellow-700">
-                <p>
-                  There&#39;s an issue connecting to the database.
-                  Your changes will be applied locally but may not
-                  persist.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Quick stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
@@ -467,7 +490,6 @@ export default function AdminDashboard() {
                       </p>
                       <div className="flex gap-2">
                         <button
-                          type="button"
                           className="px-4 py-2 rounded-md text-white"
                           style={{
                             backgroundColor: formData.primaryColor,
@@ -476,7 +498,6 @@ export default function AdminDashboard() {
                           Primary Button
                         </button>
                         <button
-                          type="button"
                           className="px-4 py-2 rounded-md text-white"
                           style={{
                             backgroundColor: formData.secondaryColor,
@@ -492,11 +513,12 @@ export default function AdminDashboard() {
                 <div className="flex items-center justify-between">
                   <Button
                     type="submit"
-                    disabled={isSaving}
+                    color="primary"
                     style={{
                       backgroundColor: formData.primaryColor,
                       color: '#FFFFFF',
                     }}
+                    disabled={isSaving}
                   >
                     {isSaving
                       ? 'Saving...'
@@ -505,16 +527,17 @@ export default function AdminDashboard() {
 
                   <Button
                     type="button"
+                    color="default"
                     variant="flat"
                     className="text-gray-700"
                     onClick={() =>
                       setFormData({
-                        primaryColor: '#E79023',
-                        secondaryColor: '#a6620c',
-                        textColor: '#333333',
-                        bgColor: '#FFFFFF',
-                        cardBgColor: '#F8F9FA',
-                        borderColor: '#E2E8F0',
+                        primaryColor: '#E79023', // Default Voyager color
+                        secondaryColor: '#a6620c', // Default Voyager accent
+                        textColor: '#1F2937',
+                        bgColor: '#F9FAFB',
+                        cardBgColor: '#FFFFFF',
+                        borderColor: '#E5E7EB',
                       })
                     }
                   >
@@ -524,11 +547,7 @@ export default function AdminDashboard() {
 
                 {message && (
                   <div
-                    className={`mt-4 p-3 rounded-md ${
-                      message.includes('Error')
-                        ? 'bg-red-100 text-red-700'
-                        : 'bg-green-100 text-green-700'
-                    }`}
+                    className={`mt-4 p-3 rounded-md ${message.includes('Error') ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}`}
                   >
                     {message}
                   </div>

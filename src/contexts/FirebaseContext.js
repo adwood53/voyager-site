@@ -1,3 +1,4 @@
+// src/contexts/FirebaseContext.js
 'use client';
 
 import React, {
@@ -10,6 +11,8 @@ import { useUser, useOrganization } from '@clerk/nextjs';
 import {
   getUserByClerkId,
   getOrganizationByClerkId,
+  createOrUpdateUser,
+  createOrganization,
 } from '@/src/lib/firestore';
 
 // Create the context
@@ -20,6 +23,7 @@ export function FirebaseProvider({ children }) {
   const { user: clerkUser, isLoaded: isUserLoaded } = useUser();
   const { organization: clerkOrg, isLoaded: isOrgLoaded } =
     useOrganization();
+
   const [firestoreUser, setFirestoreUser] = useState(null);
   const [firestoreOrg, setFirestoreOrg] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -27,7 +31,7 @@ export function FirebaseProvider({ children }) {
 
   useEffect(() => {
     async function loadData() {
-      // Skip loading if user or org data is not fully loaded
+      // Skip loading if Clerk isn't ready yet
       if (!isUserLoaded || (clerkOrg && !isOrgLoaded)) {
         return;
       }
@@ -36,97 +40,116 @@ export function FirebaseProvider({ children }) {
       setError(null);
 
       try {
-        // Load user data if authenticated (with error handling)
+        // Load user data if authenticated
         if (clerkUser) {
           try {
-            const userData = await getUserByClerkId(clerkUser.id);
+            let userData = await getUserByClerkId(clerkUser.id);
+
+            // If user doesn't exist yet in Firestore, create them
+            if (!userData) {
+              console.log('Creating new user in Firestore...');
+              const primaryEmail =
+                clerkUser.emailAddresses.length > 0
+                  ? clerkUser.emailAddresses[0].emailAddress
+                  : '';
+
+              await createOrUpdateUser({
+                clerkId: clerkUser.id,
+                displayName:
+                  `${clerkUser.firstName || ''} ${clerkUser.lastName || ''}`.trim() ||
+                  'User',
+                email: primaryEmail,
+                avatar: clerkUser.imageUrl || '',
+                type: 'individual',
+                isReseller: false,
+              });
+
+              // Fetch the newly created user
+              userData = await getUserByClerkId(clerkUser.id);
+            }
+
             setFirestoreUser(userData);
           } catch (userError) {
-            console.warn('Error loading user data:', userError);
-            // Create fallback user data from Clerk
-            setFirestoreUser({
-              id: 'temp-' + clerkUser.id,
-              clerkId: clerkUser.id,
-              displayName:
-                `${clerkUser.firstName || ''} ${clerkUser.lastName || ''}`.trim() ||
-                'User',
-              email:
-                clerkUser.emailAddresses?.[0]?.emailAddress || '',
-              avatar: clerkUser.imageUrl || '',
-              type: 'individual',
-              isReseller: false,
-            });
+            console.error('Error fetching/creating user:', userError);
+            // Don't fail completely, still try to load org
           }
         } else {
           setFirestoreUser(null);
         }
 
-        // Load organization data if in org context (with error handling)
+        // Load organization data if in org context
         if (clerkOrg) {
           try {
-            const orgData = await getOrganizationByClerkId(
-              clerkOrg.id
-            );
+            let orgData = await getOrganizationByClerkId(clerkOrg.id);
 
-            // If we got data, use it
-            if (orgData) {
-              setFirestoreOrg(orgData);
-            }
-            // If no data found, create temporary organization data
-            else {
+            // If organization doesn't exist yet in Firestore, create temporary data
+            if (!orgData) {
               console.log(
                 'No organization found in Firestore, creating temporary data'
               );
-              setFirestoreOrg({
+
+              // Create temporary org data for UI (not saved to Firestore yet)
+              const tempOrgData = {
                 id: 'temp-' + clerkOrg.id,
                 clerkOrgId: clerkOrg.id,
-                name: clerkOrg.name || 'Your Organization',
+                name: clerkOrg.name,
                 slug: clerkOrg.slug || '',
                 logo: clerkOrg.imageUrl || '',
-                primaryColor: '#E79023',
-                secondaryColor: '#a6620c',
+                primaryColor: '#E79023', // Default Voyager primary
+                secondaryColor: '#a6620c', // Default Voyager accent
                 textColor: '#333333',
                 bgColor: '#FFFFFF',
                 cardBgColor: '#F8F9FA',
                 borderColor: '#E2E8F0',
-                members: [],
-              });
-            }
-          } catch (orgError) {
-            console.error(
-              'Error loading organization data:',
-              orgError
-            );
-            // Set the overall error state
-            setError(
-              orgError.message || 'Failed to load organization data'
-            );
+                isTemp: true, // Flag to indicate this is temporary
+              };
 
-            // Create fallback organization data
+              // Try to create the organization in Firestore
+              try {
+                await createOrganization({
+                  clerkOrgId: clerkOrg.id,
+                  name: clerkOrg.name,
+                  slug: clerkOrg.slug || '',
+                  logo: clerkOrg.imageUrl || '',
+                  primaryColor: '#E79023',
+                  secondaryColor: '#a6620c',
+                  textColor: '#333333',
+                  bgColor: '#FFFFFF',
+                  cardBgColor: '#F8F9FA',
+                  borderColor: '#E2E8F0',
+                });
+
+                // Fetch the newly created org
+                orgData = await getOrganizationByClerkId(clerkOrg.id);
+              } catch (createError) {
+                console.error(
+                  'Error creating organization:',
+                  createError
+                );
+                // Use the temporary data if creation fails
+                orgData = tempOrgData;
+              }
+            }
+
+            setFirestoreOrg(orgData);
+          } catch (orgError) {
+            console.error('Error fetching organization:', orgError);
+            // Set a default temporary organization
             setFirestoreOrg({
-              id: 'temp-' + clerkOrg.id,
-              clerkOrgId: clerkOrg.id,
-              name: clerkOrg.name || 'Your Organization',
-              slug: clerkOrg.slug || '',
-              logo: clerkOrg.imageUrl || '',
+              id: 'temp-org',
+              name: clerkOrg?.name || 'Your Organization',
+              logo: clerkOrg?.imageUrl || '/Voyager-Box-Logo.png',
               primaryColor: '#E79023',
               secondaryColor: '#a6620c',
-              textColor: '#333333',
-              bgColor: '#FFFFFF',
-              cardBgColor: '#F8F9FA',
-              borderColor: '#E2E8F0',
-              members: [],
+              isTemp: true,
             });
           }
         } else {
           setFirestoreOrg(null);
         }
-      } catch (generalError) {
-        console.error(
-          'General error loading Firestore data:',
-          generalError
-        );
-        setError(generalError.message || 'Failed to load data');
+      } catch (err) {
+        console.error('Error loading Firestore data:', err);
+        setError(err.message || 'Failed to load data');
       } finally {
         setLoading(false);
       }
@@ -142,10 +165,12 @@ export function FirebaseProvider({ children }) {
     loading,
     error,
     reload: () => {
+      // Function to manually reload data
       setLoading(true);
-      // Force error state to null to trigger a new load
-      setError(null);
-      // The useEffect will handle the actual data loading
+      // Set a small delay to ensure the state updates properly
+      setTimeout(() => {
+        // The useEffect will handle the actual data loading
+      }, 10);
     },
   };
 
