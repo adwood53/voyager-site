@@ -24,7 +24,6 @@ export default function Home() {
         <NewsCarousel />
         <ContactSection />
         <Footer />
-        <EasterEgg />
       </div>
     </main>
   );
