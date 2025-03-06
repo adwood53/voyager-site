@@ -113,7 +113,7 @@ function NavItem({ id, label, icon, active, onClick, customStyle }) {
         {/* Active indicator */}
         {active && (
           <motion.div
-            className="absolute left-0 top-0 bottom-0 w-1 rounded-r-full"
+            className="absolute -left-2 top-0 bottom-0 w-1 h-full rounded-r-full"
             style={{
               backgroundColor: 'var(--primary-color, #2563EB)',
             }}

@@ -20,6 +20,7 @@ export default function AdminDashboard() {
   const {
     organization: firestoreOrg,
     loading,
+    error,
     reload,
   } = useFirebase();
   const [isSaving, setIsSaving] = useState(false);
@@ -27,24 +28,24 @@ export default function AdminDashboard() {
 
   // Form state for organisation settings
   const [formData, setFormData] = useState({
-    primaryColor: firestoreOrg?.primaryColor || '#2563EB',
-    secondaryColor: firestoreOrg?.secondaryColor || '#10B981',
-    textColor: firestoreOrg?.textColor || '#1F2937',
-    bgColor: firestoreOrg?.bgColor || '#F9FAFB',
-    cardBgColor: firestoreOrg?.cardBgColor || '#FFFFFF',
-    borderColor: firestoreOrg?.borderColor || '#E5E7EB',
+    primaryColor: '#E79023',
+    secondaryColor: '#a6620c',
+    textColor: '#333333',
+    bgColor: '#FFFFFF',
+    cardBgColor: '#F8F9FA',
+    borderColor: '#E2E8F0',
   });
 
   // Update form data when Firestore org data loads
   useEffect(() => {
     if (firestoreOrg) {
       setFormData({
-        primaryColor: firestoreOrg.primaryColor || '#2563EB',
-        secondaryColor: firestoreOrg.secondaryColor || '#10B981',
-        textColor: firestoreOrg.textColor || '#1F2937',
-        bgColor: firestoreOrg.bgColor || '#F9FAFB',
-        cardBgColor: firestoreOrg.cardBgColor || '#FFFFFF',
-        borderColor: firestoreOrg.borderColor || '#E5E7EB',
+        primaryColor: firestoreOrg.primaryColor || '#E79023',
+        secondaryColor: firestoreOrg.secondaryColor || '#a6620c',
+        textColor: firestoreOrg.textColor || '#333333',
+        bgColor: firestoreOrg.bgColor || '#FFFFFF',
+        cardBgColor: firestoreOrg.cardBgColor || '#F8F9FA',
+        borderColor: firestoreOrg.borderColor || '#E2E8F0',
       });
     }
   }, [firestoreOrg]);
@@ -65,7 +66,7 @@ export default function AdminDashboard() {
     setMessage('');
 
     try {
-      if (firestoreOrg) {
+      if (firestoreOrg && !firestoreOrg.id?.startsWith('temp-')) {
         await updateOrganization(firestoreOrg.id, {
           ...formData,
           name: organization?.name || firestoreOrg.name,
@@ -81,7 +82,11 @@ export default function AdminDashboard() {
           window.location.reload();
         }, 1500);
       } else {
-        setMessage('Error: Organisation data not found');
+        setMessage(
+          error
+            ? 'Error: Database connection issue. Settings will be applied temporarily.'
+            : 'Error: Organisation data not found'
+        );
       }
     } catch (error) {
       console.error('Error updating organisation settings:', error);
@@ -123,6 +128,39 @@ export default function AdminDashboard() {
           Manage your organisation settings and configurations
         </p>
       </div>
+
+      {/* Database error notification if applicable */}
+      {error && (
+        <div className="mb-6 p-4 bg-yellow-50 border border-yellow-300 rounded-md">
+          <div className="flex">
+            <div className="flex-shrink-0">
+              <svg
+                className="h-5 w-5 text-yellow-400"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </div>
+            <div className="ml-3">
+              <h3 className="text-sm font-medium text-yellow-800">
+                Database Connection Issue
+              </h3>
+              <div className="mt-2 text-sm text-yellow-700">
+                <p>
+                  There&#39;s an issue connecting to the database.
+                  Your changes will be applied locally but may not
+                  persist.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Quick stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
@@ -429,6 +467,7 @@ export default function AdminDashboard() {
                       </p>
                       <div className="flex gap-2">
                         <button
+                          type="button"
                           className="px-4 py-2 rounded-md text-white"
                           style={{
                             backgroundColor: formData.primaryColor,
@@ -437,6 +476,7 @@ export default function AdminDashboard() {
                           Primary Button
                         </button>
                         <button
+                          type="button"
                           className="px-4 py-2 rounded-md text-white"
                           style={{
                             backgroundColor: formData.secondaryColor,
@@ -452,12 +492,11 @@ export default function AdminDashboard() {
                 <div className="flex items-center justify-between">
                   <Button
                     type="submit"
-                    color="primary"
+                    disabled={isSaving}
                     style={{
                       backgroundColor: formData.primaryColor,
                       color: '#FFFFFF',
                     }}
-                    disabled={isSaving}
                   >
                     {isSaving
                       ? 'Saving...'
@@ -466,17 +505,16 @@ export default function AdminDashboard() {
 
                   <Button
                     type="button"
-                    color="default"
                     variant="flat"
                     className="text-gray-700"
                     onClick={() =>
                       setFormData({
-                        primaryColor: '#2563EB',
-                        secondaryColor: '#10B981',
-                        textColor: '#1F2937',
-                        bgColor: '#F9FAFB',
-                        cardBgColor: '#FFFFFF',
-                        borderColor: '#E5E7EB',
+                        primaryColor: '#E79023',
+                        secondaryColor: '#a6620c',
+                        textColor: '#333333',
+                        bgColor: '#FFFFFF',
+                        cardBgColor: '#F8F9FA',
+                        borderColor: '#E2E8F0',
                       })
                     }
                   >
@@ -486,7 +524,11 @@ export default function AdminDashboard() {
 
                 {message && (
                   <div
-                    className={`mt-4 p-3 rounded-md ${message.includes('Error') ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}`}
+                    className={`mt-4 p-3 rounded-md ${
+                      message.includes('Error')
+                        ? 'bg-red-100 text-red-700'
+                        : 'bg-green-100 text-green-700'
+                    }`}
                   >
                     {message}
                   </div>

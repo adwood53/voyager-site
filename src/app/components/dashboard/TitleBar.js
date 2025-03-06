@@ -82,37 +82,6 @@ export default function TitleBar({
             </div>
           </motion.div>
         </div>
-
-        {/* Right side - Profile actions */}
-        <div className="flex items-center space-x-3">
-          <Button
-            isIconOnly
-            variant="light"
-            aria-label="Notifications"
-            className="text-gray-500 hover:text-gray-800"
-          >
-            <span className="text-xl">🔔</span>
-          </Button>
-
-          <Button
-            isIconOnly
-            variant="light"
-            aria-label="Help"
-            className="text-gray-500 hover:text-gray-800"
-          >
-            <span className="text-xl">❓</span>
-          </Button>
-
-          <Button
-            isIconOnly
-            variant="light"
-            aria-label="Profile"
-            className="text-gray-500 hover:text-gray-800"
-            onClick={toggleProfilePanel}
-          >
-            <span className="text-xl">👤</span>
-          </Button>
-        </div>
       </div>
     </div>
   );

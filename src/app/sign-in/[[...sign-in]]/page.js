@@ -57,7 +57,7 @@ export default function SignInPage() {
                 Partner Sign In
               </h1>
               <p className="text-textLight opacity-70">
-                Sign in to access your organization&#39;s resources
+                Sign in to access your organisation&#39;s dashboard.
               </p>
             </div>
 

@@ -132,27 +132,6 @@ export default function ProfilePanel({
                   {/* Actions */}
                   <div className="mt-4 space-y-2">
                     <Button
-                      className="w-full justify-start"
-                      variant="light"
-                      onClick={() =>
-                        window.open('/user-profile', '_blank')
-                      }
-                    >
-                      👤 My Profile
-                    </Button>
-                    <Button
-                      className="w-full justify-start"
-                      variant="light"
-                      onClick={() =>
-                        window.open(
-                          '/user-profile/settings',
-                          '_blank'
-                        )
-                      }
-                    >
-                      ⚙️ Account Settings
-                    </Button>
-                    <Button
                       className="w-full justify-start text-red-600"
                       variant="light"
                       onClick={handleSignOut}
