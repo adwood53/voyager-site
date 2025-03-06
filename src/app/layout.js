@@ -77,8 +77,12 @@ export const metadata = {
   },
   // Icons/favicons, etc.
   icons: {
-    icon: '/favicon.ico',
-    apple: '/favicon.ico',
+    icon: [
+      { url: './favicon.ico', sizes: '128x128' }, // Updated path
+    ],
+    apple: [
+      { url: './favicon.ico' }, // Updated path
+    ],
   },
 };
 
@@ -92,6 +96,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en-GB">
       <head>
+        <link rel="shortcut icon" href="/favicon.ico" />
         <Script
           strategy="afterInteractive"
           src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"
