@@ -1,0 +1,66 @@
+:root {
+  /* Default partner dashboard colors */
+  --partner-primary: #E79023;
+  --partner-secondary: #a6620c;
+  --partner-text: #333333;
+  --partner-bg: #FFFFFF;
+  --partner-card-bg: #F8F9FA;
+  --partner-border: #E2E8F0;
+  --partner-gradient: linear-gradient(315deg, var(--partner-primary) 0%, var(--partner-secondary) 100%);
+}
+
+/* Partner dashboard base styles */
+.partner-dashboard {
+  background-color: var(--partner-bg);
+  color: var(--partner-text);
+  min-height: 100vh;
+}
+
+.partner-header {
+  background-color: var(--partner-card-bg);
+  border-bottom: 1px solid var(--partner-border);
+}
+
+.partner-navbar {
+  background-color: var(--partner-card-bg);
+  border-bottom: 1px solid var(--partner-border);
+}
+
+.partner-card {
+  background-color: var(--partner-card-bg);
+  border: 1px solid var(--partner-border);
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.partner-button-primary {
+  background-color: var(--partner-primary);
+  color: white;
+}
+
+.partner-button-primary:hover {
+  background-color: var(--partner-secondary);
+}
+
+.partner-button-secondary {
+  border: 1px solid var(--partner-primary);
+  color: var(--partner-primary);
+}
+
+.partner-button-secondary:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.partner-link {
+  color: var(--partner-primary);
+}
+
+.partner-link:hover {
+  color: var(--partner-secondary);
+}
+
+.partner-active-nav {
+  color: var(--partner-primary);
+}
+
+/* Add any other partner dashboard styles here */

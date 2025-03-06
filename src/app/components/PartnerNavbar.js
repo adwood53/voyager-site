@@ -1,27 +1,46 @@
+// src/app/components/PartnerNavbar.js - updated with theme classes
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useUser, UserButton, useOrganization } from '@clerk/nextjs';
 import { Link } from '@heroui/react';
 import { motion } from 'framer-motion';
+import { usePathname } from 'next/navigation';
 import CustomOrganizationSwitcher from './OrganizationSwitcher';
 
 export default function PartnerNavbar({ orgDetails }) {
-  const [activePage, setActivePage] = useState('dashboard');
+  const pathname = usePathname();
+  const [activePage, setActivePage] = useState('');
   const { user } = useUser();
-  const { organization } = useOrganization();
+  const { organization, membership } = useOrganization();
 
   // Get organization details from provided prop or Clerk
   const orgName =
     orgDetails?.name || organization?.name || 'Partner Portal';
 
-  // Handle navigation item click
-  const handleNavClick = (pageName) => {
-    setActivePage(pageName);
-  };
+  // Check if user is an admin or owner
+  const isAdmin =
+    membership?.role === 'admin' || membership?.role === 'owner';
+
+  // Set active page based on current URL path
+  useEffect(() => {
+    if (pathname === '/partner') {
+      setActivePage('dashboard');
+    } else if (pathname.includes('/partner/projects')) {
+      setActivePage('projects');
+    } else if (pathname.includes('/partner/resources')) {
+      setActivePage('resources');
+    } else if (pathname.includes('/partner/calculator')) {
+      setActivePage('calculator');
+    } else if (pathname.includes('/partner/team')) {
+      setActivePage('team');
+    } else if (pathname.includes('/partner/settings')) {
+      setActivePage('settings');
+    }
+  }, [pathname]);
 
   return (
-    <nav className="bg-darkBg border-b border-primary border-opacity-10">
+    <nav className="partner-navbar">
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center h-16">
           {/* Navigation links */}
@@ -29,38 +48,41 @@ export default function PartnerNavbar({ orgDetails }) {
             <NavLink
               href="/partner"
               active={activePage === 'dashboard'}
-              onClick={() => handleNavClick('dashboard')}
             >
               Dashboard
             </NavLink>
             <NavLink
               href="/partner/projects"
               active={activePage === 'projects'}
-              onClick={() => handleNavClick('projects')}
             >
               Projects
             </NavLink>
             <NavLink
               href="/partner/resources"
               active={activePage === 'resources'}
-              onClick={() => handleNavClick('resources')}
             >
               Resources
             </NavLink>
             <NavLink
               href="/partner/calculator"
               active={activePage === 'calculator'}
-              onClick={() => handleNavClick('calculator')}
             >
               Calculator
             </NavLink>
             <NavLink
               href="/partner/team"
               active={activePage === 'team'}
-              onClick={() => handleNavClick('team')}
             >
               Team
             </NavLink>
+            {isAdmin && (
+              <NavLink
+                href="/partner/settings"
+                active={activePage === 'settings'}
+              >
+                Settings
+              </NavLink>
+            )}
           </div>
 
           {/* User menu and organization switcher */}
@@ -74,7 +96,7 @@ export default function PartnerNavbar({ orgDetails }) {
 
             {/* User info and button */}
             <div className="flex items-center">
-              <div className="mr-2 text-textLight opacity-70 text-sm hidden sm:block">
+              <div className="mr-2 text-sm hidden sm:block">
                 {user?.firstName || 'User'}
               </div>
               <UserButton
@@ -82,11 +104,10 @@ export default function PartnerNavbar({ orgDetails }) {
                 appearance={{
                   elements: {
                     userButtonAvatarBox: 'w-9 h-9',
-                    userButtonPopoverCard:
-                      'bg-darkCard border border-primary border-opacity-20',
-                    userButtonPopoverText: 'text-textLight',
+                    userButtonPopoverCard: 'partner-card',
+                    userButtonPopoverText: '',
                     userButtonPopoverActionButton:
-                      'text-textLight hover:bg-primary hover:bg-opacity-20',
+                      'hover:bg-gray-100',
                   },
                 }}
               />
@@ -97,7 +118,7 @@ export default function PartnerNavbar({ orgDetails }) {
 
       {/* Mobile organization switcher - shown only on small screens */}
       {user && organization && (
-        <div className="sm:hidden p-2 border-t border-primary border-opacity-10">
+        <div className="sm:hidden p-2 border-t partner-border">
           <CustomOrganizationSwitcher />
         </div>
       )}
@@ -106,43 +127,22 @@ export default function PartnerNavbar({ orgDetails }) {
 }
 
 // Helper component for navigation links
-function NavLink({ href, active, onClick, children }) {
+function NavLink({ href, active, children }) {
   return (
     <Link
       href={href}
-      onClick={onClick}
-      className="relative px-3 py-2 rounded-md text-sm font-medium whitespace-nowrap"
+      className={`relative px-3 py-2 rounded-md text-sm font-medium whitespace-nowrap ${active ? 'partner-active-nav' : ''}`}
     >
-      <span
-        className={`${active ? 'text-primary' : 'text-textLight hover:text-primary'} transition-colors`}
-      >
-        {children}
-      </span>
+      {children}
       {active && (
         <motion.div
           layoutId="activeIndicator"
-          className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary rounded-full"
+          className="absolute bottom-0 left-0 right-0 h-0.5 bg-partner-primary rounded-full"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.3 }}
         />
       )}
     </Link>
-  );
-}
-
-// Add a style to hide scrollbars but keep functionality
-function styles() {
-  return (
-    <style jsx global>{`
-      .hide-scrollbar {
-        -ms-overflow-style: none; /* IE and Edge */
-        scrollbar-width: none; /* Firefox */
-      }
-
-      .hide-scrollbar::-webkit-scrollbar {
-        display: none; /* Chrome, Safari, Opera */
-      }
-    `}</style>
   );
 }

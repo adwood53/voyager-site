@@ -1,3 +1,4 @@
+// src/app/api/webhooks/clerk/route.js
 import { Webhook } from 'svix';
 import { headers } from 'next/headers';
 import {
@@ -49,11 +50,16 @@ export async function POST(req) {
     const { id, first_name, last_name, email_addresses, image_url } =
       evt.data;
 
+    const primaryEmail =
+      email_addresses?.length > 0
+        ? email_addresses[0].email_address
+        : '';
+
     const userData = {
       clerkId: id,
       displayName:
         `${first_name || ''} ${last_name || ''}`.trim() || 'User',
-      email: email_addresses?.[0]?.email_address || '',
+      email: primaryEmail,
       avatar: image_url || '',
       type: 'individual', // Default to individual user
       isReseller: false, // Default to not a reseller
@@ -67,15 +73,19 @@ export async function POST(req) {
 
   // Organization events
   if (eventType === 'organization.created') {
-    const { id, name, slug } = evt.data;
+    const { id, name, slug, image_url } = evt.data;
 
     await createOrganization({
       clerkOrgId: id,
       name,
-      subdomain: slug,
-      logo: '', // Default empty, Clerk will store the actual logo
-      primaryColor: '#E79023', // Voyager primary
-      secondaryColor: '#a6620c', // Voyager accent
+      slug: slug || '',
+      logo: image_url || '',
+      primaryColor: '#E79023', // Default Voyager primary
+      secondaryColor: '#a6620c', // Default Voyager accent
+      textColor: '#333333',
+      bgColor: '#FFFFFF',
+      cardBgColor: '#F8F9FA',
+      borderColor: '#E2E8F0',
       members: [],
     });
 
@@ -85,21 +95,50 @@ export async function POST(req) {
   }
 
   if (eventType === 'organization.updated') {
-    const { id, name, slug } = evt.data;
+    const { id, name, slug, image_url } = evt.data;
 
     // Get Firebase organization ID from Clerk ID
     const existingOrg = await getOrganizationByClerkId(id);
 
-    if (!existingOrg) {
-      return new Response('Organization not found', { status: 404 });
+    if (existingOrg) {
+      await updateOrganization(existingOrg.id, {
+        name,
+        slug: slug || existingOrg.slug || '',
+        logo: image_url || existingOrg.logo || '',
+        // Preserve existing styles
+        primaryColor: existingOrg.primaryColor || '#E79023',
+        secondaryColor: existingOrg.secondaryColor || '#a6620c',
+        textColor: existingOrg.textColor || '#333333',
+        bgColor: existingOrg.bgColor || '#FFFFFF',
+        cardBgColor: existingOrg.cardBgColor || '#F8F9FA',
+        borderColor: existingOrg.borderColor || '#E2E8F0',
+      });
+    } else {
+      // Create the organization if it doesn't exist
+      await createOrganization({
+        clerkOrgId: id,
+        name,
+        slug: slug || '',
+        logo: image_url || '',
+        primaryColor: '#E79023',
+        secondaryColor: '#a6620c',
+        textColor: '#333333',
+        bgColor: '#FFFFFF',
+        cardBgColor: '#F8F9FA',
+        borderColor: '#E2E8F0',
+        members: [],
+      });
     }
 
-    await updateOrganization(existingOrg.id, {
-      name,
-      subdomain: slug,
-    });
-
     return new Response('Organization updated in Firebase', {
+      status: 200,
+    });
+  }
+
+  // Handle organization membership events
+  if (eventType === 'organizationMembership.created') {
+    // You could track members here if needed
+    return new Response('Organization membership event received', {
       status: 200,
     });
   }

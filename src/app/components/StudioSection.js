@@ -99,7 +99,7 @@ export default function StudioSection() {
               viewport={{ once: true }}
             >
               <p className="text-xl text-textLight opacity-80 mb-6">
-                A pro-grade, fully equipped greenscreen studio—
+                A pro-grade, fully equipped greenscreen studio,
                 <strong className="text-primary">
                   not available to the public, only for our
                   white-label partners.

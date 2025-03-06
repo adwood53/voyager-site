@@ -136,7 +136,7 @@ export default function PlansSection() {
                   <li className="flex items-start">
                     <span className="mr-2 text-confirm">✓</span>
                     <span>
-                      Experience Builder—create custom interactive
+                      Experience Builder, create custom interactive
                       experiences
                     </span>
                   </li>
@@ -144,6 +144,12 @@ export default function PlansSection() {
                     <span className="mr-2 text-confirm">✓</span>
                     <span>
                       Full access to our immersive tech team
+                    </span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="mr-2 text-confirm">✓</span>
+                    <span>
+                      Minium 20% Commission on all products sold.
                     </span>
                   </li>
                 </ul>
@@ -154,7 +160,7 @@ export default function PlansSection() {
                   href="#signup"
                   className="w-full bg-primary text-textLight font-medium hover:bg-accent transition-all duration-300 rounded-md py-3 hover:shadow-glow"
                 >
-                  Sign Up for Free →
+                  Apply now for Free →
                 </Button>
               </CardFooter>
             </Card>

@@ -1,61 +1,22 @@
 // src/lib/firestore.js
-
-import { initializeApp, getApps } from 'firebase/app';
-import { getFirestore } from 'firebase/firestore';
+import { db } from './firebase';
 import {
   collection,
-  query,
-  where,
-  getDocs,
   doc,
   getDoc,
+  getDocs,
+  setDoc,
+  updateDoc,
+  query,
+  where,
+  serverTimestamp,
+  Timestamp,
+  deleteDoc,
 } from 'firebase/firestore';
+import { logEvent } from 'firebase/analytics';
+import { analytics } from './firebase';
 
-// Initialize Firebase if not already initialized
-const app =
-  getApps().length === 0
-    ? initializeApp({
-        apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-        authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-        projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-        appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
-      })
-    : getApps()[0];
-
-const db = getFirestore(app);
-
-// Get organization by subdomain
-export async function getOrganizationBySubdomain(subdomain) {
-  try {
-    // Normalize subdomain to lowercase and trim
-    const normalizedSubdomain = subdomain.toLowerCase().trim();
-
-    const q = query(
-      collection(db, 'organizations'),
-      where('subdomain', '==', normalizedSubdomain)
-    );
-    const querySnapshot = await getDocs(q);
-
-    if (querySnapshot.empty) {
-      console.log(
-        `No organization found with subdomain: ${normalizedSubdomain}`
-      );
-      return null;
-    }
-
-    const doc = querySnapshot.docs[0];
-    console.log(
-      `Found organization with subdomain ${normalizedSubdomain}: ${doc.id}`
-    );
-    return {
-      id: doc.id,
-      ...doc.data(),
-    };
-  } catch (error) {
-    console.error('Error fetching organization by subdomain:', error);
-    throw error;
-  }
-}
+// ===== ORGANIZATION FUNCTIONS =====
 
 // Get organization by Clerk ID
 export async function getOrganizationByClerkId(clerkOrgId) {
@@ -75,16 +36,157 @@ export async function getOrganizationByClerkId(clerkOrgId) {
       return null;
     }
 
-    const doc = querySnapshot.docs[0];
+    const orgDoc = querySnapshot.docs[0];
+
+    // Log analytics event if available
+    if (analytics) {
+      logEvent(analytics, 'organization_loaded', {
+        organization_id: orgDoc.id,
+        clerk_org_id: clerkOrgId,
+      });
+    }
+
     return {
-      id: doc.id,
-      ...doc.data(),
+      id: orgDoc.id,
+      ...orgDoc.data(),
     };
   } catch (error) {
     console.error('Error fetching organization by Clerk ID:', error);
     throw error;
   }
 }
+
+// Create organization
+export async function createOrganization(orgData) {
+  try {
+    if (!orgData.clerkOrgId) {
+      throw new Error('Clerk organization ID is required');
+    }
+
+    // Check if organization already exists (prevents duplication)
+    const existingOrg = await getOrganizationByClerkId(
+      orgData.clerkOrgId
+    );
+
+    if (existingOrg) {
+      // Organization already exists, update it instead
+      return await updateOrganization(existingOrg.id, orgData);
+    }
+
+    // Create new organization
+    const orgRef = doc(collection(db, 'organizations'));
+
+    // Set defaults for critical values if not provided
+    const finalOrgData = {
+      ...orgData,
+      // Default brand colors if not specified
+      primaryColor: orgData.primaryColor || '#E79023',
+      secondaryColor: orgData.secondaryColor || '#a6620c',
+      textColor: orgData.textColor || '#333333',
+      bgColor: orgData.bgColor || '#FFFFFF',
+      cardBgColor: orgData.cardBgColor || '#F8F9FA',
+      borderColor: orgData.borderColor || '#E2E8F0',
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+    };
+
+    await setDoc(orgRef, finalOrgData);
+    console.log(`Organization created: ${orgRef.id}`);
+
+    // Log analytics event if available
+    if (analytics) {
+      logEvent(analytics, 'organization_created', {
+        organization_id: orgRef.id,
+        clerk_org_id: orgData.clerkOrgId,
+      });
+    }
+
+    return orgRef.id;
+  } catch (error) {
+    console.error('Error creating organization:', error);
+    throw error;
+  }
+}
+
+// Update organization
+export async function updateOrganization(orgId, orgData) {
+  try {
+    if (!orgId) {
+      throw new Error('Organization ID is required for update');
+    }
+
+    // Get the organization reference
+    const orgRef = doc(db, 'organizations', orgId);
+
+    // Check if the organization exists
+    const orgDoc = await getDoc(orgRef);
+
+    if (!orgDoc.exists()) {
+      throw new Error(`Organization with ID ${orgId} does not exist`);
+    }
+
+    // Preserve existing data that's not being updated
+    const currentData = orgDoc.data();
+
+    // Update existing organization
+    await updateDoc(orgRef, {
+      ...orgData,
+      updatedAt: serverTimestamp(),
+    });
+
+    console.log(`Organization updated: ${orgId}`);
+
+    // Log analytics event if available
+    if (analytics) {
+      logEvent(analytics, 'organization_updated', {
+        organization_id: orgId,
+        clerk_org_id: orgData.clerkOrgId || currentData.clerkOrgId,
+      });
+    }
+
+    return orgId;
+  } catch (error) {
+    console.error('Error updating organization:', error);
+    throw error;
+  }
+}
+
+// Delete organization
+export async function deleteOrganization(orgId) {
+  try {
+    if (!orgId) {
+      throw new Error('Organization ID is required for deletion');
+    }
+
+    // Get organization data before deletion for analytics
+    const orgRef = doc(db, 'organizations', orgId);
+    const orgDoc = await getDoc(orgRef);
+
+    if (!orgDoc.exists()) {
+      throw new Error(`Organization with ID ${orgId} does not exist`);
+    }
+
+    const orgData = orgDoc.data();
+
+    await deleteDoc(orgRef);
+    console.log(`Organization deleted: ${orgId}`);
+
+    // Log analytics event if available
+    if (analytics) {
+      logEvent(analytics, 'organization_deleted', {
+        organization_id: orgId,
+        clerk_org_id: orgData.clerkOrgId,
+      });
+    }
+
+    return true;
+  } catch (error) {
+    console.error('Error deleting organization:', error);
+    throw error;
+  }
+}
+
+// ===== USER FUNCTIONS =====
 
 // Get user by Clerk ID
 export async function getUserByClerkId(clerkUserId) {
@@ -102,10 +204,10 @@ export async function getUserByClerkId(clerkUserId) {
       return null;
     }
 
-    const doc = querySnapshot.docs[0];
+    const userDoc = querySnapshot.docs[0];
     return {
-      id: doc.id,
-      ...doc.data(),
+      id: userDoc.id,
+      ...userDoc.data(),
     };
   } catch (error) {
     console.error('Error fetching user by Clerk ID:', error);
@@ -115,26 +217,141 @@ export async function getUserByClerkId(clerkUserId) {
 
 // Create or update user
 export async function createOrUpdateUser(userData) {
-  // Implementation for creating or updating a user
-  // This is a placeholder - you would need to implement this based on your requirements
-  console.log('Creating/updating user:', userData);
-  return true;
+  try {
+    if (!userData.clerkId) {
+      throw new Error(
+        'Clerk ID is required for user creation/update'
+      );
+    }
+
+    // Check if user exists
+    const existingUser = await getUserByClerkId(userData.clerkId);
+
+    if (existingUser) {
+      // Update existing user
+      const userRef = doc(db, 'users', existingUser.id);
+      await updateDoc(userRef, {
+        ...userData,
+        updatedAt: serverTimestamp(),
+      });
+      console.log(`User updated: ${existingUser.id}`);
+
+      // Log analytics event if available
+      if (analytics) {
+        logEvent(analytics, 'user_updated', {
+          user_id: existingUser.id,
+          clerk_user_id: userData.clerkId,
+        });
+      }
+
+      return existingUser.id;
+    } else {
+      // Create new user
+      const userRef = doc(collection(db, 'users'));
+      await setDoc(userRef, {
+        ...userData,
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
+      });
+      console.log(`User created: ${userRef.id}`);
+
+      // Log analytics event if available
+      if (analytics) {
+        logEvent(analytics, 'user_created', {
+          user_id: userRef.id,
+          clerk_user_id: userData.clerkId,
+        });
+      }
+
+      return userRef.id;
+    }
+  } catch (error) {
+    console.error('Error creating/updating user:', error);
+    throw error;
+  }
 }
 
-// Create organization
-export async function createOrganization(orgData) {
-  // Implementation for creating an organization
-  // This is a placeholder - you would need to implement this based on your requirements
-  console.log('Creating organization:', orgData);
-  return true;
+// Get users by organization
+export async function getUsersByOrganization(orgId) {
+  try {
+    if (!orgId) return [];
+
+    const q = query(
+      collection(db, 'users'),
+      where('organizationId', '==', orgId)
+    );
+    const querySnapshot = await getDocs(q);
+
+    return querySnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+  } catch (error) {
+    console.error('Error fetching users by organization:', error);
+    throw error;
+  }
 }
 
-// Update organization
-export async function updateOrganization(orgId, orgData) {
-  // Implementation for updating an organization
-  // This is a placeholder - you would need to implement this based on your requirements
-  console.log(`Updating organization ${orgId}:`, orgData);
-  return true;
+// ===== UTILITY FUNCTIONS =====
+
+// Test Firestore connection
+export async function testFirestoreConnection() {
+  try {
+    const testCollection = collection(db, 'test');
+    const testDoc = doc(testCollection, 'test-connection');
+    await setDoc(testDoc, {
+      timestamp: serverTimestamp(),
+      message: 'Firestore connection successful',
+      testDate: new Date().toISOString(),
+    });
+
+    // Read back to verify
+    const docSnap = await getDoc(testDoc);
+    if (docSnap.exists()) {
+      console.log('Firestore connection test successful');
+
+      // Log analytics event if available
+      if (analytics) {
+        logEvent(analytics, 'test_connection_successful');
+      }
+
+      return true;
+    } else {
+      throw new Error(
+        'Test document was written but could not be read back'
+      );
+    }
+  } catch (error) {
+    console.error('Firestore connection test failed:', error);
+
+    // Log analytics event if available
+    if (analytics) {
+      logEvent(analytics, 'test_connection_failed', {
+        error: error.message,
+      });
+    }
+
+    throw error;
+  }
+}
+
+// Convert Firestore timestamp to Date object
+export function timestampToDate(timestamp) {
+  if (!timestamp) return null;
+
+  if (timestamp instanceof Timestamp) {
+    return timestamp.toDate();
+  }
+
+  return new Date(timestamp);
+}
+
+// Convert Date to ISO string for consistent formatting
+export function formatDate(date) {
+  if (!date) return '';
+
+  const d = date instanceof Date ? date : new Date(date);
+  return d.toISOString();
 }
 
 export { db };

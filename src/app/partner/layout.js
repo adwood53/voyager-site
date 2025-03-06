@@ -1,9 +1,9 @@
-// src/app/partner/layout.js
+// src/app/partner/layout.js - updated
 import { ClerkProvider } from '@clerk/nextjs';
 import { FirebaseProvider } from '@/src/contexts/FirebaseContext';
 import { Quicksand } from 'next/font/google';
 import localFont from 'next/font/local';
-import DynamicBranding from '@/src/app/components/DynamicBranding';
+import ThemeManager from '@/src/app/components/ThemeManager';
 
 // Define fonts (same as root layout)
 const quicksand = Quicksand({
@@ -39,11 +39,13 @@ export default function PartnerLayout({ children }) {
   return (
     <ClerkProvider>
       <FirebaseProvider>
-        <DynamicBranding>
-          <div className={`${quicksand.variable} ${labora.variable}`}>
+        <ThemeManager>
+          <div
+            className={`${quicksand.variable} ${labora.variable} partner-dashboard`}
+          >
             {children}
           </div>
-        </DynamicBranding>
+        </ThemeManager>
       </FirebaseProvider>
     </ClerkProvider>
   );
