@@ -52,7 +52,7 @@ export default function MobileWarning() {
         </ModalHeader>
         <ModalBody className="bg-white text-gray-600">
           <p>
-            This dashboard is optimized for desktop use. While you can
+            This dashboard is optimised for desktop use. While you can
             continue on mobile, some features may not work as expected
             or may be difficult to navigate.
           </p>

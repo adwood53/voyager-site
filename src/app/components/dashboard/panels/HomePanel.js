@@ -132,10 +132,11 @@ export default function HomePanel() {
             <p className="mt-4">
               Need help? Contact your Voyager representative at{' '}
               <a
-                href="mailto:support@voyagervrlab.co.uk"
+                href="mailto:conect@voyagervrlab.co.uk"
                 className="text-blue-600 hover:underline"
+                style={{ color: 'var(--primary-color, #2563EB)' }}
               >
-                support@voyagervrlab.co.uk
+                connect@voyagervrlab.co.uk
               </a>
               .
             </p>

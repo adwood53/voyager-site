@@ -10,7 +10,7 @@ export default function TitleBar({
   toggleProfilePanel,
 }) {
   // Get organization details (fallback to defaults if not available)
-  const orgName = organization?.name || 'Partner Organization';
+  const orgName = organization?.name || 'Partner Organisation';
 
   // Use the correct logo path from the organization data
   const [orgLogo, setOrgLogo] = useState('/Voyager-Box-Logo.png');

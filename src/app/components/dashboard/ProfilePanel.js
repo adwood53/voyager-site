@@ -20,7 +20,7 @@ export default function ProfilePanel({
   const orgName =
     firestoreOrg?.name ||
     organization?.name ||
-    'Partner Organization';
+    'Partner Organisation';
   const orgLogo =
     firestoreOrg?.logo ||
     organization?.imageUrl ||

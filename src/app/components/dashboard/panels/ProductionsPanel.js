@@ -33,7 +33,7 @@ export default function ProductionsPanel() {
               Online Booking Coming Soon
             </h3>
             <p className="text-blue-700">
-              We&#39;re currently developing online booking
+              We&apos;re currently developing online booking
               functionality. In the meantime, please contact us
               directly to schedule studio time.
             </p>

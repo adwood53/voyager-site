@@ -4,8 +4,8 @@
 import { useState, useEffect } from 'react';
 
 /**
- * Gets organization branding properties based on organization data
- * @param {object|null} organization - The organization data
+ * Gets organisation branding properties based on organisation data
+ * @param {object|null} organization - The organisation data
  * @returns {object} Branding properties with defaults if none provided
  */
 function getOrganizationBranding(organization) {
@@ -30,8 +30,8 @@ function getOrganizationBranding(organization) {
 }
 
 /**
- * Generate CSS variables based on organization branding
- * @param {object} branding - Organization branding properties
+ * Generate CSS variables based on organisation branding
+ * @param {object} branding - Organisation branding properties
  * @returns {string} CSS variables string that can be injected into a style tag
  */
 function generateBrandingCSS(branding) {
@@ -46,7 +46,7 @@ function generateBrandingCSS(branding) {
 }
 
 /**
- * Component that applies organization-specific branding via CSS variables
+ * Component that applies organisation-specific branding via CSS variables
  * This should be placed in the layout file of areas that need dynamic branding
  */
 export default function DynamicBranding({ organization, children }) {
