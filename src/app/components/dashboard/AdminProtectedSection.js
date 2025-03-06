@@ -12,7 +12,7 @@ export default function AdminProtectedSection() {
         return auth.has({ role: ['admin', 'org:admin', 'owner'] });
       }}
       fallback={
-        <div>You don't have permission to view this content</div>
+        <div>You don&#39;t have permission to view this content</div>
       }
     >
       <AdminDashboard />
