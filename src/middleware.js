@@ -1,7 +1,7 @@
 // src/middleware.js
-import { authMiddleware } from '@clerk/nextjs';
+import { clerkMiddleware } from '@clerk/nextjs/server';
 
-export default authMiddleware({
+export default clerkMiddleware({
   publicRoutes: [
     '/',
     '/blog(.*)',
@@ -9,10 +9,9 @@ export default authMiddleware({
     '/api/webhook(.*)',
     '/studio(.*)',
   ],
-  // Enable organization features
-  tokenVerificationClaims: ['org_id', 'org_role', 'org_slug'],
 });
 
+// Use the simplest pattern that's officially supported
 export const config = {
-  matcher: ['/((?!_next|public|favicon.ico|assets).*)'],
+  matcher: ['/((?!.*\\..*|_next).*)', '/', '/(api|trpc)(.*)'],
 };

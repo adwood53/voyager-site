@@ -3,6 +3,13 @@
 const nextConfig = {
   images: {
     domains: ['cdn.sanity.io', 'firebasestorage.googleapis.com'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'cdn.sanity.io',
+        pathname: '/**',
+      },
+    ],
   },
   // Enable custom domains/subdomains
   async rewrites() {
@@ -47,3 +54,5 @@ const nextConfig = {
     ];
   },
 };
+
+export default nextConfig;

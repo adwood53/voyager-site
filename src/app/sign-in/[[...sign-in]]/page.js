@@ -1,6 +1,8 @@
+// src/app/sign-in/[[...sign-in]]/page.js
 'use client';
 
 import { SignIn } from '@clerk/nextjs';
+import { ClerkProvider } from '@clerk/nextjs';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
@@ -124,62 +126,64 @@ export default function SignInPage() {
   }
 
   return (
-    <div className="min-h-screen bg-darkBg flex flex-col">
-      {/* Header with branding (org-specific if available) */}
-      <header className="w-full p-6 bg-darkCard border-b border-primary border-opacity-20">
-        <div className="container mx-auto flex justify-center items-center">
-          <div className="flex items-center">
-            <Image
-              src={logo}
-              alt={brandName}
-              width={50}
-              height={50}
-              className="rounded-md"
-            />
-            <span className="text-primary font-heading ml-2 text-xl">
-              {brandName}
-            </span>
+    <ClerkProvider>
+      <div className="min-h-screen bg-darkBg flex flex-col">
+        {/* Header with branding (org-specific if available) */}
+        <header className="w-full p-6 bg-darkCard border-b border-primary border-opacity-20">
+          <div className="container mx-auto flex justify-center items-center">
+            <div className="flex items-center">
+              <Image
+                src={logo}
+                alt={brandName}
+                width={50}
+                height={50}
+                className="rounded-md"
+              />
+              <span className="text-primary font-heading ml-2 text-xl">
+                {brandName}
+              </span>
+            </div>
           </div>
-        </div>
-      </header>
+        </header>
 
-      {/* Main content */}
-      <div className="flex-1 flex items-center justify-center p-6">
-        <div className="w-full max-w-md">
-          <div className="text-center mb-8">
-            <h1 className="text-3xl font-heading text-primary mb-2">
-              Partner Sign In
-            </h1>
-            <p className="text-textLight opacity-70">
-              Sign in to access your organization&#39;s resources
-            </p>
-            {orgDetails && (
-              <p className="mt-2 text-primary text-sm">
-                {orgDetails.name} Portal
+        {/* Main content */}
+        <div className="flex-1 flex items-center justify-center p-6">
+          <div className="w-full max-w-md">
+            <div className="text-center mb-8">
+              <h1 className="text-3xl font-heading text-primary mb-2">
+                Partner Sign In
+              </h1>
+              <p className="text-textLight opacity-70">
+                Sign in to access your organization&#39;s resources
               </p>
-            )}
-          </div>
+              {orgDetails && (
+                <p className="mt-2 text-primary text-sm">
+                  {orgDetails.name} Portal
+                </p>
+              )}
+            </div>
 
-          <div className="bg-darkCard border border-primary border-opacity-20 rounded-lg p-1">
-            <SignIn
-              appearance={appearance}
-              redirectUrl={
-                orgDetails
-                  ? `/partner?org=${orgDetails.id}`
-                  : '/partner'
-              }
-            />
+            <div className="bg-darkCard border border-primary border-opacity-20 rounded-lg p-1">
+              <SignIn
+                appearance={appearance}
+                redirectUrl={
+                  orgDetails
+                    ? `/partner?org=${orgDetails.id}`
+                    : '/partner'
+                }
+              />
+            </div>
           </div>
         </div>
+
+        {/* Footer */}
+        <footer className="w-full p-4 bg-darkCard border-t border-primary border-opacity-20">
+          <div className="container mx-auto text-center text-textLight opacity-60 text-sm">
+            &copy; {new Date().getFullYear()} Voyager. All rights
+            reserved.
+          </div>
+        </footer>
       </div>
-
-      {/* Footer */}
-      <footer className="w-full p-4 bg-darkCard border-t border-primary border-opacity-20">
-        <div className="container mx-auto text-center text-textLight opacity-60 text-sm">
-          &copy; {new Date().getFullYear()} Voyager. All rights
-          reserved.
-        </div>
-      </footer>
-    </div>
+    </ClerkProvider>
   );
 }
