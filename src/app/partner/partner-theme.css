@@ -1,3 +1,4 @@
+/* src/app/partner/partner-theme.css - updated */
 :root {
   /* Default partner dashboard colors */
   --partner-primary: #E79023;
@@ -7,6 +8,17 @@
   --partner-card-bg: #F8F9FA;
   --partner-border: #E2E8F0;
   --partner-gradient: linear-gradient(315deg, var(--partner-primary) 0%, var(--partner-secondary) 100%);
+}
+
+/* Specific overrides for partner theme */
+[data-theme="partner"] {
+  background-color: var(--partner-bg, #FFFFFF) !important;
+  color: var(--partner-text, #333333) !important;
+}
+
+[data-theme="partner"] .partner-dashboard {
+  background-color: var(--partner-bg, #FFFFFF);
+  color: var(--partner-text, #333333);
 }
 
 /* Partner dashboard base styles */
@@ -62,5 +74,3 @@
 .partner-active-nav {
   color: var(--partner-primary);
 }
-
-/* Add any other partner dashboard styles here */

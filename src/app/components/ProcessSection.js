@@ -26,7 +26,8 @@ export default function ProcessSection() {
     {
       number: 1,
       title: 'Sign Up',
-      description: 'Join as a free or pro white-label partner.',
+      description:
+        'Join as a reseller for free or as a pro white-label partner.',
       delay: 0,
       icon: '📝',
     },
@@ -34,7 +35,7 @@ export default function ProcessSection() {
       number: 2,
       title: 'Get Your Sales Toolkit',
       description:
-        'We send you everything you need to start selling immersive.',
+        'Access your sales toolkit and resources in your partner dashboard',
       delay: 0.2,
       icon: '🧰',
     },
@@ -42,7 +43,7 @@ export default function ProcessSection() {
       number: 3,
       title: 'Sell Bigger Projects',
       description:
-        'Offer your clients AR, VR, virtual events, and more—without lifting a finger.',
+        'Offer your clients AR, VR, virtual events, and more, without lifting a finger.',
       delay: 0.4,
       icon: '💰',
     },

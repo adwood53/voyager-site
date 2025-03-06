@@ -1,51 +1,52 @@
-'use client';
 // src/app/components/ThemeManager.js
+'use client';
 
 import { useEffect } from 'react';
 import { useFirebase } from '@/src/contexts/FirebaseContext';
-import '../partner/partner-theme.css'; // Import the base CSS
 
 export default function ThemeManager({ children }) {
   const { organization, loading } = useFirebase();
 
   useEffect(() => {
-    // Only update theme if organization data is available
-    if (!loading && organization) {
-      // Apply theme variables from Firestore
+    const partnerDashboard = document.querySelector(
+      '.partner-dashboard'
+    );
+
+    if (!loading && organization && partnerDashboard) {
       const theme = {
-        primary: organization.primaryColor || '#E79023',
-        secondary: organization.secondaryColor || '#a6620c',
-        text: organization.textColor || '#333333',
-        bg: organization.bgColor || '#FFFFFF',
-        cardBg: organization.cardBgColor || '#F8F9FA',
-        border: organization.borderColor || '#E2E8F0',
+        primaryColor: organization.primaryColor || '#E79023',
+        secondaryColor: organization.secondaryColor || '#a6620c',
+        textColor: organization.textColor || '#333333',
+        backgroundColor: organization.bgColor || '#FFFFFF',
+        cardBgColor: organization.cardBgColor || '#F8F9FA',
+        borderColor: organization.borderColor || '#E2E8F0',
       };
 
-      // Set CSS variables
-      document.documentElement.style.setProperty(
-        '--partner-primary',
-        theme.primary
+      // Apply CSS variables directly to the partner dashboard
+      partnerDashboard.style.setProperty(
+        '--primary-color',
+        theme.primaryColor
       );
-      document.documentElement.style.setProperty(
-        '--partner-secondary',
-        theme.secondary
+      partnerDashboard.style.setProperty(
+        '--secondary-color',
+        theme.secondaryColor
       );
-      document.documentElement.style.setProperty(
-        '--partner-text',
-        theme.text
+      partnerDashboard.style.setProperty(
+        '--text-color',
+        theme.textColor
       );
-      document.documentElement.style.setProperty(
-        '--partner-bg',
-        theme.bg
+      partnerDashboard.style.setProperty(
+        '--card-bg-color',
+        theme.cardBgColor
       );
-      document.documentElement.style.setProperty(
-        '--partner-card-bg',
-        theme.cardBg
+      partnerDashboard.style.setProperty(
+        '--border-color',
+        theme.borderColor
       );
-      document.documentElement.style.setProperty(
-        '--partner-border',
-        theme.border
-      );
+
+      // Set background and text color
+      partnerDashboard.style.backgroundColor = theme.backgroundColor;
+      partnerDashboard.style.color = theme.textColor;
     }
   }, [organization, loading]);
 

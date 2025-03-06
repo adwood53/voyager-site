@@ -1,33 +1,8 @@
-// src/app/partner/layout.js - updated
+// src/app/partner/layout.js
 import { ClerkProvider } from '@clerk/nextjs';
 import { FirebaseProvider } from '@/src/contexts/FirebaseContext';
-import { Quicksand } from 'next/font/google';
-import localFont from 'next/font/local';
 import ThemeManager from '@/src/app/components/ThemeManager';
-
-// Define fonts (same as root layout)
-const quicksand = Quicksand({
-  subsets: ['latin'],
-  variable: '--font-body',
-  display: 'swap',
-});
-
-const labora = localFont({
-  src: [
-    {
-      path: '../../../public/fonts/Labora-Regular.otf',
-      weight: '400',
-      style: 'normal',
-    },
-    {
-      path: '../../../public/fonts/Labora-Italic.otf',
-      weight: '400',
-      style: 'italic',
-    },
-  ],
-  variable: '--font-heading',
-  display: 'swap',
-});
+import './partner-layout.css';
 
 export const metadata = {
   title: 'Voyager Partner Portal',
@@ -40,11 +15,7 @@ export default function PartnerLayout({ children }) {
     <ClerkProvider>
       <FirebaseProvider>
         <ThemeManager>
-          <div
-            className={`${quicksand.variable} ${labora.variable} partner-dashboard`}
-          >
-            {children}
-          </div>
+          <div className="partner-dashboard">{children}</div>
         </ThemeManager>
       </FirebaseProvider>
     </ClerkProvider>

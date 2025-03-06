@@ -206,21 +206,11 @@ export default function PlansSection() {
                     <span className="mr-2 text-confirm">✓</span>
                     <div>
                       <span className="font-medium text-primary">
-                        Immersive Brand Package
-                      </span>
-                      <p className="text-sm text-textLight opacity-60">
-                        Your own branded immersive marketing materials
-                      </p>
-                    </div>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="mr-2 text-confirm">✓</span>
-                    <div>
-                      <span className="font-medium text-primary">
-                        50 Interactive Business Cards
+                        1 Interactive Business Card
                       </span>
                       <p className="text-sm text-textLight opacity-60">
                         Tap-to-access digital portfolio & contact info
+                        for your brand
                       </p>
                     </div>
                   </li>
@@ -228,11 +218,22 @@ export default function PlansSection() {
                     <span className="mr-2 text-confirm">✓</span>
                     <div>
                       <span className="font-medium text-primary">
-                        50 Interactive Posters
+                        5 Interactive Posters & 100 leaflets
                       </span>
                       <p className="text-sm text-textLight opacity-60">
-                        Clients scan to engage with your immersive
-                        work
+                        Clients scan to engage with your brands
+                        immersive work
+                      </p>
+                    </div>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="mr-2 text-confirm">✓</span>
+                    <div>
+                      <span className="font-medium text-primary">
+                        Branded Experience Portal
+                      </span>
+                      <p className="text-sm text-textLight opacity-60">
+                        Display your brand logo within our experiences
                       </p>
                     </div>
                   </li>

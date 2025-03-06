@@ -1,17 +1,9 @@
-// src/app/partner/settings/page.js - updated with better verification
+// src/app/partner/settings/page.js
 'use client';
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import {
-  Card,
-  CardBody,
-  CardHeader,
-  CardFooter,
-  Button,
-  Link,
-} from '@heroui/react';
 import { useUser, useOrganization } from '@clerk/nextjs';
 import PartnerNavbar from '@/src/app/components/PartnerNavbar';
 import { useFirebase } from '@/src/contexts/FirebaseContext';
@@ -27,20 +19,18 @@ export default function OrganizationSettings() {
   const { organization: firestoreOrg, loading } = useFirebase();
   const router = useRouter();
 
-  // Form state with default light theme colors
+  // Form state with more refined default colors
   const [formData, setFormData] = useState({
-    primaryColor: '#E79023',
-    secondaryColor: '#a6620c',
-    textColor: '#333333',
-    bgColor: '#FFFFFF',
-    cardBgColor: '#F8F9FA',
-    borderColor: '#E2E8F0',
+    primaryColor: '#2563EB', // Refined blue
+    secondaryColor: '#10B981', // Soft green
+    textColor: '#1F2937', // Dark gray
+    bgColor: '#F9FAFB', // Light gray background
+    cardBgColor: '#FFFFFF', // Pure white for cards
+    borderColor: '#E5E7EB', // Soft border color
   });
 
   const [isSaving, setIsSaving] = useState(false);
   const [saveMessage, setSaveMessage] = useState('');
-  const [firestoreStatus, setFirestoreStatus] = useState('checking');
-  const [testComplete, setTestComplete] = useState(false);
 
   // Redirect to sign-in if not authenticated
   useEffect(() => {
@@ -51,26 +41,17 @@ export default function OrganizationSettings() {
 
   // Populate form with existing data when available
   useEffect(() => {
-    if (!loading) {
-      if (firestoreOrg) {
-        setFormData({
-          primaryColor: firestoreOrg.primaryColor || '#E79023',
-          secondaryColor: firestoreOrg.secondaryColor || '#a6620c',
-          textColor: firestoreOrg.textColor || '#333333',
-          bgColor: firestoreOrg.bgColor || '#FFFFFF',
-          cardBgColor: firestoreOrg.cardBgColor || '#F8F9FA',
-          borderColor: firestoreOrg.borderColor || '#E2E8F0',
-        });
-        setFirestoreStatus('connected');
-      } else if (clerkOrg) {
-        // No Firestore record yet but we have a Clerk org
-        setFirestoreStatus('not_found');
-      } else {
-        // No organization data at all
-        setFirestoreStatus('no_org');
-      }
+    if (!loading && firestoreOrg) {
+      setFormData({
+        primaryColor: firestoreOrg.primaryColor || '#2563EB',
+        secondaryColor: firestoreOrg.secondaryColor || '#10B981',
+        textColor: firestoreOrg.textColor || '#1F2937',
+        bgColor: firestoreOrg.bgColor || '#F9FAFB',
+        cardBgColor: firestoreOrg.cardBgColor || '#FFFFFF',
+        borderColor: firestoreOrg.borderColor || '#E5E7EB',
+      });
     }
-  }, [firestoreOrg, clerkOrg, loading]);
+  }, [firestoreOrg, loading]);
 
   // Check if user is an admin or owner
   const isAdmin =
@@ -83,49 +64,6 @@ export default function OrganizationSettings() {
       ...prev,
       [name]: value,
     }));
-  };
-
-  // Run a Firestore test
-  const testFirestore = async () => {
-    try {
-      setTestComplete(false);
-      setSaveMessage('Testing Firestore connection...');
-
-      // Create a test object
-      const testObj = {
-        testId: Date.now().toString(),
-        timestamp: new Date().toISOString(),
-      };
-
-      // Try to update (or create) the organization with this test field
-      if (firestoreOrg) {
-        await updateOrganization(firestoreOrg.id, {
-          ...firestoreOrg,
-          testField: testObj,
-        });
-      } else if (clerkOrg) {
-        // Create a new organization record
-        await createOrganization({
-          clerkOrgId: clerkOrg.id,
-          name: clerkOrg.name,
-          logo: clerkOrg.imageUrl || '',
-          testField: testObj,
-          primaryColor: '#E79023',
-          secondaryColor: '#a6620c',
-        });
-      } else {
-        throw new Error('No organization available for testing');
-      }
-
-      setSaveMessage(
-        'Firestore connection successful! Your settings can be saved.'
-      );
-      setTestComplete(true);
-    } catch (error) {
-      console.error('Firestore test failed:', error);
-      setSaveMessage(`Firestore test failed: ${error.message}`);
-      setTestComplete(true);
-    }
   };
 
   // Handle form submission
@@ -150,7 +88,6 @@ export default function OrganizationSettings() {
         // Update existing organization
         await updateOrganization(firestoreOrg.id, {
           ...formData,
-          // Keep other existing fields intact
           name: clerkOrg.name,
           clerkOrgId: clerkOrg.id,
           logo: clerkOrg.imageUrl || firestoreOrg.logo,
@@ -184,33 +121,9 @@ export default function OrganizationSettings() {
   // If still loading, show loading state
   if (!isLoaded || loading || !user) {
     return (
-      <div className="partner-dashboard flex flex-col items-center justify-center min-h-screen">
-        <div className="animate-pulse flex flex-col items-center">
-          <div
-            className="w-20 h-20 bg-opacity-20 rounded-full flex items-center justify-center mb-4"
-            style={{ backgroundColor: 'var(--partner-primary)' }}
-          >
-            <svg
-              className="w-10 h-10 animate-spin"
-              style={{ color: 'var(--partner-primary)' }}
-              fill="none"
-              viewBox="0 0 24 24"
-            >
-              <circle
-                className="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                strokeWidth="4"
-              ></circle>
-              <path
-                className="opacity-75"
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-              ></path>
-            </svg>
-          </div>
+      <div className="partner-dashboard flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <div className="animate-spin w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full mx-auto mb-4"></div>
           <p>Loading settings...</p>
         </div>
       </div>
@@ -221,488 +134,180 @@ export default function OrganizationSettings() {
   const orgName = clerkOrg?.name || 'Partner Organization';
   const orgLogo = clerkOrg?.imageUrl || '/Voyager-Box-Logo.png';
 
+  // Color input fields with labels and descriptions
+  const colorFields = [
+    {
+      key: 'primaryColor',
+      label: 'Primary Color',
+      description:
+        'Main brand color used for key elements and highlights',
+    },
+    {
+      key: 'secondaryColor',
+      label: 'Secondary Color',
+      description:
+        'Complementary color for accents and secondary actions',
+    },
+    {
+      key: 'textColor',
+      label: 'Text Color',
+      description: 'Default color for body text',
+    },
+    {
+      key: 'bgColor',
+      label: 'Background Color',
+      description: 'Main page background color',
+    },
+    {
+      key: 'cardBgColor',
+      label: 'Card Background',
+      description: 'Background color for cards and panels',
+    },
+    {
+      key: 'borderColor',
+      label: 'Border Color',
+      description: 'Color for borders and dividers',
+    },
+  ];
+
   return (
-    <div className="partner-dashboard flex flex-col min-h-screen">
-      {/* Organization branding header */}
-      <header className="partner-header p-4">
-        <div className="container mx-auto flex justify-between items-center">
-          {/* Organization logo */}
-          <div className="flex items-center">
+    <div className="partner-dashboard min-h-screen bg-gray-50">
+      {/* Main Container */}
+      <div className="container mx-auto px-4 py-8">
+        {/* Page Header */}
+        <div className="mb-8 flex justify-between items-center">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-800">
+              Organization Settings
+            </h1>
+            <p className="text-gray-500 mt-2">
+              Customize your organization's appearance
+            </p>
+          </div>
+          <div className="flex items-center space-x-4">
             <Image
               src={orgLogo}
-              alt={orgName}
-              width={40}
-              height={40}
-              className="rounded-md mr-3"
-            />
-            <span className="text-lg font-medium">{orgName}</span>
-          </div>
-
-          {/* Voyager logo */}
-          <div className="flex items-center">
-            <span className="opacity-70 mr-2 hidden sm:inline">
-              Powered by
-            </span>
-            <Image
-              src="/Voyager-Box-Logo.png"
-              alt="Voyager"
-              width={36}
-              height={36}
+              alt={`${orgName} Logo`}
+              width={50}
+              height={50}
               className="rounded-md"
             />
-            <span className="partner-link font-medium ml-2">
-              VOYAGER
-            </span>
+            <div>
+              <p className="font-semibold text-gray-700">{orgName}</p>
+              <p className="text-sm text-gray-500">
+                {isAdmin ? 'Admin' : 'Member'}
+              </p>
+            </div>
           </div>
         </div>
-      </header>
 
-      {/* Partner portal navigation */}
-      <PartnerNavbar orgDetails={clerkOrg} />
-
-      {/* Main content */}
-      <main className="flex-1 p-6">
-        <div className="container mx-auto">
-          <div className="partner-card w-full max-w-4xl mx-auto p-6">
-            <div className="border-b pb-4 mb-6">
-              <div className="flex justify-between items-center">
-                <h1 className="text-2xl md:text-3xl font-semibold">
-                  Organization Settings
-                </h1>
-                <div className="text-right">
-                  <p className="opacity-70 text-sm">
-                    Customize your organization appearance
-                  </p>
-                  <FirestoreTest />
-                  {!isAdmin && (
-                    <p className="text-red-500 text-sm mt-1">
-                      You need admin privileges to edit settings
-                    </p>
-                  )}
-                </div>
-              </div>
+        {/* Firestore Connection Test */}
+        <div className="mb-8">
+          <FirestoreTest />
+          {!isAdmin && (
+            <div className="mt-4 bg-yellow-50 border-l-4 border-yellow-400 p-4">
+              <p className="text-yellow-700">
+                You need admin privileges to edit organization
+                settings.
+              </p>
             </div>
+          )}
+        </div>
 
-            {/* Firestore Status */}
-            <div
-              className={`mb-6 p-4 rounded-md ${
-                firestoreStatus === 'connected'
-                  ? 'bg-green-50 text-green-700'
-                  : firestoreStatus === 'not_found'
-                    ? 'bg-yellow-50 text-yellow-700'
-                    : firestoreStatus === 'no_org'
-                      ? 'bg-red-50 text-red-700'
-                      : 'bg-blue-50 text-blue-700'
-              }`}
-            >
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="font-medium">
-                    {firestoreStatus === 'connected'
-                      ? 'Firestore Organization Record Found'
-                      : firestoreStatus === 'not_found'
-                        ? 'New Organization - No Firestore Record Yet'
-                        : firestoreStatus === 'no_org'
-                          ? 'No Organization Found'
-                          : 'Checking Firestore Status...'}
-                  </p>
-                  <p className="text-sm mt-1">
-                    {firestoreStatus === 'connected'
-                      ? 'Your settings are already saved in our database.'
-                      : firestoreStatus === 'not_found'
-                        ? "We'll create a new record when you save settings."
-                        : firestoreStatus === 'no_org'
-                          ? 'You need to create or join an organization.'
-                          : 'Please wait while we check your organization status...'}
-                  </p>
-                </div>
-                {isAdmin &&
-                  (firestoreStatus === 'connected' ||
-                    firestoreStatus === 'not_found') && (
-                    <Button
-                      onClick={testFirestore}
-                      className="partner-button-secondary px-4 py-2 rounded-md text-sm"
-                      disabled={isSaving || testComplete}
-                    >
-                      Test Connection
-                    </Button>
-                  )}
-              </div>
-            </div>
-
-            <form onSubmit={handleSubmit}>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                {/* Organization Logo (read-only) */}
-                <div>
-                  <label className="block mb-2 font-medium">
-                    Organization Logo
-                  </label>
-                  <div className="flex items-center gap-4">
-                    <div
-                      className="w-16 h-16 border rounded-md overflow-hidden flex items-center justify-center"
-                      style={{ borderColor: 'var(--partner-border)' }}
-                    >
-                      <Image
-                        src={orgLogo}
-                        alt={orgName}
-                        width={64}
-                        height={64}
-                        className="object-cover"
-                      />
-                    </div>
-                    <div className="opacity-70 text-sm">
-                      Logo is managed through your Clerk organization
-                      settings
-                    </div>
-                  </div>
-                </div>
-
-                {/* Organization Name (read-only) */}
-                <div>
-                  <label className="block mb-2 font-medium">
-                    Organization Name
-                  </label>
-                  <div
-                    className="w-full px-3 py-2 bg-opacity-10 rounded-md"
-                    style={{
-                      backgroundColor: 'var(--partner-border)',
-                    }}
-                  >
-                    {orgName}
-                  </div>
-                  <p className="opacity-70 text-xs mt-1">
-                    Name is managed through your Clerk organization
-                    settings
-                  </p>
-                </div>
-
-                {/* Basic Colors Group */}
-                <div className="md:col-span-2">
-                  <h2 className="text-lg font-medium mb-3">
-                    Brand Colors
-                  </h2>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    {/* Primary Color */}
-                    <div>
-                      <label className="block mb-2">
-                        Primary Color
-                      </label>
-                      <div className="flex items-center gap-2">
-                        <input
-                          type="color"
-                          name="primaryColor"
-                          value={formData.primaryColor}
-                          onChange={handleChange}
-                          className="h-10 w-10 rounded-md cursor-pointer border"
-                          style={{
-                            borderColor: 'var(--partner-border)',
-                          }}
-                          disabled={!isAdmin}
-                        />
-                        <input
-                          type="text"
-                          name="primaryColor"
-                          value={formData.primaryColor}
-                          onChange={handleChange}
-                          className="w-full px-3 py-2 rounded-md border focus:outline-none focus:ring-1"
-                          style={{
-                            borderColor: 'var(--partner-border)',
-                            backgroundColor: 'var(--partner-bg)',
-                            color: 'var(--partner-text)',
-                          }}
-                          placeholder="#E79023"
-                          disabled={!isAdmin}
-                        />
-                      </div>
-                    </div>
-
-                    {/* Secondary Color */}
-                    <div>
-                      <label className="block mb-2">
-                        Secondary Color
-                      </label>
-                      <div className="flex items-center gap-2">
-                        <input
-                          type="color"
-                          name="secondaryColor"
-                          value={formData.secondaryColor}
-                          onChange={handleChange}
-                          className="h-10 w-10 rounded-md cursor-pointer border"
-                          style={{
-                            borderColor: 'var(--partner-border)',
-                          }}
-                          disabled={!isAdmin}
-                        />
-                        <input
-                          type="text"
-                          name="secondaryColor"
-                          value={formData.secondaryColor}
-                          onChange={handleChange}
-                          className="w-full px-3 py-2 rounded-md border focus:outline-none focus:ring-1"
-                          style={{
-                            borderColor: 'var(--partner-border)',
-                            backgroundColor: 'var(--partner-bg)',
-                            color: 'var(--partner-text)',
-                          }}
-                          placeholder="#a6620c"
-                          disabled={!isAdmin}
-                        />
-                      </div>
-                    </div>
-
-                    {/* Text Color */}
-                    <div>
-                      <label className="block mb-2">Text Color</label>
-                      <div className="flex items-center gap-2">
-                        <input
-                          type="color"
-                          name="textColor"
-                          value={formData.textColor}
-                          onChange={handleChange}
-                          className="h-10 w-10 rounded-md cursor-pointer border"
-                          style={{
-                            borderColor: 'var(--partner-border)',
-                          }}
-                          disabled={!isAdmin}
-                        />
-                        <input
-                          type="text"
-                          name="textColor"
-                          value={formData.textColor}
-                          onChange={handleChange}
-                          className="w-full px-3 py-2 rounded-md border focus:outline-none focus:ring-1"
-                          style={{
-                            borderColor: 'var(--partner-border)',
-                            backgroundColor: 'var(--partner-bg)',
-                            color: 'var(--partner-text)',
-                          }}
-                          placeholder="#333333"
-                          disabled={!isAdmin}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* UI Colors Group */}
-                <div className="md:col-span-2">
-                  <h2 className="text-lg font-medium mb-3">
-                    Interface Colors
-                  </h2>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    {/* Background Color */}
-                    <div>
-                      <label className="block mb-2">
-                        Background Color
-                      </label>
-                      <div className="flex items-center gap-2">
-                        <input
-                          type="color"
-                          name="bgColor"
-                          value={formData.bgColor}
-                          onChange={handleChange}
-                          className="h-10 w-10 rounded-md cursor-pointer border"
-                          style={{
-                            borderColor: 'var(--partner-border)',
-                          }}
-                          disabled={!isAdmin}
-                        />
-                        <input
-                          type="text"
-                          name="bgColor"
-                          value={formData.bgColor}
-                          onChange={handleChange}
-                          className="w-full px-3 py-2 rounded-md border focus:outline-none focus:ring-1"
-                          style={{
-                            borderColor: 'var(--partner-border)',
-                            backgroundColor: 'var(--partner-bg)',
-                            color: 'var(--partner-text)',
-                          }}
-                          placeholder="#FFFFFF"
-                          disabled={!isAdmin}
-                        />
-                      </div>
-                    </div>
-
-                    {/* Card Background Color */}
-                    <div>
-                      <label className="block mb-2">
-                        Card Background Color
-                      </label>
-                      <div className="flex items-center gap-2">
-                        <input
-                          type="color"
-                          name="cardBgColor"
-                          value={formData.cardBgColor}
-                          onChange={handleChange}
-                          className="h-10 w-10 rounded-md cursor-pointer border"
-                          style={{
-                            borderColor: 'var(--partner-border)',
-                          }}
-                          disabled={!isAdmin}
-                        />
-                        <input
-                          type="text"
-                          name="cardBgColor"
-                          value={formData.cardBgColor}
-                          onChange={handleChange}
-                          className="w-full px-3 py-2 rounded-md border focus:outline-none focus:ring-1"
-                          style={{
-                            borderColor: 'var(--partner-border)',
-                            backgroundColor: 'var(--partner-bg)',
-                            color: 'var(--partner-text)',
-                          }}
-                          placeholder="#F8F9FA"
-                          disabled={!isAdmin}
-                        />
-                      </div>
-                    </div>
-
-                    {/* Border Color */}
-                    <div>
-                      <label className="block mb-2">
-                        Border Color
-                      </label>
-                      <div className="flex items-center gap-2">
-                        <input
-                          type="color"
-                          name="borderColor"
-                          value={formData.borderColor}
-                          onChange={handleChange}
-                          className="h-10 w-10 rounded-md cursor-pointer border"
-                          style={{
-                            borderColor: 'var(--partner-border)',
-                          }}
-                          disabled={!isAdmin}
-                        />
-                        <input
-                          type="text"
-                          name="borderColor"
-                          value={formData.borderColor}
-                          onChange={handleChange}
-                          className="w-full px-3 py-2 rounded-md border focus:outline-none focus:ring-1"
-                          style={{
-                            borderColor: 'var(--partner-border)',
-                            backgroundColor: 'var(--partner-bg)',
-                            color: 'var(--partner-text)',
-                          }}
-                          placeholder="#E2E8F0"
-                          disabled={!isAdmin}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Color Preview */}
-              <div className="mb-8">
-                <h3 className="font-medium mb-4">Preview</h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div
-                    className="p-4 rounded-md flex items-center justify-center h-24 text-center text-white"
-                    style={{ backgroundColor: formData.primaryColor }}
-                  >
-                    Primary Color
-                  </div>
-                  <div
-                    className="p-4 rounded-md flex items-center justify-center h-24 text-center text-white"
-                    style={{
-                      backgroundColor: formData.secondaryColor,
-                    }}
-                  >
-                    Secondary Color
-                  </div>
-                  <div
-                    className="p-4 rounded-md flex items-center justify-center h-24 text-center text-white"
-                    style={{
-                      background: `linear-gradient(315deg, ${formData.primaryColor} 0%, ${formData.secondaryColor} 100%)`,
-                    }}
-                  >
-                    Gradient
-                  </div>
-                </div>
-
-                <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div
-                    className="p-4 rounded-md border flex items-center justify-center h-24 text-center"
-                    style={{
-                      backgroundColor: formData.bgColor,
-                      color: formData.textColor,
-                      borderColor: formData.borderColor,
-                    }}
-                  >
-                    Background
-                  </div>
-                  <div
-                    className="p-4 rounded-md border flex items-center justify-center h-24 text-center"
-                    style={{
-                      backgroundColor: formData.cardBgColor,
-                      color: formData.textColor,
-                      borderColor: formData.borderColor,
-                    }}
-                  >
-                    Card Background
-                  </div>
-                  <div
-                    className="p-4 rounded-md border-2 flex items-center justify-center h-24 text-center"
-                    style={{
-                      backgroundColor: formData.cardBgColor,
-                      color: formData.textColor,
-                      borderColor: formData.borderColor,
-                    }}
-                  >
-                    Border Color
-                  </div>
-                </div>
-              </div>
-
-              {/* Submit button */}
-              <div className="flex justify-end gap-4">
-                <Button
-                  as={Link}
-                  href="/partner"
-                  className="border px-6 py-2 rounded-md transition-all"
-                  style={{
-                    borderColor: 'var(--partner-border)',
-                    color: 'var(--partner-text)',
-                  }}
+        {/* Settings Form */}
+        <form
+          onSubmit={handleSubmit}
+          className="bg-white shadow-md rounded-lg p-8"
+        >
+          <div className="grid md:grid-cols-2 gap-6">
+            {colorFields.map((field) => (
+              <div key={field.key} className="space-y-2">
+                <label
+                  htmlFor={field.key}
+                  className="block text-sm font-medium text-gray-700"
                 >
-                  Cancel
-                </Button>
-                <Button
-                  type="submit"
-                  className="partner-button-primary px-6 py-2 rounded-md transition-all"
-                  disabled={
-                    isSaving ||
-                    !isAdmin ||
-                    firestoreStatus === 'no_org'
+                  {field.label}
+                </label>
+                <p className="text-xs text-gray-500 mb-2">
+                  {field.description}
+                </p>
+                <div className="flex items-center space-x-4">
+                  <input
+                    type="color"
+                    id={field.key}
+                    name={field.key}
+                    value={formData[field.key]}
+                    onChange={handleChange}
+                    disabled={!isAdmin}
+                    className="h-10 w-10 rounded-md cursor-pointer border-2 border-gray-300"
+                  />
+                  <input
+                    type="text"
+                    name={field.key}
+                    value={formData[field.key]}
+                    onChange={handleChange}
+                    disabled={!isAdmin}
+                    className="flex-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Color Preview */}
+          <div className="mt-8 grid grid-cols-3 gap-4">
+            {[
+              { name: 'Primary Color', key: 'primaryColor' },
+              { name: 'Secondary Color', key: 'secondaryColor' },
+              {
+                name: 'Gradient',
+                style: {
+                  background: `linear-gradient(to right, ${formData.primaryColor}, ${formData.secondaryColor})`,
+                },
+              },
+            ].map((color, index) => (
+              <div
+                key={index}
+                className="p-4 rounded text-white text-center"
+                style={
+                  color.style || {
+                    backgroundColor: formData[color.key],
                   }
-                >
-                  {isSaving ? 'Saving...' : 'Save Settings'}
-                </Button>
+                }
+              >
+                {color.name}
               </div>
-
-              {/* Save message */}
-              {saveMessage && (
-                <div
-                  className={`mt-4 p-3 rounded-md ${saveMessage.includes('Error') || saveMessage.includes('failed') ? 'bg-red-100 text-red-700' : saveMessage.includes('Testing') ? 'bg-blue-100 text-blue-700' : 'bg-green-100 text-green-700'}`}
-                >
-                  {saveMessage}
-                </div>
-              )}
-            </form>
+            ))}
           </div>
-        </div>
-      </main>
 
-      {/* Footer */}
-      <footer className="partner-header p-4 mt-auto">
-        <div className="container mx-auto text-center opacity-60 text-sm">
-          &copy; {new Date().getFullYear()} Voyager. All rights
-          reserved.
-        </div>
-      </footer>
+          {/* Save Button */}
+          <div className="mt-8 flex justify-end">
+            <button
+              type="submit"
+              disabled={isSaving || !isAdmin}
+              className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-300 disabled:opacity-50"
+            >
+              {isSaving ? 'Saving...' : 'Save Settings'}
+            </button>
+          </div>
+
+          {/* Save Message */}
+          {saveMessage && (
+            <div
+              className={`
+              mt-4 p-3 rounded-md 
+              ${
+                saveMessage.includes('Error')
+                  ? 'bg-red-100 text-red-700 border-l-4 border-red-500'
+                  : 'bg-green-100 text-green-700 border-l-4 border-green-500'
+              }
+            `}
+            >
+              {saveMessage}
+            </div>
+          )}
+        </form>
+      </div>
     </div>
   );
 }
