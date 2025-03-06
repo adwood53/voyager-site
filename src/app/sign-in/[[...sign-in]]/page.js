@@ -23,7 +23,13 @@ export default function SignInPage() {
   };
 
   return (
-    <ClerkProvider>
+    <ClerkProvider
+      appearance={{
+        layout: {
+          unsafe_disableDevelopmentModeWarnings: true,
+        },
+      }}
+    >
       <div className="min-h-screen bg-darkBg flex flex-col">
         {/* Header with branding */}
         <header className="w-full p-6 bg-darkCard border-b border-primary border-opacity-20">
@@ -45,7 +51,7 @@ export default function SignInPage() {
 
         {/* Main content */}
         <div className="flex-1 flex items-center justify-center p-6">
-          <div className="w-full max-w-md">
+          <div className="w-full">
             <div className="text-center mb-8">
               <h1 className="text-3xl font-heading text-primary mb-2">
                 Partner Sign In

@@ -181,7 +181,7 @@ export default function OrganizationSettings() {
               Organization Settings
             </h1>
             <p className="text-gray-500 mt-2">
-              Customize your organization's appearance
+              Customize your organization&#39;s appearance
             </p>
           </div>
           <div className="flex items-center space-x-4">
