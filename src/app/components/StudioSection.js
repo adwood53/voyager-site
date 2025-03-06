@@ -12,6 +12,7 @@ export default function StudioSection() {
     offset: ['start end', 'end start'],
   });
 
+  // Framer Motion transforms for fade, scale, etc.
   const opacity = useTransform(
     scrollYProgress,
     [0, 0.2, 0.8, 1],
@@ -28,6 +29,7 @@ export default function StudioSection() {
     [0.9, 1, 1, 0.9]
   );
 
+  // Define an array of features for the left side bullets
   const studioFeatures = [
     {
       icon: '🎥',
@@ -51,6 +53,30 @@ export default function StudioSection() {
     },
   ];
 
+  // Manually define hotspot positions (tooltip text, top, left)
+  const studioHotspots = [
+    {
+      tooltip: '4K Cameras',
+      top: '40%',
+      left: '92%',
+    },
+    {
+      tooltip: 'Full Audio Setup',
+      top: '60%',
+      left: '47%',
+    },
+    {
+      tooltip: 'Production Lighting',
+      top: '25%',
+      left: '65%',
+    },
+    {
+      tooltip: 'State-of-the-art Infinity Cove',
+      top: '25%',
+      left: '25%',
+    },
+  ];
+
   return (
     <section
       id="studio"
@@ -61,10 +87,10 @@ export default function StudioSection() {
       <div className="absolute inset-0">
         <div className="has-tooltip">
           <Image
-            src="/placeholder.jpg"
+            src="/studiobackground.jpeg"
             alt="Studio background"
             fill
-            className="object-cover opacity-20"
+            className="object-cover opacity-90"
           />
           <span className="custom-tooltip">
             Our professional studio setup
@@ -78,6 +104,7 @@ export default function StudioSection() {
         style={{ opacity, y, scale }}
       >
         <div className="flex flex-col lg:flex-row gap-12 items-center">
+          {/* Left side text/features */}
           <div className="w-full lg:w-1/2">
             <motion.h2
               initial={{ opacity: 0, y: 20 }}
@@ -101,6 +128,7 @@ export default function StudioSection() {
               <p className="text-xl text-textLight opacity-80 mb-6">
                 A pro-grade, fully equipped greenscreen studio,
                 <strong className="text-primary">
+                  {' '}
                   not available to the public, only for our
                   white-label partners.
                 </strong>{' '}
@@ -154,15 +182,17 @@ export default function StudioSection() {
               >
                 <Button
                   as={Link}
-                  href="#signup"
+                  href="https://immerse.voyagervrlab.co.uk/VOY/3D-Model-VR"
+                  target="_blank"
                   className="bg-primary text-textLight font-medium hover:bg-accent px-6 py-3 rounded-md transition-all hover:shadow-glow glitch-effect"
                 >
-                  Book a Studio Tour →
+                  See our Studio →
                 </Button>
               </motion.div>
             </motion.div>
           </div>
 
+          {/* Right side image with hotspots */}
           <motion.div
             className="w-full lg:w-1/2 relative parallax-container"
             initial={{ opacity: 0, x: 50 }}
@@ -173,7 +203,7 @@ export default function StudioSection() {
             <div className="relative overflow-hidden rounded-lg aspect-video hover-3d shadow-glow-sm border border-primary border-opacity-20">
               <div className="has-tooltip">
                 <Image
-                  src="/placeholder.jpg"
+                  src="/studioimage.jpg"
                   alt="Voyager Studio"
                   fill
                   className="object-cover"
@@ -195,18 +225,15 @@ export default function StudioSection() {
                 <div className="absolute inset-0 bg-[url('/placeholder.jpg')] opacity-20 bg-no-repeat bg-center bg-contain mix-blend-lighten"></div>
               </motion.div>
 
-              {/* Interactive elements */}
+              {/* Interactive hotspots (manual positions) */}
               <div className="absolute inset-0 z-10">
-                {[...Array(5)].map((_, i) => (
-                  <Tooltip
-                    key={i}
-                    content={`Studio Feature ${i + 1}`}
-                  >
+                {studioHotspots.map((hotspot, i) => (
+                  <Tooltip key={i} content={hotspot.tooltip}>
                     <motion.div
                       className="absolute w-4 h-4 rounded-full bg-primary cursor-pointer"
                       style={{
-                        left: `${20 + i * 15}%`,
-                        top: `${30 + Math.sin(i) * 20}%`,
+                        top: hotspot.top,
+                        left: hotspot.left,
                       }}
                       initial={{ scale: 0 }}
                       whileInView={{ scale: 1 }}
@@ -220,6 +247,7 @@ export default function StudioSection() {
                         boxShadow: '0 0 15px rgba(231, 144, 35, 0.8)',
                       }}
                     >
+                      {/* Pulsating inner circle */}
                       <motion.div
                         className="absolute inset-0 bg-primary rounded-full"
                         animate={{
