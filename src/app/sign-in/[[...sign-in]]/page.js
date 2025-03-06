@@ -51,7 +51,7 @@ export default function SignInPage() {
 
         {/* Main content */}
         <div className="flex-1 flex items-center justify-center p-6">
-          <div className="w-full">
+          <div className="">
             <div className="text-center mb-8">
               <h1 className="text-3xl font-heading text-primary mb-2">
                 Partner Sign In
