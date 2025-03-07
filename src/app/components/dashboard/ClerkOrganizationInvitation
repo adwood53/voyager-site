@@ -1,0 +1,62 @@
+'use client';
+// src/app/components/dashboard/ClerkOrganizationInvitation.js
+
+import { useState, useEffect } from 'react';
+import { useOrganization } from '@clerk/nextjs';
+
+export default function ClerkOrganizationInvitation() {
+  const { organization } = useOrganization();
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+    
+    // Only attempt to mount if in a browser environment
+    if (typeof window === 'undefined') return;
+    
+    // Check for the clerk container element
+    const containerElement = document.getElementById('clerk-invitation');
+    if (!containerElement) return;
+    
+    // Function to mount Clerk UI
+    const mountClerkUI = async () => {
+      // Safely check if Clerk is available
+      if (!window.Clerk || !organization) return;
+      
+      try {
+        // Mount the Clerk Organization Invitation Component when Clerk is ready
+        if (window.Clerk.loaded) {
+          await window.Clerk.mountOrganizationInvitation({
+            rootEl: containerElement,
+            organizationId: organization.id
+          });
+          console.log('Clerk invitation UI mounted');
+        }
+      } catch (error) {
+        console.error('Error mounting Clerk UI:', error);
+      }
+    };
+    
+    // Create a MutationObserver to wait for Clerk to be ready
+    const observer = new MutationObserver((mutations, obs) => {
+      if (window.Clerk && window.Clerk.loaded) {
+        mountClerkUI();
+        obs.disconnect(); // Stop observing once we've mounted
+      }
+    });
+    
+    // Start observing the document for Clerk to be ready
+    observer.observe(document.body, { 
+      childList: true,
+      subtree: true
+    });
+    
+    // Cleanup function
+    return () => {
+      observer.disconnect();
+    };
+  }, [organization]);
+  
+  // Don't render anything, just hook into the DOM
+  return null;
+}

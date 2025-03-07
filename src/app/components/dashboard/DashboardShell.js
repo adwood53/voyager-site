@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { useUser, useOrganization } from '@clerk/nextjs';
 import { useFirebase } from '@/src/contexts/FirebaseContext';
+import ClientScriptLoader from './ClientScriptLoader';
 
 import TitleBar from './TitleBar';
 import NavigationBar from './NavigationBar';
@@ -171,41 +172,46 @@ export default function DashboardShell() {
   };
 
   return (
-    <div
-      className="dashboard-shell flex flex-col h-screen overflow-hidden bg-gray-50"
-      style={brandingStyles}
-    >
-      {/* Title Bar with organization and Voyager logos */}
-      <TitleBar
-        organization={firestoreOrg || organization}
-        toggleProfilePanel={toggleProfilePanel}
-      />
+    <>
+      {/* Add Clerk JS script using the client component */}
+      <ClientScriptLoader />
 
-      {/* Main content area with sidebar */}
-      <div className="flex flex-1 overflow-hidden">
-        {/* Navigation sidebar */}
-        <NavigationBar
-          activeRoute={activePanel}
-          onNavigate={handleNavigate}
-          isAdmin={isAdmin}
+      <div
+        className="dashboard-shell flex flex-col h-screen overflow-hidden bg-gray-50"
+        style={brandingStyles}
+      >
+        {/* Title Bar with organization and Voyager logos */}
+        <TitleBar
+          organization={firestoreOrg || organization}
+          toggleProfilePanel={toggleProfilePanel}
         />
 
-        {/* Main content area */}
-        <div className="flex-1 overflow-auto relative">
-          {/* Dynamic content - tab switching instead of modals */}
-          <div className="h-full p-6">{renderPanel()}</div>
+        {/* Main content area with sidebar */}
+        <div className="flex flex-1 overflow-hidden">
+          {/* Navigation sidebar */}
+          <NavigationBar
+            activeRoute={activePanel}
+            onNavigate={handleNavigate}
+            isAdmin={isAdmin}
+          />
+
+          {/* Main content area */}
+          <div className="flex-1 overflow-auto relative">
+            {/* Dynamic content - tab switching instead of modals */}
+            <div className="h-full p-6">{renderPanel()}</div>
+          </div>
+
+          {/* Profile panel */}
+          <ProfilePanel
+            expanded={profileExpanded}
+            onToggle={toggleProfilePanel}
+            user={user}
+            organization={organization}
+            firestoreOrg={firestoreOrg}
+          />
         </div>
-
-        {/* Profile panel */}
-        <ProfilePanel
-          expanded={profileExpanded}
-          onToggle={toggleProfilePanel}
-          user={user}
-          organization={organization}
-          firestoreOrg={firestoreOrg}
-        />
       </div>
-    </div>
+    </>
   );
 }
 

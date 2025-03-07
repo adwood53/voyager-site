@@ -211,9 +211,28 @@ export default function Footer() {
                 </svg>
               </a>
             </div>
-            <span className="text-textLight opacity-40 text-sm">
-              Terms and Privacy Policy Coming Soon
-            </span>
+            <div className="flex items-center gap-4 text-textLight opacity-40 text-sm">
+              <Link
+                href="/our-code"
+                className="hover:text-primary hover:opacity-100 transition-colors"
+              >
+                Our Code
+              </Link>
+              <span>•</span>
+              <Link
+                href="/terms"
+                className="hover:text-primary hover:opacity-100 transition-colors"
+              >
+                Terms
+              </Link>
+              <span>•</span>
+              <Link
+                href="/privacy"
+                className="hover:text-primary hover:opacity-100 transition-colors"
+              >
+                Privacy Policy
+              </Link>
+            </div>
           </div>
         </div>
       </div>

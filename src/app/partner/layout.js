@@ -1,3 +1,6 @@
+// src/app/partner/layout.js
+import { ClerkProvider } from '@clerk/nextjs';
+
 // Define metadata for the partner section
 export const metadata = {
   title: 'Voyager Partner Portal',
@@ -6,5 +9,5 @@ export const metadata = {
 };
 
 export default function PartnerLayout({ children }) {
-  return children;
+  return <ClerkProvider>{children}</ClerkProvider>;
 }
