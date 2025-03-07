@@ -146,24 +146,56 @@ export default function MemberManagement({
   };
 
   /**
-   * Handle member removal
+   * Handle member removal with improved error handling and debugging
    */
   const handleRemoveMember = async (membershipId) => {
+    // Debug member removal request
+    console.log('Attempting to remove member:', membershipId);
+    console.log('Current user role:', membership?.role);
+
     // Only owners can remove members
-    if (!isOwner) return;
+    if (!isOwner) {
+      console.warn('Remove attempt by non-owner');
+      return;
+    }
 
     // Confirm before removing
     if (!confirm('Are you sure you want to remove this member?'))
       return;
 
     try {
-      await organization.removeMember(membershipId);
+      // Get the organization membership directly
+      const memberships = await organization.getMemberships({
+        limit: 100,
+      });
+
+      // Find the specific membership to remove
+      const membershipToRemove = memberships.data.find(
+        (m) => m.id === membershipId
+      );
+
+      if (membershipToRemove) {
+        // Use the membership object's destroy method (Clerk's recommended approach)
+        await membershipToRemove.destroy();
+        console.log('Member successfully removed');
+      } else {
+        // Fallback to the organization method if membership not found
+        await organization.removeMember(membershipId);
+        console.log('Member removed using fallback method');
+      }
 
       // Update local state
       setMembers((prev) => prev.filter((m) => m.id !== membershipId));
+
+      // Reload members list
+      setTimeout(() => {
+        loadMembers();
+      }, 500);
     } catch (error) {
       console.error('Error removing member:', error);
-      alert(`Error: ${error.message}`);
+      alert(
+        `Error removing member: ${error.message || 'Unknown error'}`
+      );
     }
   };
 
@@ -383,7 +415,10 @@ export default function MemberManagement({
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalContent>
           <ModalHeader>Invite Team Member</ModalHeader>
-          <ModalBody>
+          // Inside the modal body of MemberManagement.js
+          <ModalBody className="text-gray-800">
+            {' '}
+            {/* Add text color to modal body */}
             <form id="invite-form" onSubmit={handleInvite}>
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -395,7 +430,7 @@ export default function MemberManagement({
                   onChange={(e) => setInviteEmail(e.target.value)}
                   placeholder="colleague@example.com"
                   required
-                  className="w-full"
+                  className="w-full bg-white text-gray-800 border border-gray-300" // Improved styling
                 />
               </div>
 
@@ -404,9 +439,15 @@ export default function MemberManagement({
                   Role
                 </label>
                 <Select
-                  className="w-full"
+                  className="w-full text-gray-800" // Added text color
                   value={inviteRole}
                   onChange={(e) => setInviteRole(e.target.value)}
+                  classNames={{
+                    trigger:
+                      'bg-white border border-gray-300 text-gray-800', // Fixed select trigger
+                    popover: 'bg-white border border-gray-300', // Fixed popover
+                    listbox: 'text-gray-800 bg-white', // Fixed listbox
+                  }}
                 >
                   <SelectItem key="org:admin" value="org:admin">
                     Admin

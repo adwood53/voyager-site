@@ -65,6 +65,9 @@ export default function SignInPage() {
               <SignIn
                 appearance={appearance}
                 redirectUrl="/partner"
+                afterSignInUrl="/partner"
+                afterSignUpUrl="/partner"
+                signUpUrl="/sign-in" // Keep users on sign-in page for simplicity
               />
             </div>
           </div>

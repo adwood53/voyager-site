@@ -1,4 +1,4 @@
-// src/app/partner/layout.js
+// src/app/partner/layout.js - updated
 import { ClerkProvider } from '@clerk/nextjs';
 
 // Define metadata for the partner section
@@ -9,5 +9,24 @@ export const metadata = {
 };
 
 export default function PartnerLayout({ children }) {
-  return <ClerkProvider>{children}</ClerkProvider>;
+  return (
+    <ClerkProvider
+      appearance={{
+        layout: {
+          unsafe_disableDevelopmentModeWarnings: true,
+        },
+      }}
+      // Added redirects configuration
+      redirectUrls={{
+        signIn: '/partner',
+        signUp: '/partner',
+        afterSignIn: '/partner',
+        afterSignUp: '/partner',
+        createOrganization: '/partner',
+        afterCreateOrganization: '/partner',
+      }}
+    >
+      {children}
+    </ClerkProvider>
+  );
 }

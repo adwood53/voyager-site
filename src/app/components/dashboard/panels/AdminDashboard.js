@@ -10,6 +10,7 @@ import { useRouter } from 'next/navigation';
 import OrganizationInfo from './admin/OrganizationInfo';
 import MemberManagement from './admin/MemberManagement';
 import BrandingSettings from './admin/BrandingSettings';
+import DebugInfo from '../DebugInfo';
 
 /**
  * AdminDashboard - Main container component for the admin dashboard
@@ -75,6 +76,8 @@ export default function AdminDashboard() {
           Manage your organisation settings and members
         </p>
       </div>
+
+      <DebugInfo />
 
       {/* Stats Cards can go here later */}
 
