@@ -116,48 +116,52 @@ function NavItem({ id, label, icon, active, onClick, customStyle }) {
   const buttonStyles = active ? activeStyles : inactiveStyles;
 
   return (
-    <Button
-      className={`w-full justify-start p-3 rounded-lg transition-all ${
-        active ? 'bg-opacity-10' : 'hover:bg-gray-100'
-      } ${customStyle || ''}`}
-      onClick={onClick}
-      variant="light"
-      style={buttonStyles}
-    >
-      <div className="relative flex items-center w-full">
-        <div className="flex md:min-w-[24px] justify-center">
-          <span className="text-xl">{icon}</span>
-        </div>
-        <span
-          className={`hidden md:block ml-3 ${
-            active ? 'font-medium' : ''
-          }`}
+    <div className="relative">
+      {' '}
+      {/* Add a parent container for positioning context */}
+      {/* Active indicator - positioned absolutely relative to the parent div */}
+      {active && (
+        <motion.div
+          className="absolute top-0 bottom-0 left-0 w-2 bg-primary rounded-l-full"
           style={{
-            color: active
-              ? 'var(--primary-color, #2563EB)'
-              : '#4B5563',
+            backgroundColor: 'var(--primary-color, #2563EB)',
           }}
-        >
-          {label}
-        </span>
-        {/* Active indicator */}
-        {active && (
-          <motion.div
-            className="absolute left-0 top-0 bottom-0 w-1 rounded-r-full"
+          layoutId="activeTab"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{
+            type: 'spring',
+            stiffness: 300,
+            damping: 30,
+          }}
+        />
+      )}
+      <Button
+        className={`w-full h-12 transition-all flex items-center ${
+          active ? 'bg-opacity-10' : 'hover:bg-gray-100'
+        } ${customStyle || ''}`}
+        onClick={onClick}
+        variant="light"
+        style={buttonStyles}
+      >
+        <div className="flex items-center w-full">
+          <div className="flex md:min-w-[24px] justify-center">
+            <span className="text-xl">{icon}</span>
+          </div>
+          <span
+            className={`hidden md:block ml-3 ${
+              active ? 'font-medium' : ''
+            }`}
             style={{
-              backgroundColor: 'var(--primary-color, #2563EB)',
+              color: active
+                ? 'var(--primary-color, #2563EB)'
+                : '#4B5563',
             }}
-            layoutId="activeTab"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{
-              type: 'spring',
-              stiffness: 300,
-              damping: 30,
-            }}
-          />
-        )}
-      </div>
-    </Button>
+          >
+            {label}
+          </span>
+        </div>
+      </Button>
+    </div>
   );
 }
