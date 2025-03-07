@@ -3,13 +3,7 @@
 
 import { useState } from 'react';
 import { useUser, useOrganization } from '@clerk/nextjs';
-import {
-  Card,
-  CardBody,
-  CardHeader,
-  Switch,
-  Button,
-} from '@heroui/react';
+import { Card, CardBody, CardHeader, Button } from '@heroui/react';
 import { useFirebase } from '@/src/contexts/FirebaseContext';
 
 /**
@@ -41,12 +35,15 @@ export default function DebugInfo() {
         <h2 className="text-amber-800 text-base font-medium">
           Admin Debugging Tools
         </h2>
-        <Switch
+        {/* Replaced Switch with simple button toggle for better visibility */}
+        <Button
           size="sm"
-          checked={showDebug}
-          onChange={() => setShowDebug(!showDebug)}
-          color="warning"
-        />
+          color={showDebug ? 'warning' : 'default'}
+          onClick={() => setShowDebug(!showDebug)}
+          className="min-w-[80px] bg-white border border-amber-300 text-amber-800"
+        >
+          {showDebug ? 'Hide' : 'Show'}
+        </Button>
       </CardHeader>
 
       {showDebug && (

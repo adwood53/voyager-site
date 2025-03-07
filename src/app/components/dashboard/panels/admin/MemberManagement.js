@@ -68,6 +68,7 @@ export default function MemberManagement({
   // Check user permissions
   const userRole = membership?.role;
   const isOwner = userRole === 'org:owner' || userRole === 'owner';
+  // Modified admin check to include owner roles as well
   const isAdmin =
     isOwner || userRole === 'org:admin' || userRole === 'admin';
 
@@ -153,9 +154,9 @@ export default function MemberManagement({
     console.log('Attempting to remove member:', membershipId);
     console.log('Current user role:', membership?.role);
 
-    // Only owners can remove members
-    if (!isOwner) {
-      console.warn('Remove attempt by non-owner');
+    // Allow both owners and admins to remove members
+    if (!isAdmin) {
+      console.warn('Remove attempt by non-admin user');
       return;
     }
 
@@ -364,7 +365,7 @@ export default function MemberManagement({
                               )}
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                              {isOwner &&
+                              {isAdmin &&
                               !isCurrentUser &&
                               !isMemberOwner ? (
                                 <Button
@@ -415,10 +416,7 @@ export default function MemberManagement({
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalContent>
           <ModalHeader>Invite Team Member</ModalHeader>
-          // Inside the modal body of MemberManagement.js
           <ModalBody className="text-gray-800">
-            {' '}
-            {/* Add text color to modal body */}
             <form id="invite-form" onSubmit={handleInvite}>
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -430,7 +428,7 @@ export default function MemberManagement({
                   onChange={(e) => setInviteEmail(e.target.value)}
                   placeholder="colleague@example.com"
                   required
-                  className="w-full bg-white text-gray-800 border border-gray-300" // Improved styling
+                  className="w-full bg-white text-gray-800 border border-gray-300"
                 />
               </div>
 
@@ -439,14 +437,14 @@ export default function MemberManagement({
                   Role
                 </label>
                 <Select
-                  className="w-full text-gray-800" // Added text color
+                  className="w-full text-gray-800"
                   value={inviteRole}
                   onChange={(e) => setInviteRole(e.target.value)}
                   classNames={{
                     trigger:
-                      'bg-white border border-gray-300 text-gray-800', // Fixed select trigger
-                    popover: 'bg-white border border-gray-300', // Fixed popover
-                    listbox: 'text-gray-800 bg-white', // Fixed listbox
+                      'bg-white border border-gray-300 text-gray-800',
+                    popover: 'bg-white border border-gray-300',
+                    listbox: 'text-gray-800 bg-white',
                   }}
                 >
                   <SelectItem key="org:admin" value="org:admin">
