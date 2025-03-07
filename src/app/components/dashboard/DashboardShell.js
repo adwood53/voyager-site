@@ -31,7 +31,13 @@ export default function DashboardShell() {
   const router = useRouter();
   const pathname = usePathname();
   const { user, isSignedIn, isLoaded } = useUser();
-  const { organization, membership } = useOrganization();
+  const { organization, membership } = useOrganization({
+    memberships: {
+      pageSize: 20,
+      keepPreviousData: true,
+    },
+  });
+
   const {
     organization: firestoreOrg,
     loading,
@@ -48,8 +54,9 @@ export default function DashboardShell() {
 
   // Check if user is admin based on Clerk membership
   const isAdmin =
-    membership?.role === 'admin' ||
     membership?.role === 'org:admin' ||
+    membership?.role === 'org:owner' ||
+    membership?.role === 'admin' ||
     membership?.role === 'owner';
 
   // Debug admin status
@@ -101,8 +108,9 @@ export default function DashboardShell() {
     setProfileExpanded(!profileExpanded);
   };
 
-  // If still loading, show loading screen
-  if (!isLoaded || loading) {
+  // Show loading screen only when we're initially loading the user data
+  // but not when we're just waiting for organization data
+  if (!isLoaded || (loading && !firestoreOrg)) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-50">
         <div className="text-center">

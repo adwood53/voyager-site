@@ -7,7 +7,6 @@ import { useState, useEffect } from 'react';
 import { useAuth, useOrganization } from '@clerk/nextjs';
 
 export default function NavigationBar({ activeRoute, onNavigate }) {
-  const { has } = useAuth();
   const { membership } = useOrganization();
   const [navItems, setNavItems] = useState([
     {
@@ -39,8 +38,9 @@ export default function NavigationBar({ activeRoute, onNavigate }) {
 
   // Check if the user has admin privileges
   const hasAdminRole =
-    membership?.role === 'admin' ||
     membership?.role === 'org:admin' ||
+    membership?.role === 'org:owner' ||
+    membership?.role === 'admin' ||
     membership?.role === 'owner';
 
   // Update nav items based on admin status
