@@ -4,17 +4,9 @@
 
 import { useState } from 'react';
 import { Card, CardBody, CardHeader } from '@heroui/react';
-import { CalculatorContainer } from '../calculators';
-import scopeBuilderSchema from '@/src/schemas/scopeBuilder';
 
 export default function ScopeBuilderPanel() {
   const [calculatorComplete, setCalculatorComplete] = useState(false);
-
-  // Handle calculator completion
-  const handleCalculatorComplete = (data) => {
-    console.log('Scope builder completed with data:', data);
-    setCalculatorComplete(true);
-  };
 
   return (
     <div className="max-w-4xl mx-auto">
@@ -28,13 +20,25 @@ export default function ScopeBuilderPanel() {
         </p>
       </div>
 
-      <CalculatorContainer
-        schema={scopeBuilderSchema}
-        calculatorType="scope-builder"
-        showPdfExport={true}
-        showSubmitToCRM={false} // Explicitly disable HubSpot submission
-        onSubmit={handleCalculatorComplete}
-      />
+      <Card>
+        <CardHeader>
+          <h2 className="text-xl font-semibold text-gray-800">
+            Calculator Coming Soon
+          </h2>
+        </CardHeader>
+        <CardBody>
+          <p className="text-gray-600 mb-4">
+            The Scope Builder calculator is currently under
+            development. This tool will help you analyze your project
+            requirements and recommend the most appropriate immersive
+            solution for your needs.
+          </p>
+          <p className="text-gray-600">
+            Check back soon to use this feature and create detailed
+            project scope documents with tailored recommendations.
+          </p>
+        </CardBody>
+      </Card>
 
       {/* Information card */}
       <Card className="mt-8">
@@ -55,18 +59,6 @@ export default function ScopeBuilderPanel() {
             tailored recommendations based on your answers, along with
             the option to export a detailed scope document as a PDF.
           </p>
-          {calculatorComplete && (
-            <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-md">
-              <h3 className="text-green-700 font-medium mb-2">
-                Scope Building Complete
-              </h3>
-              <p className="text-green-600">
-                Your project scope has been analyzed. You can review
-                the recommendations and export a detailed PDF for your
-                records.
-              </p>
-            </div>
-          )}
         </CardBody>
       </Card>
     </div>
