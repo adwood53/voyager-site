@@ -1,6 +1,8 @@
 // src/app/components/dashboard/calculators/questions/YesNoQuestion.js
 'use client';
 
+import React from 'react';
+
 export default function YesNoQuestion({
   question,
   value,
@@ -8,26 +10,22 @@ export default function YesNoQuestion({
   errors,
 }) {
   return (
-    <div className="mb-6">
-      <label className="block text-sm font-medium text-gray-700 mb-1">
+    <div className="question-container">
+      <label className="question-label">
         {question.label}
         {question.required !== false && (
-          <span className="text-red-500 ml-1">*</span>
+          <span className="required">*</span>
         )}
       </label>
 
       {question.helpText && (
-        <p className="text-xs text-gray-500 mb-2">
-          {question.helpText}
-        </p>
+        <p className="question-help">{question.helpText}</p>
       )}
 
-      <div className="flex gap-3">
+      <div className="yes-no-buttons">
         <button
           type="button"
-          className={`big-button ${value === true ? 'active' : ''} ${
-            errors ? 'invalid' : ''
-          }`}
+          className={`yes-no-button ${value === true ? 'active' : ''}`}
           onClick={() => onChange(true)}
         >
           Yes
@@ -35,18 +33,14 @@ export default function YesNoQuestion({
 
         <button
           type="button"
-          className={`big-button ${value === false ? 'active' : ''} ${
-            errors ? 'invalid' : ''
-          }`}
+          className={`yes-no-button ${value === false ? 'active' : ''}`}
           onClick={() => onChange(false)}
         >
           No
         </button>
       </div>
 
-      {errors && (
-        <div className="mt-1 text-sm text-red-600">{errors}</div>
-      )}
+      {errors && <p className="error-text">{errors}</p>}
     </div>
   );
 }

@@ -1,0 +1,194 @@
+/* src/app/components/dashboard/calculators/calculator.css */
+
+/* Main Calculator Container */
+.calculator-container {
+    @apply bg-white rounded-lg shadow-md overflow-hidden;
+  }
+  
+  /* Progress Bar */
+  .calculator-progress {
+    @apply mb-6;
+  }
+  
+  .progress-text {
+    @apply text-sm text-gray-600 mb-2;
+  }
+  
+  .progress-bar {
+    @apply w-full h-2 bg-gray-200 rounded-full overflow-hidden;
+  }
+  
+  .progress-bar-fill {
+    @apply h-full bg-primary transition-all duration-300 ease-in-out;
+  }
+  
+  /* Section Title */
+  .section-title {
+    @apply text-xl font-semibold mb-6;
+  }
+  
+  /* Questions Container */
+  .questions-container {
+    @apply space-y-6 mb-8;
+  }
+  
+  .no-questions-message {
+    @apply text-gray-500 italic;
+  }
+  
+  /* Question components - Base styles */
+  .question-item {
+    @apply mb-6;
+  }
+  
+  /* Form controls */
+  .my-number-input {
+    @apply w-full px-3 py-2 bg-white border border-gray-300 rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition;
+  }
+  
+  .my-number-input.invalid {
+    @apply border-red-500 ring-red-200;
+  }
+  
+  /* Buttons */
+  .calculator-actions {
+    @apply flex justify-between mt-8;
+  }
+  
+  .primary-button {
+    @apply bg-primary text-white px-6 py-2 rounded-md font-medium hover:bg-opacity-90 transition disabled:opacity-50;
+    background-color: var(--primary-color, #E79023);
+  }
+  
+  .secondary-button {
+    @apply bg-gray-200 text-gray-700 px-6 py-2 rounded-md font-medium hover:bg-gray-300 transition disabled:opacity-50;
+  }
+  
+  /* Error Messages */
+  .calculator-errors {
+    @apply mt-6 p-4 bg-red-50 border border-red-200 rounded-md text-red-700;
+  }
+  
+  .error-message {
+    @apply text-sm text-red-600 mt-1;
+  }
+  
+  /* Results Summary */
+  .results-summary {
+    @apply p-6;
+  }
+  
+  .results-title {
+    @apply text-2xl font-bold mb-6 text-gray-800;
+  }
+  
+  .tier-section {
+    @apply mb-6 p-4 bg-primary bg-opacity-10 rounded-lg border border-primary border-opacity-20;
+  }
+  
+  .tier-title {
+    @apply text-xl font-semibold text-primary mb-2;
+  }
+  
+  .tier-description {
+    @apply text-gray-600;
+  }
+  
+  .features-section, 
+  .commission-section, 
+  .pricing-section {
+    @apply mb-6;
+  }
+  
+  .section-title {
+    @apply text-lg font-semibold mb-3 text-gray-800;
+  }
+  
+  .features-list {
+    @apply grid grid-cols-1 md:grid-cols-2 gap-3;
+  }
+  
+  .summary-item {
+    @apply p-3 rounded-md;
+  }
+  
+  .summary-item.blue {
+    @apply bg-blue-50 text-blue-700;
+  }
+  
+  .summary-item.green {
+    @apply bg-green-50 text-green-700;
+  }
+  
+  .price-item {
+    @apply flex justify-between py-2 border-b border-gray-200 last:border-b-0;
+  }
+  
+  .price-label {
+    @apply text-gray-600;
+  }
+  
+  .price-value {
+    @apply font-medium text-gray-800;
+  }
+  
+  .price-value.total {
+    @apply text-lg font-bold text-primary;
+  }
+  
+  .results-actions {
+    @apply mt-8 flex flex-wrap gap-4 justify-center;
+  }
+  
+  /* Recommendations Panel */
+  .recommendations-panel {
+    @apply p-6;
+  }
+  
+  .recommendations-title {
+    @apply text-2xl font-bold mb-6 text-gray-800;
+  }
+  
+  .recommendation-card {
+    @apply p-6 bg-white rounded-lg border border-primary border-opacity-20 shadow-md mb-6;
+  }
+  
+  .recommendation-name {
+    @apply text-xl font-semibold mb-2 text-primary;
+  }
+  
+  .recommendation-category {
+    @apply inline-block px-3 py-1 rounded-full text-xs font-medium mb-4 bg-primary bg-opacity-10 text-primary;
+  }
+  
+  .recommendation-description {
+    @apply text-gray-700 mb-4;
+  }
+  
+  .recommendation-features {
+    @apply mt-4;
+  }
+  
+  .recommendation-features h4 {
+    @apply text-sm font-semibold mb-2 text-gray-700;
+  }
+  
+  .recommendation-features ul {
+    @apply list-disc list-inside space-y-1 text-gray-600;
+  }
+  
+  .recommendation-detail {
+    @apply mt-2 text-gray-600;
+  }
+  
+  .recommendation-navigation {
+    @apply flex items-center justify-between mb-6;
+  }
+  
+  .recommendation-counter {
+    @apply text-sm text-gray-500;
+  }
+  
+  .recommendations-actions {
+    @apply mt-8 flex flex-wrap gap-4 justify-center;
+  }

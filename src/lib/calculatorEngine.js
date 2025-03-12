@@ -1,455 +1,67 @@
-// src/utils/calculatorEngine.js
+// src/lib/calculatorEngine.js additions
 
 /**
- * Calculator Engine
+ * Initialize answers with default values from schema
  *
- * This utility provides functions for processing calculator schemas,
- * managing calculator state, and performing calculations.
- *
- * It's designed to work with any calculator schema that follows our format.
+ * @param {Object} schema - Calculator schema
+ * @returns {Object} - Initial answers object
  */
+export function initializeAnswers(schema) {
+  const answers = {};
 
-/**
- * Process answers against a schema to calculate results
- *
- * @param {Object} schema - The calculator schema containing calculation rules
- * @param {Object} answers - User's answers to calculator questions
- * @param {Object} options - Additional options for calculation
- * @returns {Object} Calculation results including features, price, etc.
- */
-export function calculateResults(schema, answers, options = {}) {
-  // Default result structure
-  const results = {
-    features: [],
-    commissionItems: [],
-    pricing: {
-      basePrice: 0,
-      additionalCosts: {},
-      totalPrice: 0,
-    },
-    summary: {
-      tier: 1,
-      type: schema.type || 'Unknown',
-      totalFeatures: 0,
-      requiresCommissionedWork: false,
-    },
-    recommendations: [],
-  };
-
-  try {
-    // Process schema rules
-    if (schema.calculations) {
-      // Calculate base price (maybe from tier selection)
-      if (schema.calculations.basePrice) {
-        const basePriceCalc = executeCalculation(
-          schema.calculations.basePrice,
-          answers,
-          options
-        );
-        results.pricing.basePrice = basePriceCalc;
-      }
-
-      // Calculate tier if defined
-      if (schema.calculations.tier) {
-        const tierCalc = executeCalculation(
-          schema.calculations.tier,
-          answers,
-          options
-        );
-        results.summary.tier = tierCalc;
-      }
-
-      // Process features
-      if (schema.calculations.features) {
-        results.features = processFeatures(
-          schema.calculations.features,
-          answers,
-          options
-        );
-      }
-
-      // Process commission items
-      if (schema.calculations.commissionItems) {
-        results.commissionItems = processCommissionItems(
-          schema.calculations.commissionItems,
-          answers,
-          options
-        );
-      }
-
-      // Process additional costs
-      if (schema.calculations.additionalCosts) {
-        results.pricing.additionalCosts = processAdditionalCosts(
-          schema.calculations.additionalCosts,
-          answers,
-          options
-        );
-      }
-
-      // Process recommendations if available
-      if (schema.calculations.recommendations) {
-        results.recommendations = processRecommendations(
-          schema.calculations.recommendations,
-          answers,
-          schema.recommendations || [],
-          options
-        );
-      }
-    }
-
-    // Update summary information
-    results.summary.totalFeatures = results.features.length;
-    results.summary.requiresCommissionedWork =
-      results.commissionItems.length > 0;
-
-    // Calculate total price
-    const additionalCostsTotal = Object.values(
-      results.pricing.additionalCosts
-    ).reduce((sum, cost) => sum + cost, 0);
-    results.pricing.totalPrice =
-      results.pricing.basePrice + additionalCostsTotal;
-
-    return results;
-  } catch (error) {
-    console.error('Error in calculateResults:', error);
-    return {
-      ...results,
-      error: error.message,
-    };
-  }
-}
-
-/**
- * Execute a calculation function or static value
- *
- * @param {Function|any} calculation - Function or static value
- * @param {Object} answers - User's answers
- * @param {Object} options - Additional options
- * @returns {any} Calculation result
- */
-function executeCalculation(calculation, answers, options) {
-  if (typeof calculation === 'function') {
-    return calculation(answers, options);
-  }
-  return calculation;
-}
-
-/**
- * Process features based on answers
- *
- * @param {Array|Function} featureRules - Rules to determine features
- * @param {Object} answers - User's answers
- * @param {Object} options - Additional options
- * @returns {Array} List of features
- */
-function processFeatures(featureRules, answers, options) {
-  if (typeof featureRules === 'function') {
-    return featureRules(answers, options);
-  }
-
-  const features = [];
-
-  for (const rule of featureRules) {
-    try {
-      if (typeof rule === 'function') {
-        const result = rule(answers, options);
-        if (Array.isArray(result)) {
-          features.push(...result);
-        } else if (result) {
-          features.push(result);
-        }
-      } else if (rule.condition) {
-        // Rule with explicit condition
-        const condition =
-          typeof rule.condition === 'function'
-            ? rule.condition(answers, options)
-            : evaluateCondition(rule.condition, answers);
-
-        if (condition) {
-          const feature = rule.value;
-          if (typeof feature === 'function') {
-            const result = feature(answers, options);
-            features.push(result);
-          } else {
-            features.push(feature);
+  // Iterate through all sections and questions
+  if (schema.sections) {
+    schema.sections.forEach((section) => {
+      if (section.questions) {
+        section.questions.forEach((question) => {
+          if (question.defaultValue !== undefined) {
+            answers[question.id] = question.defaultValue;
           }
-        }
+        });
       }
-    } catch (error) {
-      console.error('Error processing feature rule:', error);
-    }
+    });
   }
 
-  return features;
+  return answers;
 }
 
 /**
- * Process commission items based on answers
- *
- * @param {Array|Function} commissionRules - Rules to determine commission items
- * @param {Object} answers - User's answers
- * @param {Object} options - Additional options
- * @returns {Array} List of commission items
- */
-function processCommissionItems(commissionRules, answers, options) {
-  if (typeof commissionRules === 'function') {
-    return commissionRules(answers, options);
-  }
-
-  const commissionItems = [];
-
-  for (const rule of commissionRules) {
-    try {
-      if (typeof rule === 'function') {
-        const result = rule(answers, options);
-        if (Array.isArray(result)) {
-          commissionItems.push(...result);
-        } else if (result) {
-          commissionItems.push(result);
-        }
-      } else if (rule.condition) {
-        // Rule with explicit condition
-        const condition =
-          typeof rule.condition === 'function'
-            ? rule.condition(answers, options)
-            : evaluateCondition(rule.condition, answers);
-
-        if (condition) {
-          const item = rule.value;
-          if (typeof item === 'function') {
-            const result = item(answers, options);
-            commissionItems.push(result);
-          } else {
-            commissionItems.push(item);
-          }
-        }
-      }
-    } catch (error) {
-      console.error('Error processing commission rule:', error);
-    }
-  }
-
-  return commissionItems;
-}
-
-/**
- * Process additional costs based on answers
- *
- * @param {Object|Function} costRules - Rules to determine additional costs
- * @param {Object} answers - User's answers
- * @param {Object} options - Additional options
- * @returns {Object} Map of additional costs
- */
-function processAdditionalCosts(costRules, answers, options) {
-  if (typeof costRules === 'function') {
-    return costRules(answers, options);
-  }
-
-  const additionalCosts = {};
-
-  for (const [costName, rule] of Object.entries(costRules)) {
-    try {
-      if (typeof rule === 'function') {
-        additionalCosts[costName] = rule(answers, options);
-      } else if (rule.condition && rule.value) {
-        const condition =
-          typeof rule.condition === 'function'
-            ? rule.condition(answers, options)
-            : evaluateCondition(rule.condition, answers);
-
-        if (condition) {
-          const cost =
-            typeof rule.value === 'function'
-              ? rule.value(answers, options)
-              : rule.value;
-
-          additionalCosts[costName] = cost;
-        }
-      } else {
-        additionalCosts[costName] = rule;
-      }
-    } catch (error) {
-      console.error(
-        `Error processing cost rule for ${costName}:`,
-        error
-      );
-    }
-  }
-
-  return additionalCosts;
-}
-
-/**
- * Process recommendations based on answers
- *
- * @param {Array|Function} recommendationRules - Rules to determine recommendations
- * @param {Object} answers - User's answers
- * @param {Array} availableRecommendations - List of available recommendations
- * @param {Object} options - Additional options
- * @returns {Array} List of recommendations
- */
-function processRecommendations(
-  recommendationRules,
-  answers,
-  availableRecommendations,
-  options
-) {
-  if (typeof recommendationRules === 'function') {
-    return recommendationRules(
-      answers,
-      availableRecommendations,
-      options
-    );
-  }
-
-  const recommendations = [];
-
-  for (const rule of recommendationRules) {
-    try {
-      if (typeof rule === 'function') {
-        const result = rule(
-          answers,
-          availableRecommendations,
-          options
-        );
-        if (Array.isArray(result)) {
-          recommendations.push(...result);
-        } else if (result) {
-          recommendations.push(result);
-        }
-      } else if (rule.condition) {
-        // Rule with explicit condition
-        const condition =
-          typeof rule.condition === 'function'
-            ? rule.condition(answers, options)
-            : evaluateCondition(rule.condition, answers);
-
-        if (condition) {
-          if (typeof rule.recommendationId === 'string') {
-            const recommendation = availableRecommendations.find(
-              (r) => r.id === rule.recommendationId
-            );
-            if (recommendation) {
-              recommendations.push(recommendation);
-            }
-          } else if (typeof rule.value === 'function') {
-            const result = rule.value(
-              answers,
-              availableRecommendations,
-              options
-            );
-            if (result) recommendations.push(result);
-          }
-        }
-      }
-    } catch (error) {
-      console.error('Error processing recommendation rule:', error);
-    }
-  }
-
-  return recommendations;
-}
-
-/**
- * Evaluate a condition against answers
- *
- * @param {Object} condition - Condition object with path, operator, and value
- * @param {Object} answers - User's answers
- * @returns {boolean} Whether condition is met
- */
-function evaluateCondition(condition, answers) {
-  // Simple path-based condition
-  if (condition.path && condition.operator) {
-    const value = getValueByPath(answers, condition.path);
-
-    switch (condition.operator) {
-      case '==':
-        return value === condition.value;
-      case '!=':
-        return value !== condition.value;
-      case '>':
-        return value > condition.value;
-      case '>=':
-        return value >= condition.value;
-      case '<':
-        return value < condition.value;
-      case '<=':
-        return value <= condition.value;
-      case 'includes':
-        return (
-          Array.isArray(value) && value.includes(condition.value)
-        );
-      case 'notIncludes':
-        return (
-          !Array.isArray(value) || !value.includes(condition.value)
-        );
-      case 'isEmpty':
-        return (
-          value === undefined ||
-          value === null ||
-          value === '' ||
-          (Array.isArray(value) && value.length === 0)
-        );
-      case 'isNotEmpty':
-        return (
-          value !== undefined &&
-          value !== null &&
-          value !== '' &&
-          (!Array.isArray(value) || value.length > 0)
-        );
-      default:
-        return false;
-    }
-  }
-
-  // Complex conditions with AND/OR
-  if (condition.AND) {
-    return condition.AND.every((subCond) =>
-      evaluateCondition(subCond, answers)
-    );
-  }
-
-  if (condition.OR) {
-    return condition.OR.some((subCond) =>
-      evaluateCondition(subCond, answers)
-    );
-  }
-
-  // Default (should not reach here if condition is well-formed)
-  return false;
-}
-
-/**
- * Get a value from an object by dot-notation path
- *
- * @param {Object} obj - Object to get value from
- * @param {string} path - Dot-notation path to value
- * @returns {any} Value at path
- */
-function getValueByPath(obj, path) {
-  return path.split('.').reduce((curr, key) => {
-    return curr && curr[key] !== undefined ? curr[key] : undefined;
-  }, obj);
-}
-
-/**
- * Validate if the answers meet all required fields
+ * Validate answers against schema requirements
  *
  * @param {Object} schema - Calculator schema
  * @param {Object} answers - User's answers
- * @returns {Object} Validation result {valid, errors}
+ * @returns {Object} - Validation result { valid, errors }
  */
 export function validateAnswers(schema, answers) {
   const errors = [];
 
-  if (!schema.questions) {
+  // If schema doesn't have questions, return valid
+  if (
+    !schema.questions &&
+    (!schema.sections || schema.sections.length === 0)
+  ) {
     return { valid: true, errors };
   }
 
-  // Check each question
-  for (const question of schema.questions) {
+  // Get all questions from sections or directly from questions array
+  const questions = schema.sections
+    ? schema.sections.flatMap((section) => section.questions || [])
+    : schema.questions || [];
+
+  // Check required questions
+  questions.forEach((question) => {
+    // Skip if question shouldn't be displayed based on dependencies
+    if (question.dependsOn) {
+      const { questionId, value } = question.dependsOn;
+      if (answers[questionId] !== value) {
+        return;
+      }
+    }
+
     // Skip non-required questions
-    if (!question.required) continue;
+    if (question.required === false) {
+      return;
+    }
 
     const value = answers[question.id];
 
@@ -465,58 +77,7 @@ export function validateAnswers(schema, answers) {
         message: `${question.label || question.id} is required`,
       });
     }
-
-    // Check conditional requirements
-    if (question.conditionalRequired) {
-      const isRequired = evaluateCondition(
-        question.conditionalRequired,
-        answers
-      );
-      if (
-        isRequired &&
-        (value === undefined || value === null || value === '')
-      ) {
-        errors.push({
-          questionId: question.id,
-          message: `${question.label || question.id} is required based on your other answers`,
-        });
-      }
-    }
-
-    // Check validators
-    if (
-      question.validators &&
-      value !== undefined &&
-      value !== null
-    ) {
-      for (const validator of question.validators) {
-        if (typeof validator === 'function') {
-          const result = validator(value, answers);
-          if (result !== true && typeof result === 'string') {
-            errors.push({
-              questionId: question.id,
-              message: result,
-            });
-          }
-        } else if (
-          validator.condition &&
-          typeof validator.message === 'string'
-        ) {
-          const isInvalid = evaluateCondition(validator.condition, {
-            ...answers,
-            [question.id]: value,
-          });
-
-          if (isInvalid) {
-            errors.push({
-              questionId: question.id,
-              message: validator.message,
-            });
-          }
-        }
-      }
-    }
-  }
+  });
 
   return {
     valid: errors.length === 0,
@@ -525,23 +86,215 @@ export function validateAnswers(schema, answers) {
 }
 
 /**
- * Initialize answers with default values from schema
+ * Calculate results based on answers and schema
  *
  * @param {Object} schema - Calculator schema
- * @returns {Object} Initial answers object
+ * @param {Object} answers - User's answers
+ * @param {Object} options - Additional options
+ * @returns {Object} - Calculation results
  */
-export function initializeAnswers(schema) {
-  const answers = {};
+export function calculateResults(schema, answers, options = {}) {
+  // Initialize results object
+  const results = {
+    features: [],
+    commissionItems: [],
+    pricing: {
+      basePrice: 0,
+      additionalCosts: {},
+      totalPrice: 0,
+    },
+    summary: {
+      tier: 1,
+      type: schema.id || 'generic',
+    },
+    recommendations: [],
+  };
 
-  if (!schema.questions) {
-    return answers;
+  // Process sections
+  if (schema.sections) {
+    schema.sections.forEach((section) => {
+      if (section.questions) {
+        // Process each question's effects
+        section.questions.forEach((question) => {
+          const value = answers[question.id];
+
+          // Skip if no value or no effects
+          if (
+            value === undefined ||
+            value === null ||
+            !question.effects
+          ) {
+            return;
+          }
+
+          // Process effects
+          question.effects.forEach((effect) => {
+            // Skip if effect has a condition that isn't met
+            if (effect.condition) {
+              // Simple conditions
+              if (
+                effect.condition.answer !== undefined &&
+                effect.condition.answer !== value
+              ) {
+                return;
+              }
+
+              // Min value condition
+              if (
+                effect.condition.minValue !== undefined &&
+                value < effect.condition.minValue
+              ) {
+                return;
+              }
+
+              // Max value condition
+              if (
+                effect.condition.maxValue !== undefined &&
+                value > effect.condition.maxValue
+              ) {
+                return;
+              }
+            }
+
+            // Process effect based on type
+            switch (effect.type) {
+              case 'add-feature':
+                results.features.push(effect.value);
+                break;
+
+              case 'add-commission':
+                results.commissionItems.push(effect.value);
+                break;
+
+              case 'set-base-price':
+                results.pricing.basePrice = effect.value;
+                break;
+
+              case 'add-price':
+                // If multiplying by quantity
+                if (
+                  effect.multiplier &&
+                  effect.multiplier in answers
+                ) {
+                  const quantity = Number(answers[effect.multiplier]);
+                  if (!isNaN(quantity)) {
+                    const name =
+                      effect.name || `${question.label} Cost`;
+                    results.pricing.additionalCosts[name] =
+                      effect.value * quantity;
+                  }
+                } else {
+                  const name =
+                    effect.name || `${question.label} Cost`;
+                  results.pricing.additionalCosts[name] =
+                    effect.value;
+                }
+                break;
+
+              case 'set-tier':
+                results.summary.tier = effect.value;
+                break;
+            }
+          });
+
+          // For single-select questions, also add effects from the selected option
+          if (question.type === 'single-select' && question.options) {
+            const selectedOption = question.options.find(
+              (opt) => opt.id === value
+            );
+            if (selectedOption && selectedOption.effects) {
+              // Process option effects
+              selectedOption.effects.forEach((effect) => {
+                switch (effect.type) {
+                  case 'add-feature':
+                    results.features.push(effect.value);
+                    break;
+
+                  case 'add-commission':
+                    results.commissionItems.push(effect.value);
+                    break;
+
+                  case 'set-base-price':
+                    results.pricing.basePrice = effect.value;
+                    break;
+
+                  case 'add-price':
+                    const name =
+                      effect.name || `${selectedOption.label} Cost`;
+                    results.pricing.additionalCosts[name] =
+                      effect.value;
+                    break;
+                }
+              });
+            }
+          }
+        });
+      }
+    });
   }
 
-  for (const question of schema.questions) {
-    if (question.defaultValue !== undefined) {
-      answers[question.id] = question.defaultValue;
+  // Process recommendations if schema has them
+  if (schema.recommendations) {
+    const { recommendations, logic, products } =
+      schema.recommendations;
+
+    // Simple logic to select recommendations
+    if (logic === 'score-based' && Array.isArray(products)) {
+      products.forEach((product) => {
+        // Calculate score for this product
+        let score = 0;
+
+        if (Array.isArray(product.conditions)) {
+          product.conditions.forEach((condition) => {
+            const { questionId, value, weight = 1 } = condition;
+
+            // If user's answer matches condition, add to score
+            if (answers[questionId] === value) {
+              score += weight;
+            }
+          });
+        }
+
+        // If score meets minimum, add to recommendations
+        if (score >= (product.minScore || 1)) {
+          // Determine tier based on score
+          let tier = 1;
+
+          if (product.tierMapping) {
+            const thresholds = Object.values(
+              product.tierMapping
+            ).sort((a, b) => b.score - a.score);
+
+            for (const threshold of thresholds) {
+              if (score >= threshold.score) {
+                tier = threshold.tier;
+                break;
+              }
+            }
+          }
+
+          results.recommendations.push({
+            id: product.id,
+            title: product.name,
+            description: product.description,
+            tier,
+            score,
+          });
+        }
+      });
+
+      // Sort recommendations by score (highest first)
+      results.recommendations.sort((a, b) => b.score - a.score);
     }
   }
 
-  return answers;
+  // Calculate total price
+  const additionalCostsTotal = Object.values(
+    results.pricing.additionalCosts
+  ).reduce((sum, cost) => sum + cost, 0);
+
+  results.pricing.totalPrice =
+    results.pricing.basePrice + additionalCostsTotal;
+
+  return results;
 }

@@ -1,109 +1,171 @@
-// src/app/components/calculators/RecommendationsPanel.js
+// src/app/components/dashboard/calculators/RecommendationsPanel.js
 
 'use client';
 
 import React, { useState } from 'react';
-import { groupRecommendationsByCategory } from '@/utils/recommendationEngine';
 
 export default function RecommendationsPanel({
   recommendations,
   onBackToResults,
   onReset,
 }) {
-  const [activeCategory, setActiveCategory] = useState(null);
+  const [selectedIndex, setSelectedIndex] = useState(0);
 
-  // Group recommendations by category
-  const groupedRecommendations =
-    groupRecommendationsByCategory(recommendations);
+  // Group recommendations by category if they have one
+  const groupedRecommendations = recommendations.reduce(
+    (groups, recommendation) => {
+      const category = recommendation.category || 'General';
+      if (!groups[category]) {
+        groups[category] = [];
+      }
+      groups[category].push(recommendation);
+      return groups;
+    },
+    {}
+  );
 
   // Get all categories
   const categories = Object.keys(groupedRecommendations);
 
-  // Set default active category if none selected
-  if (categories.length > 0 && !activeCategory) {
-    setActiveCategory(categories[0]);
+  // If no categories, just use a flat array
+  const displayRecommendations =
+    categories.length > 0
+      ? Object.values(groupedRecommendations).flat()
+      : recommendations;
+
+  const handleNext = () => {
+    setSelectedIndex((prev) =>
+      prev < displayRecommendations.length - 1 ? prev + 1 : prev
+    );
+  };
+
+  const handlePrevious = () => {
+    setSelectedIndex((prev) => (prev > 0 ? prev - 1 : prev));
+  };
+
+  // If no recommendations, show a message
+  if (!recommendations || recommendations.length === 0) {
+    return (
+      <div className="recommendations-panel empty">
+        <h2>No Recommendations Available</h2>
+        <p>
+          Based on your answers, we don't have specific
+          recommendations. Please review your results.
+        </p>
+        <div className="recommendations-actions">
+          <button
+            className="primary-button"
+            onClick={onBackToResults}
+          >
+            View Results
+          </button>
+          <button className="secondary-button" onClick={onReset}>
+            Start Over
+          </button>
+        </div>
+      </div>
+    );
   }
 
-  // Handle category change
-  const handleCategoryChange = (category) => {
-    setActiveCategory(category);
-  };
-
-  // Get recommendations for active category
-  const getCategoryRecommendations = () => {
-    return activeCategory
-      ? groupedRecommendations[activeCategory] || []
-      : [];
-  };
+  // Get current recommendation
+  const currentRecommendation = displayRecommendations[selectedIndex];
 
   return (
     <div className="recommendations-panel">
-      <h2 className="recommendations-title">Recommendations</h2>
+      <h2 className="recommendations-title">Recommended Solution</h2>
 
-      {categories.length > 1 && (
-        <div className="categories-tabs">
-          {categories.map((category) => (
-            <button
-              key={category}
-              onClick={() => handleCategoryChange(category)}
-              className={`category-tab ${activeCategory === category ? 'active' : ''}`}
-            >
-              {category === 'default' ? 'General' : category}
-            </button>
-          ))}
-        </div>
-      )}
+      {/* Recommendation display */}
+      <div className="recommendation-card">
+        <h3 className="recommendation-name">
+          {currentRecommendation.title ||
+            currentRecommendation.name ||
+            'Recommendation'}
+        </h3>
 
-      <div className="recommendations-list">
-        {getCategoryRecommendations().map((recommendation, index) => (
-          <div key={index} className="recommendation-card">
-            <h3 className="recommendation-title">
-              {recommendation.title}
-            </h3>
-
-            {recommendation.description && (
-              <p className="recommendation-description">
-                {recommendation.description}
-              </p>
-            )}
-
-            {recommendation.image && (
-              <div className="recommendation-image">
-                <img
-                  src={recommendation.image}
-                  alt={recommendation.title}
-                />
-              </div>
-            )}
-
-            {recommendation.link && (
-              <a
-                href={recommendation.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="recommendation-link"
-              >
-                {recommendation.linkText || 'Learn More'}
-              </a>
-            )}
-          </div>
-        ))}
-
-        {getCategoryRecommendations().length === 0 && (
-          <div className="no-recommendations">
-            No recommendations available for this category.
+        {currentRecommendation.category && (
+          <div className="recommendation-category">
+            {currentRecommendation.category}
           </div>
         )}
+
+        <div className="recommendation-description">
+          {currentRecommendation.description ||
+            'No description available.'}
+        </div>
+
+        {/* Features or specifications */}
+        {currentRecommendation.features && (
+          <div className="recommendation-features">
+            <h4>Key Features</h4>
+            <ul>
+              {currentRecommendation.features.map(
+                (feature, index) => (
+                  <li key={index}>{feature}</li>
+                )
+              )}
+            </ul>
+          </div>
+        )}
+
+        {/* Custom fields in recommendation */}
+        {Object.entries(currentRecommendation)
+          .filter(
+            ([key]) =>
+              ![
+                'title',
+                'name',
+                'description',
+                'category',
+                'features',
+                'id',
+              ].includes(key)
+          )
+          .map(
+            ([key, value]) =>
+              typeof value === 'string' && (
+                <div key={key} className="recommendation-detail">
+                  <strong>
+                    {key
+                      .replace(/([A-Z])/g, ' $1')
+                      .replace(/^./, (str) => str.toUpperCase())}
+                    :
+                  </strong>{' '}
+                  {value}
+                </div>
+              )
+          )}
       </div>
 
-      <div className="recommendations-actions">
+      {/* Navigation */}
+      <div className="recommendation-navigation">
         <button
           className="secondary-button"
-          onClick={onBackToResults}
+          onClick={handlePrevious}
+          disabled={selectedIndex === 0}
         >
-          Back to Results
+          Previous
         </button>
 
+        <div className="recommendation-counter">
+          {selectedIndex + 1} of {displayRecommendations.length}
+        </div>
+
+        <button
+          className="secondary-button"
+          onClick={handleNext}
+          disabled={
+            selectedIndex >= displayRecommendations.length - 1
+          }
+        >
+          Next
+        </button>
+      </div>
+
+      {/* Actions */}
+      <div className="recommendations-actions">
+        <button className="primary-button" onClick={onBackToResults}>
+          View Detailed Results
+        </button>
         <button className="secondary-button" onClick={onReset}>
           Start Over
         </button>

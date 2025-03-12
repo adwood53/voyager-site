@@ -1,6 +1,8 @@
 // src/app/components/dashboard/calculators/questions/TextQuestion.js
 'use client';
 
+import React from 'react';
+
 export default function TextQuestion({
   question,
   value,
@@ -8,41 +10,39 @@ export default function TextQuestion({
   errors,
 }) {
   return (
-    <div className="mb-6">
-      <label className="block text-sm font-medium text-gray-700 mb-1">
+    <div className="question-container">
+      <label className="question-label" htmlFor={question.id}>
         {question.label}
         {question.required !== false && (
-          <span className="text-red-500 ml-1">*</span>
+          <span className="required">*</span>
         )}
       </label>
 
       {question.helpText && (
-        <p className="text-xs text-gray-500 mb-2">
-          {question.helpText}
-        </p>
+        <p className="question-help">{question.helpText}</p>
       )}
 
       {question.multiline ? (
         <textarea
-          className={`my-number-input ${errors ? 'invalid' : ''}`}
+          id={question.id}
+          className={`text-area ${errors ? 'invalid' : ''}`}
           value={value || ''}
           onChange={(e) => onChange(e.target.value)}
-          rows={question.rows || 3}
+          rows={question.rows || 4}
           placeholder={question.placeholder || ''}
         />
       ) : (
         <input
+          id={question.id}
           type="text"
-          className={`my-number-input ${errors ? 'invalid' : ''}`}
+          className={`text-input ${errors ? 'invalid' : ''}`}
           value={value || ''}
           onChange={(e) => onChange(e.target.value)}
           placeholder={question.placeholder || ''}
         />
       )}
 
-      {errors && (
-        <div className="mt-1 text-sm text-red-600">{errors}</div>
-      )}
+      {errors && <p className="error-text">{errors}</p>}
     </div>
   );
 }

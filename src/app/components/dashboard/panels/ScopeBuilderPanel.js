@@ -1,28 +1,18 @@
 // src/app/components/dashboard/panels/ScopeBuilderPanel.js
+
 'use client';
 
 import { useState } from 'react';
 import { Card, CardBody, CardHeader } from '@heroui/react';
-import CalculatorContainer from '../calculators/CalculatorContainer';
-import scopeBuilderSchema from '@/schemas/scopeBuilder';
-import { usePartner } from '@/utils/partners';
-import { generateRecommendations } from '@/lib/recommendationEngine';
+import { CalculatorContainer } from '../calculators';
+import scopeBuilderSchema from '@/src/schemas/scopeBuilder';
 
 export default function ScopeBuilderPanel() {
-  const partner = usePartner();
   const [calculatorComplete, setCalculatorComplete] = useState(false);
 
-  // When calculator is submitted, generate recommendations
-  const handleCalculatorSubmit = (data) => {
-    // Generate recommendations based on answers
-    const recommendations = generateRecommendations(
-      scopeBuilderSchema,
-      data.answers
-    );
-
-    // Add recommendations to results
-    data.results.recommendations = recommendations;
-
+  // Handle calculator completion
+  const handleCalculatorComplete = (data) => {
+    console.log('Scope builder completed with data:', data);
     setCalculatorComplete(true);
   };
 
@@ -30,23 +20,24 @@ export default function ScopeBuilderPanel() {
     <div className="max-w-4xl mx-auto">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-800 mb-2">
-          Scope Builder
+          Project Scope Builder
         </h1>
         <p className="text-gray-600">
           Configure your project scope and get recommendations for the
-          best solutions
+          best immersive solutions
         </p>
       </div>
 
       <CalculatorContainer
         schema={scopeBuilderSchema}
-        onSubmit={handleCalculatorSubmit}
+        calculatorType="scope-builder"
         showPdfExport={true}
-        showSubmitToCRM={false}
+        showSubmitToCRM={false} // Explicitly disable HubSpot submission
+        onSubmit={handleCalculatorComplete}
       />
 
-      {/* Additional information card */}
-      <Card className="mb-6">
+      {/* Information card */}
+      <Card className="mt-8">
         <CardHeader>
           <h2 className="text-xl font-semibold text-gray-800">
             About the Scope Builder
@@ -56,15 +47,26 @@ export default function ScopeBuilderPanel() {
           <p className="text-gray-600 mb-4">
             The Scope Builder helps you understand what type of
             immersive experience would best suit your project needs.
-            Answer the questions to receive personalized
-            recommendations and export a detailed scope document.
+            The tool analyzes your requirements and recommends the
+            most appropriate approach.
           </p>
           <p className="text-gray-600">
-            This tool does not automatically submit to our CRM.
-            Instead, it focuses on helping you determine the right
-            approach for your project. You can export the results as a
-            PDF for reference or to share with your team.
+            After completing the questionnaire, you'll receive
+            tailored recommendations based on your answers, along with
+            the option to export a detailed scope document as a PDF.
           </p>
+          {calculatorComplete && (
+            <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-md">
+              <h3 className="text-green-700 font-medium mb-2">
+                Scope Building Complete
+              </h3>
+              <p className="text-green-600">
+                Your project scope has been analyzed. You can review
+                the recommendations and export a detailed PDF for your
+                records.
+              </p>
+            </div>
+          )}
         </CardBody>
       </Card>
     </div>

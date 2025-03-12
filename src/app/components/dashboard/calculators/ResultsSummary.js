@@ -1,4 +1,4 @@
-// src/app/components/calculators/ResultsSummary.js
+// src/app/components/dashboard/calculators/ResultsSummary.js
 
 'use client';
 
@@ -148,9 +148,11 @@ export default function ResultsSummary({
           Start Over
         </button>
 
-        <button className="secondary-button" onClick={onExportPDF}>
-          Export PDF
-        </button>
+        {onExportPDF && (
+          <button className="secondary-button" onClick={onExportPDF}>
+            Export PDF
+          </button>
+        )}
 
         {onSubmitToHubspot && (
           <button

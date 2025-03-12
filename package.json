@@ -24,6 +24,8 @@
     "@sanity/client": "^6.28.0",
     "firebase": "^11.4.0",
     "framer-motion": "^12.4.3",
+    "jspdf": "^3.0.0",
+    "jspdf-autotable": "^5.0.2",
     "next": "15.1.7",
     "next-sanity": "^9.8.57",
     "react": "^18.2.0",

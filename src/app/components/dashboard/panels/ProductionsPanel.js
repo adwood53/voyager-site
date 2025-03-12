@@ -1,26 +1,18 @@
 // src/app/components/dashboard/panels/ProductionsPanel.js
+
 'use client';
 
 import { useState } from 'react';
-import { Card, CardBody, CardHeader, Button } from '@heroui/react';
-import CalculatorContainer from '../calculators/CalculatorContainer';
-import productionsSchema from '@/schemas/productions';
-import { usePartner } from '@/utils/partners';
+import { Card, CardBody, CardHeader } from '@heroui/react';
 import { useUser, useOrganization } from '@clerk/nextjs';
-import CalculatorDealForm from '@/app/components/CalculatorDealForm';
+import { CalculatorContainer } from '../calculators';
+import productionsSchema from '@/src/schemas/productions';
+import { useFirebase } from '@/src/contexts/FirebaseContext';
 
 export default function ProductionsPanel() {
-  const partner = usePartner();
   const { user } = useUser();
   const { organization } = useOrganization();
-
-  const [showDealForm, setShowDealForm] = useState(false);
-  const [calculatorResults, setCalculatorResults] = useState(null);
-
-  const handleCalculatorSubmit = (data) => {
-    setCalculatorResults(data);
-    setShowDealForm(true);
-  };
+  const { organization: firestoreOrg } = useFirebase();
 
   return (
     <div className="max-w-4xl mx-auto">
@@ -36,13 +28,13 @@ export default function ProductionsPanel() {
 
       <CalculatorContainer
         schema={productionsSchema}
-        onSubmit={handleCalculatorSubmit}
+        calculatorType="productions"
         showPdfExport={true}
         showSubmitToCRM={true}
       />
 
       {/* Information card */}
-      <Card className="mb-6">
+      <Card className="mt-8">
         <CardHeader>
           <h2 className="text-xl font-semibold text-gray-800">
             About Productions Services
@@ -62,22 +54,6 @@ export default function ProductionsPanel() {
           </p>
         </CardBody>
       </Card>
-
-      {/* Deal Form Modal */}
-      {showDealForm && (
-        <CalculatorDealForm
-          configurationData={calculatorResults.results}
-          salesPersonDetails={{
-            firstName: user?.firstName || '',
-            lastName: user?.lastName || '',
-            email: user?.primaryEmailAddress?.emailAddress || '',
-            companyName: organization?.name || '',
-            brandsource: partner.name,
-          }}
-          calculatorType="productions"
-          onClose={() => setShowDealForm(false)}
-        />
-      )}
     </div>
   );
 }
