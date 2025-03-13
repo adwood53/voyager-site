@@ -21,7 +21,7 @@ export default function Home() {
     {
       id: 'partner1',
       name: 'Smartway Media',
-      logo: 'https://media.licdn.com/dms/image/v2/C4D0BAQFWZPm1DSxi-A/company-logo_200_200/company-logo_200_200/0/1630526996912/smartwaymedia_logo?e=1749686400&v=beta&t=QvSNXqdqo5_J5qapi7IoyPsL1fsQKKq0Ssw_6iwak2k',
+      logo: '/partners/smartwaymedia_logo.png',
       url: 'https://www.smartwaymedia.co.uk/',
     },
     {
@@ -33,13 +33,13 @@ export default function Home() {
     {
       id: 'partner3',
       name: 'Cross Productions',
-      logo: '/partners/cross_productions_limited_logo.jpeg',
+      logo: '/partners/cross_productions_limited_logo.png',
       url: 'https://crossproductions.co.uk/',
     },
     {
       id: 'partner4',
       name: 'Everything Branded',
-      logo: '/partners/eb.jpeg',
+      logo: 'https://www.everythingbranded.co.uk/assets/images/logos/everything-branded.svg',
       url: 'https://www.everythingbranded.co.uk/',
     },
     {

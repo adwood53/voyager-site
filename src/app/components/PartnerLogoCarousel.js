@@ -2,22 +2,7 @@
 
 import React, { useEffect, useState, useRef } from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
 
-/**
- * PartnerLogoCarousel - Revised version with:
- * - No border or glow on hover, just scale and color
- * - Proper overflow handling for scaled logos
- * - Much smoother infinite scrolling without "jumps"
- * - Background elements at 1/4 the original speed
- *
- * @param {Object} props
- * @param {Array} props.partners - Array of partner objects with logo, name, and url
- * @param {string} props.background - Background color or gradient
- * @param {string} props.className - Additional CSS classes
- * @param {string} props.title - Section title
- * @param {string} props.subtitle - Section subtitle
- */
 export default function PartnerLogoCarousel({
   partners = [],
   background = 'transparent',
@@ -32,19 +17,13 @@ export default function PartnerLogoCarousel({
   const cubesRef = useRef([]);
   const animationRef = useRef(null);
   const bgAnimationRef = useRef(null);
-  const lastPositionRef = useRef(0);
-  const speedRef = useRef(1); // Normal speed
+  const positionRef = useRef(0);
+  const velocityRef = useRef(1);
+  const lastTimeRef = useRef(0);
+  const isHoveredRef = useRef(false);
+  const totalScrollDistanceRef = useRef(0);
 
-  // Create a pool of logos that's much larger than visible area
-  // to prevent seeing any "jumps" in the carousel
-  const extendedPartners = [
-    ...partners,
-    ...partners,
-    ...partners,
-    ...partners,
-  ]; // 4x duplication
-
-  // Generate random background cubes
+  // Initialize background cubes
   useEffect(() => {
     if (!backgroundRef.current) return;
 
@@ -55,7 +34,7 @@ export default function PartnerLogoCarousel({
       );
     }
 
-    // Generate new cubes
+    // Create new background cubes with random properties
     const numCubes = 15;
     const cubes = [];
 
@@ -68,14 +47,12 @@ export default function PartnerLogoCarousel({
       const posX = Math.random() * 100; // 0-100%
       const opacity = Math.random() * 0.2 + 0.05; // 0.05-0.25
       const rotation = Math.random() * 45; // 0-45deg
-
-      // Alternate between primary and alt-primary colors
       const useAltColor = Math.random() > 0.5;
       const color = useAltColor
         ? 'var(--alt-primary)'
         : 'var(--primary)';
 
-      // Apply styles
+      // Style the cube
       cube.className = 'bg-cube absolute';
       cube.style.width = `${size}px`;
       cube.style.height = `${size}px`;
@@ -88,10 +65,9 @@ export default function PartnerLogoCarousel({
       cube.style.borderRadius = '10px';
       cube.style.position = 'absolute';
 
-      // Store initial position
-      cube.dataset.speed = Math.random() * 0.125 + 0.125; // 1/4 the speed (0.125-0.25)
+      // Store animation data
+      cube.dataset.speed = Math.random() * 0.125 + 0.125; // 0.125-0.25
       cube.dataset.posX = posX;
-      cube.dataset.color = color;
 
       backgroundRef.current.appendChild(cube);
       cubes.push(cube);
@@ -101,81 +77,129 @@ export default function PartnerLogoCarousel({
 
     // Start background animation
     animateBackgroundCubes();
+
+    return () => {
+      if (bgAnimationRef.current) {
+        cancelAnimationFrame(bgAnimationRef.current);
+      }
+    };
   }, []);
 
-  // Initialize logo carousel
+  // Initialize and manage logo carousel elements
   useEffect(() => {
-    if (!logoContainerRef.current || extendedPartners.length === 0)
-      return;
+    function createCarouselItems() {
+      if (!logoContainerRef.current || partners.length === 0) return;
 
-    const container = logoContainerRef.current;
+      const container = logoContainerRef.current;
 
-    // Clear existing logos
-    while (container.firstChild) {
-      container.removeChild(container.firstChild);
+      // Clear existing logos
+      while (container.firstChild) {
+        container.removeChild(container.firstChild);
+      }
+
+      // Create enough duplicate sets to ensure continuous scrolling
+      // Using a dynamic approach based on viewport width
+      const viewportWidth = window.innerWidth;
+      const logoWidth = 250; // Approximate width of each logo item
+      const singleSetWidth = logoWidth * partners.length;
+
+      // Calculate how many complete sets we need to fill 3x viewport
+      const setsNeeded =
+        Math.ceil((viewportWidth * 3) / singleSetWidth) + 1;
+
+      // Create multiple copies of partners array based on calculated need
+      const extendedPartners = Array(setsNeeded)
+        .fill(partners)
+        .flat();
+
+      // Create logos
+      extendedPartners.forEach((partner, index) => {
+        const item = document.createElement('div');
+        item.className = 'logo-item px-6 inline-block';
+        item.style.overflow = 'visible';
+        item.style.transform = 'translate3d(0,0,0)';
+        item.dataset.index = index % partners.length;
+        item.dataset.setIndex = Math.floor(index / partners.length);
+
+        item.innerHTML = `
+          <div class="inline-block relative" style="overflow: visible;">
+            <div class="relative h-20 w-56 md:h-24 md:w-64" style="overflow: visible;">
+              <img 
+                src="${partner.logo || '/Voyager-Box-Logo.png'}" 
+                alt="${partner.name || 'Partner logo'}"
+                class="w-full h-full object-contain transition-all duration-300"
+                style="filter: grayscale(1); opacity: 0.6; transform-origin: center; transform: scale(1); will-change: transform, filter, opacity;"
+              />
+            </div>
+          </div>
+        `;
+
+        // Add click handler for partner URL
+        item.addEventListener('click', () => {
+          if (partner.url) {
+            window.open(partner.url, '_blank', 'noopener,noreferrer');
+          }
+        });
+
+        // Add hover handlers with better state management
+        item.addEventListener('mouseenter', () => {
+          isHoveredRef.current = true;
+          setActiveIndex(index % partners.length);
+
+          const img = item.querySelector('img');
+          if (img) {
+            img.style.filter = 'grayscale(0)';
+            img.style.opacity = '1';
+            img.style.transform = 'scale(1.15)';
+          }
+        });
+
+        item.addEventListener('mouseleave', () => {
+          isHoveredRef.current = false;
+          setActiveIndex(-1);
+
+          const img = item.querySelector('img');
+          if (img) {
+            img.style.filter = 'grayscale(1)';
+            img.style.opacity = '0.6';
+            img.style.transform = 'scale(1)';
+          }
+        });
+
+        // Set cursor style
+        item.style.cursor = 'pointer';
+
+        container.appendChild(item);
+      });
+
+      // Reset scroll position counters
+      positionRef.current = 0;
+      totalScrollDistanceRef.current = 0;
     }
 
-    // Create logos - pre-populate with many duplicates for smooth infinite scroll
-    extendedPartners.forEach((partner, index) => {
-      const item = document.createElement('div');
-      item.className = 'logo-item px-6 inline-block overflow-visible';
-      item.dataset.index = index % partners.length; // Use modulo to map back to original partner index
+    // Create initial carousel items
+    createCarouselItems();
 
-      // Initial data for the logo
-      item.innerHTML = `
-        <div class="inline-block relative overflow-visible">
-          <div class="relative h-20 w-56 md:h-24 md:w-64 overflow-visible">
-            <img 
-              src="${partner.logo || '/Voyager-Box-Logo.png'}" 
-              alt="${partner.name || 'Partner logo'}"
-              class="w-full h-full object-contain grayscale opacity-60 transition-all duration-300"
-              style="filter: grayscale(1); transform-origin: center;"
-            />
-          </div>
-        </div>
-      `;
+    // Handle window resize for responsive implementation
+    const handleResize = () => {
+      // Recreate carousel items on resize to ensure enough content
+      createCarouselItems();
+    };
 
-      // Add click handler to navigate to partner URL
-      item.addEventListener('click', () => {
-        if (partner.url) {
-          window.open(partner.url, '_blank', 'noopener,noreferrer');
-        }
-      });
+    window.addEventListener('resize', handleResize);
 
-      // Add hover handlers
-      item.addEventListener('mouseenter', () => {
-        setActiveIndex(index % partners.length);
-        const img = item.querySelector('img');
-
-        if (img) {
-          img.style.filter = 'grayscale(0)';
-          img.style.opacity = '1';
-          img.style.transform = 'scale(1.15)';
-        }
-      });
-
-      item.addEventListener('mouseleave', () => {
-        setActiveIndex(-1);
-        const img = item.querySelector('img');
-
-        if (img) {
-          img.style.filter = 'grayscale(1)';
-          img.style.opacity = '0.6';
-          img.style.transform = 'scale(1)';
-        }
-      });
-
-      // Set cursor style
-      item.style.cursor = 'pointer';
-
-      container.appendChild(item);
-    });
-
-    // Start logo carousel animation
+    // Start carousel animation
     animateLogoCarousel();
-  }, [extendedPartners, partners]);
 
-  // Animation function for background cubes
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+    };
+  }, [partners]);
+
+  // Background animation function
   const animateBackgroundCubes = () => {
     if (!backgroundRef.current) return;
 
@@ -187,9 +211,9 @@ export default function PartnerLogoCarousel({
 
         x += speed;
 
-        // If cube goes off screen, reset to left side
+        // Reset position when out of view
         if (x > 100) {
-          x = -10; // Start a bit outside the container
+          x = -10;
         }
 
         cube.style.left = `${x}%`;
@@ -200,82 +224,141 @@ export default function PartnerLogoCarousel({
     };
 
     bgAnimationRef.current = requestAnimationFrame(animate);
-
-    // Clean up animation on unmount
-    return () => {
-      if (bgAnimationRef.current) {
-        cancelAnimationFrame(bgAnimationRef.current);
-      }
-    };
   };
 
-  // Animation function for logo carousel using a different approach
+  // Dynamic logo carousel animation with on-demand content addition
   const animateLogoCarousel = () => {
-    if (!logoContainerRef.current) return;
+    if (!logoContainerRef.current || !partners.length) return;
 
     const container = logoContainerRef.current;
-    let position = lastPositionRef.current;
+    const logoWidth = 250; // Approximate width of a logo item
+    const singleSetWidth = logoWidth * partners.length;
 
-    // Get first logo width to use for recycling
-    // Only measure this once to avoid layout thrashing
-    const logoWidth = container.firstChild
-      ? container.firstChild.offsetWidth
-      : 200;
+    const animate = (timestamp) => {
+      // Initialize lastTimeRef on first run
+      if (!lastTimeRef.current) {
+        lastTimeRef.current = timestamp;
+      }
 
-    const animate = () => {
-      // Apply acceleration effect if coming back from hover
-      if (activeIndex === -1) {
-        if (speedRef.current < 1) {
-          speedRef.current += 0.05; // Gradually increase speed back to normal
-        } else {
-          speedRef.current = 1; // Cap at normal speed
-        }
+      const deltaTime = timestamp - lastTimeRef.current;
+      lastTimeRef.current = timestamp;
+
+      // Handle animation speed based on hover state
+      if (isHoveredRef.current) {
+        // When hovering, quickly but smoothly slow to a stop
+        velocityRef.current *= 0.9; // Exponential deceleration for smoothness
+        if (velocityRef.current < 0.01) velocityRef.current = 0;
       } else {
-        speedRef.current = 0; // No movement when hovering
+        // When not hovering, smoothly accelerate back to normal speed
+        if (velocityRef.current < 1) {
+          velocityRef.current += 0.003; // Very gradual acceleration
+          if (velocityRef.current > 1) velocityRef.current = 1;
+        }
       }
 
-      position -= speedRef.current; // Apply current speed
-      lastPositionRef.current = position; // Store position for resuming
+      // Calculate movement based on time and velocity
+      const pixelsPerSecond = 50; // Base speed
+      const movement =
+        ((pixelsPerSecond * deltaTime) / 1000) * velocityRef.current;
 
-      // Apply position to container
-      container.style.transform = `translateX(${position}px)`;
+      // Update position
+      positionRef.current -= movement;
+      totalScrollDistanceRef.current += movement;
 
-      // Check if first logo is out of view and needs to be recycled
-      // Using a threshold of full logo width
-      if (position <= -logoWidth) {
-        // Instead of moving DOM elements which causes visual jumps,
-        // just adjust the position back by one logo width
-        // This creates the illusion of infinite scrolling
-        position += logoWidth;
-        lastPositionRef.current = position;
-        container.style.transform = `translateX(${position}px)`;
+      // KEY SOLUTION: Check if we need to add more partners
+      // If we've scrolled more than one set width, check if we need to add more logos
+      if (totalScrollDistanceRef.current >= singleSetWidth) {
+        // Reset the counter
+        totalScrollDistanceRef.current = 0;
+
+        // Check if we need to add more logos
+        const lastItem = container.lastChild;
+
+        if (lastItem) {
+          const setIndex =
+            parseInt(lastItem.dataset.setIndex, 10) || 0;
+
+          // Add another set of logos if needed
+          if (setIndex < 10) {
+            // Limit to 10 sets to prevent memory issues
+            partners.forEach((partner, index) => {
+              const item = document.createElement('div');
+              item.className = 'logo-item px-6 inline-block';
+              item.style.overflow = 'visible';
+              item.style.transform = 'translate3d(0,0,0)';
+              item.dataset.index = index % partners.length;
+              item.dataset.setIndex = setIndex + 1;
+
+              item.innerHTML = `
+                <div class="inline-block relative" style="overflow: visible;">
+                  <div class="relative h-20 w-56 md:h-24 md:w-64" style="overflow: visible;">
+                    <img 
+                      src="${partner.logo || '/Voyager-Box-Logo.png'}" 
+                      alt="${partner.name || 'Partner logo'}"
+                      class="w-full h-full object-contain transition-all duration-300"
+                      style="filter: grayscale(1); opacity: 0.6; transform-origin: center; transform: scale(1); will-change: transform, filter, opacity;"
+                    />
+                  </div>
+                </div>
+              `;
+
+              // Add event handlers (same as before)
+              item.addEventListener('click', () => {
+                if (partner.url) {
+                  window.open(
+                    partner.url,
+                    '_blank',
+                    'noopener,noreferrer'
+                  );
+                }
+              });
+
+              item.addEventListener('mouseenter', () => {
+                isHoveredRef.current = true;
+                setActiveIndex(index % partners.length);
+
+                const img = item.querySelector('img');
+                if (img) {
+                  img.style.filter = 'grayscale(0)';
+                  img.style.opacity = '1';
+                  img.style.transform = 'scale(1.15)';
+                }
+              });
+
+              item.addEventListener('mouseleave', () => {
+                isHoveredRef.current = false;
+                setActiveIndex(-1);
+
+                const img = item.querySelector('img');
+                if (img) {
+                  img.style.filter = 'grayscale(1)';
+                  img.style.opacity = '0.6';
+                  img.style.transform = 'scale(1)';
+                }
+              });
+
+              // Set cursor style
+              item.style.cursor = 'pointer';
+
+              container.appendChild(item);
+            });
+          }
+        }
+
+        // Remove offscreen items to prevent excessive DOM nodes
+        while (container.children.length > partners.length * 10) {
+          container.removeChild(container.firstChild);
+        }
       }
 
-      // Continue animation
+      // Apply transform with GPU acceleration
+      container.style.transform = `translate3d(${positionRef.current}px, 0, 0)`;
+
       animationRef.current = requestAnimationFrame(animate);
     };
 
     animationRef.current = requestAnimationFrame(animate);
-
-    // Clean up animation on unmount
-    return () => {
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current);
-      }
-    };
   };
-
-  // Clean up on unmount
-  useEffect(() => {
-    return () => {
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current);
-      }
-      if (bgAnimationRef.current) {
-        cancelAnimationFrame(bgAnimationRef.current);
-      }
-    };
-  }, []);
 
   return (
     <div
@@ -319,16 +402,25 @@ export default function PartnerLogoCarousel({
         )}
       </div>
 
-      {/* Logo carousel container (horizontally scrolling) */}
+      {/* Logo carousel - improved container structure */}
       <div
-        className="relative w-full mt-6 overflow-hidden"
+        className="relative w-full mt-6"
         ref={logoWrapperRef}
+        style={{ overflow: 'visible' }}
       >
-        <div className="mx-auto max-w-full overflow-hidden logo-container-wrapper">
+        <div
+          className="mx-auto max-w-full"
+          style={{ overflow: 'visible' }}
+        >
           <div
             ref={logoContainerRef}
-            className="inline-flex items-center logo-carousel-inner overflow-visible"
-            style={{ whiteSpace: 'nowrap' }}
+            className="inline-flex items-center"
+            style={{
+              whiteSpace: 'nowrap',
+              transform: 'translate3d(0, 0, 0)',
+              willChange: 'transform',
+              overflow: 'visible',
+            }}
           />
         </div>
       </div>
