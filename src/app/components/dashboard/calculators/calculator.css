@@ -4,7 +4,7 @@
 .calculator-container {
   background-color: white;
   border-radius: 0.5rem;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 10%), 0 2px 4px -1px rgb(0 0 0 / 6%);
   overflow: hidden;
 }
   
@@ -26,7 +26,7 @@
   border-radius: 9999px;
   overflow: hidden;
 }
-  
+
 .progress-bar-fill {
   height: 100%;
   background-color: var(--primary, #E79023);
@@ -179,7 +179,10 @@
   margin-bottom: 1.5rem;
 }
   
-.section-title {
+/* Additional section title styling */
+.pricing-section .section-title, 
+.features-section .section-title, 
+.commission-section .section-title {
   font-size: 1.125rem;
   font-weight: 600;
   margin-bottom: 0.75rem;
@@ -192,7 +195,7 @@
   gap: 0.75rem;
 }
 
-@media (min-width: 768px) {
+@media (width >= 768px) {
   .features-list {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -218,13 +221,11 @@
   justify-content: space-between;
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
-  border-bottom-width: 1px;
-  border-bottom-style: solid;
-  border-bottom-color: #E5E7EB;
+  border-bottom: 1px solid #E5E7EB;
 }
 
 .price-item:last-child {
-  border-bottom-width: 0;
+  border-bottom: 0;
 }
   
 .price-label {
@@ -268,7 +269,7 @@
   border-radius: 0.5rem;
   border: 1px solid;
   border-color: rgba(var(--primary, #E79023), 0.2);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 10%), 0 2px 4px -1px rgb(0 0 0 / 6%);
   margin-bottom: 1.5rem;
 }
   

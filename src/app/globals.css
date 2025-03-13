@@ -3,18 +3,20 @@
 
 /* Font Face Declarations for Labora */
 @font-face {
-  font-family: 'Labora';
-  src: url('/fonts/Labora-Regular.otf') format('opentype'),
-       url('/fonts/Labora-Regular.ttf') format('truetype');
+  font-family: Labora;
+  src:
+    url('/fonts/Labora-Regular.otf') format('opentype'),
+    url('/fonts/Labora-Regular.ttf') format('truetype');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Labora';
-  src: url('/fonts/Labora-Italic.otf') format('opentype'),
-       url('/fonts/Labora-Italic.ttf') format('truetype');
+  font-family: Labora;
+  src:
+    url('/fonts/Labora-Italic.otf') format('opentype'),
+    url('/fonts/Labora-Italic.ttf') format('truetype');
   font-weight: 400;
   font-style: italic;
   font-display: swap;
@@ -28,25 +30,29 @@
 /* Root-level CSS variables mapping brand colours and fonts */
 :root {
   /* Colours */
-  --background-light: #E6E7D9;                                              /* Light-Primary */
-  --background-dark: #252523;                                               /* Dark-Accent */
-  --primary: #E79023;                                                       /* Brand-Primary */
-  --primary-gradient: linear-gradient(315deg, #e79023 0%, #a6620c 100%);    /* Brand-Gradient */
-  --accent: #a6620c;                                                        /* Brand-Accent */
-  --alt-primary: #7466E2;                                                   /* Brand-Alt-Primary */
-  --alt-accent: #6055B5;                                                    /* Brand-Alt-Accent */
-  --text-light: #FFFFFF;                                                    /* Text-Light */
-  --text-dark: #000000;                                                     /* Text-Dark */
-  --error: #DC3D1C;                                                         /* Error */
-  --confirm: #3DC81C;                                                       /* Confirm */
-  --link: #55A9D0;                                                          /* Link */
-  --dark-bg: #121212;                                                       /* Dark background */
-  --dark-card: #1E1E1E;                                                     /* Card background */
+  --background-light: #e6e7d9; /* Light-Primary */
+  --background-dark: #252523; /* Dark-Accent */
+  --primary: #e79023; /* Brand-Primary */
+  --primary-gradient: linear-gradient(
+    315deg,
+    #e79023 0%,
+    #a6620c 100%
+  ); /* Brand-Gradient */
+  --accent: #a6620c; /* Brand-Accent */
+  --alt-primary: #7466e2; /* Brand-Alt-Primary */
+  --alt-accent: #6055b5; /* Brand-Alt-Accent */
+  --text-light: #fff; /* Text-Light */
+  --text-dark: #000; /* Text-Dark */
+  --error: #dc3d1c; /* Error */
+  --confirm: #3dc81c; /* Confirm */
+  --link: #55a9d0; /* Link */
+  --dark-bg: #121212; /* Dark background */
+  --dark-card: #1e1e1e; /* Card background */
 
-  /* Fonts */ 
-  --font-heading: 'Labora', sans-serif;                                     /* Labora font for headings */
-  --font-body: 'Quicksand', sans-serif;                                     /* Quicksand font for body */
-  --line-height-base: 1.6;                                                  /* Line-height */
+  /* Fonts */
+  --font-heading: Labora, sans-serif; /* Labora font for headings */
+  --font-body: Quicksand, sans-serif; /* Quicksand font for body */
+  --line-height-base: 1.6; /* Line-height */
 }
 
 /* Dark mode - using backgroundDark as the base */
@@ -80,20 +86,22 @@ img {
 }
 
 /* Custom layer components for Voyager Immersive */
+@media (width >= 768px) {
+  .container-voyager {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 2rem;
+    max-width: 80rem;
+  }
+}
+
 .container-voyager {
   width: 100%;
   margin-left: auto;
   margin-right: auto;
-  padding-left: 1rem;
-  padding-right: 1rem;
+  padding: 0 1rem;
   max-width: 80rem;
-}
-
-@media (min-width: 768px) {
-  .container-voyager {
-    padding-left: 2rem;
-    padding-right: 2rem;
-  }
 }
 
 .btn-voyager {
@@ -122,9 +130,13 @@ img {
 .btn-primary:focus {
   --tw-ring-opacity: 0.5;
   --tw-ring-color: var(--primary);
-  --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
-  --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);
-  box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
+  --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0
+    var(--tw-ring-offset-width) var(--tw-ring-offset-color);
+  --tw-ring-shadow: var(--tw-ring-inset) 0 0 0
+    calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);
+  box-shadow:
+    var(--tw-ring-offset-shadow), var(--tw-ring-shadow),
+    var(--tw-shadow, 0 0 #0000);
 }
 
 .btn-secondary {
@@ -149,26 +161,30 @@ img {
 .btn-alt:focus {
   --tw-ring-opacity: 0.5;
   --tw-ring-color: var(--alt-primary);
-  --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
-  --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);
-  box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
+  --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0
+    var(--tw-ring-offset-width) var(--tw-ring-offset-color);
+  --tw-ring-shadow: var(--tw-ring-inset) 0 0 0
+    calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);
+  box-shadow:
+    var(--tw-ring-offset-shadow), var(--tw-ring-shadow),
+    var(--tw-shadow, 0 0 #0000);
 }
 
 .card-voyager {
   background-color: var(--dark-card);
   border-radius: 0.5rem;
   overflow: hidden;
-  border: 1px solid var(--primary);
-  border-opacity: 0.2;
-  transition-property: all;
-  transition-duration: 300ms;
+  border: 1px solid rgba(231, 144, 35, 0.2);
+  transition: all 300ms ease;
   transform: translateZ(0);
 }
 
 .card-voyager:hover {
-  border-opacity: 0.5;
+  border-color: rgba(231, 144, 35, 0.5);
   transform: scale(1.02);
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 
 .heading-voyager {
@@ -181,7 +197,7 @@ img {
   padding-bottom: 5rem;
 }
 
-@media (min-width: 768px) {
+@media (width >= 768px) {
   .section-voyager {
     padding-top: 8rem;
     padding-bottom: 8rem;
@@ -196,8 +212,10 @@ img {
   color: var(--text-light);
   font-size: 0.875rem;
   border: 1px solid var(--primary);
-  border-opacity: 0.3;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  opacity: 0.3;
+  box-shadow:
+    0 10px 15px -3px rgb(0 0 0 / 10%),
+    0 4px 6px -2px rgb(0 0 0 / 5%);
   opacity: 0;
   transition: opacity 300ms;
   z-index: 50;
@@ -221,8 +239,15 @@ img {
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: linear-gradient(120deg, transparent 10%, rgba(231, 144, 35, 0.2) 10%, rgba(231, 144, 35, 0.2) 14%, transparent 14%);
-  animation: glitch 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both infinite;
+  background-image: linear-gradient(
+    120deg,
+    transparent 10%,
+    rgb(231 144 35 / 20%) 10%,
+    rgb(231 144 35 / 20%) 14%,
+    transparent 14%
+  );
+  animation: glitch 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both
+    infinite;
   pointer-events: none;
 }
 
@@ -231,12 +256,12 @@ img {
   transition-property: all;
   transition-duration: 300ms;
   transform: translateZ(0);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 5px 15px rgb(0 0 0 / 10%);
 }
 
 .hover-3d:hover {
   transform: translateY(-5px) scale(1.02);
-  box-shadow: 0 15px 30px rgba(231, 144, 35, 0.2);
+  box-shadow: 0 15px 30px rgb(231 144 35 / 20%);
 }
 
 /* Glow Effect */
@@ -246,7 +271,7 @@ img {
 }
 
 .glow-effect:hover {
-  box-shadow: 0 0 15px rgba(231, 144, 35, 0.5);
+  box-shadow: 0 0 15px rgb(231 144 35 / 50%);
 }
 
 /* Parallax Container */
@@ -264,32 +289,62 @@ img {
 
 /* Custom keyframes for animations */
 @keyframes marquee {
-  from { transform: translateX(0); }
-  to { transform: translateX(-100%); }
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
 }
 
 @keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 5px rgba(231, 144, 35, 0.5); }
-  50% { box-shadow: 0 0 20px rgba(231, 144, 35, 0.8); }
+  0%,
+  100% {
+    box-shadow: 0 0 5px rgb(231 144 35 / 50%);
+  }
+  50% {
+    box-shadow: 0 0 20px rgb(231 144 35 / 80%);
+  }
 }
 
 @keyframes glitch {
-  0% { transform: translate(0); }
-  25% { transform: translate(-5px, 5px); }
-  50% { transform: translate(-5px, -5px); }
-  75% { transform: translate(5px, 5px); }
-  100% { transform: translate(5px, -5px); }
+  0% {
+    transform: translate(0);
+  }
+  25% {
+    transform: translate(-5px, 5px);
+  }
+  50% {
+    transform: translate(-5px, -5px);
+  }
+  75% {
+    transform: translate(5px, 5px);
+  }
+  100% {
+    transform: translate(5px, -5px);
+  }
 }
 
 @keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
 }
 
 @keyframes rotate3d {
-  0% { transform: rotateY(0deg); }
-  50% { transform: rotateY(10deg); }
-  100% { transform: rotateY(0deg); }
+  0% {
+    transform: rotateY(0deg);
+  }
+  50% {
+    transform: rotateY(10deg);
+  }
+  100% {
+    transform: rotateY(0deg);
+  }
 }
 
 /* Custom scrollbar for webkit browsers */
@@ -302,10 +357,10 @@ img {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(231, 144, 35, 0.3);
+  background: rgb(231 144 35 / 30%);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(231, 144, 35, 0.5);
+  background: rgb(231 144 35 / 50%);
 }

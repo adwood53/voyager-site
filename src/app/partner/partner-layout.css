@@ -1,76 +1,318 @@
-/* src/app/partner/partner-theme.css - updated */
-:root {
-  /* Default partner dashboard colors */
-  --partner-primary: #E79023;
-  --partner-secondary: #a6620c;
-  --partner-text: #333333;
-  --partner-bg: #FFFFFF;
-  --partner-card-bg: #F8F9FA;
-  --partner-border: #E2E8F0;
-  --partner-gradient: linear-gradient(315deg, var(--partner-primary) 0%, var(--partner-secondary) 100%);
-}
+/* src/app/partner/partner-layout.css */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
-/* Specific overrides for partner theme */
-[data-theme="partner"] {
-  background-color: var(--partner-bg, #FFFFFF) !important;
-  color: var(--partner-text, #333333) !important;
-}
-
-[data-theme="partner"] .partner-dashboard {
-  background-color: var(--partner-bg, #FFFFFF);
-  color: var(--partner-text, #333333);
-}
-
-/* Partner dashboard base styles */
+/* Complete reset and partner-specific base styles */
 .partner-dashboard {
-  background-color: var(--partner-bg);
-  color: var(--partner-text);
+  font-family: 'Inter', sans-serif;
+  background-color: #fff;
+  color: #333;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  line-height: 1.6;
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  user-select: auto;
 }
 
-.partner-header {
-  background-color: var(--partner-card-bg);
-  border-bottom: 1px solid var(--partner-border);
+.partner-dashboard * {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', sans-serif;
 }
 
-.partner-navbar {
-  background-color: var(--partner-card-bg);
-  border-bottom: 1px solid var(--partner-border);
+/* Typography */
+.partner-dashboard h1,
+.partner-dashboard h2,
+.partner-dashboard h3,
+.partner-dashboard h4,
+.partner-dashboard h5,
+.partner-dashboard h6 {
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 0.5rem;
 }
 
-.partner-card {
-  background-color: var(--partner-card-bg);
-  border: 1px solid var(--partner-border);
-  border-radius: 0.5rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-}
-
-.partner-button-primary {
-  background-color: var(--partner-primary);
+/* Button Styles */
+.partner-dashboard button {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--primary-color, #e79023);
   color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  opacity: 1;
+  visibility: visible;
+  position: relative;
+  z-index: 10;
 }
 
-.partner-button-primary:hover {
-  background-color: var(--partner-secondary);
+.partner-dashboard button:hover {
+  background-color: var(--secondary-color, #a6620c);
 }
 
-.partner-button-secondary {
-  border: 1px solid var(--partner-primary);
-  color: var(--partner-primary);
+/* FIX: Admin Dashboard Member Actions */
+.partner-dashboard button[size='sm'],
+.partner-dashboard [role='cell'] button,
+.partner-dashboard table td button,
+.partner-dashboard [data-rk] button,
+.partner-dashboard [data-slot='base'] button {
+  opacity: 1 !important;
+  visibility: visible !important;
+  z-index: 50;
+  position: relative;
 }
 
-.partner-button-secondary:hover {
-  background-color: rgba(0, 0, 0, 0.05);
+.partner-dashboard button[color='danger'],
+.partner-dashboard button.danger,
+.partner-dashboard [role='cell']:last-child button,
+.partner-dashboard table td:last-child button,
+.partner-dashboard button[data-color='danger'] {
+  background-color: #ef4444 !important;
+  color: white !important;
+  font-weight: 500;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  opacity: 1 !important;
+  visibility: visible !important;
 }
 
-.partner-link {
-  color: var(--partner-primary);
+.partner-dashboard button[color='danger']:hover,
+.partner-dashboard button.danger:hover,
+.partner-dashboard [role='cell']:last-child button:hover,
+.partner-dashboard table td:last-child button:hover,
+.partner-dashboard button[data-color='danger']:hover {
+  background-color: #dc2626 !important;
 }
 
-.partner-link:hover {
-  color: var(--partner-secondary);
+/* Fix for HeroUI components */
+.partner-dashboard [data-slot='base'],
+.partner-dashboard [data-slot='content'] {
+  z-index: auto;
+  position: relative;
 }
 
-.partner-active-nav {
-  color: var(--partner-primary);
+/* Fix for table cell content wrapping */
+.partner-dashboard [role='cell'] > div {
+  width: max-content;
+  min-width: 100%;
+}
+
+/* Text button fix */
+.partner-dashboard [data-slot='base'][data-color='danger'] {
+  color: #ef4444 !important;
+}
+
+/* Fix for admin dashboard member action buttons */
+.partner-dashboard
+  [role='table']
+  [role='row']
+  [role='cell']:last-child
+  *,
+.partner-dashboard
+  [role='table']
+  [role='row']
+  [role='cell']:last-child
+  button {
+  position: relative !important;
+  z-index: 50 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* Card Styles */
+.partner-card {
+  background-color: var(--card-bg-color, white);
+  border: 1px solid var(--border-color, #e2e8f0);
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+/* Navigation */
+.partner-dashboard nav {
+  background-color: var(--card-bg-color, #f8f9fa);
+  border-bottom: 1px solid var(--border-color, #e2e8f0);
+}
+
+/* Utility Classes */
+.partner-dashboard .text-primary {
+  color: var(--primary-color, #e79023);
+}
+
+.partner-dashboard .bg-primary {
+  background-color: var(--primary-color, #e79023);
+}
+
+/* Responsive Layout */
+.partner-dashboard .container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
+/* Flex Utilities */
+.partner-dashboard .flex {
+  display: flex;
+}
+
+.partner-dashboard .flex-col {
+  flex-direction: column;
+}
+
+.partner-dashboard .items-center {
+  align-items: center;
+}
+
+.partner-dashboard .justify-between {
+  justify-content: space-between;
+}
+
+/* Grid Utilities */
+.partner-dashboard .grid {
+  display: grid;
+}
+
+.partner-dashboard .grid-cols-1 {
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+
+@media (min-width: 768px) {
+  .partner-dashboard .md\:grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Spacing Utilities */
+.partner-dashboard .p-4 {
+  padding: 1rem;
+}
+
+.partner-dashboard .p-6 {
+  padding: 1.5rem;
+}
+
+.partner-dashboard .mb-4 {
+  margin-bottom: 1rem;
+}
+
+.partner-dashboard .mb-6 {
+  margin-bottom: 1.5rem;
+}
+
+/* Input Styles */
+.partner-dashboard input,
+.partner-dashboard select,
+.partner-dashboard textarea {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid var(--border-color, #e2e8f0);
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+/* Link Styles */
+.partner-dashboard a {
+  color: var(--primary-color, #e79023);
+  text-decoration: none;
+  transition: color 0.3s ease;
+  position: relative;
+  z-index: 10;
+}
+
+.partner-dashboard a:hover {
+  color: var(--secondary-color, #a6620c);
+}
+
+/* Tables and data display */
+.partner-dashboard table,
+.partner-dashboard [role='table'] {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.partner-dashboard table th,
+.partner-dashboard table td,
+.partner-dashboard [role='rowheader'],
+.partner-dashboard [role='cell'] {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  user-select: text !important;
+}
+
+.partner-dashboard table th,
+.partner-dashboard [role='rowheader'] {
+  font-weight: 600;
+  color: #4a5568;
+  background-color: #f7fafc;
+}
+
+.partner-dashboard table td,
+.partner-dashboard [role='cell'] {
+  border-top: 1px solid #e2e8f0;
+}
+
+/* Additional Member Styles */
+.partner-dashboard .member-row img,
+.partner-dashboard [role='row'] img {
+  width: 40px;
+  height: 40px;
+  border-radius: 9999px;
+  object-fit: cover;
+}
+
+.partner-dashboard .member-details,
+.partner-dashboard [role='cell'] > div {
+  display: flex;
+  flex-direction: column;
+}
+
+.partner-dashboard .member-name,
+.partner-dashboard [role='cell'] > div > span:first-child {
+  font-weight: 500;
+  color: #2d3748;
+}
+
+.partner-dashboard .member-email,
+.partner-dashboard [role='cell'] > div > span:last-child {
+  font-size: 0.875rem;
+  color: #718096;
+}
+
+/* Status indicators */
+.partner-dashboard .status-active,
+.partner-dashboard [role='cell'] .bg-green-100 {
+  background-color: #d1fae5;
+  color: #064e3b;
+  padding: 0.25rem 0.5rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.partner-dashboard .role-admin,
+.partner-dashboard [role='cell'] .bg-blue-100 {
+  background-color: #dbeafe;
+  color: #1e40af;
+  padding: 0.25rem 0.5rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.partner-dashboard .role-member,
+.partner-dashboard [role='cell'] .bg-gray-100 {
+  background-color: #f3f4f6;
+  color: #4b5563;
+  padding: 0.25rem 0.5rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
 }

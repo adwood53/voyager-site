@@ -1,10 +1,18 @@
 /* src/app/partner/partner-theme.css - updated */
+
+/* Partner dashboard styles should come before data-theme selectors */
+.partner-dashboard {
+  background-color: var(--partner-bg);
+  color: var(--partner-text);
+  min-height: 100vh;
+}
+
 :root {
   /* Default partner dashboard colors */
   --partner-primary: #E79023;
   --partner-secondary: #a6620c;
-  --partner-text: #333333;
-  --partner-bg: #FFFFFF;
+  --partner-text: #333;
+  --partner-bg: #FFF;
   --partner-card-bg: #F8F9FA;
   --partner-border: #E2E8F0;
   --partner-gradient: linear-gradient(315deg, var(--partner-primary) 0%, var(--partner-secondary) 100%);
@@ -12,20 +20,13 @@
 
 /* Specific overrides for partner theme */
 [data-theme="partner"] {
-  background-color: var(--partner-bg, #FFFFFF) !important;
-  color: var(--partner-text, #333333) !important;
+  background-color: var(--partner-bg, #FFF) !important;
+  color: var(--partner-text, #333) !important;
 }
 
 [data-theme="partner"] .partner-dashboard {
-  background-color: var(--partner-bg, #FFFFFF);
-  color: var(--partner-text, #333333);
-}
-
-/* Partner dashboard base styles */
-.partner-dashboard {
-  background-color: var(--partner-bg);
-  color: var(--partner-text);
-  min-height: 100vh;
+  background-color: var(--partner-bg, #FFF);
+  color: var(--partner-text, #333);
 }
 
 .partner-header {
@@ -42,7 +43,7 @@
   background-color: var(--partner-card-bg);
   border: 1px solid var(--partner-border);
   border-radius: 0.5rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 1px 3px rgb(0 0 0 / 5%);
 }
 
 .partner-button-primary {
@@ -60,7 +61,7 @@
 }
 
 .partner-button-secondary:hover {
-  background-color: rgba(0, 0, 0, 0.05);
+  background-color: rgb(0 0 0 / 5%);
 }
 
 .partner-link {
