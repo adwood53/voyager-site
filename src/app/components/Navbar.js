@@ -10,9 +10,13 @@ import {
 } from '@heroui/react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
+import { usePathname, useRouter } from 'next/navigation';
 
 export default function VoyagerNavbar() {
   const [scrolled, setScrolled] = useState(false);
+  const pathname = usePathname();
+  const router = useRouter();
+  const isHomePage = pathname === '/';
 
   useEffect(() => {
     const handleScroll = () => {
@@ -24,6 +28,40 @@ export default function VoyagerNavbar() {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, [scrolled]);
+
+  // Handle navigation for both home and non-home pages
+  const handleNavigation = (sectionId) => {
+    if (isHomePage) {
+      // If we're on home page, just scroll to the section
+      const section = document.getElementById(sectionId);
+      if (section) {
+        section.scrollIntoView({ behavior: 'smooth' });
+      }
+    } else {
+      // Store the target section in sessionStorage for retrieval after navigation
+      sessionStorage.setItem('scrollToSection', sectionId);
+      // Navigate to the home page (using plain href to avoid chunk loading issues)
+      window.location.href = '/';
+    }
+  };
+
+  // Check if we need to scroll to a section after navigation
+  useEffect(() => {
+    if (isHomePage) {
+      const targetSection = sessionStorage.getItem('scrollToSection');
+      if (targetSection) {
+        // Wait for the page to fully render
+        setTimeout(() => {
+          const section = document.getElementById(targetSection);
+          if (section) {
+            section.scrollIntoView({ behavior: 'smooth' });
+          }
+          // Clear the stored section to prevent scrolling on subsequent page loads
+          sessionStorage.removeItem('scrollToSection');
+        }, 100);
+      }
+    }
+  }, [isHomePage]);
 
   return (
     <>
@@ -80,13 +118,33 @@ export default function VoyagerNavbar() {
                   className="list-none"
                   style={{ listStyle: 'none' }}
                 >
-                  <Button
-                    as={Link}
-                    href="#signup"
-                    className="bg-primary text-textLight font-medium px-3 py-1 text-sm rounded-md hover:bg-accent transition-all duration-300"
+                  <a
+                    href="#"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      if (isHomePage) {
+                        // If we're on home page, just scroll to the section
+                        const section =
+                          document.getElementById('signup');
+                        if (section) {
+                          section.scrollIntoView({
+                            behavior: 'smooth',
+                          });
+                        }
+                      } else {
+                        // Store the target section in sessionStorage for retrieval after navigation
+                        sessionStorage.setItem(
+                          'scrollToSection',
+                          'signup'
+                        );
+                        // Navigate to the home page (using plain href to avoid chunk loading issues)
+                        window.location.href = '/';
+                      }
+                    }}
+                    className="bg-primary text-textLight font-medium px-3 py-1 text-sm rounded-md hover:bg-accent transition-all duration-300 inline-block"
                   >
                     Join!
-                  </Button>
+                  </a>
                 </NavbarItem>
               </div>
             </div>
@@ -98,6 +156,10 @@ export default function VoyagerNavbar() {
                   style={{ listStyle: 'none' }}
                 >
                   <Link
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleNavigation('benefits');
+                    }}
                     href="#benefits"
                     className="text-textLight hover:text-primary transition-colors text-base font-medium"
                   >
@@ -109,6 +171,10 @@ export default function VoyagerNavbar() {
                   style={{ listStyle: 'none' }}
                 >
                   <Link
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleNavigation('services');
+                    }}
                     href="#services"
                     className="text-textLight hover:text-primary transition-colors text-base font-medium"
                   >
@@ -120,6 +186,10 @@ export default function VoyagerNavbar() {
                   style={{ listStyle: 'none' }}
                 >
                   <Link
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleNavigation('studio');
+                    }}
                     href="#studio"
                     className="text-textLight hover:text-primary transition-colors text-base font-medium"
                   >
@@ -131,6 +201,10 @@ export default function VoyagerNavbar() {
                   style={{ listStyle: 'none' }}
                 >
                   <Link
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleNavigation('plans');
+                    }}
                     href="#plans"
                     className="text-textLight hover:text-primary transition-colors text-base font-medium"
                   >
@@ -182,6 +256,10 @@ export default function VoyagerNavbar() {
                   style={{ listStyle: 'none' }}
                 >
                   <Link
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleNavigation('benefits');
+                    }}
                     href="#benefits"
                     className="text-textLight hover:text-primary transition-colors text-lg font-medium"
                   >
@@ -193,6 +271,10 @@ export default function VoyagerNavbar() {
                   style={{ listStyle: 'none' }}
                 >
                   <Link
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleNavigation('services');
+                    }}
                     href="#services"
                     className="text-textLight hover:text-primary transition-colors text-lg font-medium"
                   >
@@ -204,6 +286,10 @@ export default function VoyagerNavbar() {
                   style={{ listStyle: 'none' }}
                 >
                   <Link
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleNavigation('studio');
+                    }}
                     href="#studio"
                     className="text-textLight hover:text-primary transition-colors text-lg font-medium"
                   >
@@ -215,6 +301,10 @@ export default function VoyagerNavbar() {
                   style={{ listStyle: 'none' }}
                 >
                   <Link
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleNavigation('plans');
+                    }}
                     href="#plans"
                     className="text-textLight hover:text-primary transition-colors text-lg font-medium"
                   >
@@ -253,13 +343,33 @@ export default function VoyagerNavbar() {
                   className="list-none"
                   style={{ listStyle: 'none' }}
                 >
-                  <Button
-                    as={Link}
-                    href="#signup"
-                    className="bg-primary text-textLight font-medium px-6 py-2 rounded-md hover:bg-accent transition-all duration-300"
+                  <a
+                    href="#"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      if (isHomePage) {
+                        // If we're on home page, just scroll to the section
+                        const section =
+                          document.getElementById('signup');
+                        if (section) {
+                          section.scrollIntoView({
+                            behavior: 'smooth',
+                          });
+                        }
+                      } else {
+                        // Store the target section in sessionStorage for retrieval after navigation
+                        sessionStorage.setItem(
+                          'scrollToSection',
+                          'signup'
+                        );
+                        // Navigate to the home page (using plain href to avoid chunk loading issues)
+                        window.location.href = '/';
+                      }
+                    }}
+                    className="bg-primary text-textLight font-medium px-6 py-2 rounded-md hover:bg-accent transition-all duration-300 inline-block"
                   >
                     Join For Free
-                  </Button>
+                  </a>
                 </NavbarItem>
               </div>
             </div>

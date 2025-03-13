@@ -1,5 +1,5 @@
-// src/app/components/dashboard/panels/admin/MemberManagement.js
 'use client';
+// src/app/components/dashboard/panels/admin/MemberManagement.js
 
 import { useState, useEffect, useCallback } from 'react';
 import {
@@ -224,6 +224,45 @@ export default function MemberManagement({
     }
   };
 
+  /**
+   * Gets the member's primary email address
+   * @param {Object} member - Member object from Clerk
+   * @returns {string} Email address or fallback text
+   */
+  const getMemberEmail = (member) => {
+    // Check if the member has publicUserData with emailAddresses
+    if (member.publicUserData?.emailAddresses?.[0]?.emailAddress) {
+      return member.publicUserData.emailAddresses[0].emailAddress;
+    }
+
+    // Check for identifier that might contain an email
+    if (member.publicUserData?.identifier) {
+      const identifier = member.publicUserData.identifier;
+      // Simple regex to check if identifier looks like an email
+      if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(identifier)) {
+        return identifier;
+      }
+    }
+
+    // As a last resort, check for any email property
+    if (member.publicUserData?.email) {
+      return member.publicUserData.email;
+    }
+
+    return 'No email available';
+  };
+
+  /**
+   * Creates a mailto link for the member's email
+   * @param {string} email - Email address
+   * @returns {string} Mailto URL or empty string
+   */
+  const createMailtoLink = (email) => {
+    return email && email !== 'No email available'
+      ? `mailto:${email}`
+      : '';
+  };
+
   return (
     <>
       <Card>
@@ -281,6 +320,9 @@ export default function MemberManagement({
                         const isMemberOwner =
                           memberRole === 'org:owner' ||
                           memberRole === 'owner';
+                        const memberEmail = getMemberEmail(member);
+                        const mailtoLink =
+                          createMailtoLink(memberEmail);
 
                         return (
                           <tr key={member.id}>
@@ -307,9 +349,20 @@ export default function MemberManagement({
                                     {isCurrentUser && ' (You)'}
                                   </div>
                                   <div className="text-sm text-gray-500">
-                                    {member.publicUserData
-                                      ?.emailAddresses?.[0]
-                                      ?.emailAddress || 'No email'}
+                                    {mailtoLink ? (
+                                      <a
+                                        href={mailtoLink}
+                                        className="hover:underline text-primary-color"
+                                        style={{
+                                          color:
+                                            'var(--primary-color, #2563EB)',
+                                        }}
+                                      >
+                                        {memberEmail}
+                                      </a>
+                                    ) : (
+                                      memberEmail
+                                    )}
                                   </div>
                                 </div>
                               </div>
@@ -374,15 +427,6 @@ export default function MemberManagement({
                                   onClick={() =>
                                     handleRemoveMember(member.id)
                                   }
-                                  className="text-white bg-red-500 opacity-100 visible relative z-50 inline-block px-3 py-1 font-medium"
-                                  style={{
-                                    opacity: 1,
-                                    visibility: 'visible',
-                                    backgroundColor: '#ef4444',
-                                    color: 'white',
-                                    display: 'inline-flex',
-                                    zIndex: 100,
-                                  }}
                                 >
                                   Remove
                                 </Button>
@@ -391,7 +435,6 @@ export default function MemberManagement({
                                   size="sm"
                                   color="default"
                                   disabled
-                                  className="opacity-100 visible"
                                 >
                                   {isCurrentUser
                                     ? 'You'
