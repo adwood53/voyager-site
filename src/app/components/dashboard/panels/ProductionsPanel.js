@@ -2,9 +2,18 @@
 
 'use client';
 
+import { useState } from 'react';
 import { Card, CardBody, CardHeader } from '@heroui/react';
+import { useUser, useOrganization } from '@clerk/nextjs';
+import { CalculatorContainer } from '../calculators';
+import productionsSchema from '@/src/schemas/productions';
+import { useFirebase } from '@/src/contexts/FirebaseContext';
 
 export default function ProductionsPanel() {
+  const { user } = useUser();
+  const { organization } = useOrganization();
+  const { organization: firestoreOrg } = useFirebase();
+
   return (
     <div className="max-w-4xl mx-auto">
       <div className="mb-8">
@@ -17,25 +26,12 @@ export default function ProductionsPanel() {
         </p>
       </div>
 
-      <Card>
-        <CardHeader>
-          <h2 className="text-xl font-semibold text-gray-800">
-            Calculator Coming Soon
-          </h2>
-        </CardHeader>
-        <CardBody>
-          <p className="text-gray-600 mb-4">
-            The Productions Calculator is currently under development.
-            This tool will help you configure your production needs
-            and provide accurate pricing for studio bookings,
-            equipment rentals, and production services.
-          </p>
-          <p className="text-gray-600">
-            Check back soon to use this feature and get detailed
-            pricing estimates.
-          </p>
-        </CardBody>
-      </Card>
+      <CalculatorContainer
+        schema={productionsSchema}
+        calculatorType="productions"
+        showPdfExport={true}
+        showSubmitToCRM={true}
+      />
 
       {/* Information card */}
       <Card className="mt-8">
@@ -52,8 +48,8 @@ export default function ProductionsPanel() {
             production needs and provide accurate pricing.
           </p>
           <p className="text-gray-600">
-            After completing the calculator, you'll be able to export
-            the results as a PDF or submit directly to our team to
+            After completing the calculator, you can export the
+            results as a PDF or submit directly to our team to
             schedule a consultation.
           </p>
         </CardBody>
