@@ -1,5 +1,5 @@
-'use client';
 // src/app/components/dashboard/panels/admin/MemberManagement.js
+'use client';
 
 import { useState, useEffect, useCallback } from 'react';
 import {
@@ -374,6 +374,15 @@ export default function MemberManagement({
                                   onClick={() =>
                                     handleRemoveMember(member.id)
                                   }
+                                  className="text-white bg-red-500 opacity-100 visible relative z-50 inline-block px-3 py-1 font-medium"
+                                  style={{
+                                    opacity: 1,
+                                    visibility: 'visible',
+                                    backgroundColor: '#ef4444',
+                                    color: 'white',
+                                    display: 'inline-flex',
+                                    zIndex: 100,
+                                  }}
                                 >
                                   Remove
                                 </Button>
@@ -382,6 +391,7 @@ export default function MemberManagement({
                                   size="sm"
                                   color="default"
                                   disabled
+                                  className="opacity-100 visible"
                                 >
                                   {isCurrentUser
                                     ? 'You'

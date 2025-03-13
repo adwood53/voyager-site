@@ -67,6 +67,59 @@
   position: relative;
 }
 
+/* ENHANCED BUTTON FIX - More specific selectors */
+.partner-dashboard
+  [role='table']
+  [role='row']
+  [role='cell']:last-child
+  button,
+.partner-dashboard
+  [role='table']
+  [role='row']
+  [role='cell']:last-child
+  [data-slot='base']
+  button,
+.partner-dashboard table tbody tr td:last-child button,
+.partner-dashboard
+  [role='cell']:last-child
+  button[data-color='danger'],
+.partner-dashboard
+  [role='cell']:last-child
+  [data-slot='base'][data-color='danger'] {
+  display: inline-flex !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  position: relative !important;
+  z-index: 100 !important;
+  background-color: #ef4444 !important;
+  color: white !important;
+  font-weight: 500 !important;
+  padding: 0.25rem 0.75rem !important;
+  border-radius: 0.25rem !important;
+  pointer-events: auto !important;
+  min-height: 1.5rem !important;
+  min-width: 4rem !important;
+}
+
+/* Fix text selection issues */
+.partner-dashboard [role='table'],
+.partner-dashboard [role='row'],
+.partner-dashboard [role='cell'],
+.partner-dashboard [role='cell'] > * {
+  user-select: text !important;
+  -webkit-user-select: text !important;
+  -moz-user-select: text !important;
+  pointer-events: auto !important;
+}
+
+/* Fix for any overlays or stacking issues */
+.partner-dashboard [role='cell']:last-child,
+.partner-dashboard [role='cell']:last-child > * {
+  overflow: visible !important;
+  position: relative !important;
+  z-index: 50 !important;
+}
+
 .partner-dashboard button[color='danger'],
 .partner-dashboard button.danger,
 .partner-dashboard [role='cell']:last-child button,
