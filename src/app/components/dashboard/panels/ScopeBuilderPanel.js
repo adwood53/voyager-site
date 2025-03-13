@@ -51,7 +51,7 @@ export default function ScopeBuilderPanel() {
             most appropriate approach.
           </p>
           <p className="text-gray-600">
-            After completing the questionnaire, you'll receive
+            After completing the questionnaire, you&#39;ll receive
             tailored recommendations based on your answers, along with
             the option to export a detailed scope document as a PDF.
           </p>

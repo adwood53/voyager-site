@@ -80,96 +80,186 @@ img {
 }
 
 /* Custom layer components for Voyager Immersive */
-@layer components {
+.container-voyager {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  max-width: 80rem;
+}
+
+@media (min-width: 768px) {
   .container-voyager {
-    @apply container mx-auto px-4 md:px-8 max-w-7xl;
+    padding-left: 2rem;
+    padding-right: 2rem;
   }
-  
-  .btn-voyager {
-    @apply inline-flex items-center justify-center px-6 py-3 font-medium rounded-md transition-all duration-300;
-  }
-  
-  .btn-primary {
-    @apply btn-voyager bg-primary text-textLight hover:bg-accent focus:ring-2 focus:ring-primary focus:ring-opacity-50;
-  }
-  
-  .btn-secondary {
-    @apply btn-voyager border border-primary text-primary hover:bg-primary hover:bg-opacity-10;
-  }
-  
-  .btn-alt {
-    @apply btn-voyager bg-altPrimary text-textLight hover:bg-altAccent focus:ring-2 focus:ring-altPrimary focus:ring-opacity-50;
-  }
-  
-  .card-voyager {
-    @apply bg-darkCard rounded-lg overflow-hidden border border-primary border-opacity-20 hover:border-opacity-50 transition-all duration-300 transform hover:scale-[1.02] hover:shadow-lg;
-  }
-  
-  .heading-voyager {
-    @apply font-heading font-bold;
-  }
-  
+}
+
+.btn-voyager {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+  font-weight: 500;
+  border-radius: 0.375rem;
+  transition-property: all;
+  transition-duration: 300ms;
+}
+
+.btn-primary {
+  background-color: var(--primary);
+  color: var(--text-light);
+}
+
+.btn-primary:hover {
+  background-color: var(--accent);
+}
+
+.btn-primary:focus {
+  --tw-ring-opacity: 0.5;
+  --tw-ring-color: var(--primary);
+  --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
+  --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);
+  box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
+}
+
+.btn-secondary {
+  border: 1px solid var(--primary);
+  color: var(--primary);
+}
+
+.btn-secondary:hover {
+  background-color: var(--primary);
+  opacity: 0.1;
+}
+
+.btn-alt {
+  background-color: var(--alt-primary);
+  color: var(--text-light);
+}
+
+.btn-alt:hover {
+  background-color: var(--alt-accent);
+}
+
+.btn-alt:focus {
+  --tw-ring-opacity: 0.5;
+  --tw-ring-color: var(--alt-primary);
+  --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
+  --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);
+  box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
+}
+
+.card-voyager {
+  background-color: var(--dark-card);
+  border-radius: 0.5rem;
+  overflow: hidden;
+  border: 1px solid var(--primary);
+  border-opacity: 0.2;
+  transition-property: all;
+  transition-duration: 300ms;
+  transform: translateZ(0);
+}
+
+.card-voyager:hover {
+  border-opacity: 0.5;
+  transform: scale(1.02);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.heading-voyager {
+  font-family: var(--font-heading);
+  font-weight: 700;
+}
+
+.section-voyager {
+  padding-top: 5rem;
+  padding-bottom: 5rem;
+}
+
+@media (min-width: 768px) {
   .section-voyager {
-    @apply py-20 md:py-32;
+    padding-top: 8rem;
+    padding-bottom: 8rem;
   }
+}
 
-  .custom-tooltip {
-    @apply absolute bg-darkCard p-2 rounded-md text-textLight text-sm border border-primary border-opacity-30 shadow-lg opacity-0 transition-opacity duration-300 z-50 pointer-events-none;
-  }
+.custom-tooltip {
+  position: absolute;
+  background-color: var(--dark-card);
+  padding: 0.5rem;
+  border-radius: 0.375rem;
+  color: var(--text-light);
+  font-size: 0.875rem;
+  border: 1px solid var(--primary);
+  border-opacity: 0.3;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  opacity: 0;
+  transition: opacity 300ms;
+  z-index: 50;
+  pointer-events: none;
+}
 
-  .has-tooltip:hover .custom-tooltip {
-    @apply opacity-100;
-  }
-  
-  /* Glitch effect for buttons */
-  .glitch-effect {
-    position: relative;
-    overflow: hidden;
-  }
-  
-  .glitch-effect:hover::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: linear-gradient(120deg, transparent 10%, rgba(231, 144, 35, 0.2) 10%, rgba(231, 144, 35, 0.2) 14%, transparent 14%);
-    animation: glitch 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both infinite;
-    pointer-events: none;
-  }
+.has-tooltip:hover .custom-tooltip {
+  opacity: 1;
+}
 
-  /* 3D Hover Effect */
-  .hover-3d {
-    @apply transition-all duration-300 transform;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-  }
+/* Glitch effect for buttons */
+.glitch-effect {
+  position: relative;
+  overflow: hidden;
+}
 
-  .hover-3d:hover {
-    transform: translateY(-5px) scale(1.02);
-    box-shadow: 0 15px 30px rgba(231, 144, 35, 0.2);
-  }
+.glitch-effect:hover::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: linear-gradient(120deg, transparent 10%, rgba(231, 144, 35, 0.2) 10%, rgba(231, 144, 35, 0.2) 14%, transparent 14%);
+  animation: glitch 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both infinite;
+  pointer-events: none;
+}
 
-  /* Glow Effect */
-  .glow-effect {
-    @apply transition-all duration-300;
-  }
+/* 3D Hover Effect */
+.hover-3d {
+  transition-property: all;
+  transition-duration: 300ms;
+  transform: translateZ(0);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
 
-  .glow-effect:hover {
-    box-shadow: 0 0 15px rgba(231, 144, 35, 0.5);
-  }
+.hover-3d:hover {
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 15px 30px rgba(231, 144, 35, 0.2);
+}
 
-  /* Parallax Container */
-  .parallax-container {
-    @apply overflow-hidden relative;
-    perspective: 1000px;
-  }
+/* Glow Effect */
+.glow-effect {
+  transition-property: all;
+  transition-duration: 300ms;
+}
 
-  /* Parallax Element */
-  .parallax-element {
-    @apply relative;
-    transform-style: preserve-3d;
-  }
+.glow-effect:hover {
+  box-shadow: 0 0 15px rgba(231, 144, 35, 0.5);
+}
+
+/* Parallax Container */
+.parallax-container {
+  overflow: hidden;
+  position: relative;
+  perspective: 1000px;
+}
+
+/* Parallax Element */
+.parallax-element {
+  position: relative;
+  transform-style: preserve-3d;
 }
 
 /* Custom keyframes for animations */

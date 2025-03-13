@@ -49,7 +49,7 @@ export default function RecommendationsPanel({
       <div className="recommendations-panel empty">
         <h2>No Recommendations Available</h2>
         <p>
-          Based on your answers, we don't have specific
+          Based on your answers, we don&#39;t have specific
           recommendations. Please review your results.
         </p>
         <div className="recommendations-actions">

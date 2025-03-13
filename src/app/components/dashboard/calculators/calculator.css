@@ -2,193 +2,343 @@
 
 /* Main Calculator Container */
 .calculator-container {
-    @apply bg-white rounded-lg shadow-md overflow-hidden;
-  }
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+}
   
-  /* Progress Bar */
-  .calculator-progress {
-    @apply mb-6;
-  }
+/* Progress Bar */
+.calculator-progress {
+  margin-bottom: 1.5rem;
+}
   
-  .progress-text {
-    @apply text-sm text-gray-600 mb-2;
-  }
+.progress-text {
+  font-size: 0.875rem;
+  color: #4B5563;
+  margin-bottom: 0.5rem;
+}
   
-  .progress-bar {
-    @apply w-full h-2 bg-gray-200 rounded-full overflow-hidden;
-  }
+.progress-bar {
+  width: 100%;
+  height: 0.5rem;
+  background-color: #E5E7EB;
+  border-radius: 9999px;
+  overflow: hidden;
+}
   
-  .progress-bar-fill {
-    @apply h-full bg-primary transition-all duration-300 ease-in-out;
-  }
+.progress-bar-fill {
+  height: 100%;
+  background-color: var(--primary, #E79023);
+  transition: all 0.3s ease-in-out;
+}
   
-  /* Section Title */
-  .section-title {
-    @apply text-xl font-semibold mb-6;
-  }
+/* Section Title */
+.section-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+}
   
-  /* Questions Container */
-  .questions-container {
-    @apply space-y-6 mb-8;
-  }
+/* Questions Container */
+.questions-container {
+  margin-bottom: 2rem;
+}
+
+.questions-container > * + * {
+  margin-top: 1.5rem;
+}
   
-  .no-questions-message {
-    @apply text-gray-500 italic;
-  }
+.no-questions-message {
+  color: #6B7280;
+  font-style: italic;
+}
   
-  /* Question components - Base styles */
-  .question-item {
-    @apply mb-6;
-  }
+/* Question components - Base styles */
+.question-item {
+  margin-bottom: 1.5rem;
+}
   
-  /* Form controls */
-  .my-number-input {
-    @apply w-full px-3 py-2 bg-white border border-gray-300 rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition;
-  }
+/* Form controls */
+.my-number-input {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  background-color: white;
+  border: 1px solid #D1D5DB;
+  border-radius: 0.375rem;
+  color: #374151;
+  transition: all 0.15s;
+}
+
+.my-number-input:focus {
+  outline: none;
+  --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
+  --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);
+  box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
+  --tw-ring-color: var(--primary, #E79023);
+  border-color: transparent;
+}
   
-  .my-number-input.invalid {
-    @apply border-red-500 ring-red-200;
-  }
+.my-number-input.invalid {
+  border-color: #EF4444;
+  --tw-ring-color: #FEE2E2;
+}
   
-  /* Buttons */
-  .calculator-actions {
-    @apply flex justify-between mt-8;
-  }
+/* Buttons */
+.calculator-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2rem;
+}
   
-  .primary-button {
-    @apply bg-primary text-white px-6 py-2 rounded-md font-medium hover:bg-opacity-90 transition disabled:opacity-50;
-    background-color: var(--primary-color, #E79023);
-  }
+.primary-button {
+  background-color: var(--primary, #E79023);
+  color: white;
+  padding: 0.5rem 1.5rem;
+  border-radius: 0.375rem;
+  font-weight: 500;
+  transition: background-color 0.15s;
+}
+
+.primary-button:hover {
+  background-color: rgba(var(--primary, #E79023), 0.9);
+}
+
+.primary-button:disabled {
+  opacity: 0.5;
+}
   
-  .secondary-button {
-    @apply bg-gray-200 text-gray-700 px-6 py-2 rounded-md font-medium hover:bg-gray-300 transition disabled:opacity-50;
-  }
+.secondary-button {
+  background-color: #E5E7EB;
+  color: #4B5563;
+  padding: 0.5rem 1.5rem;
+  border-radius: 0.375rem;
+  font-weight: 500;
+  transition: background-color 0.15s;
+}
+
+.secondary-button:hover {
+  background-color: #D1D5DB;
+}
+
+.secondary-button:disabled {
+  opacity: 0.5;
+}
   
-  /* Error Messages */
-  .calculator-errors {
-    @apply mt-6 p-4 bg-red-50 border border-red-200 rounded-md text-red-700;
-  }
+/* Error Messages */
+.calculator-errors {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background-color: #FEF2F2;
+  border: 1px solid #FEE2E2;
+  border-radius: 0.375rem;
+  color: #B91C1C;
+}
   
-  .error-message {
-    @apply text-sm text-red-600 mt-1;
-  }
+.error-message {
+  font-size: 0.875rem;
+  color: #DC2626;
+  margin-top: 0.25rem;
+}
   
-  /* Results Summary */
-  .results-summary {
-    @apply p-6;
-  }
+/* Results Summary */
+.results-summary {
+  padding: 1.5rem;
+}
   
-  .results-title {
-    @apply text-2xl font-bold mb-6 text-gray-800;
-  }
+.results-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  color: #1F2937;
+}
   
-  .tier-section {
-    @apply mb-6 p-4 bg-primary bg-opacity-10 rounded-lg border border-primary border-opacity-20;
-  }
+.tier-section {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background-color: rgba(var(--primary, #E79023), 0.1);
+  border-radius: 0.5rem;
+  border: 1px solid;
+  border-color: rgba(var(--primary, #E79023), 0.2);
+}
   
-  .tier-title {
-    @apply text-xl font-semibold text-primary mb-2;
-  }
+.tier-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--primary, #E79023);
+  margin-bottom: 0.5rem;
+}
   
-  .tier-description {
-    @apply text-gray-600;
-  }
+.tier-description {
+  color: #4B5563;
+}
   
-  .features-section, 
-  .commission-section, 
-  .pricing-section {
-    @apply mb-6;
-  }
+.features-section, 
+.commission-section, 
+.pricing-section {
+  margin-bottom: 1.5rem;
+}
   
-  .section-title {
-    @apply text-lg font-semibold mb-3 text-gray-800;
-  }
+.section-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  color: #1F2937;
+}
   
+.features-list {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+@media (min-width: 768px) {
   .features-list {
-    @apply grid grid-cols-1 md:grid-cols-2 gap-3;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+}
   
-  .summary-item {
-    @apply p-3 rounded-md;
-  }
+.summary-item {
+  padding: 0.75rem;
+  border-radius: 0.375rem;
+}
   
-  .summary-item.blue {
-    @apply bg-blue-50 text-blue-700;
-  }
+.summary-item.blue {
+  background-color: #EFF6FF;
+  color: #1E40AF;
+}
   
-  .summary-item.green {
-    @apply bg-green-50 text-green-700;
-  }
+.summary-item.green {
+  background-color: #ECFDF5;
+  color: #065F46;
+}
   
-  .price-item {
-    @apply flex justify-between py-2 border-b border-gray-200 last:border-b-0;
-  }
+.price-item {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  border-bottom-color: #E5E7EB;
+}
+
+.price-item:last-child {
+  border-bottom-width: 0;
+}
   
-  .price-label {
-    @apply text-gray-600;
-  }
+.price-label {
+  color: #4B5563;
+}
   
-  .price-value {
-    @apply font-medium text-gray-800;
-  }
+.price-value {
+  font-weight: 500;
+  color: #1F2937;
+}
   
-  .price-value.total {
-    @apply text-lg font-bold text-primary;
-  }
+.price-value.total {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--primary, #E79023);
+}
   
-  .results-actions {
-    @apply mt-8 flex flex-wrap gap-4 justify-center;
-  }
+.results-actions {
+  margin-top: 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+}
   
-  /* Recommendations Panel */
-  .recommendations-panel {
-    @apply p-6;
-  }
+/* Recommendations Panel */
+.recommendations-panel {
+  padding: 1.5rem;
+}
   
-  .recommendations-title {
-    @apply text-2xl font-bold mb-6 text-gray-800;
-  }
+.recommendations-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  color: #1F2937;
+}
   
-  .recommendation-card {
-    @apply p-6 bg-white rounded-lg border border-primary border-opacity-20 shadow-md mb-6;
-  }
+.recommendation-card {
+  padding: 1.5rem;
+  background-color: white;
+  border-radius: 0.5rem;
+  border: 1px solid;
+  border-color: rgba(var(--primary, #E79023), 0.2);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  margin-bottom: 1.5rem;
+}
   
-  .recommendation-name {
-    @apply text-xl font-semibold mb-2 text-primary;
-  }
+.recommendation-name {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--primary, #E79023);
+}
   
-  .recommendation-category {
-    @apply inline-block px-3 py-1 rounded-full text-xs font-medium mb-4 bg-primary bg-opacity-10 text-primary;
-  }
+.recommendation-category {
+  display: inline-block;
+  padding: 0 0.75rem;
+  line-height: 1.5rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  margin-bottom: 1rem;
+  background-color: rgba(var(--primary, #E79023), 0.1);
+  color: var(--primary, #E79023);
+}
   
-  .recommendation-description {
-    @apply text-gray-700 mb-4;
-  }
+.recommendation-description {
+  color: #374151;
+  margin-bottom: 1rem;
+}
   
-  .recommendation-features {
-    @apply mt-4;
-  }
+.recommendation-features {
+  margin-top: 1rem;
+}
   
-  .recommendation-features h4 {
-    @apply text-sm font-semibold mb-2 text-gray-700;
-  }
+.recommendation-features h4 {
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #374151;
+}
   
-  .recommendation-features ul {
-    @apply list-disc list-inside space-y-1 text-gray-600;
-  }
+.recommendation-features ul {
+  list-style-type: disc;
+  list-style-position: inside;
+  margin-bottom: 0;
+  color: #4B5563;
+}
+
+.recommendation-features ul > * + * {
+  margin-top: 0.25rem;
+}
   
-  .recommendation-detail {
-    @apply mt-2 text-gray-600;
-  }
+.recommendation-detail {
+  margin-top: 0.5rem;
+  color: #4B5563;
+}
   
-  .recommendation-navigation {
-    @apply flex items-center justify-between mb-6;
-  }
+.recommendation-navigation {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
   
-  .recommendation-counter {
-    @apply text-sm text-gray-500;
-  }
+.recommendation-counter {
+  font-size: 0.875rem;
+  color: #6B7280;
+}
   
-  .recommendations-actions {
-    @apply mt-8 flex flex-wrap gap-4 justify-center;
-  }
+.recommendations-actions {
+  margin-top: 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+}

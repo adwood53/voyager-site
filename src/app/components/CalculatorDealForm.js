@@ -131,7 +131,7 @@ export default function CalculatorDealForm({
                 Request Submitted Successfully!
               </h3>
               <p className="text-gray-600 mb-6">
-                We'll be in touch with you shortly to discuss your
+                We&#39;ll be in touch with you shortly to discuss your
                 requirements.
               </p>
               <button
