@@ -1,3 +1,5 @@
+'use client';
+
 import Navbar from '@/src/app/components/Navbar';
 import HeroSection from '@/src/app/components/HeroSection';
 import BenefitsSection from '@/src/app/components/BenefitsSection';
@@ -9,13 +11,66 @@ import NewsCarousel from '@/src/app/components/NewsCarousel';
 import ContactSection from '@/src/app/components/ContactSection';
 import Footer from '@/src/app/components/Footer';
 import EasterEgg from '@/src/app/components/EasterEgg';
+import PartnerLogoCarousel from '@/src/app/components/PartnerLogoCarousel';
 
 export default function Home() {
+  /**
+   * List of partners to display in the carousel
+   */
+  const partners = [
+    {
+      id: 'partner1',
+      name: 'Smartway Media',
+      logo: 'https://media.licdn.com/dms/image/v2/C4D0BAQFWZPm1DSxi-A/company-logo_200_200/company-logo_200_200/0/1630526996912/smartwaymedia_logo?e=1749686400&v=beta&t=QvSNXqdqo5_J5qapi7IoyPsL1fsQKKq0Ssw_6iwak2k',
+      url: 'https://www.smartwaymedia.co.uk/',
+    },
+    {
+      id: 'partner2',
+      name: 'Leicester Podcast Studio',
+      logo: '/partners/lps.png',
+      url: 'https://leicesterpodcaststudio.co.uk/',
+    },
+    {
+      id: 'partner3',
+      name: 'Cross Productions',
+      logo: '/partners/cross_productions_limited_logo.jpeg',
+      url: 'https://crossproductions.co.uk/',
+    },
+    {
+      id: 'partner4',
+      name: 'Everything Branded',
+      logo: '/partners/eb.jpeg',
+      url: 'https://www.everythingbranded.co.uk/',
+    },
+    {
+      id: 'partner5',
+      name: 'Yellow Glove Productions',
+      logo: 'https://images.squarespace-cdn.com/content/v1/5ad5035155b02ca840e1ad39/607dd169-ce5b-4d5c-b039-0200ce0fb8ec/Logo+file+2024+for+web.png?format=1500w',
+      url: 'https://yellow-glove.co.uk/',
+    },
+    {
+      id: 'partner6',
+      name: 'Twin Planets',
+      logo: 'https://twinplanets.co.uk/assets/images/img-1605-304x193.png',
+      url: 'https://twinplanets.co.uk/',
+    },
+  ];
+
   return (
     <main className="min-h-screen bg-darkBg text-textLight overflow-hidden">
       <div className="parallax-container">
         <Navbar />
         <HeroSection />
+
+        {/* Partner Logo Carousel with vanilla JS implementation */}
+        <PartnerLogoCarousel
+          partners={partners}
+          background="linear-gradient(to bottom, rgba(18, 18, 18, 0.98), rgba(26, 26, 26, 0.98))"
+          className="border-t border-b border-primary border-opacity-10"
+          title="Trusted By Industry Leaders"
+          subtitle="Collaborating with top organisations to deliver exceptional immersive experiences"
+        />
+
         <BenefitsSection />
         <ServicesSection />
         <StudioSection />
@@ -24,6 +79,7 @@ export default function Home() {
         <NewsCarousel />
         <ContactSection />
         <Footer />
+        <EasterEgg />
       </div>
     </main>
   );

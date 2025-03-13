@@ -287,26 +287,76 @@ img {
   transform-style: preserve-3d;
 }
 
-/* Custom keyframes for animations */
-@keyframes marquee {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-100%);
-  }
+/* Add these styles to your globals.css file */
+
+/* Partner carousel container */
+.partner-carousel {
+  position: relative;
+  z-index: 10;
+  overflow: hidden;
 }
 
-@keyframes pulse-glow {
-  0%,
-  100% {
-    box-shadow: 0 0 5px rgb(231 144 35 / 50%);
-  }
-  50% {
-    box-shadow: 0 0 20px rgb(231 144 35 / 80%);
-  }
+/* Background cube container */
+.bg-cubes-container {
+  pointer-events: none;
 }
 
+/* Background cubes */
+.bg-cube {
+  transition: transform 0.5s ease-out;
+}
+
+/* Logo container */
+.logo-container-wrapper {
+  width: 100%;
+  position: relative;
+  overflow: visible !important; /* Ensure overflow is visible for scaling logos */
+}
+
+/* Logo carousel inner container */
+.logo-carousel-inner {
+  transform-style: preserve-3d; /* For better performance */
+  will-change: transform; /* Hint to browser for optimization */
+  overflow: visible !important; /* Allow logos to scale outside container */
+}
+
+/* Individual logo styling */
+.logo-item {
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  overflow: visible !important; /* Crucial for allowing overflow during scale */
+}
+
+.logo-item > div {
+  overflow: visible !important; /* Ensure overflow visibility is maintained through the hierarchy */
+}
+
+.logo-item img {
+  transition: all 0.3s ease;
+  transform-origin: center;
+  filter: grayscale(1);
+  opacity: 0.6;
+  overflow: visible;
+}
+
+.logo-item:hover img {
+  filter: grayscale(0);
+  opacity: 1;
+  transform: scale(1.15); /* Scale without clipping */
+  z-index: 20; /* Ensure the hovered logo appears above others */
+}
+
+/* Support smaller screens */
+@media (max-width: 768px) {
+  .logo-item {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .bg-cube {
+    transform: scale(0.7);
+  }
+}
 @keyframes glitch {
   0% {
     transform: translate(0);
