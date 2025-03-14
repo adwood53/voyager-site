@@ -50,8 +50,14 @@ export default function Home() {
     },
     {
       id: 'partner6',
+      name: 'Creative Collaborators',
+      logo: '/partners/cc.png',
+      url: 'https://www.creativecollaborators.co.uk/',
+    },
+    {
+      id: 'partner7',
       name: 'Twin Planets',
-      logo: 'https://twinplanets.co.uk/assets/images/img-1605-304x193.png',
+      logo: '/partners/tp.png',
       url: 'https://twinplanets.co.uk/',
     },
   ];
@@ -61,6 +67,8 @@ export default function Home() {
       <div className="parallax-container">
         <Navbar />
         <HeroSection />
+        <BenefitsSection />
+        <ServicesSection />
 
         {/* Partner Logo Carousel with vanilla JS implementation */}
         <PartnerLogoCarousel
@@ -71,8 +79,6 @@ export default function Home() {
           subtitle="Collaborating with top organisations to deliver exceptional immersive experiences"
         />
 
-        <BenefitsSection />
-        <ServicesSection />
         <StudioSection />
         <PlansSection />
         <ProcessSection />
