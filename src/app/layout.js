@@ -6,9 +6,9 @@ import './globals.css';
 import Script from 'next/script';
 import ClientWrapper from '@/src/app/components/ClientWrapper';
 
-const SITE_NAME = 'Social Innovation People';
-const BASE_URL = 'https://www.socialinnovationpeople.co.uk';
-const OG_IMAGE_URL = `${BASE_URL}/logo.png`;
+const SITE_NAME = 'Voyager';
+const BASE_URL = 'https://www.voyagervrlab.co.uk';
+const OG_IMAGE_URL = `${BASE_URL}/Voyager-Box-Logo.png`;
 const TWITTER_HANDLE = '@YourTwitterHandle';
 
 // Define fonts

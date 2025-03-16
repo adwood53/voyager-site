@@ -187,7 +187,7 @@ export default function PlansSection() {
                 </div>
                 <div className="flex flex-col items-end self-start">
                   <p className="text-4xl font-bold text-primary">
-                    £799
+                    PAID
                   </p>
                   <p className="text-sm text-textLight opacity-60">
                     One-Time Fee
