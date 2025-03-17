@@ -1,5 +1,6 @@
 // src/app/partner/layout.js - updated
 import { ClerkProvider } from '@clerk/nextjs';
+import { PartnerProvider } from '@/src/utils/partners';
 
 // Define metadata for the partner section
 export const metadata = {
@@ -26,7 +27,7 @@ export default function PartnerLayout({ children }) {
         afterCreateOrganization: '/partner',
       }}
     >
-      {children}
+      <PartnerProvider>{children}</PartnerProvider>
     </ClerkProvider>
   );
 }

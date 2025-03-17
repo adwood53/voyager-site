@@ -1,5 +1,4 @@
-// src/app/components/dashboard/calculators/CalculatorContainer.js
-
+// src/app/components/dashboard/calculators/CalculatorContainer.js - Update
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -10,11 +9,11 @@ import {
   validateAnswers,
 } from '@/src/lib/calculatorEngine';
 import { generateAndSavePDF } from '@/src/lib/pdfService';
-import { formatResultsForHubspot } from '@/src/lib/hubspot';
 import QuestionRenderer from './QuestionRenderer';
 import ResultsSummary from './ResultsSummary';
 import RecommendationsPanel from './RecommendationsPanel';
-import CalculatorDealForm from '@/src/app/components/CalculatorDealForm';
+import DealForm from '@/src/app/components/partner-calculator/DealForm';
+import { usePartner } from '@/src/utils/partners';
 
 export default function CalculatorContainer({
   schema,
@@ -22,7 +21,14 @@ export default function CalculatorContainer({
   showPdfExport = false,
   showSubmitToCRM = false,
   calculatorType = 'generic',
+  pricingStructure,
+  partner,
+  onSubmitToCRM,
 }) {
+  // If partner is not provided, get from context
+  const partnerContext = usePartner();
+  const actualPartner = partner || partnerContext;
+
   const { user } = useUser();
   const { organization } = useOrganization();
 
@@ -108,9 +114,10 @@ export default function CalculatorContainer({
         return;
       }
 
-      // Calculate results
-      const calculatedResults = calculateResults(schema, answers, {
+      // Prepare options for calculation
+      const options = {
         calculatorType,
+        pricingStructure,
         organization: organization
           ? {
               id: organization.id,
@@ -125,7 +132,15 @@ export default function CalculatorContainer({
               email: user.primaryEmailAddress?.emailAddress,
             }
           : null,
-      });
+        partner: actualPartner,
+      };
+
+      // Calculate results
+      const calculatedResults = calculateResults(
+        schema,
+        answers,
+        options
+      );
 
       setResults(calculatedResults);
 
@@ -170,8 +185,11 @@ export default function CalculatorContainer({
       {
         title: schema.title || 'Voyager Calculator Results',
         subtitle: calculatorType,
-        companyName: organization?.name || 'Voyager',
-        showPrice: schema.showPrice !== false,
+        companyName:
+          organization?.name || actualPartner?.name || 'Voyager',
+        showPrice:
+          schema.showPrice !== false &&
+          actualPartner?.config?.features?.showPrice !== false,
         includeRecommendations: true,
         contactInfo: {
           email: 'connect@voyagervrlab.co.uk',
@@ -186,6 +204,14 @@ export default function CalculatorContainer({
   // Submit results to HubSpot
   const handleSubmitToCRM = () => {
     if (!results) return;
+
+    // If custom handler provided, use that
+    if (onSubmitToCRM && typeof onSubmitToCRM === 'function') {
+      onSubmitToCRM(results);
+      return;
+    }
+
+    // Otherwise show the default form
     setShowDealForm(true);
   };
 
@@ -225,6 +251,7 @@ export default function CalculatorContainer({
             showSubmitToCRM ? handleSubmitToCRM : null
           }
           onReset={handleReset}
+          partner={actualPartner}
         />
       ) : showRecommendations ? (
         <RecommendationsPanel
@@ -295,15 +322,8 @@ export default function CalculatorContainer({
       )}
 
       {showDealForm && (
-        <CalculatorDealForm
+        <DealForm
           configurationData={results}
-          salesPersonDetails={{
-            firstName: user?.firstName || '',
-            lastName: user?.lastName || '',
-            email: user?.primaryEmailAddress?.emailAddress || '',
-            companyName: organization?.name || '',
-          }}
-          calculatorType={calculatorType}
           onClose={() => setShowDealForm(false)}
         />
       )}

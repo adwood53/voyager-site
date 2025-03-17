@@ -1,12 +1,30 @@
 // src/app/components/dashboard/panels/MerchandisePanel.js
-
 'use client';
 
+import { useState } from 'react';
 import { Card, CardBody, CardHeader } from '@heroui/react';
 import { CalculatorContainer } from '../calculators';
+import { usePartner } from '@/src/utils/partners';
 import merchandiseSchema from '@/src/schemas/merchandise';
+import DealForm from '@/src/app/components/partner-calculator/DealForm';
 
 export default function MerchandisePanel() {
+  const [showDealForm, setShowDealForm] = useState(false);
+  const [calculationResults, setCalculationResults] = useState(null);
+  const partner = usePartner();
+
+  // Handle calculator completion
+  const handleCalculatorComplete = (data) => {
+    setCalculationResults(data.results);
+    console.log('Merchandise calculator results:', data.results);
+  };
+
+  // Handle deal form submission
+  const handleSubmitToCRM = () => {
+    if (!calculationResults) return;
+    setShowDealForm(true);
+  };
+
   return (
     <div className="max-w-4xl mx-auto">
       <div className="mb-8">
@@ -22,8 +40,19 @@ export default function MerchandisePanel() {
       <CalculatorContainer
         schema={merchandiseSchema}
         calculatorType="merchandise"
-        showPdfExport={true}
+        showPdfExport={
+          partner?.config?.features?.showPdfExport ?? true
+        }
         showSubmitToCRM={true}
+        pricingStructure={{
+          type: partner?.config?.pricingType || 'white-label',
+          baseMultiplier: 1.0, // For white-label, this is the cost to the partner
+          commissionRate:
+            partner?.config?.pricing?.commissionRate || 0.2, // 20% commission for referrals
+        }}
+        partner={partner}
+        onSubmit={handleCalculatorComplete}
+        onSubmitToCRM={handleSubmitToCRM}
       />
 
       {/* Information card */}
@@ -47,6 +76,14 @@ export default function MerchandisePanel() {
           </p>
         </CardBody>
       </Card>
+
+      {/* Deal Form Modal */}
+      {showDealForm && calculationResults && (
+        <DealForm
+          configurationData={calculationResults}
+          onClose={() => setShowDealForm(false)}
+        />
+      )}
     </div>
   );
 }

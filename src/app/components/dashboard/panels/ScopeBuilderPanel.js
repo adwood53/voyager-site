@@ -1,19 +1,28 @@
 // src/app/components/dashboard/panels/ScopeBuilderPanel.js
-
 'use client';
 
 import { useState } from 'react';
-import { Card, CardBody, CardHeader } from '@heroui/react';
+import { Card, CardBody, CardHeader, Button } from '@heroui/react';
 import { CalculatorContainer } from '../calculators';
 import scopeBuilderSchema from '@/src/schemas/scopeBuilder';
+import { usePartner } from '@/src/utils/partners';
 
 export default function ScopeBuilderPanel() {
-  const [calculatorComplete, setCalculatorComplete] = useState(false);
+  const partner = usePartner();
+  const [showRecommendations, setShowRecommendations] =
+    useState(false);
+  const [calculationResults, setCalculationResults] = useState(null);
 
   // Handle calculator completion
   const handleCalculatorComplete = (data) => {
-    console.log('Scope builder completed with data:', data);
-    setCalculatorComplete(true);
+    setCalculationResults(data.results);
+    setShowRecommendations(true);
+    console.log('Scope builder results:', data.results);
+  };
+
+  // Handle PDF export (separate function if needed)
+  const handleExportPDF = () => {
+    // PDF export logic will be handled by CalculatorContainer
   };
 
   return (
@@ -28,13 +37,88 @@ export default function ScopeBuilderPanel() {
         </p>
       </div>
 
-      <CalculatorContainer
-        schema={scopeBuilderSchema}
-        calculatorType="scope-builder"
-        showPdfExport={true}
-        showSubmitToCRM={false} // Explicitly disable HubSpot submission
-        onSubmit={handleCalculatorComplete}
-      />
+      {showRecommendations &&
+      calculationResults?.recommendations?.length > 0 ? (
+        <div>
+          <Card className="mb-6">
+            <CardHeader>
+              <h2 className="text-xl font-semibold text-gray-800">
+                Recommended Solutions
+              </h2>
+            </CardHeader>
+            <CardBody>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {calculationResults.recommendations.map(
+                  (recommendation, index) => (
+                    <Card key={index} className="h-full">
+                      <CardBody>
+                        <h3 className="text-lg font-semibold text-primary mb-2">
+                          {recommendation.title}
+                        </h3>
+                        <p className="text-gray-600 mb-4">
+                          {recommendation.description}
+                        </p>
+                        <div className="mb-2">
+                          <span className="bg-primary/20 text-primary px-2 py-1 rounded-full text-xs font-medium">
+                            Tier {recommendation.tier}
+                          </span>
+                        </div>
+                        <Button
+                          color="primary"
+                          className="w-full"
+                          style={{
+                            backgroundColor:
+                              'var(--primary-color, #E79023)',
+                          }}
+                          onClick={() => {
+                            // Navigate to appropriate calculator based on recommendation ID
+                            const target = recommendation.id.includes(
+                              'merchandise'
+                            )
+                              ? '/partner/merchandise'
+                              : recommendation.id.includes(
+                                    'production'
+                                  )
+                                ? '/partner/productions'
+                                : '/partner';
+
+                            // In a real implementation, use router.push
+                            // For simplicity in this example:
+                            window.location.href = target;
+                          }}
+                        >
+                          Learn More
+                        </Button>
+                      </CardBody>
+                    </Card>
+                  )
+                )}
+              </div>
+
+              <div className="mt-6 text-center">
+                <Button
+                  color="default"
+                  variant="light"
+                  onClick={() => setShowRecommendations(false)}
+                >
+                  Back to Scope Builder
+                </Button>
+              </div>
+            </CardBody>
+          </Card>
+        </div>
+      ) : (
+        <CalculatorContainer
+          schema={scopeBuilderSchema}
+          calculatorType="scope-builder"
+          showPdfExport={
+            partner?.config?.features?.showPdfExport ?? true
+          }
+          showSubmitToCRM={false} // No CRM submission for scope builder
+          partner={partner}
+          onSubmit={handleCalculatorComplete}
+        />
+      )}
 
       {/* Information card */}
       <Card className="mt-8">
@@ -51,22 +135,11 @@ export default function ScopeBuilderPanel() {
             most appropriate approach.
           </p>
           <p className="text-gray-600">
-            After completing the questionnaire, you&#39;ll receive
+            After completing the questionnaire, you'll receive
             tailored recommendations based on your answers, along with
-            the option to export a detailed scope document as a PDF.
+            the option to explore our other calculators for specific
+            solutions.
           </p>
-          {calculatorComplete && (
-            <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-md">
-              <h3 className="text-green-700 font-medium mb-2">
-                Scope Building Complete
-              </h3>
-              <p className="text-green-600">
-                Your project scope has been analyzed. You can review
-                the recommendations and export a detailed PDF for your
-                records.
-              </p>
-            </div>
-          )}
         </CardBody>
       </Card>
     </div>
