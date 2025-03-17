@@ -1,4 +1,4 @@
-// src/app/api/hubspot/deal/route.js
+//src/app/api/hubspot/create-deal/route.js
 import { NextResponse } from 'next/server';
 import { Client } from '@hubspot/api-client';
 
@@ -9,12 +9,7 @@ export const POST = async (req) => {
     });
 
     const body = await req.json();
-    const {
-      contactDetails,
-      configurationData,
-      calculatorType = 'generic',
-      salesPersonId,
-    } = body;
+    const { contactDetails, configurationData } = body;
 
     let contactId;
 
@@ -72,48 +67,30 @@ export const POST = async (req) => {
       throw new Error('Failed to check or create contact.');
     }
 
-    // Format features and commissions for HubSpot
-    const featureString = Array.isArray(configurationData.features)
-      ? configurationData.features
-          .map((feature) => {
-            if (Array.isArray(feature)) {
-              return `${feature[0]}: ${feature[1]}`;
-            } else if (typeof feature === 'object') {
-              return `${feature.name || 'Feature'}: ${feature.value || 'Yes'}`;
-            } else {
-              return feature;
-            }
-          })
-          .join('\n')
-      : '';
+    // Populate the final property strings
+    const featureString = configurationData.features
+      .map(([k, v]) => `${k}: ${v}`)
+      .join('\n');
 
-    const commissionString = Array.isArray(
-      configurationData.commissionItems
-    )
-      ? configurationData.commissionItems.join('\n') || 'None'
-      : 'None';
+    const commissionString =
+      configurationData.commissionItems.join('\n') || 'None';
+
+    const projectDetails = contactDetails.projectDetails || '';
 
     // Step 2: Create a deal and associate it with the contact
     const dealProperties = {
-      dealname: `${contactDetails.firstName} ${contactDetails.lastName} - ${calculatorType} Configuration`,
+      dealname: `${contactDetails.firstName} ${contactDetails.lastName} - ${configurationData.summary.type} Configuration`,
       pipeline: 'default',
       dealstage: 'appointmentscheduled',
-      amount: configurationData.pricing?.basePrice?.toString() || '0',
-      configuration_tier:
-        configurationData.pricing?.tier?.toString() || '1',
-      configuration_type__ar_vr_: calculatorType,
+      amount: configurationData.pricing.basePrice.toString(),
+      configuration_tier: configurationData.pricing.tier.toString(),
+      configuration_type__ar_vr_: configurationData.summary.type,
       configuration_features: featureString,
       items_to_be_commissioned: commissionString,
-      project_details:
-        configurationData.summary?.projectDetails || '',
-      project_link: configurationData.immersionLink || '',
-      brandsource: contactDetails.brandsource || 'voyager',
+      project_details: configurationData.summary.projectDetails,
+      project_link: configurationData.immersionLink,
+      brandsource: contactDetails.brandsource,
     };
-
-    // Include salesperson_id if provided
-    if (salesPersonId) {
-      dealProperties.salesperson_id = salesPersonId;
-    }
 
     console.log('Creating deal with properties:', dealProperties);
 
@@ -144,7 +121,7 @@ export const POST = async (req) => {
     return NextResponse.json(
       {
         error: error.message,
-        details: error.response?.data || error.toString(),
+        details: error.response?.data || error,
       },
       { status: 500 }
     );

@@ -225,10 +225,7 @@ export default function ContactSection() {
                     viewport={{ once: true }}
                     className="space-y-6"
                   >
-                    <form
-                      className="space-y-6"
-                      onSubmit={handleSubmit}
-                    >
+                    <form onSubmit={handleSubmit}>
                       {/* First Row: First Name and Last Name */}
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
