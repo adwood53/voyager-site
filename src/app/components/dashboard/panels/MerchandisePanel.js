@@ -3,10 +3,10 @@
 
 import { useState } from 'react';
 import { Card, CardBody, CardHeader } from '@heroui/react';
-import { CalculatorContainer } from '../calculators';
+import { CalculatorContainer } from '../calculator';
 import { usePartner } from '@/src/utils/partners';
 import merchandiseSchema from '@/src/schemas/merchandise';
-import DealForm from '@/src/app/components/partner-calculator/DealForm';
+import DealForm from '@/src/app/components/dashboard/calculator/DealForm';
 
 export default function MerchandisePanel() {
   const [showDealForm, setShowDealForm] = useState(false);

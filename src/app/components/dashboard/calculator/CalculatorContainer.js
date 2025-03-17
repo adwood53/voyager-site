@@ -1,4 +1,3 @@
-// src/app/components/dashboard/calculators/CalculatorContainer.js - Update
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -9,17 +8,30 @@ import {
   validateAnswers,
 } from '@/src/lib/calculatorEngine';
 import { generateAndSavePDF } from '@/src/lib/pdfService';
+import { usePartner } from '@/src/utils/partners';
 import QuestionRenderer from './QuestionRenderer';
 import ResultsSummary from './ResultsSummary';
 import RecommendationsPanel from './RecommendationsPanel';
-import DealForm from '@/src/app/components/partner-calculator/DealForm';
-import { usePartner } from '@/src/utils/partners';
+import DealForm from './DealForm';
 
+/**
+ * Main calculator container component with multi-step form handling
+ *
+ * @param {Object} props
+ * @param {Object} props.schema - Calculator schema definition
+ * @param {Function} props.onSubmit - Callback on form completion
+ * @param {boolean} props.showPdfExport - Whether to show PDF export option
+ * @param {boolean} props.showSubmitToCRM - Whether to show submit to CRM option
+ * @param {string} props.calculatorType - Type of calculator
+ * @param {Object} props.pricingStructure - Pricing structure config
+ * @param {Object} props.partner - Partner info (optional, will use context if not provided)
+ * @param {Function} props.onSubmitToCRM - Custom CRM submission handler
+ */
 export default function CalculatorContainer({
   schema,
   onSubmit,
-  showPdfExport = false,
-  showSubmitToCRM = false,
+  showPdfExport = true,
+  showSubmitToCRM = true,
   calculatorType = 'generic',
   pricingStructure,
   partner,
@@ -90,6 +102,17 @@ export default function CalculatorContainer({
     } else {
       // Move to next section
       setCurrentSection(currentSection + 1);
+
+      // Scroll to top of calculator when changing sections
+      const calculatorElement = document.querySelector(
+        '.calculator-container'
+      );
+      if (calculatorElement) {
+        calculatorElement.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start',
+        });
+      }
     }
   };
 
@@ -168,6 +191,7 @@ export default function CalculatorContainer({
       console.error('Error calculating results:', error);
       setErrors([
         {
+          questionId: null,
           message: `Error calculating results: ${error.message}`,
         },
       ]);
@@ -263,7 +287,8 @@ export default function CalculatorContainer({
         <div className="calculator-questions-container">
           <div className="calculator-progress">
             <div className="progress-text">
-              Section {currentSection + 1} of {getTotalSections()}
+              Section {currentSection + 1} of {getTotalSections()}:{' '}
+              {schema.sections[currentSection].title}
             </div>
             <div className="progress-bar">
               <div
@@ -325,6 +350,7 @@ export default function CalculatorContainer({
         <DealForm
           configurationData={results}
           onClose={() => setShowDealForm(false)}
+          calculatorType={calculatorType}
         />
       )}
     </div>

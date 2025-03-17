@@ -4,7 +4,7 @@
 import { useState } from 'react';
 import { Card, CardBody, CardHeader, Button } from '@heroui/react';
 import { usePartner } from '@/src/utils/partners';
-import { CalculatorContainer } from '../calculators';
+import { CalculatorContainer } from '../calculator';
 import productionsSchema from '@/src/schemas/productions';
 import MeetingScheduler from '@/src/app/components/partner-calculator/MeetingScheduler';
 

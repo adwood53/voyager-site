@@ -1,12 +1,24 @@
-// src/app/components/partner-calculator/DealForm.js
 'use client';
 
 import { useState, useEffect } from 'react';
 import { usePartner } from '@/src/utils/partners';
 
-export default function DealForm({ configurationData, onClose }) {
+/**
+ * DealForm - Form for submitting calculator data to Hubspot CRM
+ *
+ * @param {Object} props
+ * @param {Object} props.configurationData - Data from calculator results
+ * @param {Function} props.onClose - Function to close the form
+ * @param {string} props.calculatorType - Type of calculator for classification
+ */
+export default function DealForm({
+  configurationData,
+  onClose,
+  calculatorType = 'generic',
+}) {
   const partner = usePartner();
 
+  // Form state with partner brandsource to ensure it's always populated
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -14,7 +26,8 @@ export default function DealForm({ configurationData, onClose }) {
     phoneNumber: '',
     companyName: '',
     sourceInfo: '',
-    brandsource: partner?.brandSource || 'voyager', // This contains "SalesPerson @ Organization"
+    projectDetails: '',
+    brandsource: partner?.brandSource || 'voyager', // Brandsource from partner
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -80,9 +93,17 @@ export default function DealForm({ configurationData, onClose }) {
       const updatedConfigData = {
         ...configurationData,
         immersionLink: generatedLink,
+        summary: {
+          ...configurationData.summary,
+          projectDetails:
+            formData.projectDetails ||
+            configurationData.summary?.projectDetails ||
+            '',
+          type: calculatorType,
+        },
       };
 
-      // Create the request body
+      // Create the request body with brandsource coming from partner context
       const requestBody = {
         contactDetails: {
           firstName: formData.firstName,
@@ -91,12 +112,12 @@ export default function DealForm({ configurationData, onClose }) {
           phoneNumber: formData.phoneNumber || '',
           companyName: formData.companyName || '',
           sourceInfo: formData.sourceInfo || '',
-          brandsource:
-            formData.brandsource || partner?.brandSource || 'voyager',
+          projectDetails: formData.projectDetails || '',
+          // Always use partner's brandSource for consistency
+          brandsource: partner?.brandSource || 'voyager',
         },
         configurationData: updatedConfigData,
-        calculatorType: 'merchandise', // or passed as prop
-        salesPersonId: partner?.userId || '',
+        calculatorType: calculatorType,
       };
 
       // Submit to our API endpoint
@@ -108,11 +129,15 @@ export default function DealForm({ configurationData, onClose }) {
         body: JSON.stringify(requestBody),
       });
 
-      const data = await response.json();
-
       if (!response.ok) {
-        throw new Error(data.error || 'Failed to submit to Hubspot');
+        const errorData = await response.json();
+        throw new Error(
+          errorData.error || 'Failed to submit to Hubspot'
+        );
       }
+
+      const data = await response.json();
+      console.log('HubSpot response:', data);
 
       // Show success message
       setImmersionLink(generatedLink);
@@ -265,6 +290,28 @@ export default function DealForm({ configurationData, onClose }) {
                   />
                 </div>
               </div>
+
+              {/* Project Details */}
+              <div>
+                <label className="block text-sm font-medium text-textLight mb-1">
+                  Additional Project Details
+                </label>
+                <textarea
+                  name="projectDetails"
+                  value={formData.projectDetails}
+                  onChange={handleChange}
+                  rows={4}
+                  className="w-full px-3 py-2 bg-darkCard border border-primary border-opacity-30 rounded-md text-textLight focus:outline-none focus:border-primary"
+                  placeholder="Please provide any additional details that would help us understand your requirements better..."
+                />
+              </div>
+
+              {/* Brandsource info (hidden) */}
+              <input
+                type="hidden"
+                name="brandsource"
+                value={formData.brandsource}
+              />
 
               {/* Error Message */}
               {error && (

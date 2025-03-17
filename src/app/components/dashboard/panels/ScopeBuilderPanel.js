@@ -3,7 +3,7 @@
 
 import { useState } from 'react';
 import { Card, CardBody, CardHeader, Button } from '@heroui/react';
-import { CalculatorContainer } from '../calculators';
+import { CalculatorContainer } from '../calculator';
 import scopeBuilderSchema from '@/src/schemas/scopeBuilder';
 import { usePartner } from '@/src/utils/partners';
 
