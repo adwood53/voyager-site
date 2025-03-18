@@ -1,15 +1,16 @@
-//src/app/api/hubspot/create-deal/route.js
+// src/app/api/hubspot/deal/route.js
 import { NextResponse } from 'next/server';
 import { Client } from '@hubspot/api-client';
 
-export const POST = async (req) => {
+export async function POST(req) {
   try {
     const hubspotClient = new Client({
       accessToken: process.env.HUBSPOT_API_KEY,
     });
 
     const body = await req.json();
-    const { contactDetails, configurationData } = body;
+    const { contactDetails, configurationData, calculatorType } =
+      body;
 
     let contactId;
 
@@ -67,29 +68,71 @@ export const POST = async (req) => {
       throw new Error('Failed to check or create contact.');
     }
 
-    // Populate the final property strings
-    const featureString = configurationData.features
-      .map(([k, v]) => `${k}: ${v}`)
-      .join('\n');
+    // Format features for HubSpot - handle different structures
+    let featureString = '';
+    if (Array.isArray(configurationData.features)) {
+      // Map features to clean string
+      featureString = configurationData.features
+        .map((feature) => {
+          if (Array.isArray(feature)) {
+            return `${feature[0]}: ${feature[1]}`;
+          } else if (
+            typeof feature === 'object' &&
+            feature !== null
+          ) {
+            return `${feature.name || 'Feature'}: ${feature.value || 'Yes'}`;
+          } else {
+            return String(feature);
+          }
+        })
+        .join('\n');
+    }
 
-    const commissionString =
-      configurationData.commissionItems.join('\n') || 'None';
+    // Format commission items for HubSpot
+    const commissionString = Array.isArray(
+      configurationData.commissionItems
+    )
+      ? configurationData.commissionItems.join('\n')
+      : 'None';
 
-    const projectDetails = contactDetails.projectDetails || '';
+    // Get the total cost from the calculator
+    const totalPrice =
+      configurationData.pricing?.totalPrice ||
+      configurationData.pricing?.basePrice ||
+      0;
+
+    // Configuration type
+    const configurationType =
+      calculatorType ||
+      configurationData.summary?.type ||
+      configurationData.summary?.configurationType ||
+      'Merchandise';
+
+    const combinedProjectDetails = `
+      Project Name: ${contactDetails.projectName || ''}
+      
+      Project Purpose: ${contactDetails.projectPurpose || ''}
+      
+      Additional Details: ${contactDetails.projectDetails || ''}
+      
+      How They Found Us: ${contactDetails.sourceInfo || ''}
+      `.trim();
 
     // Step 2: Create a deal and associate it with the contact
     const dealProperties = {
-      dealname: `${contactDetails.firstName} ${contactDetails.lastName} - ${configurationData.summary.type} Configuration`,
+      dealname: `${contactDetails.firstName} ${contactDetails.lastName} - ${configurationType} Configuration`,
       pipeline: 'default',
       dealstage: 'appointmentscheduled',
-      amount: configurationData.pricing.basePrice.toString(),
-      configuration_tier: configurationData.pricing.tier.toString(),
-      configuration_type__ar_vr_: configurationData.summary.type,
+      amount: totalPrice.toString(),
+      configuration_tier: (
+        configurationData.summary?.tier || 1
+      ).toString(),
+      configuration_type__ar_vr_: configurationType,
       configuration_features: featureString,
       items_to_be_commissioned: commissionString,
-      project_details: configurationData.summary.projectDetails,
-      project_link: configurationData.immersionLink,
+      project_link: '', // Blank as specified
       brandsource: contactDetails.brandsource,
+      project_details: combinedProjectDetails,
     };
 
     console.log('Creating deal with properties:', dealProperties);
@@ -126,4 +169,4 @@ export const POST = async (req) => {
       { status: 500 }
     );
   }
-};
+}

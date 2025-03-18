@@ -1,3 +1,4 @@
+'use client';
 // src/lib/pdfService.js
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
