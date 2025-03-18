@@ -3,11 +3,7 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import { useUser, useOrganization } from '@clerk/nextjs';
-import {
-  calculateResults,
-  initializeAnswers,
-  validateAnswers,
-} from '@/src/lib/calculatorEngine';
+import { calculateResults } from '@/src/lib/calculatorEngine';
 import { generateRecommendations } from '@/src/lib/recommendationEngine';
 import { generateAndSavePDF } from '@/src/lib/pdfService';
 import { usePartner } from '@/src/utils/partners';
@@ -15,6 +11,125 @@ import QuestionRenderer from './QuestionRenderer';
 import ResultsSummary from './ResultsSummary';
 import RecommendationsPanel from './RecommendationsPanel';
 import DealForm from './DealForm';
+/**
+ * Initialize answers with default values from schema
+ *
+ * @param {Object} schema - Calculator schema
+ * @returns {Object} - Initial answers object
+ */
+function initializeAnswers(schema) {
+  const answers = {};
+
+  // Iterate through all sections and questions
+  if (schema.sections) {
+    schema.sections.forEach((section) => {
+      if (section.questions) {
+        section.questions.forEach((question) => {
+          if (question.defaultValue !== undefined) {
+            answers[question.id] = question.defaultValue;
+          }
+        });
+      }
+    });
+  }
+
+  return answers;
+}
+
+/**
+ * Check if a section should be shown based on dependencies
+ *
+ * @param {Object} section - Section to check
+ * @param {Object} answers - User's answers
+ * @returns {boolean} - Whether section should be shown
+ */
+function shouldShowSection(section, answers) {
+  if (!section.dependsOn) return true;
+
+  const { questionId, value } = section.dependsOn;
+
+  // Check for array values in multi-select questions
+  if (Array.isArray(answers[questionId])) {
+    return answers[questionId].includes(value);
+  }
+
+  return answers[questionId] === value;
+}
+
+/**
+ * Validate answers against schema requirements
+ *
+ * @param {Object} schema - Calculator schema
+ * @param {Object} answers - User's answers
+ * @returns {Object} - Validation result { valid, errors }
+ */
+function validateAnswers(schema, answers) {
+  const errors = [];
+
+  // If schema doesn't have questions, return valid
+  if (
+    !schema.questions &&
+    (!schema.sections || schema.sections.length === 0)
+  ) {
+    return { valid: true, errors };
+  }
+
+  // Get all questions from sections or directly from questions array
+  const allQuestions = [];
+
+  if (schema.sections) {
+    schema.sections.forEach((section) => {
+      if (section.questions) {
+        // Check if the section should be shown based on dependencies
+        if (shouldShowSection(section, answers)) {
+          section.questions.forEach((question) => {
+            allQuestions.push({ ...question, sectionId: section.id });
+          });
+        }
+      }
+    });
+  } else if (schema.questions) {
+    schema.questions.forEach((question) => {
+      allQuestions.push({ ...question });
+    });
+  }
+
+  // Check required questions
+  allQuestions.forEach((question) => {
+    // Skip if question shouldn't be displayed based on dependencies
+    if (question.dependsOn) {
+      const { questionId, value } = question.dependsOn;
+      if (answers[questionId] !== value) {
+        return;
+      }
+    }
+
+    // Skip non-required questions
+    if (question.required === false) {
+      return;
+    }
+
+    const value = answers[question.id];
+
+    // Check if value is empty
+    if (
+      value === undefined ||
+      value === null ||
+      value === '' ||
+      (Array.isArray(value) && value.length === 0)
+    ) {
+      errors.push({
+        questionId: question.id,
+        message: `${question.label || question.id} is required`,
+      });
+    }
+  });
+
+  return {
+    valid: errors.length === 0,
+    errors,
+  };
+}
 
 /**
  * Main calculator container component with multi-step form handling

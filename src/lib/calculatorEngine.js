@@ -1,125 +1,5 @@
 // src/lib/calculatorEngine.js
 /**
- * Initialize answers with default values from schema
- *
- * @param {Object} schema - Calculator schema
- * @returns {Object} - Initial answers object
- */
-export function initializeAnswers(schema) {
-  const answers = {};
-
-  // Iterate through all sections and questions
-  if (schema.sections) {
-    schema.sections.forEach((section) => {
-      if (section.questions) {
-        section.questions.forEach((question) => {
-          if (question.defaultValue !== undefined) {
-            answers[question.id] = question.defaultValue;
-          }
-        });
-      }
-    });
-  }
-
-  return answers;
-}
-
-/**
- * Validate answers against schema requirements
- *
- * @param {Object} schema - Calculator schema
- * @param {Object} answers - User's answers
- * @returns {Object} - Validation result { valid, errors }
- */
-export function validateAnswers(schema, answers) {
-  const errors = [];
-
-  // If schema doesn't have questions, return valid
-  if (
-    !schema.questions &&
-    (!schema.sections || schema.sections.length === 0)
-  ) {
-    return { valid: true, errors };
-  }
-
-  // Get all questions from sections or directly from questions array
-  const allQuestions = [];
-
-  if (schema.sections) {
-    schema.sections.forEach((section) => {
-      if (section.questions) {
-        // Check if the section should be shown based on dependencies
-        if (shouldShowSection(section, answers)) {
-          section.questions.forEach((question) => {
-            allQuestions.push({ ...question, sectionId: section.id });
-          });
-        }
-      }
-    });
-  } else if (schema.questions) {
-    schema.questions.forEach((question) => {
-      allQuestions.push({ ...question });
-    });
-  }
-
-  // Check required questions
-  allQuestions.forEach((question) => {
-    // Skip if question shouldn't be displayed based on dependencies
-    if (question.dependsOn) {
-      const { questionId, value } = question.dependsOn;
-      if (answers[questionId] !== value) {
-        return;
-      }
-    }
-
-    // Skip non-required questions
-    if (question.required === false) {
-      return;
-    }
-
-    const value = answers[question.id];
-
-    // Check if value is empty
-    if (
-      value === undefined ||
-      value === null ||
-      value === '' ||
-      (Array.isArray(value) && value.length === 0)
-    ) {
-      errors.push({
-        questionId: question.id,
-        message: `${question.label || question.id} is required`,
-      });
-    }
-  });
-
-  return {
-    valid: errors.length === 0,
-    errors,
-  };
-}
-
-/**
- * Check if a section should be shown based on dependencies
- *
- * @param {Object} section - Section to check
- * @param {Object} answers - User's answers
- * @returns {boolean} - Whether section should be shown
- */
-function shouldShowSection(section, answers) {
-  if (!section.dependsOn) return true;
-
-  const { questionId, value } = section.dependsOn;
-
-  // Check for array values in multi-select questions
-  if (Array.isArray(answers[questionId])) {
-    return answers[questionId].includes(value);
-  }
-
-  return answers[questionId] === value;
-}
-
-/**
  * Calculate results based on answers and schema
  *
  * @param {Object} schema - Calculator schema
@@ -136,6 +16,7 @@ export function calculateResults(schema, answers, options = {}) {
       basePrice: 0,
       additionalCosts: {},
       totalPrice: 0,
+      salesCommission: 0, // Track sales commission separately
     },
     summary: {
       tier: 1, // Default to tier 1 for calculator
@@ -277,23 +158,6 @@ export function calculateResults(schema, answers, options = {}) {
   results.pricing.totalPrice =
     results.pricing.basePrice + additionalCostsTotal;
 
-  // Add commission information for partner pricing
-  if (results.summary.pricingStructure === 'partner') {
-    // Calculate commission from commission items
-    let totalCommission = 0;
-
-    results.commissionItems.forEach((item) => {
-      // Try to extract commission amount from text strings like "X: £200 Commission"
-      const match = item.match(/£(\d+(\.\d+)?)/);
-      if (match && match[1]) {
-        totalCommission += parseFloat(match[1]);
-      }
-    });
-
-    results.pricing.commission = totalCommission;
-    results.summary.commission = totalCommission;
-  }
-
   // Handle project details from answers if applicable
   if (answers.projectDetails) {
     results.summary.projectDetails = answers.projectDetails;
@@ -326,7 +190,7 @@ export function calculateResults(schema, answers, options = {}) {
       options.partner.config.pricingType === 'referral' &&
       pricingConfig.commissionRate
     ) {
-      results.pricing.commission =
+      results.pricing.salesCommission =
         results.pricing.totalPrice * pricingConfig.commissionRate;
     }
   }
@@ -352,7 +216,7 @@ export function calculateResults(schema, answers, options = {}) {
     basePrice: results.pricing.basePrice,
     additionalCosts: results.pricing.additionalCosts,
     totalPrice: results.pricing.totalPrice,
-    commission: results.pricing.commission,
+    salesCommission: results.pricing.salesCommission,
     tier: results.summary.tier,
     features: results.features.length,
     commissionItems: results.commissionItems.length,
@@ -439,7 +303,24 @@ function processEffects(
         break;
 
       case 'add-commission':
+        // Just add the item to commissionItems list (no monetary value)
         results.commissionItems.push(effect.value);
+        break;
+
+      case 'add-sales-commission':
+        // Add the commission amount to the pricing data
+        if (typeof effect.value === 'number') {
+          results.pricing.salesCommission =
+            (results.pricing.salesCommission || 0) + effect.value;
+        } else {
+          // Try to parse a number if it's a string
+          const commissionAmount = parseFloat(effect.value);
+          if (!isNaN(commissionAmount)) {
+            results.pricing.salesCommission =
+              (results.pricing.salesCommission || 0) +
+              commissionAmount;
+          }
+        }
         break;
 
       case 'set-base-price':

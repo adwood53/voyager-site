@@ -1,21 +1,16 @@
-// src/app/components/dashboard/panels/ProductionsPanel.js
 'use client';
 
 import { useState } from 'react';
+import Script from 'next/script';
 import { Card, CardBody, CardHeader, Button } from '@heroui/react';
 import { usePartner } from '@/src/utils/partners';
 import CalculatorContainer from '@/src/app/components/dashboard/calculator/CalculatorContainer';
-import MeetingScheduler from '@/src/app/components/dashboard/meeting/MeetingScheduler';
 
 export default function ProductionsPanel() {
   const partner = usePartner();
   const [currentStep, setCurrentStep] = useState('schedule'); // 'schedule' or 'services'
   const [schedulingComplete, setSchedulingComplete] = useState(false);
   const [calculationResults, setCalculationResults] = useState(null);
-
-  // Meeting ID from HubSpot (this would be configured in your env)
-  const HUBSPOT_MEETING_ID =
-    process.env.NEXT_PUBLIC_HUBSPOT_MEETING_ID || '123456'; // Replace with actual ID
 
   // Handle calculator completion
   const handleCalculatorComplete = (data) => {
@@ -44,12 +39,20 @@ export default function ProductionsPanel() {
       {/* Step indicator */}
       <div className="flex mb-8">
         <div
-          className={`flex-1 p-4 text-center border-b-2 ${currentStep === 'schedule' ? 'border-primary text-primary font-medium' : 'border-gray-300'}`}
+          className={`flex-1 p-4 text-center border-b-2 ${
+            currentStep === 'schedule'
+              ? 'border-primary text-primary font-medium'
+              : 'border-gray-300'
+          }`}
         >
           1. Schedule Studio Time
         </div>
         <div
-          className={`flex-1 p-4 text-center border-b-2 ${currentStep === 'services' ? 'border-primary text-primary font-medium' : 'border-gray-300'}`}
+          className={`flex-1 p-4 text-center border-b-2 ${
+            currentStep === 'services'
+              ? 'border-primary text-primary font-medium'
+              : 'border-gray-300'
+          }`}
         >
           2. Additional Services
         </div>
@@ -64,45 +67,41 @@ export default function ProductionsPanel() {
             </h2>
           </CardHeader>
           <CardBody>
-            <MeetingScheduler
-              hubspotMeetingId={HUBSPOT_MEETING_ID}
-              onComplete={handleScheduleComplete}
+            {/* This is the HubSpot container where the embedded meeting will appear */}
+            <div
+              className="meetings-iframe-container"
+              data-src="https://meetings.hubspot.com/swragg?embed=true"
             />
+            <Script
+              src="https://static.hsappstatic.net/MeetingsEmbed/ex/MeetingsEmbedCode.js"
+              strategy="lazyOnload"
+            />
+
+            {/* Button to proceed after the user has completed scheduling */}
+            <Button className="mt-4" onClick={handleScheduleComplete}>
+              I’ve Scheduled My Meeting
+            </Button>
           </CardBody>
         </Card>
       ) : (
-        <div>
-          <Card>
-            <CardHeader>
-              <h2 className="text-xl font-semibold text-gray-800">
-                Select Additional Services
-              </h2>
-            </CardHeader>
-            <CardBody>
-              <CalculatorContainer
-                schema={productionsSchema}
-                calculatorType="productions"
-                showPdfExport={
-                  partner?.config?.features?.showPdfExport ?? true
-                }
-                showSubmitToCRM={true}
-                partner={partner}
-                onSubmit={handleCalculatorComplete}
-              />
-            </CardBody>
-          </Card>
-
-          {/* Back button */}
-          <div className="mt-4">
-            <Button
-              onClick={() => setCurrentStep('schedule')}
-              variant="light"
-              color="default"
-            >
-              ← Back to Scheduling
-            </Button>
-          </div>
-        </div>
+        <Card>
+          <CardHeader>
+            <h2 className="text-xl font-semibold text-gray-800">
+              Select Additional Services
+            </h2>
+          </CardHeader>
+          <CardBody>
+            <CalculatorContainer
+              calculatorType="productions"
+              showPdfExport={
+                partner?.config?.features?.showPdfExport ?? true
+              }
+              showSubmitToCRM={true}
+              partner={partner}
+              onSubmit={handleCalculatorComplete}
+            />
+          </CardBody>
+        </Card>
       )}
 
       {/* Information card */}

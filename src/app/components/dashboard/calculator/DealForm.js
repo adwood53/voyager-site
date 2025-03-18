@@ -72,7 +72,24 @@ const handleSubmit = async (e) => {
         brandsource: formData.brandsource,
       },
       configurationData: updatedConfigData,
-      hubspotData,
+      hubspotData: {
+        dealname: `${formData.firstName} ${formData.lastName} - ${configurationData.summary.type} Configuration`,
+        pipeline: 'default',
+        dealstage: 'appointmentscheduled',
+        amount: configurationData.pricing.totalPrice.toString(),
+        configuration_tier: configurationData.summary.tier.toString(),
+        configuration_type__ar_vr_:
+          configurationData.summary.configurationType || 'New Target',
+        configuration_features: configurationData.features.join('\n'),
+        items_to_be_commissioned:
+          configurationData.commissionItems.join('\n'),
+        project_details:
+          formData.projectDetails ||
+          configurationData.summary.projectDetails ||
+          '',
+        project_link: generatedLink,
+        brandsource: formData.brandsource,
+      },
       calculatorType,
     };
 

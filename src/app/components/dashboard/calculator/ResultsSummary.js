@@ -231,14 +231,23 @@ export default function ResultsSummary({
               </div>
             )}
 
-            {results.pricing.commission && (
-              <div className="commission-price price-item">
-                <span className="price-label">Commission:</span>
-                <span className="price-value commission">
-                  {formatCurrency(results.pricing.commission)}
-                </span>
-              </div>
-            )}
+            {/* Add sales commission display in green */}
+            {results.pricing.salesCommission > 0 &&
+              results.summary.pricingStructure === 'partner' && (
+                <div className="commission-price price-item">
+                  <span className="price-label">
+                    Partner Commission:
+                  </span>
+                  <span
+                    className="price-value commission"
+                    style={{ color: '#10b981' }}
+                  >
+                    {' '}
+                    {/* Green color for commission */}
+                    {formatCurrency(results.pricing.salesCommission)}
+                  </span>
+                </div>
+              )}
           </div>
         </div>
       )}

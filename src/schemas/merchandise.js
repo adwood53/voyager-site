@@ -165,6 +165,11 @@ const merchandiseSchema = {
                   condition: { pricingStructure: 'partner' },
                 },
                 {
+                  type: 'add-sales-commission',
+                  value: 200,
+                  condition: { pricingStructure: 'partner' },
+                },
+                {
                   type: 'add-price',
                   value: 549,
                   condition: { pricingStructure: 'white-label' },
@@ -186,6 +191,11 @@ const merchandiseSchema = {
                 {
                   type: 'add-commission',
                   value: 'A1 Posters (25)',
+                  condition: { pricingStructure: 'partner' },
+                },
+                {
+                  type: 'add-sales-commission',
+                  value: 250,
                   condition: { pricingStructure: 'partner' },
                 },
                 {
@@ -213,6 +223,11 @@ const merchandiseSchema = {
                   condition: { pricingStructure: 'partner' },
                 },
                 {
+                  type: 'add-sales-commission',
+                  value: 300,
+                  condition: { pricingStructure: 'partner' },
+                },
+                {
                   type: 'add-price',
                   value: 1049,
                   condition: { pricingStructure: 'white-label' },
@@ -234,6 +249,11 @@ const merchandiseSchema = {
                 {
                   type: 'add-commission',
                   value: 'A1 Posters (100)',
+                  condition: { pricingStructure: 'partner' },
+                },
+                {
+                  type: 'add-sales-commission',
+                  value: 330,
                   condition: { pricingStructure: 'partner' },
                 },
                 {
@@ -273,6 +293,11 @@ const merchandiseSchema = {
                   condition: { pricingStructure: 'partner' },
                 },
                 {
+                  type: 'add-sales-commission',
+                  value: 550,
+                  condition: { pricingStructure: 'partner' },
+                },
+                {
                   type: 'add-price',
                   value: 2299,
                   condition: { pricingStructure: 'white-label' },
@@ -294,6 +319,11 @@ const merchandiseSchema = {
                 {
                   type: 'add-commission',
                   value: 'A2 Posters (250)',
+                  condition: { pricingStructure: 'partner' },
+                },
+                {
+                  type: 'add-sales-commission',
+                  value: 900,
                   condition: { pricingStructure: 'partner' },
                 },
                 {
@@ -321,6 +351,11 @@ const merchandiseSchema = {
                   condition: { pricingStructure: 'partner' },
                 },
                 {
+                  type: 'add-sales-commission',
+                  value: 1050,
+                  condition: { pricingStructure: 'partner' },
+                },
+                {
                   type: 'add-price',
                   value: 4799,
                   condition: { pricingStructure: 'white-label' },
@@ -342,6 +377,11 @@ const merchandiseSchema = {
                 {
                   type: 'add-commission',
                   value: 'A2 Posters (1000)',
+                  condition: { pricingStructure: 'partner' },
+                },
+                {
+                  type: 'add-sales-commission',
+                  value: 1350,
                   condition: { pricingStructure: 'partner' },
                 },
                 {
@@ -381,6 +421,11 @@ const merchandiseSchema = {
                   condition: { pricingStructure: 'partner' },
                 },
                 {
+                  type: 'add-sales-commission',
+                  value: 180,
+                  condition: { pricingStructure: 'partner' },
+                },
+                {
                   type: 'add-price',
                   value: 449,
                   condition: { pricingStructure: 'white-label' },
@@ -402,6 +447,11 @@ const merchandiseSchema = {
                 {
                   type: 'add-commission',
                   value: 'A3 Posters (100)',
+                  condition: { pricingStructure: 'partner' },
+                },
+                {
+                  type: 'add-sales-commission',
+                  value: 230,
                   condition: { pricingStructure: 'partner' },
                 },
                 {
@@ -429,6 +479,11 @@ const merchandiseSchema = {
                   condition: { pricingStructure: 'partner' },
                 },
                 {
+                  type: 'add-sales-commission',
+                  value: 350,
+                  condition: { pricingStructure: 'partner' },
+                },
+                {
                   type: 'add-price',
                   value: 1299,
                   condition: { pricingStructure: 'white-label' },
@@ -453,6 +508,11 @@ const merchandiseSchema = {
                   condition: { pricingStructure: 'partner' },
                 },
                 {
+                  type: 'add-sales-commission',
+                  value: 360,
+                  condition: { pricingStructure: 'partner' },
+                },
+                {
                   type: 'add-price',
                   value: 1349,
                   condition: { pricingStructure: 'white-label' },
@@ -474,6 +534,11 @@ const merchandiseSchema = {
                 {
                   type: 'add-commission',
                   value: 'A3 Posters (1000)',
+                  condition: { pricingStructure: 'partner' },
+                },
+                {
+                  type: 'add-sales-commission',
+                  value: 450,
                   condition: { pricingStructure: 'partner' },
                 },
                 {
@@ -518,6 +583,11 @@ const merchandiseSchema = {
                   condition: { pricingStructure: 'partner' },
                 },
                 {
+                  type: 'add-sales-commission',
+                  value: 200,
+                  condition: { pricingStructure: 'partner' },
+                },
+                {
                   type: 'add-price',
                   value: 549,
                   condition: { pricingStructure: 'white-label' },
@@ -539,6 +609,11 @@ const merchandiseSchema = {
                 {
                   type: 'add-commission',
                   value: 'Business Cards (50)',
+                  condition: { pricingStructure: 'partner' },
+                },
+                {
+                  type: 'add-sales-commission',
+                  value: 350,
                   condition: { pricingStructure: 'partner' },
                 },
                 {
@@ -566,6 +641,11 @@ const merchandiseSchema = {
                   condition: { pricingStructure: 'partner' },
                 },
                 {
+                  type: 'add-sales-commission',
+                  value: 450,
+                  condition: { pricingStructure: 'partner' },
+                },
+                {
                   type: 'add-price',
                   value: 1799,
                   condition: { pricingStructure: 'white-label' },
@@ -587,6 +667,11 @@ const merchandiseSchema = {
                 {
                   type: 'add-commission',
                   value: 'Business Cards (500)',
+                  condition: { pricingStructure: 'partner' },
+                },
+                {
+                  type: 'add-sales-commission',
+                  value: 550,
                   condition: { pricingStructure: 'partner' },
                 },
                 {
@@ -614,6 +699,11 @@ const merchandiseSchema = {
                 {
                   type: 'add-commission',
                   value: 'Business Cards (1000)',
+                  condition: { pricingStructure: 'partner' },
+                },
+                {
+                  type: 'add-sales-commission',
+                  value: 650,
                   condition: { pricingStructure: 'partner' },
                 },
                 {
@@ -658,6 +748,11 @@ const merchandiseSchema = {
                   condition: { pricingStructure: 'partner' },
                 },
                 {
+                  type: 'add-sales-commission',
+                  value: 199,
+                  condition: { pricingStructure: 'partner' },
+                },
+                {
                   type: 'add-price',
                   value: 495,
                   condition: { pricingStructure: 'white-label' },
@@ -679,6 +774,11 @@ const merchandiseSchema = {
                   value: 1599,
                   condition: { pricingStructure: 'partner' },
                   name: 'Enhanced Marketing Bundle',
+                },
+                {
+                  type: 'add-sales-commission',
+                  value: 319.8,
+                  condition: { pricingStructure: 'partner' },
                 },
                 {
                   type: 'add-commission',
@@ -708,6 +808,11 @@ const merchandiseSchema = {
                 {
                   type: 'add-commission',
                   value: 'Premium Bundle',
+                  condition: { pricingStructure: 'partner' },
+                },
+                {
+                  type: 'add-sales-commission',
+                  value: 1850,
                   condition: { pricingStructure: 'partner' },
                 },
                 {
