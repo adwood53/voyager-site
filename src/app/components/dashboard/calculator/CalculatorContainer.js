@@ -296,7 +296,7 @@ export default function CalculatorContainer({
   const currentSectionObj = getCurrentSection();
 
   return (
-    <div className="calculator-container">
+    <div className="calculator-container shadow-md rounded-lg overflow-hidden">
       {showResults ? (
         <ResultsSummary
           results={results}

@@ -1,5 +1,4 @@
-// src/lib/calculatorEngine.js
-
+// src/lib/calculatorEngine.js - Complete file
 /**
  * Initialize answers with default values from schema
  *
@@ -129,7 +128,7 @@ function shouldShowSection(section, answers) {
  * @returns {Object} - Calculation results
  */
 export function calculateResults(schema, answers, options = {}) {
-  // Initialize results object
+  // Initialize results object with default values
   const results = {
     features: [],
     commissionItems: [],
@@ -150,6 +149,23 @@ export function calculateResults(schema, answers, options = {}) {
   // Add the pricingStructure to options for effect conditions
   options.pricingStructure = answers.pricingType;
 
+  // DEBUG: Log the initial state
+  console.log('Calculator initial state:', {
+    pricingType: answers.pricingType,
+    options: options,
+  });
+
+  // Process single-select questions directly
+  if (answers.pricingType) {
+    console.log(
+      'Pricing type found in answers:',
+      answers.pricingType
+    );
+    // Ensure the pricingStructure is set correctly in both places
+    results.summary.pricingStructure = answers.pricingType;
+    options.pricingStructure = answers.pricingType;
+  }
+
   // Process sections
   if (schema.sections) {
     schema.sections.forEach((section) => {
@@ -166,6 +182,16 @@ export function calculateResults(schema, answers, options = {}) {
         section.questions.forEach((question) => {
           const value = answers[question.id];
 
+          // Handle specific case for pricing type
+          if (question.id === 'pricingType' && value) {
+            results.summary.pricingStructure = value;
+            options.pricingStructure = value;
+            console.log(
+              'Updated pricing structure from question:',
+              value
+            );
+          }
+
           // Skip if no value or no effects
           if (
             value === undefined ||
@@ -177,6 +203,23 @@ export function calculateResults(schema, answers, options = {}) {
 
           // Process effects
           question.effects.forEach((effect) => {
+            // Log effect for debugging
+            if (
+              effect.condition &&
+              effect.condition.pricingStructure
+            ) {
+              console.log(
+                'Processing effect with pricing condition:',
+                {
+                  effect,
+                  currentPricingStructure: options.pricingStructure,
+                  matches:
+                    effect.condition.pricingStructure ===
+                    options.pricingStructure,
+                }
+              );
+            }
+
             // Skip if effect has a condition that isn't met
             if (effect.condition) {
               // Simple conditions
@@ -187,12 +230,20 @@ export function calculateResults(schema, answers, options = {}) {
                 return;
               }
 
-              // Pricing structure condition
+              // Pricing structure condition - with extra logging
               if (
                 effect.condition.pricingStructure !== undefined &&
                 effect.condition.pricingStructure !==
                   options.pricingStructure
               ) {
+                console.log(
+                  'Skipping effect due to pricing structure mismatch:',
+                  {
+                    effectCondition:
+                      effect.condition.pricingStructure,
+                    currentStructure: options.pricingStructure,
+                  }
+                );
                 return;
               }
 
@@ -243,12 +294,18 @@ export function calculateResults(schema, answers, options = {}) {
                       effect.name || `${question.label} Cost`;
                     results.pricing.additionalCosts[name] =
                       effect.value * quantity;
+                    console.log(
+                      `Added price with multiplier: ${name} = ${effect.value} * ${quantity}`
+                    );
                   }
                 } else {
                   const name =
                     effect.name || `${question.label} Cost`;
                   results.pricing.additionalCosts[name] =
                     effect.value;
+                  console.log(
+                    `Added price: ${name} = ${effect.value}`
+                  );
                 }
                 break;
 
@@ -321,6 +378,9 @@ export function calculateResults(schema, answers, options = {}) {
                       effect.name || `${selectedOption.label} Cost`;
                     results.pricing.additionalCosts[name] =
                       effect.value;
+                    console.log(
+                      `Added price from option: ${name} = ${effect.value}`
+                    );
                     break;
 
                   case 'set-tier':
@@ -384,6 +444,9 @@ export function calculateResults(schema, answers, options = {}) {
                         effect.name || `${selectedOption.label} Cost`;
                       results.pricing.additionalCosts[name] =
                         effect.value;
+                      console.log(
+                        `Added price from multi-select option: ${name} = ${effect.value}`
+                      );
                       break;
                   }
                 });
@@ -520,6 +583,15 @@ export function calculateResults(schema, answers, options = {}) {
         results.pricing.totalPrice * pricingConfig.commissionRate;
     }
   }
+
+  // Log final price calculation
+  console.log('Final price calculation:', {
+    basePrice: results.pricing.basePrice,
+    additionalCosts: results.pricing.additionalCosts,
+    additionalCostsTotal,
+    totalPrice: results.pricing.totalPrice,
+    pricingStructure: options.pricingStructure,
+  });
 
   return results;
 }

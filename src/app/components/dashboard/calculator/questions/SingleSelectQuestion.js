@@ -1,4 +1,4 @@
-// src/app/components/dashboard/calculators/questions/SingleSelectQuestion.js
+// src/app/components/dashboard/calculator/questions/SingleSelectQuestion.js - Updated
 'use client';
 
 import React from 'react';
@@ -31,6 +31,11 @@ export default function SingleSelectQuestion({
             onClick={() => onChange(option.id)}
           >
             {option.label}
+            {option.description && (
+              <span className="block mt-1 text-xs text-gray-500">
+                {option.description}
+              </span>
+            )}
           </button>
         ))}
       </div>

@@ -1,5 +1,4 @@
-// src/app/components/dashboard/calculators/ResultsSummary.js
-
+// src/app/components/dashboard/calculator/ResultsSummary.js - Updated
 'use client';
 
 import React from 'react';
@@ -11,6 +10,7 @@ export default function ResultsSummary({
   onExportPDF,
   onSubmitToHubspot,
   onReset,
+  partner,
 }) {
   if (!results) {
     return <div className="loading-results">Loading results...</div>;
@@ -26,25 +26,25 @@ export default function ResultsSummary({
     if (Array.isArray(feature)) {
       // Feature is [key, value] pair
       return (
-        <div key={index} className="summary-item blue">
-          <span className="summary-item-title">
-            {feature[0]}: {feature[1]}
-          </span>
+        <div key={index} className="summary-item">
+          <span className="summary-item-title">{feature[0]}:</span>{' '}
+          {feature[1]}
         </div>
       );
     } else if (typeof feature === 'object') {
       // Feature is object with name/value
       return (
-        <div key={index} className="summary-item blue">
+        <div key={index} className="summary-item">
           <span className="summary-item-title">
-            {feature.name || 'Feature'}: {feature.value || 'Yes'}
-          </span>
+            {feature.name || 'Feature'}:
+          </span>{' '}
+          {feature.value || 'Yes'}
         </div>
       );
     } else {
       // Feature is string
       return (
-        <div key={index} className="summary-item green">
+        <div key={index} className="summary-item">
           <span className="summary-item-title">{feature}</span>
         </div>
       );
@@ -91,7 +91,7 @@ export default function ResultsSummary({
             <div className="commission-list">
               <ul>
                 {results.commissionItems.map((item, index) => (
-                  <li key={index}>
+                  <li key={index} className="commission-item">
                     {typeof item === 'object'
                       ? item.name || item.description
                       : item}
@@ -107,38 +107,40 @@ export default function ResultsSummary({
         <div className="pricing-section">
           <h3 className="section-title">Pricing</h3>
 
-          <div className="price-item">
-            <span className="price-label">Base Price:</span>
-            <span className="price-value">
-              {formatCurrency(results.pricing.basePrice || 0)}
-            </span>
-          </div>
+          <div className="price-items">
+            <div className="price-item">
+              <span className="price-label">Base Price:</span>
+              <span className="price-value">
+                {formatCurrency(results.pricing.basePrice || 0)}
+              </span>
+            </div>
 
-          {results.pricing.additionalCosts &&
-            Object.keys(results.pricing.additionalCosts).length >
-              0 && (
-              <div className="additional-costs">
-                {Object.entries(results.pricing.additionalCosts).map(
-                  ([name, cost], index) => (
+            {results.pricing.additionalCosts &&
+              Object.keys(results.pricing.additionalCosts).length >
+                0 && (
+                <div className="additional-costs">
+                  {Object.entries(
+                    results.pricing.additionalCosts
+                  ).map(([name, cost], index) => (
                     <div key={index} className="price-item">
                       <span className="price-label">{name}:</span>
                       <span className="price-value">
                         {formatCurrency(cost)}
                       </span>
                     </div>
-                  )
-                )}
+                  ))}
+                </div>
+              )}
+
+            {typeof results.pricing.totalPrice === 'number' && (
+              <div className="total-price price-item">
+                <span className="price-label">Total:</span>
+                <span className="price-value total">
+                  {formatCurrency(results.pricing.totalPrice)}
+                </span>
               </div>
             )}
-
-          {typeof results.pricing.totalPrice === 'number' && (
-            <div className="total-price">
-              <span className="price-label">Total:</span>
-              <span className="price-value total">
-                {formatCurrency(results.pricing.totalPrice)}
-              </span>
-            </div>
-          )}
+          </div>
         </div>
       )}
 

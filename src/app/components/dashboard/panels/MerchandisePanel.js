@@ -1,4 +1,4 @@
-// src/app/components/dashboard/panels/MerchandisePanel.js
+// src/app/components/dashboard/panels/MerchandisePanel.js - Updated
 'use client';
 
 import { useState } from 'react';
@@ -29,16 +29,23 @@ export default function MerchandisePanel() {
         </p>
       </div>
 
-      <CalculatorContainer
-        schema={merchandiseSchema}
-        calculatorType="merchandise"
-        showPdfExport={
-          partner?.config?.features?.showPdfExport ?? true
-        }
-        showSubmitToCRM={true}
-        partner={partner}
-        onSubmit={handleCalculatorComplete}
-      />
+      {/* Added a card wrapper with shadow and padding */}
+      <Card className="shadow-md rounded-lg overflow-hidden">
+        <CardBody className="p-0">
+          {' '}
+          {/* Remove padding from the Card so the calculator padding works correctly */}
+          <CalculatorContainer
+            schema={merchandiseSchema}
+            calculatorType="merchandise"
+            showPdfExport={
+              partner?.config?.features?.showPdfExport ?? true
+            }
+            showSubmitToCRM={true}
+            partner={partner}
+            onSubmit={handleCalculatorComplete}
+          />
+        </CardBody>
+      </Card>
 
       {/* Information card */}
       <Card className="mt-8">

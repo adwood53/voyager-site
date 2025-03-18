@@ -1,45 +1,47 @@
-/* src/app/components/dashboard/calculators/calculator.css */
-
 /* Main Calculator Container */
 .calculator-container {
   background-color: white;
   border-radius: 0.5rem;
-  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 10%), 0 2px 4px -1px rgb(0 0 0 / 6%);
+  box-shadow:
+    0 4px 6px -1px rgb(0 0 0 / 10%),
+    0 2px 4px -1px rgb(0 0 0 / 6%);
   overflow: hidden;
+  padding: 1.5rem; /* Added internal padding */
 }
-  
+
 /* Progress Bar */
 .calculator-progress {
   margin-bottom: 1.5rem;
 }
-  
+
 .progress-text {
   font-size: 0.875rem;
-  color: #4B5563;
+  color: #4b5563;
   margin-bottom: 0.5rem;
 }
-  
+
 .progress-bar {
   width: 100%;
   height: 0.5rem;
-  background-color: #E5E7EB;
+  background-color: #e5e7eb;
   border-radius: 9999px;
   overflow: hidden;
 }
 
 .progress-bar-fill {
   height: 100%;
-  background-color: var(--primary, #E79023);
+  background-color: var(--primary, #e79023);
   transition: all 0.3s ease-in-out;
 }
-  
+
 /* Section Title */
 .section-title {
   font-size: 1.25rem;
   font-weight: 600;
   margin-bottom: 1.5rem;
+  color: #1f2937; /* Darkened text color for better visibility */
 }
-  
+
 /* Questions Container */
 .questions-container {
   margin-bottom: 2rem;
@@ -48,201 +50,338 @@
 .questions-container > * + * {
   margin-top: 1.5rem;
 }
-  
+
 .no-questions-message {
-  color: #6B7280;
+  color: #6b7280;
   font-style: italic;
 }
-  
-/* Question components - Base styles */
-.question-item {
+
+/* Question Container */
+.question-container {
+  background-color: #f9fafb;
+  border-radius: 0.5rem;
+  padding: 1.25rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e5e7eb;
   margin-bottom: 1.5rem;
 }
-  
-/* Form controls */
-.my-number-input {
-  width: 100%;
-  padding: 0.5rem 0.75rem;
+
+/* Question Label */
+.question-label {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 0.75rem;
+  color: #1f2937;
+  font-size: 1rem;
+}
+
+.question-label .required {
+  color: #ef4444;
+  margin-left: 0.25rem;
+}
+
+/* Question Help Text */
+.question-help {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin-top: -0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+/* Form controls - Single Select, Multi-select, Yes/No */
+.select-options,
+.yes-no-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.select-option,
+.yes-no-button {
   background-color: white;
-  border: 1px solid #D1D5DB;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  transition: all 0.15s;
+  color: #374151;
+  font-size: 0.875rem;
+  flex: 1 1 calc(50% - 0.75rem);
+  min-width: 150px;
+}
+
+.select-option.active,
+.yes-no-button.active {
+  background-color: rgba(var(--primary, #e79023), 0.1);
+  border-color: var(--primary, #e79023);
+  color: var(--primary, #e79023);
+  font-weight: 500;
+}
+
+.select-option:hover,
+.yes-no-button:hover {
+  border-color: var(--primary, #e79023);
+  box-shadow: 0 0 0 1px rgba(var(--primary, #e79023), 0.1);
+}
+
+/* Multi-select styling */
+.multi-select-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.multi-select-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+.multi-select-option:hover {
+  background-color: #f3f4f6;
+}
+
+/* Text inputs */
+.text-input,
+.text-area,
+.numeric-input {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: white;
+  border: 1px solid #d1d5db;
   border-radius: 0.375rem;
   color: #374151;
   transition: all 0.15s;
+  font-size: 0.875rem;
 }
 
-.my-number-input:focus {
+.text-input:focus,
+.text-area:focus,
+.numeric-input:focus {
   outline: none;
-  --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
-  --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);
-  box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
-  --tw-ring-color: var(--primary, #E79023);
+  --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0
+    var(--tw-ring-offset-width) var(--tw-ring-offset-color);
+  --tw-ring-shadow: var(--tw-ring-inset) 0 0 0
+    calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);
+  box-shadow:
+    var(--tw-ring-offset-shadow), var(--tw-ring-shadow),
+    var(--tw-shadow, 0 0 #0000);
+  --tw-ring-color: var(--primary, #e79023);
   border-color: transparent;
 }
-  
-.my-number-input.invalid {
-  border-color: #EF4444;
-  --tw-ring-color: #FEE2E2;
+
+.text-area {
+  min-height: 100px;
+  resize: vertical;
 }
-  
+
 /* Buttons */
 .calculator-actions {
   display: flex;
   justify-content: space-between;
   margin-top: 2rem;
 }
-  
+
 .primary-button {
-  background-color: var(--primary, #E79023);
+  background-color: var(--primary, #e79023);
   color: white;
-  padding: 0.5rem 1.5rem;
+  padding: 0.625rem 1.5rem;
   border-radius: 0.375rem;
   font-weight: 500;
   transition: background-color 0.15s;
+  border: none;
+  cursor: pointer;
 }
 
 .primary-button:hover {
-  background-color: rgba(var(--primary, #E79023), 0.9);
+  background-color: var(--accent, #a6620c);
 }
 
 .primary-button:disabled {
   opacity: 0.5;
+  cursor: not-allowed;
 }
-  
+
 .secondary-button {
-  background-color: #E5E7EB;
-  color: #4B5563;
-  padding: 0.5rem 1.5rem;
+  background-color: #e5e7eb;
+  color: #4b5563;
+  padding: 0.625rem 1.5rem;
   border-radius: 0.375rem;
   font-weight: 500;
   transition: background-color 0.15s;
+  border: none;
+  cursor: pointer;
 }
 
 .secondary-button:hover {
-  background-color: #D1D5DB;
+  background-color: #d1d5db;
 }
 
 .secondary-button:disabled {
   opacity: 0.5;
+  cursor: not-allowed;
 }
-  
+
 /* Error Messages */
 .calculator-errors {
   margin-top: 1.5rem;
   padding: 1rem;
-  background-color: #FEF2F2;
-  border: 1px solid #FEE2E2;
+  background-color: #fef2f2;
+  border: 1px solid #fee2e2;
   border-radius: 0.375rem;
-  color: #B91C1C;
+  color: #b91c1c;
 }
-  
-.error-message {
+
+.error-text {
   font-size: 0.875rem;
-  color: #DC2626;
+  color: #dc2626;
   margin-top: 0.25rem;
 }
-  
-/* Results Summary */
-.results-summary {
-  padding: 1.5rem;
+
+/* Range labels for numeric inputs */
+.range-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: #6b7280;
+  margin-top: 0.25rem;
 }
-  
+
+/* Invalid styles */
+.text-input.invalid,
+.text-area.invalid,
+.numeric-input.invalid {
+  border-color: #ef4444;
+  --tw-ring-color: #fee2e2;
+}
+
+/* Results Summary styling */
+.results-summary {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 0.5rem;
+}
+
 .results-title {
   font-size: 1.5rem;
   font-weight: 700;
   margin-bottom: 1.5rem;
-  color: #1F2937;
+  color: #1f2937;
 }
-  
+
 .tier-section {
   margin-bottom: 1.5rem;
-  padding: 1rem;
-  background-color: rgba(var(--primary, #E79023), 0.1);
+  padding: 1.25rem;
+  background-color: rgba(231, 144, 35, 0.1);
   border-radius: 0.5rem;
-  border: 1px solid;
-  border-color: rgba(var(--primary, #E79023), 0.2);
+  border: 1px solid rgba(231, 144, 35, 0.2);
 }
-  
+
 .tier-title {
   font-size: 1.25rem;
   font-weight: 600;
-  color: var(--primary, #E79023);
+  color: var(--primary, #e79023);
   margin-bottom: 0.5rem;
 }
-  
+
 .tier-description {
-  color: #4B5563;
+  color: #4b5563;
 }
-  
-.features-section, 
-.commission-section, 
+
+.features-section,
+.commission-section,
 .pricing-section {
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
 }
-  
-/* Additional section title styling */
-.pricing-section .section-title, 
-.features-section .section-title, 
-.commission-section .section-title {
+
+.section-title {
   font-size: 1.125rem;
   font-weight: 600;
-  margin-bottom: 0.75rem;
-  color: #1F2937;
+  margin-bottom: 1rem;
+  color: #1f2937;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 0.5rem;
 }
-  
+
 .features-list {
   display: grid;
   grid-template-columns: repeat(1, minmax(0, 1fr));
   gap: 0.75rem;
 }
 
-@media (width >= 768px) {
+@media (min-width: 768px) {
   .features-list {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
-  
+
 .summary-item {
   padding: 0.75rem;
   border-radius: 0.375rem;
+  background-color: #f9fafb;
+  border: 1px solid #e5e7eb;
+  color: #4b5563;
+  font-size: 0.875rem;
 }
-  
-.summary-item.blue {
-  background-color: #EFF6FF;
-  color: #1E40AF;
+
+.summary-item-title {
+  font-weight: 600;
+  color: #1f2937;
 }
-  
-.summary-item.green {
-  background-color: #ECFDF5;
-  color: #065F46;
+
+.commission-list ul {
+  list-style-type: disc;
+  list-style-position: inside;
+  padding-left: 1rem;
 }
-  
+
+.commission-item {
+  margin-bottom: 0.5rem;
+  color: #4b5563;
+}
+
+.price-items {
+  border: 1px solid #e5e7eb;
+  border-radius: 0.375rem;
+  overflow: hidden;
+}
+
 .price-item {
   display: flex;
   justify-content: space-between;
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid #E5E7EB;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #e5e7eb;
 }
 
 .price-item:last-child {
-  border-bottom: 0;
+  border-bottom: none;
 }
-  
+
 .price-label {
-  color: #4B5563;
+  color: #4b5563;
+  font-weight: 500;
 }
-  
+
 .price-value {
   font-weight: 500;
-  color: #1F2937;
+  color: #1f2937;
 }
-  
+
 .price-value.total {
   font-size: 1.125rem;
   font-weight: 700;
-  color: var(--primary, #E79023);
+  color: var(--primary, #e79023);
 }
-  
+
+.total-price {
+  background-color: rgba(231, 144, 35, 0.05);
+}
+
 .results-actions {
   margin-top: 2rem;
   display: flex;
@@ -250,96 +389,11 @@
   gap: 1rem;
   justify-content: center;
 }
-  
-/* Recommendations Panel */
-.recommendations-panel {
-  padding: 1.5rem;
-}
-  
-.recommendations-title {
-  font-size: 1.5rem;
-  font-weight: 700;
-  margin-bottom: 1.5rem;
-  color: #1F2937;
-}
-  
-.recommendation-card {
-  padding: 1.5rem;
-  background-color: white;
-  border-radius: 0.5rem;
-  border: 1px solid;
-  border-color: rgba(var(--primary, #E79023), 0.2);
-  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 10%), 0 2px 4px -1px rgb(0 0 0 / 6%);
-  margin-bottom: 1.5rem;
-}
-  
-.recommendation-name {
-  font-size: 1.25rem;
-  font-weight: 600;
-  margin-bottom: 0.5rem;
-  color: var(--primary, #E79023);
-}
-  
-.recommendation-category {
-  display: inline-block;
-  padding: 0 0.75rem;
-  line-height: 1.5rem;
-  border-radius: 9999px;
-  font-size: 0.75rem;
-  font-weight: 500;
-  margin-bottom: 1rem;
-  background-color: rgba(var(--primary, #E79023), 0.1);
-  color: var(--primary, #E79023);
-}
-  
-.recommendation-description {
-  color: #374151;
-  margin-bottom: 1rem;
-}
-  
-.recommendation-features {
-  margin-top: 1rem;
-}
-  
-.recommendation-features h4 {
-  font-size: 0.875rem;
-  font-weight: 600;
-  margin-bottom: 0.5rem;
-  color: #374151;
-}
-  
-.recommendation-features ul {
-  list-style-type: disc;
-  list-style-position: inside;
-  margin-bottom: 0;
-  color: #4B5563;
-}
 
-.recommendation-features ul > * + * {
-  margin-top: 0.25rem;
-}
-  
-.recommendation-detail {
-  margin-top: 0.5rem;
-  color: #4B5563;
-}
-  
-.recommendation-navigation {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 1.5rem;
-}
-  
-.recommendation-counter {
-  font-size: 0.875rem;
-  color: #6B7280;
-}
-  
-.recommendations-actions {
+.results-footer {
   margin-top: 2rem;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  justify-content: center;
+  padding-top: 1rem;
+  border-top: 1px solid #e5e7eb;
+  color: #6b7280;
+  font-size: 0.875rem;
 }
