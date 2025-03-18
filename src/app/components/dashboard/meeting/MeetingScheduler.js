@@ -67,20 +67,17 @@ export default function MeetingScheduler({
 
         // If HubSpot meetings object is available, create the meeting
         if (window.hbspt && window.hbspt.meetings) {
-          // Add context data from partner
-          const context = {
-            brandsource: partner?.brandSource || 'voyager',
-            partnerName: partner?.name || '',
-            partnerEmail: partner?.email || '',
-            organizationId: partner?.id || '',
-          };
-
-          // Create the meeting embed with context
+          // Define a valid target selector string instead of passing the DOM reference
           window.hbspt.meetings.create({
             portalId: portalId,
             meetingId: meetingId,
-            target: schedulerRef.current,
-            context,
+            target: '.meetings-iframe-container', // Use CSS selector instead of DOM reference
+            context: {
+              brandsource: partner?.brandSource || 'voyager',
+              partnerName: partner?.name || '',
+              partnerEmail: partner?.email || '',
+              organizationId: partner?.id || '',
+            },
           });
         }
       } catch (err) {

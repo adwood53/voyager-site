@@ -140,7 +140,7 @@ function NavItem({ id, label, icon, active, onClick, customStyle }) {
         className={`w-full h-12 transition-all flex items-center ${
           active ? 'bg-opacity-10' : 'hover:bg-gray-100'
         } ${customStyle || ''}`}
-        onClick={onClick}
+        onPress={onClick} // Changed from onClick to onPress
         variant="light"
         style={buttonStyles}
       >

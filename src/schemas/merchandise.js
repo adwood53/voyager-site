@@ -9,445 +9,755 @@ const merchandiseSchema = {
     showRecommendations: false,
   },
   description:
-    'Calculate costs for interactive merchandise items with embedded digital experiences.',
+    'Calculate costs for interactive merchandise with embedded digital experiences.',
   sections: [
     {
-      id: 'product-type',
-      title: 'Product Type',
+      id: 'pricing-structure',
+      title: 'Pricing Structure',
       questions: [
         {
-          id: 'merchandiseType',
+          id: 'pricingType',
           type: 'single-select',
-          label: 'What type of merchandise are you interested in?',
+          label:
+            'Would you like to refer this with a partner commission, or would you like to white-label this?',
           options: [
             {
-              id: 'business-cards',
-              label: 'Interactive Business Cards',
+              id: 'partner',
+              label: 'Partner (Commission Pricing Structure Applied)',
               effects: [
                 {
                   type: 'add-feature',
-                  value: 'Product: Interactive Business Cards',
+                  value: 'Pricing: Partner Commission',
                 },
-                { type: 'set-base-price', value: 150 }, // Base setup fee
+                { type: 'set-pricing-structure', value: 'partner' },
               ],
             },
             {
-              id: 'brochures',
-              label: 'Interactive Brochures/Flyers',
+              id: 'white-label',
+              label:
+                'White Label (White Label Pricing Structure Applied)',
               effects: [
                 {
                   type: 'add-feature',
-                  value: 'Product: Interactive Brochures/Flyers',
+                  value: 'Pricing: White Label',
                 },
-                { type: 'set-base-price', value: 200 }, // Base setup fee
-              ],
-            },
-            {
-              id: 'packaging',
-              label: 'Interactive Packaging',
-              effects: [
                 {
-                  type: 'add-feature',
-                  value: 'Product: Interactive Packaging',
+                  type: 'set-pricing-structure',
+                  value: 'white-label',
                 },
-                { type: 'set-base-price', value: 250 }, // Base setup fee
-              ],
-            },
-            {
-              id: 'posters',
-              label: 'Interactive Posters/Signage',
-              effects: [
-                {
-                  type: 'add-feature',
-                  value: 'Product: Interactive Posters/Signage',
-                },
-                { type: 'set-base-price', value: 200 }, // Base setup fee
-              ],
-            },
-            {
-              id: 'clothing',
-              label: 'Interactive Clothing',
-              effects: [
-                {
-                  type: 'add-feature',
-                  value: 'Product: Interactive Clothing',
-                },
-                { type: 'set-base-price', value: 300 }, // Base setup fee
               ],
             },
           ],
         },
-        {
-          id: 'interactionType',
-          type: 'single-select',
-          label: 'What type of interaction do you want?',
-          options: [
-            {
-              id: 'qr',
-              label: 'QR Code',
-              effects: [
-                {
-                  type: 'add-feature',
-                  value: 'Interaction: QR Code',
-                },
-                { type: 'add-price', value: 0 }, // No additional cost for QR
-              ],
-            },
-            {
-              id: 'nfc',
-              label: 'NFC Tag',
-              effects: [
-                {
-                  type: 'add-feature',
-                  value: 'Interaction: NFC Tag',
-                },
-                { type: 'add-price', value: 50 }, // Additional setup for NFC
-              ],
-            },
-            {
-              id: 'ar-marker',
-              label: 'AR Marker',
-              effects: [
-                {
-                  type: 'add-feature',
-                  value: 'Interaction: AR Marker',
-                },
-                { type: 'add-price', value: 100 }, // Additional setup for AR markers
-              ],
-            },
-          ],
-        },
-      ],
-    },
-    {
-      id: 'quantity',
-      title: 'Quantity',
-      questions: [
-        {
-          id: 'businessCardQuantity',
-          type: 'numeric',
-          label: 'Number of Business Cards',
-          min: 25,
-          max: 10000,
-          dependsOn: {
-            questionId: 'merchandiseType',
-            value: 'business-cards',
-          },
-          effects: [
-            {
-              type: 'add-feature',
-              value: 'Business Card Quantity',
-            },
-            {
-              type: 'add-price',
-              value: 1.5, // £1.50 per card
-              multiplier: 'businessCardQuantity',
-              name: 'Business Cards Cost',
-            },
-          ],
-        },
-        {
-          id: 'brochureQuantity',
-          type: 'numeric',
-          label: 'Number of Brochures/Flyers',
-          min: 50,
-          max: 10000,
-          dependsOn: {
-            questionId: 'merchandiseType',
-            value: 'brochures',
-          },
-          effects: [
-            {
-              type: 'add-feature',
-              value: 'Brochure Quantity',
-            },
-            {
-              type: 'add-price',
-              value: 0.75, // £0.75 per brochure
-              multiplier: 'brochureQuantity',
-              name: 'Brochures Cost',
-            },
-          ],
-        },
-        {
-          id: 'packagingQuantity',
-          type: 'numeric',
-          label: 'Number of Packaging Units',
-          min: 100,
-          max: 10000,
-          dependsOn: {
-            questionId: 'merchandiseType',
-            value: 'packaging',
-          },
-          effects: [
-            {
-              type: 'add-feature',
-              value: 'Packaging Quantity',
-            },
-            {
-              type: 'add-price',
-              value: 1.25, // £1.25 per packaging unit
-              multiplier: 'packagingQuantity',
-              name: 'Packaging Cost',
-            },
-          ],
-        },
-        {
-          id: 'posterQuantity',
-          type: 'numeric',
-          label: 'Number of Posters/Signs',
-          min: 10,
-          max: 1000,
-          dependsOn: {
-            questionId: 'merchandiseType',
-            value: 'posters',
-          },
-          effects: [
-            {
-              type: 'add-feature',
-              value: 'Poster Quantity',
-            },
-            {
-              type: 'add-price',
-              value: 5, // £5 per poster
-              multiplier: 'posterQuantity',
-              name: 'Posters Cost',
-            },
-          ],
-        },
-        {
-          id: 'clothingQuantity',
-          type: 'numeric',
-          label: 'Number of Clothing Items',
-          min: 25,
-          max: 1000,
-          dependsOn: {
-            questionId: 'merchandiseType',
-            value: 'clothing',
-          },
-          effects: [
-            {
-              type: 'add-feature',
-              value: 'Clothing Quantity',
-            },
-            {
-              type: 'add-price',
-              value: 10, // £10 per clothing item
-              multiplier: 'clothingQuantity',
-              name: 'Clothing Cost',
-            },
-          ],
-        },
-      ],
-    },
-    {
-      id: 'digital-experience',
-      title: 'Digital Experience',
-      questions: [
         {
           id: 'experienceType',
           type: 'single-select',
-          label: 'What type of digital experience do you want?',
+          label:
+            'Is this a new experience, or are you adding a new scan target to an existing experience?',
           options: [
             {
-              id: 'basic',
-              label: 'Basic (Link to Website/Info)',
+              id: 'new-experience',
+              label: 'New Experience',
               effects: [
-                { type: 'add-feature', value: 'Experience: Basic' },
-                { type: 'add-price', value: 0 }, // No additional cost
-              ],
-            },
-            {
-              id: 'ar-viewer',
-              label: 'AR Viewer (3D Model/Animation)',
-              effects: [
+                { type: 'add-feature', value: 'New Experience' },
                 {
-                  type: 'add-feature',
-                  value: 'Experience: AR Viewer',
+                  type: 'add-price',
+                  value: 750,
+                  condition: { pricingStructure: 'partner' },
+                  name: 'New Experience Setup',
                 },
-                { type: 'add-price', value: 300 }, // Additional setup
-              ],
-            },
-            {
-              id: 'interactive',
-              label: 'Interactive Experience (Mini-Game/Quiz)',
-              effects: [
                 {
-                  type: 'add-feature',
-                  value: 'Experience: Interactive',
+                  type: 'add-price',
+                  value: 299,
+                  condition: { pricingStructure: 'white-label' },
+                  name: 'New Experience Setup',
                 },
-                { type: 'add-price', value: 500 }, // Additional setup
               ],
             },
             {
-              id: 'custom',
-              label: 'Custom Experience',
+              id: 'new-target',
+              label: 'New Target',
               effects: [
-                { type: 'add-feature', value: 'Experience: Custom' },
-                { type: 'add-price', value: 750 }, // Additional setup
+                { type: 'add-feature', value: 'New Scan Target' },
+                {
+                  type: 'add-price',
+                  value: 250,
+                  name: 'New Target Setup',
+                },
               ],
             },
           ],
         },
         {
-          id: 'have3DContent',
-          type: 'yes-no',
-          label: 'Do you already have 3D content?',
-          dependsOn: {
-            questionId: 'experienceType',
-            value: 'ar-viewer',
-          },
-          effects: [
-            {
-              type: 'add-feature',
-              value: 'Has Existing 3D Content',
-              condition: { answer: true },
-            },
-            {
-              type: 'add-feature',
-              value: 'Needs 3D Content Creation',
-              condition: { answer: false },
-            },
-            {
-              type: 'add-commission',
-              value: '3D Content Creation',
-              condition: { answer: false },
-            },
-            {
-              type: 'add-price',
-              value: 400, // Additional cost for 3D creation
-              condition: { answer: false },
-            },
-          ],
-        },
-        {
-          id: 'analytics',
-          type: 'yes-no',
-          label: 'Do you need analytics tracking?',
-          effects: [
-            {
-              type: 'add-feature',
-              value: 'Analytics Tracking Included',
-              condition: { answer: true },
-            },
-            {
-              type: 'add-price',
-              value: 150, // Additional cost for analytics
-              condition: { answer: true },
-            },
-          ],
-        },
-        {
-          id: 'customBranding',
-          type: 'yes-no',
+          id: 'productCategory',
+          type: 'single-select',
           label:
-            'Do you need custom branding on the digital experience?',
-          effects: [
+            'Are you looking for posters, business cards, or a bundle?',
+          options: [
             {
-              type: 'add-feature',
-              value: 'Custom Branding Included',
-              condition: { answer: true },
+              id: 'posters',
+              label: 'Posters',
+              effects: [
+                {
+                  type: 'add-feature',
+                  value: 'Product Category: Posters',
+                },
+              ],
             },
             {
-              type: 'add-price',
-              value: 100, // Additional cost for custom branding
-              condition: { answer: true },
+              id: 'business-cards',
+              label: 'Business Cards',
+              effects: [
+                {
+                  type: 'add-feature',
+                  value: 'Product Category: Business Cards',
+                },
+              ],
+            },
+            {
+              id: 'bundles',
+              label: 'Bundles',
+              effects: [
+                {
+                  type: 'add-feature',
+                  value: 'Product Category: Bundles',
+                },
+              ],
             },
           ],
         },
       ],
     },
     {
-      id: 'production-details',
-      title: 'Production Details',
+      id: 'poster-options',
+      title: 'Poster Options',
+      dependsOn: {
+        questionId: 'productCategory',
+        value: 'posters',
+      },
       questions: [
         {
-          id: 'deliveryTimeframe',
+          id: 'a1PosterQuantity',
           type: 'single-select',
-          label: 'What is your delivery timeframe?',
+          label: 'How many A1 Posters do you need?',
           options: [
             {
-              id: 'standard',
-              label: 'Standard (2-3 weeks)',
+              id: 'none',
+              label: 'None',
+              effects: [],
+            },
+            {
+              id: '10',
+              label: '10',
               effects: [
+                { type: 'add-feature', value: 'A1 Posters: 10' },
                 {
-                  type: 'add-feature',
-                  value: 'Delivery: Standard (2-3 weeks)',
+                  type: 'add-price',
+                  value: 1000,
+                  condition: { pricingStructure: 'partner' },
+                  name: 'A1 Posters (10)',
                 },
-                { type: 'add-price', value: 0 }, // No additional cost
+                {
+                  type: 'add-commission',
+                  value: 'A1 Posters (10): £200 Commission',
+                  condition: { pricingStructure: 'partner' },
+                },
+                {
+                  type: 'add-price',
+                  value: 549,
+                  condition: { pricingStructure: 'white-label' },
+                  name: 'A1 Posters (10)',
+                },
               ],
             },
             {
-              id: 'expedited',
-              label: 'Expedited (1-2 weeks)',
+              id: '25',
+              label: '25',
               effects: [
+                { type: 'add-feature', value: 'A1 Posters: 25' },
                 {
-                  type: 'add-feature',
-                  value: 'Delivery: Expedited (1-2 weeks)',
+                  type: 'add-price',
+                  value: 1250,
+                  condition: { pricingStructure: 'partner' },
+                  name: 'A1 Posters (25)',
                 },
-                { type: 'add-price', value: 200 }, // Expedited fee
+                {
+                  type: 'add-commission',
+                  value: 'A1 Posters (25): £250 Commission',
+                  condition: { pricingStructure: 'partner' },
+                },
+                {
+                  type: 'add-price',
+                  value: 799,
+                  condition: { pricingStructure: 'white-label' },
+                  name: 'A1 Posters (25)',
+                },
               ],
             },
             {
-              id: 'rush',
-              label: 'Rush (3-5 business days)',
+              id: '50',
+              label: '50',
               effects: [
+                { type: 'add-feature', value: 'A1 Posters: 50' },
                 {
-                  type: 'add-feature',
-                  value: 'Delivery: Rush (3-5 business days)',
+                  type: 'add-price',
+                  value: 1500,
+                  condition: { pricingStructure: 'partner' },
+                  name: 'A1 Posters (50)',
                 },
-                { type: 'add-price', value: 350 }, // Rush fee
+                {
+                  type: 'add-commission',
+                  value: 'A1 Posters (50): £300 Commission',
+                  condition: { pricingStructure: 'partner' },
+                },
+                {
+                  type: 'add-price',
+                  value: 1049,
+                  condition: { pricingStructure: 'white-label' },
+                  name: 'A1 Posters (50)',
+                },
+              ],
+            },
+            {
+              id: '100',
+              label: '100',
+              effects: [
+                { type: 'add-feature', value: 'A1 Posters: 100' },
+                {
+                  type: 'add-price',
+                  value: 1650,
+                  condition: { pricingStructure: 'partner' },
+                  name: 'A1 Posters (100)',
+                },
+                {
+                  type: 'add-commission',
+                  value: 'A1 Posters (100): £330 Commission',
+                  condition: { pricingStructure: 'partner' },
+                },
+                {
+                  type: 'add-price',
+                  value: 1199,
+                  condition: { pricingStructure: 'white-label' },
+                  name: 'A1 Posters (100)',
+                },
               ],
             },
           ],
         },
         {
-          id: 'haveDesigns',
-          type: 'yes-no',
+          id: 'a2PosterQuantity',
+          type: 'single-select',
+          label: 'How many A2 Posters do you need?',
+          options: [
+            {
+              id: 'none',
+              label: 'None',
+              effects: [],
+            },
+            {
+              id: '100',
+              label: '100',
+              effects: [
+                { type: 'add-feature', value: 'A2 Posters: 100' },
+                {
+                  type: 'add-price',
+                  value: 2750,
+                  condition: { pricingStructure: 'partner' },
+                  name: 'A2 Posters (100)',
+                },
+                {
+                  type: 'add-commission',
+                  value: 'A2 Posters (100): £550 Commission',
+                  condition: { pricingStructure: 'partner' },
+                },
+                {
+                  type: 'add-price',
+                  value: 2299,
+                  condition: { pricingStructure: 'white-label' },
+                  name: 'A2 Posters (100)',
+                },
+              ],
+            },
+            {
+              id: '250',
+              label: '250',
+              effects: [
+                { type: 'add-feature', value: 'A2 Posters: 250' },
+                {
+                  type: 'add-price',
+                  value: 4500,
+                  condition: { pricingStructure: 'partner' },
+                  name: 'A2 Posters (250)',
+                },
+                {
+                  type: 'add-commission',
+                  value: 'A2 Posters (250): £900 Commission',
+                  condition: { pricingStructure: 'partner' },
+                },
+                {
+                  type: 'add-price',
+                  value: 4049,
+                  condition: { pricingStructure: 'white-label' },
+                  name: 'A2 Posters (250)',
+                },
+              ],
+            },
+            {
+              id: '500',
+              label: '500',
+              effects: [
+                { type: 'add-feature', value: 'A2 Posters: 500' },
+                {
+                  type: 'add-price',
+                  value: 5250,
+                  condition: { pricingStructure: 'partner' },
+                  name: 'A2 Posters (500)',
+                },
+                {
+                  type: 'add-commission',
+                  value: 'A2 Posters (500): £1050 Commission',
+                  condition: { pricingStructure: 'partner' },
+                },
+                {
+                  type: 'add-price',
+                  value: 4799,
+                  condition: { pricingStructure: 'white-label' },
+                  name: 'A2 Posters (500)',
+                },
+              ],
+            },
+            {
+              id: '1000',
+              label: '1000',
+              effects: [
+                { type: 'add-feature', value: 'A2 Posters: 1000' },
+                {
+                  type: 'add-price',
+                  value: 6750,
+                  condition: { pricingStructure: 'partner' },
+                  name: 'A2 Posters (1000)',
+                },
+                {
+                  type: 'add-commission',
+                  value: 'A2 Posters (1000): £1350 Commission',
+                  condition: { pricingStructure: 'partner' },
+                },
+                {
+                  type: 'add-price',
+                  value: 6299,
+                  condition: { pricingStructure: 'white-label' },
+                  name: 'A2 Posters (1000)',
+                },
+              ],
+            },
+          ],
+        },
+        {
+          id: 'a3PosterQuantity',
+          type: 'single-select',
+          label: 'How many A3 Posters do you need?',
+          options: [
+            {
+              id: 'none',
+              label: 'None',
+              effects: [],
+            },
+            {
+              id: '10',
+              label: '10',
+              effects: [
+                { type: 'add-feature', value: 'A3 Posters: 10' },
+                {
+                  type: 'add-price',
+                  value: 900,
+                  condition: { pricingStructure: 'partner' },
+                  name: 'A3 Posters (10)',
+                },
+                {
+                  type: 'add-commission',
+                  value: 'A3 Posters (10): £180 Commission',
+                  condition: { pricingStructure: 'partner' },
+                },
+                {
+                  type: 'add-price',
+                  value: 449,
+                  condition: { pricingStructure: 'white-label' },
+                  name: 'A3 Posters (10)',
+                },
+              ],
+            },
+            {
+              id: '100',
+              label: '100',
+              effects: [
+                { type: 'add-feature', value: 'A3 Posters: 100' },
+                {
+                  type: 'add-price',
+                  value: 1150,
+                  condition: { pricingStructure: 'partner' },
+                  name: 'A3 Posters (100)',
+                },
+                {
+                  type: 'add-commission',
+                  value: 'A3 Posters (100): £230 Commission',
+                  condition: { pricingStructure: 'partner' },
+                },
+                {
+                  type: 'add-price',
+                  value: 699,
+                  condition: { pricingStructure: 'white-label' },
+                  name: 'A3 Posters (100)',
+                },
+              ],
+            },
+            {
+              id: '250',
+              label: '250',
+              effects: [
+                { type: 'add-feature', value: 'A3 Posters: 250' },
+                {
+                  type: 'add-price',
+                  value: 1750,
+                  condition: { pricingStructure: 'partner' },
+                  name: 'A3 Posters (250)',
+                },
+                {
+                  type: 'add-commission',
+                  value: 'A3 Posters (250): £350 Commission',
+                  condition: { pricingStructure: 'partner' },
+                },
+                {
+                  type: 'add-price',
+                  value: 1299,
+                  condition: { pricingStructure: 'white-label' },
+                  name: 'A3 Posters (250)',
+                },
+              ],
+            },
+            {
+              id: '500',
+              label: '500',
+              effects: [
+                { type: 'add-feature', value: 'A3 Posters: 500' },
+                {
+                  type: 'add-price',
+                  value: 1800,
+                  condition: { pricingStructure: 'partner' },
+                  name: 'A3 Posters (500)',
+                },
+                {
+                  type: 'add-commission',
+                  value: 'A3 Posters (500): £360 Commission',
+                  condition: { pricingStructure: 'partner' },
+                },
+                {
+                  type: 'add-price',
+                  value: 1349,
+                  condition: { pricingStructure: 'white-label' },
+                  name: 'A3 Posters (500)',
+                },
+              ],
+            },
+            {
+              id: '1000',
+              label: '1000',
+              effects: [
+                { type: 'add-feature', value: 'A3 Posters: 1000' },
+                {
+                  type: 'add-price',
+                  value: 2250,
+                  condition: { pricingStructure: 'partner' },
+                  name: 'A3 Posters (1000)',
+                },
+                {
+                  type: 'add-commission',
+                  value: 'A3 Posters (1000): £450 Commission',
+                  condition: { pricingStructure: 'partner' },
+                },
+                {
+                  type: 'add-price',
+                  value: 1799,
+                  condition: { pricingStructure: 'white-label' },
+                  name: 'A3 Posters (1000)',
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+    {
+      id: 'business-card-options',
+      title: 'Business Card Options',
+      dependsOn: {
+        questionId: 'productCategory',
+        value: 'business-cards',
+      },
+      questions: [
+        {
+          id: 'businessCardQuantity',
+          type: 'single-select',
+          label: 'How many Business Cards do you require?',
+          options: [
+            {
+              id: '10',
+              label: '10',
+              effects: [
+                { type: 'add-feature', value: 'Business Cards: 10' },
+                {
+                  type: 'add-price',
+                  value: 1000,
+                  condition: { pricingStructure: 'partner' },
+                  name: 'Business Cards (10)',
+                },
+                {
+                  type: 'add-commission',
+                  value: 'Business Cards (10): £200 Commission',
+                  condition: { pricingStructure: 'partner' },
+                },
+                {
+                  type: 'add-price',
+                  value: 549,
+                  condition: { pricingStructure: 'white-label' },
+                  name: 'Business Cards (10)',
+                },
+              ],
+            },
+            {
+              id: '50',
+              label: '50',
+              effects: [
+                { type: 'add-feature', value: 'Business Cards: 50' },
+                {
+                  type: 'add-price',
+                  value: 1750,
+                  condition: { pricingStructure: 'partner' },
+                  name: 'Business Cards (50)',
+                },
+                {
+                  type: 'add-commission',
+                  value: 'Business Cards (50): £1350 Commission',
+                  condition: { pricingStructure: 'partner' },
+                },
+                {
+                  type: 'add-price',
+                  value: 1299,
+                  condition: { pricingStructure: 'white-label' },
+                  name: 'Business Cards (50)',
+                },
+              ],
+            },
+            {
+              id: '100',
+              label: '100',
+              effects: [
+                { type: 'add-feature', value: 'Business Cards: 100' },
+                {
+                  type: 'add-price',
+                  value: 2250,
+                  condition: { pricingStructure: 'partner' },
+                  name: 'Business Cards (100)',
+                },
+                {
+                  type: 'add-commission',
+                  value: 'Business Cards (100): £1350 Commission',
+                  condition: { pricingStructure: 'partner' },
+                },
+                {
+                  type: 'add-price',
+                  value: 1799,
+                  condition: { pricingStructure: 'white-label' },
+                  name: 'Business Cards (100)',
+                },
+              ],
+            },
+            {
+              id: '500',
+              label: '500',
+              effects: [
+                { type: 'add-feature', value: 'Business Cards: 500' },
+                {
+                  type: 'add-price',
+                  value: 2750,
+                  condition: { pricingStructure: 'partner' },
+                  name: 'Business Cards (500)',
+                },
+                {
+                  type: 'add-commission',
+                  value: 'Business Cards (500): £1350 Commission',
+                  condition: { pricingStructure: 'partner' },
+                },
+                {
+                  type: 'add-price',
+                  value: 2299,
+                  condition: { pricingStructure: 'white-label' },
+                  name: 'Business Cards (500)',
+                },
+              ],
+            },
+            {
+              id: '1000',
+              label: '1000',
+              effects: [
+                {
+                  type: 'add-feature',
+                  value: 'Business Cards: 1000',
+                },
+                {
+                  type: 'add-price',
+                  value: 3250,
+                  condition: { pricingStructure: 'partner' },
+                  name: 'Business Cards (1000)',
+                },
+                {
+                  type: 'add-commission',
+                  value: 'Business Cards (1000): £1350 Commission',
+                  condition: { pricingStructure: 'partner' },
+                },
+                {
+                  type: 'add-price',
+                  value: 2799,
+                  condition: { pricingStructure: 'white-label' },
+                  name: 'Business Cards (1000)',
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+    {
+      id: 'bundle-options',
+      title: 'Bundle Options',
+      dependsOn: {
+        questionId: 'productCategory',
+        value: 'bundles',
+      },
+      questions: [
+        {
+          id: 'bundleType',
+          type: 'single-select',
+          label: 'Which bundle are you looking for?',
+          options: [
+            {
+              id: 'entry-level',
+              label: 'Entry-Level',
+              effects: [
+                { type: 'add-feature', value: 'Bundle: Entry-Level' },
+                {
+                  type: 'add-price',
+                  value: 995,
+                  condition: { pricingStructure: 'partner' },
+                  name: 'Entry-Level Bundle',
+                },
+                {
+                  type: 'add-commission',
+                  value: 'Entry-Level Bundle: £199 Commission',
+                  condition: { pricingStructure: 'partner' },
+                },
+                {
+                  type: 'add-price',
+                  value: 495,
+                  condition: { pricingStructure: 'white-label' },
+                  name: 'Entry-Level Bundle',
+                },
+              ],
+            },
+            {
+              id: 'enhanced-marketing',
+              label: 'Enhanced Marketing',
+              effects: [
+                {
+                  type: 'add-feature',
+                  value: 'Bundle: Enhanced Marketing',
+                },
+                {
+                  type: 'add-price',
+                  value: 1599,
+                  condition: { pricingStructure: 'partner' },
+                  name: 'Enhanced Marketing Bundle',
+                },
+                {
+                  type: 'add-commission',
+                  value:
+                    'Enhanced Marketing Bundle: £319.80 Commission',
+                  condition: { pricingStructure: 'partner' },
+                },
+                {
+                  type: 'add-price',
+                  value: 1299,
+                  condition: { pricingStructure: 'white-label' },
+                  name: 'Enhanced Marketing Bundle',
+                },
+              ],
+            },
+            {
+              id: 'premium',
+              label: 'Premium',
+              effects: [
+                { type: 'add-feature', value: 'Bundle: Premium' },
+                {
+                  type: 'add-price',
+                  value: 3599,
+                  condition: { pricingStructure: 'partner' },
+                  name: 'Premium Bundle',
+                },
+                {
+                  type: 'add-commission',
+                  value: 'Premium Bundle: £719.80 Commission',
+                  condition: { pricingStructure: 'partner' },
+                },
+                {
+                  type: 'add-price',
+                  value: 2999,
+                  condition: { pricingStructure: 'white-label' },
+                  name: 'Premium Bundle',
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+    {
+      id: 'extras',
+      title: 'Extras',
+      questions: [
+        {
+          id: 'need3dLogo',
+          type: 'single-select',
           label:
-            'Do you already have designs for the physical items?',
-          effects: [
+            'Do you require a 3D logo created for your brand? (If your answer is no, be sure to provide us with your 3D Logo in .glb format)',
+          options: [
             {
-              type: 'add-feature',
-              value: 'Has Existing Designs',
-              condition: { answer: true },
+              id: 'yes',
+              label: 'Yes',
+              effects: [
+                {
+                  type: 'add-feature',
+                  value: 'Requires 3D Logo Creation',
+                },
+                {
+                  type: 'add-price',
+                  value: 156.8,
+                  name: '3D Logo Creation',
+                },
+                {
+                  type: 'add-commission',
+                  value: '3D Logo Creation',
+                  condition: { pricingStructure: 'partner' },
+                },
+              ],
             },
             {
-              type: 'add-feature',
-              value: 'Needs Design Services',
-              condition: { answer: false },
-            },
-            {
-              type: 'add-commission',
-              value: 'Design Services',
-              condition: { answer: false },
-            },
-            {
-              type: 'add-price',
-              value: 250, // Design fee
-              condition: { answer: false },
-            },
-          ],
-        },
-        {
-          id: 'needInstallation',
-          type: 'yes-no',
-          label: 'Do you need installation or setup services?',
-          effects: [
-            {
-              type: 'add-feature',
-              value: 'Installation Services Required',
-              condition: { answer: true },
-            },
-            {
-              type: 'add-commission',
-              value: 'Installation Services',
-              condition: { answer: true },
-            },
-            {
-              type: 'add-price',
-              value: 300, // Installation fee
-              condition: { answer: true },
+              id: 'no',
+              label: 'No',
+              effects: [
+                {
+                  type: 'add-feature',
+                  value: 'Client Will Provide 3D Logo',
+                },
+              ],
             },
           ],
         },
@@ -458,45 +768,75 @@ const merchandiseSchema = {
       title: 'Project Details',
       questions: [
         {
-          id: 'projectTitle',
-          type: 'text',
-          label: 'Project Title',
-          effects: [{ type: 'add-feature', value: 'Project Title' }],
-        },
-        {
-          id: 'projectDescription',
+          id: 'projectDetails',
           type: 'text',
           multiline: true,
-          rows: 4,
-          label: 'Project Description',
-          placeholder:
-            'Please describe your project goals and requirements...',
+          label: 'Please share your project details with us.',
+          placeholder: 'Describe your project and requirements...',
           effects: [
-            { type: 'add-feature', value: 'Project Description' },
+            { type: 'add-feature', value: 'Project Details' },
+            { type: 'set-project-details', value: 'projectDetails' },
           ],
         },
         {
-          id: 'targetAudience',
-          type: 'text',
-          label: 'Target Audience',
-          required: false,
-          placeholder: 'Who will be using these items?',
-          effects: [
-            { type: 'add-feature', value: 'Target Audience' },
-          ],
-        },
-        {
-          id: 'additionalRequirements',
+          id: 'projectPurpose',
           type: 'text',
           multiline: true,
-          rows: 3,
-          label: 'Additional Requirements',
-          required: false,
+          label:
+            'What is the purpose of your project? (E.G. Increase sales, marketing campaign)',
           placeholder:
-            'Any other requirements or special considerations...',
+            'Explain the purpose and goals of this project...',
           effects: [
-            { type: 'add-feature', value: 'Additional Requirements' },
+            { type: 'add-feature', value: 'Project Purpose' },
           ],
+        },
+        {
+          id: 'projectName',
+          type: 'text',
+          label: 'What is the name of the project?',
+          effects: [{ type: 'add-feature', value: 'Project Name' }],
+        },
+      ],
+    },
+    {
+      id: 'client-info',
+      title: 'Client Information',
+      questions: [
+        {
+          id: 'clientFirstName',
+          type: 'text',
+          label: 'Client First Name',
+          effects: [
+            { type: 'add-feature', value: 'Client First Name' },
+          ],
+        },
+        {
+          id: 'clientLastName',
+          type: 'text',
+          label: 'Client Last Name',
+          effects: [
+            { type: 'add-feature', value: 'Client Last Name' },
+          ],
+        },
+        {
+          id: 'clientOrganisation',
+          type: 'text',
+          label: 'Client Organisation',
+          effects: [
+            { type: 'add-feature', value: 'Client Organisation' },
+          ],
+        },
+        {
+          id: 'clientEmail',
+          type: 'text',
+          label: 'Client Email',
+          effects: [{ type: 'add-feature', value: 'Client Email' }],
+        },
+        {
+          id: 'clientPhone',
+          type: 'text',
+          label: 'Client Phone',
+          effects: [{ type: 'add-feature', value: 'Client Phone' }],
         },
       ],
     },

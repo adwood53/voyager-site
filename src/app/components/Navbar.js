@@ -95,6 +95,7 @@ export default function VoyagerNavbar() {
                     width={44}
                     height={44}
                     className="rounded-md"
+                    priority
                   />
                   <div className="font-heading text-2xl font-bold">
                     <span className="text-primary">VOYAGER</span>
