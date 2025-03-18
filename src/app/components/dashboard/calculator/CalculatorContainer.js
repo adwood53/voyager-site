@@ -4,132 +4,18 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useUser, useOrganization } from '@clerk/nextjs';
 import { calculateResults } from '@/src/lib/calculatorEngine';
-import { generateRecommendations } from '@/src/lib/recommendationEngine';
+import {
+  initializeAnswers,
+  validateAnswers,
+  shouldShowSection,
+  generateRecommendations,
+} from '@/src/lib/recommendationEngine';
 import { generateAndSavePDF } from '@/src/lib/pdfService';
 import { usePartner } from '@/src/utils/partners';
 import QuestionRenderer from './QuestionRenderer';
 import ResultsSummary from './ResultsSummary';
 import RecommendationsPanel from './RecommendationsPanel';
 import DealForm from './DealForm';
-/**
- * Initialize answers with default values from schema
- *
- * @param {Object} schema - Calculator schema
- * @returns {Object} - Initial answers object
- */
-function initializeAnswers(schema) {
-  const answers = {};
-
-  // Iterate through all sections and questions
-  if (schema.sections) {
-    schema.sections.forEach((section) => {
-      if (section.questions) {
-        section.questions.forEach((question) => {
-          if (question.defaultValue !== undefined) {
-            answers[question.id] = question.defaultValue;
-          }
-        });
-      }
-    });
-  }
-
-  return answers;
-}
-
-/**
- * Check if a section should be shown based on dependencies
- *
- * @param {Object} section - Section to check
- * @param {Object} answers - User's answers
- * @returns {boolean} - Whether section should be shown
- */
-function shouldShowSection(section, answers) {
-  if (!section.dependsOn) return true;
-
-  const { questionId, value } = section.dependsOn;
-
-  // Check for array values in multi-select questions
-  if (Array.isArray(answers[questionId])) {
-    return answers[questionId].includes(value);
-  }
-
-  return answers[questionId] === value;
-}
-
-/**
- * Validate answers against schema requirements
- *
- * @param {Object} schema - Calculator schema
- * @param {Object} answers - User's answers
- * @returns {Object} - Validation result { valid, errors }
- */
-function validateAnswers(schema, answers) {
-  const errors = [];
-
-  // If schema doesn't have questions, return valid
-  if (
-    !schema.questions &&
-    (!schema.sections || schema.sections.length === 0)
-  ) {
-    return { valid: true, errors };
-  }
-
-  // Get all questions from sections or directly from questions array
-  const allQuestions = [];
-
-  if (schema.sections) {
-    schema.sections.forEach((section) => {
-      if (section.questions) {
-        // Check if the section should be shown based on dependencies
-        if (shouldShowSection(section, answers)) {
-          section.questions.forEach((question) => {
-            allQuestions.push({ ...question, sectionId: section.id });
-          });
-        }
-      }
-    });
-  } else if (schema.questions) {
-    schema.questions.forEach((question) => {
-      allQuestions.push({ ...question });
-    });
-  }
-
-  // Check required questions
-  allQuestions.forEach((question) => {
-    // Skip if question shouldn't be displayed based on dependencies
-    if (question.dependsOn) {
-      const { questionId, value } = question.dependsOn;
-      if (answers[questionId] !== value) {
-        return;
-      }
-    }
-
-    // Skip non-required questions
-    if (question.required === false) {
-      return;
-    }
-
-    const value = answers[question.id];
-
-    // Check if value is empty
-    if (
-      value === undefined ||
-      value === null ||
-      value === '' ||
-      (Array.isArray(value) && value.length === 0)
-    ) {
-      errors.push({
-        questionId: question.id,
-        message: `${question.label || question.id} is required`,
-      });
-    }
-  });
-
-  return {
-    valid: errors.length === 0,
-    errors,
-  };
-}
 
 /**
  * Main calculator container component with multi-step form handling
@@ -172,15 +58,7 @@ export default function CalculatorContainer({
     if (!schema.sections) return [];
 
     return schema.sections.filter((section) => {
-      if (!section.dependsOn) return true;
-
-      const { questionId, value } = section.dependsOn;
-
-      // If the dependent question doesn't have an answer, don't show this section
-      if (answers[questionId] === undefined) return false;
-
-      // Return true if the answer matches the required value
-      return answers[questionId] === value;
+      return shouldShowSection(section, answers);
     });
   }, [schema.sections, answers]);
 
@@ -308,39 +186,43 @@ export default function CalculatorContainer({
         options
       );
 
-      // For scope builder, need to add recommendations via the recommendation engine
+      // For scope builder, need to add recommendations
       if (
         calculatorType === 'scope-builder' &&
         schema.recommendations
       ) {
-        // Import the recommendations only when needed
-        import('@/src/lib/recommendationEngine').then(
-          ({ generateRecommendations }) => {
-            const recommendations = generateRecommendations(
-              answers,
-              schema.recommendations.products,
-              {
-                maxRecommendations: 5,
-                sortByPriority: true,
-              }
-            );
-
-            // Add recommendations to results
-            calculatedResults.recommendations = recommendations;
-
-            setResults(calculatedResults);
-
-            // Show recommendations if there are any
-            if (
-              schema.actions?.showRecommendations &&
-              recommendations.length > 0
-            ) {
-              setShowRecommendations(true);
-            } else {
-              setShowResults(true);
+        try {
+          // Generate recommendations using the imported function
+          const recommendations = generateRecommendations(
+            answers,
+            schema.recommendations.products,
+            {
+              maxRecommendations: 5,
+              sortByPriority: true,
             }
+          );
+
+          // Add recommendations to results
+          calculatedResults.recommendations = recommendations;
+
+          // Set results state
+          setResults(calculatedResults);
+
+          // Show recommendations if there are any
+          if (
+            schema.actions?.showRecommendations &&
+            recommendations.length > 0
+          ) {
+            setShowRecommendations(true);
+          } else {
+            setShowResults(true);
           }
-        );
+        } catch (error) {
+          console.error('Error generating recommendations:', error);
+          // If there's an error with recommendations, still show results without them
+          setResults(calculatedResults);
+          setShowResults(true);
+        }
       } else {
         // For calculators other than scope builder, just set results and show them
         setResults(calculatedResults);

@@ -82,11 +82,11 @@ export default function ScopeBuilderPanel() {
                           )}
 
                         <Button
-                          color="primary"
                           className="w-full mt-4"
                           style={{
                             backgroundColor:
                               'var(--primary-color, #E79023)',
+                            color: 'white', // Explicitly set the text color to white
                           }}
                           onClick={() => {
                             // Navigate to appropriate calculator based on recommendation ID

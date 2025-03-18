@@ -428,3 +428,66 @@
   border-bottom: 1px solid rgba(231, 144, 35, 0.2);
   margin-bottom: 1rem;
 }
+
+/* Ensure text is visible in calculator */
+.calculator-container,
+.calculator-questions-container,
+.section-title,
+.question-label,
+.select-option,
+.yes-no-button {
+  color: #1f2937; /* dark gray text color */
+}
+
+/* Ensure proper contrast for active/selected items */
+.select-option.active,
+.yes-no-button.active {
+  background-color: rgba(var(--primary-color-rgb, 231, 144, 35), 0.1);
+  border-color: var(--primary, #e79023);
+  color: var(--primary, #e79023);
+  font-weight: 500;
+}
+
+/* Fix for white text on white background in tabs */
+.tab,
+.tab[data-selected='false'],
+.tab-content {
+  color: #1f2937 !important; /* Dark gray text for all tab states */
+}
+
+/* Style for selected tabs */
+.tab[data-selected='true'] {
+  color: var(--primary, #e79023) !important;
+  font-weight: 500;
+}
+
+/* Extra text color fixes for form elements */
+.question-container,
+.question-label,
+.question-help,
+.select-options,
+.yes-no-buttons,
+.select-option,
+.yes-no-button,
+.text-input,
+.text-area,
+.numeric-input {
+  color: #1f2937 !important; /* Ensure dark text on all interactive elements */
+}
+
+/* Make sure section titles are clearly visible */
+.section-title {
+  color: #1f2937 !important;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+}
+
+/* Make sure buttons have readable text */
+.primary-button,
+.secondary-button {
+  color: white !important;
+}
+
+.secondary-button {
+  color: #4b5563 !important;
+}

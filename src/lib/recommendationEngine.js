@@ -25,6 +25,26 @@ export function initializeAnswers(schema) {
 }
 
 /**
+ * Check if a section should be shown based on dependencies
+ *
+ * @param {Object} section - Section to check
+ * @param {Object} answers - User's answers
+ * @returns {boolean} - Whether section should be shown
+ */
+export function shouldShowSection(section, answers) {
+  if (!section.dependsOn) return true;
+
+  const { questionId, value } = section.dependsOn;
+
+  // Check for array values in multi-select questions
+  if (Array.isArray(answers[questionId])) {
+    return answers[questionId].includes(value);
+  }
+
+  return answers[questionId] === value;
+}
+
+/**
  * Validate answers against schema requirements
  *
  * @param {Object} schema - Calculator schema
@@ -100,23 +120,224 @@ export function validateAnswers(schema, answers) {
 }
 
 /**
- * Check if a section should be shown based on dependencies
+ * Generate recommendations based on answers and product list
  *
- * @param {Object} section - Section to check
  * @param {Object} answers - User's answers
- * @returns {boolean} - Whether section should be shown
+ * @param {Array} products - List of possible product recommendations
+ * @param {Object} options - Additional options
+ * @returns {Array} - List of recommendations
  */
-function shouldShowSection(section, answers) {
-  if (!section.dependsOn) return true;
+export function generateRecommendations(
+  answers,
+  products,
+  options = {}
+) {
+  const recommendations = [];
 
-  const { questionId, value } = section.dependsOn;
-
-  // Check for array values in multi-select questions
-  if (Array.isArray(answers[questionId])) {
-    return answers[questionId].includes(value);
+  if (
+    !products ||
+    !Array.isArray(products) ||
+    products.length === 0
+  ) {
+    return recommendations;
   }
 
-  return answers[questionId] === value;
+  // Default options
+  const settings = {
+    maxRecommendations: options.maxRecommendations || 3,
+    sortByPriority: options.sortByPriority !== false,
+  };
+
+  // For each product, calculate a score based on matches with the answers
+  products.forEach((product) => {
+    // Calculate score for this product
+    let score = 0;
+
+    if (Array.isArray(product.conditions)) {
+      product.conditions.forEach((condition) => {
+        const { questionId, value, weight = 1 } = condition;
+
+        // For multi-select questions
+        if (Array.isArray(answers[questionId])) {
+          if (answers[questionId].includes(value)) {
+            score += weight;
+          }
+        }
+        // For single-select and other question types
+        else if (answers[questionId] === value) {
+          score += weight;
+        }
+      });
+    }
+
+    // If score meets minimum, add to recommendations
+    if (score >= (product.minScore || 1)) {
+      // Determine tier based on score
+      let tier = 1;
+
+      if (product.tierMapping) {
+        const thresholds = Object.values(product.tierMapping).sort(
+          (a, b) => b.score - a.score
+        );
+
+        for (const threshold of thresholds) {
+          if (score >= threshold.score) {
+            tier = threshold.tier;
+            break;
+          }
+        }
+      }
+
+      recommendations.push({
+        id: product.id,
+        title: product.name,
+        description: product.description,
+        tier,
+        score,
+        features: product.features || [],
+      });
+    }
+  });
+
+  // Sort recommendations by score (highest first)
+  if (settings.sortByPriority) {
+    recommendations.sort((a, b) => b.score - a.score);
+  }
+
+  // Limit number of recommendations if needed
+  if (
+    settings.maxRecommendations > 0 &&
+    recommendations.length > settings.maxRecommendations
+  ) {
+    return recommendations.slice(0, settings.maxRecommendations);
+  }
+
+  return recommendations;
+}
+
+/**
+ * Process a list of effects to update results
+ *
+ * @param {Array} effects - List of effects to process
+ * @param {any} value - Answer value for the question
+ * @param {Object} results - Results object to update
+ * @param {Object} options - Global options
+ * @param {Object} answers - All answers
+ * @param {Object} question - Current question
+ * @param {Object} option - Selected option (for single/multi-select questions)
+ */
+function processEffects(
+  effects,
+  value,
+  results,
+  options,
+  answers,
+  question,
+  option = null
+) {
+  effects.forEach((effect) => {
+    // Skip if effect has a condition that isn't met
+    if (effect.condition) {
+      // Check pricing structure condition
+      if (effect.condition.pricingStructure !== undefined) {
+        const currentStructure =
+          options.pricingStructure ||
+          results.summary.pricingStructure;
+
+        if (effect.condition.pricingStructure !== currentStructure) {
+          console.log(
+            `Skipping effect due to pricing structure mismatch:`,
+            {
+              needed: effect.condition.pricingStructure,
+              current: currentStructure,
+              effect: effect,
+            }
+          );
+          return; // Skip this effect
+        }
+      }
+
+      // Simple boolean answer condition
+      if (
+        effect.condition.answer !== undefined &&
+        effect.condition.answer !== value
+      ) {
+        return;
+      }
+
+      // Min value condition
+      if (
+        effect.condition.minValue !== undefined &&
+        value < effect.condition.minValue
+      ) {
+        return;
+      }
+
+      // Max value condition
+      if (
+        effect.condition.maxValue !== undefined &&
+        value > effect.condition.maxValue
+      ) {
+        return;
+      }
+    }
+
+    // Process effect based on type
+    switch (effect.type) {
+      case 'add-feature':
+        if (Array.isArray(effect.value)) {
+          results.features.push(...effect.value);
+        } else {
+          results.features.push(effect.value);
+        }
+        break;
+
+      case 'add-commission':
+        results.commissionItems.push(effect.value);
+        break;
+
+      case 'set-base-price':
+        results.pricing.basePrice = effect.value;
+        break;
+
+      case 'add-price':
+        // If multiplying by quantity
+        if (effect.multiplier && effect.multiplier in answers) {
+          const quantity = Number(answers[effect.multiplier]);
+          if (!isNaN(quantity)) {
+            const name =
+              effect.name ||
+              `${option?.label || question.label} Cost`;
+            results.pricing.additionalCosts[name] =
+              effect.value * quantity;
+            console.log(
+              `Added price with multiplier: ${name} = ${effect.value} * ${quantity}`
+            );
+          }
+        } else {
+          const name =
+            effect.name || `${option?.label || question.label} Cost`;
+          results.pricing.additionalCosts[name] = effect.value;
+          console.log(`Added price: ${name} = ${effect.value}`);
+        }
+        break;
+
+      case 'set-tier':
+        results.summary.tier = effect.value;
+        console.log(`Set tier to: ${effect.value}`);
+        break;
+
+      case 'set-project-details':
+        results.summary.projectDetails = answers[effect.value] || '';
+        break;
+
+      case 'set-pricing-structure':
+        results.summary.pricingStructure = effect.value;
+        options.pricingStructure = effect.value; // Update in both places
+        console.log(`Set pricing structure to: ${effect.value}`);
+        break;
+    }
+  });
 }
 
 /**
@@ -287,68 +508,6 @@ export function calculateResults(schema, answers, options = {}) {
     results.summary.commission = totalCommission;
   }
 
-  // Process recommendations if schema has them
-  if (schema.recommendations) {
-    const { recommendations, logic, products } =
-      schema.recommendations;
-
-    // Simple logic to select recommendations
-    if (logic === 'score-based' && Array.isArray(products)) {
-      products.forEach((product) => {
-        // Calculate score for this product
-        let score = 0;
-
-        if (Array.isArray(product.conditions)) {
-          product.conditions.forEach((condition) => {
-            const { questionId, value, weight = 1 } = condition;
-
-            // For multi-select questions
-            if (Array.isArray(answers[questionId])) {
-              if (answers[questionId].includes(value)) {
-                score += weight;
-              }
-            }
-            // For single-select and other question types
-            else if (answers[questionId] === value) {
-              score += weight;
-            }
-          });
-        }
-
-        // If score meets minimum, add to recommendations
-        if (score >= (product.minScore || 1)) {
-          // Determine tier based on score
-          let tier = 1;
-
-          if (product.tierMapping) {
-            const thresholds = Object.values(
-              product.tierMapping
-            ).sort((a, b) => b.score - a.score);
-
-            for (const threshold of thresholds) {
-              if (score >= threshold.score) {
-                tier = threshold.tier;
-                break;
-              }
-            }
-          }
-
-          results.recommendations.push({
-            id: product.id,
-            title: product.name,
-            description: product.description,
-            tier,
-            score,
-            features: product.features || [],
-          });
-        }
-      });
-
-      // Sort recommendations by score (highest first)
-      results.recommendations.sort((a, b) => b.score - a.score);
-    }
-  }
-
   // Handle project details from answers if applicable
   if (answers.projectDetails) {
     results.summary.projectDetails = answers.projectDetails;
@@ -399,129 +558,4 @@ export function calculateResults(schema, answers, options = {}) {
   });
 
   return results;
-}
-
-/**
- * Process a list of effects to update results
- *
- * @param {Array} effects - List of effects to process
- * @param {any} value - Answer value for the question
- * @param {Object} results - Results object to update
- * @param {Object} options - Global options
- * @param {Object} answers - All answers
- * @param {Object} question - Current question
- * @param {Object} option - Selected option (for single/multi-select questions)
- */
-function processEffects(
-  effects,
-  value,
-  results,
-  options,
-  answers,
-  question,
-  option = null
-) {
-  effects.forEach((effect) => {
-    // Skip if effect has a condition that isn't met
-    if (effect.condition) {
-      // Check pricing structure condition
-      if (effect.condition.pricingStructure !== undefined) {
-        const currentStructure =
-          options.pricingStructure ||
-          results.summary.pricingStructure;
-
-        if (effect.condition.pricingStructure !== currentStructure) {
-          console.log(
-            `Skipping effect due to pricing structure mismatch:`,
-            {
-              needed: effect.condition.pricingStructure,
-              current: currentStructure,
-              effect: effect,
-            }
-          );
-          return; // Skip this effect
-        }
-      }
-
-      // Simple boolean answer condition
-      if (
-        effect.condition.answer !== undefined &&
-        effect.condition.answer !== value
-      ) {
-        return;
-      }
-
-      // Min value condition
-      if (
-        effect.condition.minValue !== undefined &&
-        value < effect.condition.minValue
-      ) {
-        return;
-      }
-
-      // Max value condition
-      if (
-        effect.condition.maxValue !== undefined &&
-        value > effect.condition.maxValue
-      ) {
-        return;
-      }
-    }
-
-    // Process effect based on type
-    switch (effect.type) {
-      case 'add-feature':
-        if (Array.isArray(effect.value)) {
-          results.features.push(...effect.value);
-        } else {
-          results.features.push(effect.value);
-        }
-        break;
-
-      case 'add-commission':
-        results.commissionItems.push(effect.value);
-        break;
-
-      case 'set-base-price':
-        results.pricing.basePrice = effect.value;
-        break;
-
-      case 'add-price':
-        // If multiplying by quantity
-        if (effect.multiplier && effect.multiplier in answers) {
-          const quantity = Number(answers[effect.multiplier]);
-          if (!isNaN(quantity)) {
-            const name =
-              effect.name ||
-              `${option?.label || question.label} Cost`;
-            results.pricing.additionalCosts[name] =
-              effect.value * quantity;
-            console.log(
-              `Added price with multiplier: ${name} = ${effect.value} * ${quantity}`
-            );
-          }
-        } else {
-          const name =
-            effect.name || `${option?.label || question.label} Cost`;
-          results.pricing.additionalCosts[name] = effect.value;
-          console.log(`Added price: ${name} = ${effect.value}`);
-        }
-        break;
-
-      case 'set-tier':
-        results.summary.tier = effect.value;
-        console.log(`Set tier to: ${effect.value}`);
-        break;
-
-      case 'set-project-details':
-        results.summary.projectDetails = answers[effect.value] || '';
-        break;
-
-      case 'set-pricing-structure':
-        results.summary.pricingStructure = effect.value;
-        options.pricingStructure = effect.value; // Update in both places
-        console.log(`Set pricing structure to: ${effect.value}`);
-        break;
-    }
-  });
 }
