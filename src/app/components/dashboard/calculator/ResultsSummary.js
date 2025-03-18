@@ -166,16 +166,27 @@ export default function ResultsSummary({
       {results.commissionItems &&
         results.commissionItems.length > 0 && (
           <div className="commission-section">
-            <h3 className="section-title">Commission Items</h3>
+            <h3 className="section-title">
+              Items to be Commissioned
+            </h3>
             <div className="commission-list">
               <ul>
-                {results.commissionItems.map((item, index) => (
-                  <li key={index} className="commission-item">
-                    {typeof item === 'object'
-                      ? item.name || item.description
-                      : item}
-                  </li>
-                ))}
+                {results.commissionItems
+                  .filter((item) => {
+                    // Filter out items that contain commission amounts for the salesperson
+                    return !(
+                      typeof item === 'string' &&
+                      (item.includes('£') ||
+                        item.includes('Commission'))
+                    );
+                  })
+                  .map((item, index) => (
+                    <li key={index} className="commission-item">
+                      {typeof item === 'object'
+                        ? item.name || item.description
+                        : item}
+                    </li>
+                  ))}
               </ul>
             </div>
           </div>

@@ -1,4 +1,4 @@
-// src/lib/calculatorEngine.js - Complete file with updates
+// src/lib/calculatorEngine.js
 /**
  * Initialize answers with default values from schema
  *
@@ -128,7 +128,7 @@ function shouldShowSection(section, answers) {
  * @returns {Object} - Calculation results
  */
 export function calculateResults(schema, answers, options = {}) {
-  // Initialize results object with default values
+  // Initialize results object with default values and Hubspot-compatible structure
   const results = {
     features: [],
     commissionItems: [],
@@ -138,12 +138,12 @@ export function calculateResults(schema, answers, options = {}) {
       totalPrice: 0,
     },
     summary: {
-      tier: 1, // Default tier
+      tier: 1, // Default to tier 1 for calculator
       type: schema.id || 'generic',
       projectDetails: '',
       pricingStructure: answers.pricingType || 'partner', // Default to partner pricing
+      configurationType: 'New Target', // Default value, will be updated as needed
     },
-    recommendations: [],
   };
 
   // Add debugging for initial state
@@ -159,10 +159,6 @@ export function calculateResults(schema, answers, options = {}) {
 
   // Process single-select questions directly
   if (answers.pricingType) {
-    console.log(
-      'Pricing type found in answers:',
-      answers.pricingType
-    );
     // Ensure the pricingStructure is set correctly in both places
     results.summary.pricingStructure = answers.pricingType;
     options.pricingStructure = answers.pricingType;
@@ -188,10 +184,21 @@ export function calculateResults(schema, answers, options = {}) {
           if (question.id === 'pricingType' && value) {
             results.summary.pricingStructure = value;
             options.pricingStructure = value;
-            console.log(
-              'Updated pricing structure from question:',
-              value
-            );
+          }
+
+          // Capture experience type for Hubspot
+          if (question.id === 'experienceType' && value) {
+            switch (value) {
+              case 'new-experience':
+                results.summary.configurationType = 'New Experience';
+                break;
+              case 'new-target':
+                results.summary.configurationType = 'New Target';
+                break;
+              default:
+                // Keep default
+                break;
+            }
           }
 
           // Process direct question effects if any
@@ -287,68 +294,6 @@ export function calculateResults(schema, answers, options = {}) {
     results.summary.commission = totalCommission;
   }
 
-  // Process recommendations if schema has them
-  if (schema.recommendations) {
-    const { recommendations, logic, products } =
-      schema.recommendations;
-
-    // Simple logic to select recommendations
-    if (logic === 'score-based' && Array.isArray(products)) {
-      products.forEach((product) => {
-        // Calculate score for this product
-        let score = 0;
-
-        if (Array.isArray(product.conditions)) {
-          product.conditions.forEach((condition) => {
-            const { questionId, value, weight = 1 } = condition;
-
-            // For multi-select questions
-            if (Array.isArray(answers[questionId])) {
-              if (answers[questionId].includes(value)) {
-                score += weight;
-              }
-            }
-            // For single-select and other question types
-            else if (answers[questionId] === value) {
-              score += weight;
-            }
-          });
-        }
-
-        // If score meets minimum, add to recommendations
-        if (score >= (product.minScore || 1)) {
-          // Determine tier based on score
-          let tier = 1;
-
-          if (product.tierMapping) {
-            const thresholds = Object.values(
-              product.tierMapping
-            ).sort((a, b) => b.score - a.score);
-
-            for (const threshold of thresholds) {
-              if (score >= threshold.score) {
-                tier = threshold.tier;
-                break;
-              }
-            }
-          }
-
-          results.recommendations.push({
-            id: product.id,
-            title: product.name,
-            description: product.description,
-            tier,
-            score,
-            features: product.features || [],
-          });
-        }
-      });
-
-      // Sort recommendations by score (highest first)
-      results.recommendations.sort((a, b) => b.score - a.score);
-    }
-  }
-
   // Handle project details from answers if applicable
   if (answers.projectDetails) {
     results.summary.projectDetails = answers.projectDetails;
@@ -385,6 +330,21 @@ export function calculateResults(schema, answers, options = {}) {
         results.pricing.totalPrice * pricingConfig.commissionRate;
     }
   }
+
+  // Create formatted strings for Hubspot
+  results.hubspotData = {
+    dealname: `${options.user?.firstName || 'Customer'} ${options.user?.lastName || ''} - ${results.summary.type} Configuration`,
+    pipeline: 'default',
+    dealstage: 'appointmentscheduled',
+    amount: results.pricing.totalPrice.toString(),
+    configuration_tier: results.summary.tier.toString(),
+    configuration_type__ar_vr_: results.summary.configurationType,
+    configuration_features: results.features.join('\n'),
+    items_to_be_commissioned: results.commissionItems.join('\n'),
+    project_details: results.summary.projectDetails,
+    project_link: '',
+    brandsource: options.partner?.brandSource || 'voyager',
+  };
 
   // Log final calculation results for debugging
   console.log('Final calculation results:', {
@@ -509,6 +469,7 @@ function processEffects(
         break;
 
       case 'set-tier':
+        // Allow explicit tier setting for merchandise
         results.summary.tier = effect.value;
         console.log(`Set tier to: ${effect.value}`);
         break;

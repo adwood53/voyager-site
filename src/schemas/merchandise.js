@@ -72,7 +72,7 @@ const merchandiseSchema = {
                   condition: { pricingStructure: 'white-label' },
                   name: 'New Experience Setup',
                 },
-                { type: 'set-tier', value: 2 }, // New experiences are more complex (tier 2)
+                { type: 'set-tier', value: 1 }, // New experiences are more complex (tier 2)
               ],
             },
             {
@@ -161,7 +161,7 @@ const merchandiseSchema = {
                 },
                 {
                   type: 'add-commission',
-                  value: 'A1 Posters (10): £200 Commission',
+                  value: 'A1 Posters (10)', // Remove the commission amount from displayed text
                   condition: { pricingStructure: 'partner' },
                 },
                 {
@@ -185,7 +185,7 @@ const merchandiseSchema = {
                 },
                 {
                   type: 'add-commission',
-                  value: 'A1 Posters (25): £250 Commission',
+                  value: 'A1 Posters (25)',
                   condition: { pricingStructure: 'partner' },
                 },
                 {
@@ -209,7 +209,7 @@ const merchandiseSchema = {
                 },
                 {
                   type: 'add-commission',
-                  value: 'A1 Posters (50): £300 Commission',
+                  value: 'A1 Posters (50)',
                   condition: { pricingStructure: 'partner' },
                 },
                 {
@@ -233,7 +233,7 @@ const merchandiseSchema = {
                 },
                 {
                   type: 'add-commission',
-                  value: 'A1 Posters (100): £330 Commission',
+                  value: 'A1 Posters (100)',
                   condition: { pricingStructure: 'partner' },
                 },
                 {
@@ -269,7 +269,7 @@ const merchandiseSchema = {
                 },
                 {
                   type: 'add-commission',
-                  value: 'A2 Posters (100): £550 Commission',
+                  value: 'A2 Posters (100)',
                   condition: { pricingStructure: 'partner' },
                 },
                 {
@@ -293,7 +293,7 @@ const merchandiseSchema = {
                 },
                 {
                   type: 'add-commission',
-                  value: 'A2 Posters (250): £900 Commission',
+                  value: 'A2 Posters (250)',
                   condition: { pricingStructure: 'partner' },
                 },
                 {
@@ -317,7 +317,7 @@ const merchandiseSchema = {
                 },
                 {
                   type: 'add-commission',
-                  value: 'A2 Posters (500): £1050 Commission',
+                  value: 'A2 Posters (500)',
                   condition: { pricingStructure: 'partner' },
                 },
                 {
@@ -341,7 +341,7 @@ const merchandiseSchema = {
                 },
                 {
                   type: 'add-commission',
-                  value: 'A2 Posters (1000): £1350 Commission',
+                  value: 'A2 Posters (1000)',
                   condition: { pricingStructure: 'partner' },
                 },
                 {
@@ -377,7 +377,7 @@ const merchandiseSchema = {
                 },
                 {
                   type: 'add-commission',
-                  value: 'A3 Posters (10): £180 Commission',
+                  value: 'A3 Posters (10)',
                   condition: { pricingStructure: 'partner' },
                 },
                 {
@@ -401,7 +401,7 @@ const merchandiseSchema = {
                 },
                 {
                   type: 'add-commission',
-                  value: 'A3 Posters (100): £230 Commission',
+                  value: 'A3 Posters (100)',
                   condition: { pricingStructure: 'partner' },
                 },
                 {
@@ -425,7 +425,7 @@ const merchandiseSchema = {
                 },
                 {
                   type: 'add-commission',
-                  value: 'A3 Posters (250): £350 Commission',
+                  value: 'A3 Posters (250)',
                   condition: { pricingStructure: 'partner' },
                 },
                 {
@@ -449,7 +449,7 @@ const merchandiseSchema = {
                 },
                 {
                   type: 'add-commission',
-                  value: 'A3 Posters (500): £360 Commission',
+                  value: 'A3 Posters (500)',
                   condition: { pricingStructure: 'partner' },
                 },
                 {
@@ -473,7 +473,7 @@ const merchandiseSchema = {
                 },
                 {
                   type: 'add-commission',
-                  value: 'A3 Posters (1000): £450 Commission',
+                  value: 'A3 Posters (1000)',
                   condition: { pricingStructure: 'partner' },
                 },
                 {
@@ -514,7 +514,7 @@ const merchandiseSchema = {
                 },
                 {
                   type: 'add-commission',
-                  value: 'Business Cards (10): £200 Commission',
+                  value: 'Business Cards (10)',
                   condition: { pricingStructure: 'partner' },
                 },
                 {
@@ -538,7 +538,7 @@ const merchandiseSchema = {
                 },
                 {
                   type: 'add-commission',
-                  value: 'Business Cards (50): £350 Commission',
+                  value: 'Business Cards (50)',
                   condition: { pricingStructure: 'partner' },
                 },
                 {
@@ -562,7 +562,7 @@ const merchandiseSchema = {
                 },
                 {
                   type: 'add-commission',
-                  value: 'Business Cards (100): £450 Commission',
+                  value: 'Business Cards (100)',
                   condition: { pricingStructure: 'partner' },
                 },
                 {
@@ -586,7 +586,7 @@ const merchandiseSchema = {
                 },
                 {
                   type: 'add-commission',
-                  value: 'Business Cards (500): £550 Commission',
+                  value: 'Business Cards (500)',
                   condition: { pricingStructure: 'partner' },
                 },
                 {
@@ -613,7 +613,7 @@ const merchandiseSchema = {
                 },
                 {
                   type: 'add-commission',
-                  value: 'Business Cards (1000): £650 Commission',
+                  value: 'Business Cards (1000)',
                   condition: { pricingStructure: 'partner' },
                 },
                 {
@@ -654,7 +654,7 @@ const merchandiseSchema = {
                 },
                 {
                   type: 'add-commission',
-                  value: 'Entry-Level Bundle: £199 Commission',
+                  value: 'Entry-Level Bundle',
                   condition: { pricingStructure: 'partner' },
                 },
                 {
@@ -682,8 +682,7 @@ const merchandiseSchema = {
                 },
                 {
                   type: 'add-commission',
-                  value:
-                    'Enhanced Marketing Bundle: £319.80 Commission',
+                  value: 'Enhanced Marketing Bundle',
                   condition: { pricingStructure: 'partner' },
                 },
                 {
@@ -692,7 +691,7 @@ const merchandiseSchema = {
                   condition: { pricingStructure: 'white-label' },
                   name: 'Enhanced Marketing Bundle',
                 },
-                { type: 'set-tier', value: 2 }, // Enhanced level is tier 2
+                { type: 'set-tier', value: 1 }, // Enhanced level is tier 1
               ],
             },
             {
@@ -708,7 +707,7 @@ const merchandiseSchema = {
                 },
                 {
                   type: 'add-commission',
-                  value: 'Premium Bundle: £719.80 Commission',
+                  value: 'Premium Bundle',
                   condition: { pricingStructure: 'partner' },
                 },
                 {
@@ -717,7 +716,7 @@ const merchandiseSchema = {
                   condition: { pricingStructure: 'white-label' },
                   name: 'Premium Bundle',
                 },
-                { type: 'set-tier', value: 3 }, // Premium level is tier 3
+                { type: 'set-tier', value: 1 }, // Premium level is tier 1
               ],
             },
           ],
@@ -749,7 +748,7 @@ const merchandiseSchema = {
                 },
                 {
                   type: 'add-commission',
-                  value: '3D Logo Creation: 3D Prop Commission',
+                  value: '3D Logo Creation',
                   condition: { pricingStructure: 'partner' },
                 },
               ],

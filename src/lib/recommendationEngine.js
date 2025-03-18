@@ -1,273 +1,527 @@
-// src/utils/recommendationEngine.js
-
+// src/lib/recommendationEngine.js
 /**
- * Recommendation Engine
+ * Initialize answers with default values from schema
  *
- * This utility provides functions for generating recommendations
- * based on calculator answers and predefined recommendation templates.
+ * @param {Object} schema - Calculator schema
+ * @returns {Object} - Initial answers object
  */
+export function initializeAnswers(schema) {
+  const answers = {};
 
-/**
- * Generate recommendations based on calculator answers
- *
- * @param {Object} answers - User's answers to calculator questions
- * @param {Array} availableRecommendations - List of available recommendation templates
- * @param {Object} options - Additional options
- * @returns {Array} List of recommendations
- */
-export function generateRecommendations(
-  answers,
-  availableRecommendations,
-  options = {}
-) {
-  const recommendations = [];
-
-  // If no recommendations available, return empty array
-  if (
-    !availableRecommendations ||
-    !Array.isArray(availableRecommendations)
-  ) {
-    return recommendations;
-  }
-
-  try {
-    // Filter recommendations based on conditions
-    for (const recommendation of availableRecommendations) {
-      if (
-        shouldShowRecommendation(recommendation, answers, options)
-      ) {
-        recommendations.push(
-          processRecommendation(recommendation, answers, options)
-        );
+  // Iterate through all sections and questions
+  if (schema.sections) {
+    schema.sections.forEach((section) => {
+      if (section.questions) {
+        section.questions.forEach((question) => {
+          if (question.defaultValue !== undefined) {
+            answers[question.id] = question.defaultValue;
+          }
+        });
       }
-    }
-
-    // Sort recommendations by priority if specified
-    if (options.sortByPriority) {
-      recommendations.sort(
-        (a, b) => (b.priority || 0) - (a.priority || 0)
-      );
-    }
-
-    // Limit to max recommendations if specified
-    if (
-      options.maxRecommendations &&
-      typeof options.maxRecommendations === 'number'
-    ) {
-      return recommendations.slice(0, options.maxRecommendations);
-    }
-
-    return recommendations;
-  } catch (error) {
-    console.error('Error generating recommendations:', error);
-    return [];
-  }
-}
-
-/**
- * Determine if a recommendation should be shown based on conditions
- *
- * @param {Object} recommendation - Recommendation template
- * @param {Object} answers - User's answers
- * @param {Object} options - Additional options
- * @returns {boolean} Whether to show the recommendation
- */
-function shouldShowRecommendation(recommendation, answers, options) {
-  // Always show if no conditions
-  if (!recommendation.conditions) {
-    return true;
-  }
-
-  // Function-based condition
-  if (typeof recommendation.conditions === 'function') {
-    return recommendation.conditions(answers, options);
-  }
-
-  // Array of conditions (AND)
-  if (Array.isArray(recommendation.conditions)) {
-    return recommendation.conditions.every((condition) => {
-      return evaluateCondition(condition, answers, options);
     });
   }
 
-  // Single condition object
-  return evaluateCondition(
-    recommendation.conditions,
-    answers,
-    options
-  );
+  return answers;
 }
 
 /**
- * Evaluate a single condition against answers
+ * Validate answers against schema requirements
  *
- * @param {Object|Function} condition - Condition to evaluate
+ * @param {Object} schema - Calculator schema
  * @param {Object} answers - User's answers
- * @param {Object} options - Additional options
- * @returns {boolean} Whether condition is met
+ * @returns {Object} - Validation result { valid, errors }
  */
-function evaluateCondition(condition, answers, options) {
-  // Function-based condition
-  if (typeof condition === 'function') {
-    return condition(answers, options);
+export function validateAnswers(schema, answers) {
+  const errors = [];
+
+  // If schema doesn't have questions, return valid
+  if (
+    !schema.questions &&
+    (!schema.sections || schema.sections.length === 0)
+  ) {
+    return { valid: true, errors };
   }
 
-  // Simple path-based condition
-  if (condition.path && condition.operator) {
-    const value = getValueByPath(answers, condition.path);
+  // Get all questions from sections or directly from questions array
+  const allQuestions = [];
 
-    switch (condition.operator) {
-      case '==':
-        return value === condition.value;
-      case '!=':
-        return value !== condition.value;
-      case '>':
-        return value > condition.value;
-      case '>=':
-        return value >= condition.value;
-      case '<':
-        return value < condition.value;
-      case '<=':
-        return value <= condition.value;
-      case 'includes':
-        return (
-          Array.isArray(value) && value.includes(condition.value)
-        );
-      case 'notIncludes':
-        return (
-          !Array.isArray(value) || !value.includes(condition.value)
-        );
-      case 'isEmpty':
-        return (
-          value === undefined ||
-          value === null ||
-          value === '' ||
-          (Array.isArray(value) && value.length === 0)
-        );
-      case 'isNotEmpty':
-        return (
-          value !== undefined &&
-          value !== null &&
-          value !== '' &&
-          (!Array.isArray(value) || value.length > 0)
-        );
-      default:
-        return false;
+  if (schema.sections) {
+    schema.sections.forEach((section) => {
+      if (section.questions) {
+        // Check if the section should be shown based on dependencies
+        if (shouldShowSection(section, answers)) {
+          section.questions.forEach((question) => {
+            allQuestions.push({ ...question, sectionId: section.id });
+          });
+        }
+      }
+    });
+  } else if (schema.questions) {
+    schema.questions.forEach((question) => {
+      allQuestions.push({ ...question });
+    });
+  }
+
+  // Check required questions
+  allQuestions.forEach((question) => {
+    // Skip if question shouldn't be displayed based on dependencies
+    if (question.dependsOn) {
+      const { questionId, value } = question.dependsOn;
+      if (answers[questionId] !== value) {
+        return;
+      }
     }
-  }
 
-  // Complex conditions with AND/OR
-  if (condition.AND) {
-    return condition.AND.every((subCond) =>
-      evaluateCondition(subCond, answers, options)
-    );
-  }
+    // Skip non-required questions
+    if (question.required === false) {
+      return;
+    }
 
-  if (condition.OR) {
-    return condition.OR.some((subCond) =>
-      evaluateCondition(subCond, answers, options)
-    );
-  }
+    const value = answers[question.id];
 
-  // Default (should not reach here if condition is well-formed)
-  return false;
-}
-
-/**
- * Process a recommendation template with user's answers
- *
- * @param {Object} recommendation - Recommendation template
- * @param {Object} answers - User's answers
- * @param {Object} options - Additional options
- * @returns {Object} Processed recommendation
- */
-function processRecommendation(recommendation, answers, options) {
-  const processedRecommendation = { ...recommendation };
-
-  // Replace template values in title
-  if (
-    recommendation.title &&
-    typeof recommendation.title === 'string'
-  ) {
-    processedRecommendation.title = replaceTemplateValues(
-      recommendation.title,
-      answers
-    );
-  }
-
-  // Replace template values in description
-  if (
-    recommendation.description &&
-    typeof recommendation.description === 'string'
-  ) {
-    processedRecommendation.description = replaceTemplateValues(
-      recommendation.description,
-      answers
-    );
-  }
-
-  // Replace template values in any other string properties
-  for (const [key, value] of Object.entries(recommendation)) {
+    // Check if value is empty
     if (
-      typeof value === 'string' &&
-      key !== 'title' &&
-      key !== 'description'
+      value === undefined ||
+      value === null ||
+      value === '' ||
+      (Array.isArray(value) && value.length === 0)
     ) {
-      processedRecommendation[key] = replaceTemplateValues(
-        value,
-        answers
-      );
+      errors.push({
+        questionId: question.id,
+        message: `${question.label || question.id} is required`,
+      });
     }
-  }
-
-  return processedRecommendation;
-}
-
-/**
- * Replace template values in a string with actual values from answers
- *
- * @param {string} text - Text with template placeholders
- * @param {Object} answers - User's answers
- * @returns {string} Text with placeholders replaced
- */
-function replaceTemplateValues(text, answers) {
-  return text.replace(/\{\{([^}]+)\}\}/g, (match, path) => {
-    const value = getValueByPath(answers, path.trim());
-    return value !== undefined ? value : match;
   });
+
+  return {
+    valid: errors.length === 0,
+    errors,
+  };
 }
 
 /**
- * Get a value from an object by dot-notation path
+ * Check if a section should be shown based on dependencies
  *
- * @param {Object} obj - Object to get value from
- * @param {string} path - Dot-notation path to value
- * @returns {any} Value at path
+ * @param {Object} section - Section to check
+ * @param {Object} answers - User's answers
+ * @returns {boolean} - Whether section should be shown
  */
-function getValueByPath(obj, path) {
-  return path.split('.').reduce((curr, key) => {
-    return curr && curr[key] !== undefined ? curr[key] : undefined;
-  }, obj);
-}
+function shouldShowSection(section, answers) {
+  if (!section.dependsOn) return true;
 
-/**
- * Group recommendations by category
- *
- * @param {Array} recommendations - List of recommendations
- * @returns {Object} Recommendations grouped by category
- */
-export function groupRecommendationsByCategory(recommendations) {
-  const grouped = {};
+  const { questionId, value } = section.dependsOn;
 
-  for (const recommendation of recommendations) {
-    const category = recommendation.category || 'default';
-
-    if (!grouped[category]) {
-      grouped[category] = [];
-    }
-
-    grouped[category].push(recommendation);
+  // Check for array values in multi-select questions
+  if (Array.isArray(answers[questionId])) {
+    return answers[questionId].includes(value);
   }
 
-  return grouped;
+  return answers[questionId] === value;
+}
+
+/**
+ * Calculate results based on answers and schema
+ *
+ * @param {Object} schema - Calculator schema
+ * @param {Object} answers - User's answers
+ * @param {Object} options - Additional options
+ * @returns {Object} - Calculation results
+ */
+export function calculateResults(schema, answers, options = {}) {
+  // Initialize results object with default values
+  const results = {
+    features: [],
+    commissionItems: [],
+    pricing: {
+      basePrice: 0,
+      additionalCosts: {},
+      totalPrice: 0,
+    },
+    summary: {
+      tier: 1, // Default tier
+      type: schema.id || 'generic',
+      projectDetails: '',
+      pricingStructure: answers.pricingType || 'partner', // Default to partner pricing
+    },
+    recommendations: [],
+  };
+
+  // Add debugging for initial state
+  console.log('Calculator initial state:', {
+    answers,
+    pricingType: answers.pricingType,
+    options,
+  });
+
+  // Ensure pricingStructure is set in options for effect conditions
+  options.pricingStructure =
+    answers.pricingType || results.summary.pricingStructure;
+
+  // Process single-select questions directly
+  if (answers.pricingType) {
+    console.log(
+      'Pricing type found in answers:',
+      answers.pricingType
+    );
+    // Ensure the pricingStructure is set correctly in both places
+    results.summary.pricingStructure = answers.pricingType;
+    options.pricingStructure = answers.pricingType;
+  }
+
+  // Process sections
+  if (schema.sections) {
+    schema.sections.forEach((section) => {
+      // Skip sections that shouldn't be shown based on dependencies
+      if (section.dependsOn) {
+        const { questionId, value } = section.dependsOn;
+        if (answers[questionId] !== value) {
+          return;
+        }
+      }
+
+      if (section.questions) {
+        // Process each question's effects
+        section.questions.forEach((question) => {
+          const value = answers[question.id];
+
+          // Handle specific case for pricing type
+          if (question.id === 'pricingType' && value) {
+            results.summary.pricingStructure = value;
+            options.pricingStructure = value;
+            console.log(
+              'Updated pricing structure from question:',
+              value
+            );
+          }
+
+          // Process direct question effects if any
+          if (
+            value !== undefined &&
+            value !== null &&
+            question.effects
+          ) {
+            processEffects(
+              question.effects,
+              value,
+              results,
+              options,
+              answers,
+              question
+            );
+          }
+
+          // Process effects from selected option for single-select questions
+          if (
+            question.type === 'single-select' &&
+            value &&
+            question.options
+          ) {
+            const selectedOption = question.options.find(
+              (option) => option.id === value
+            );
+
+            if (selectedOption && selectedOption.effects) {
+              processEffects(
+                selectedOption.effects,
+                value,
+                results,
+                options,
+                answers,
+                question,
+                selectedOption
+              );
+            }
+          }
+
+          // Process effects from multiple selected options for multi-select questions
+          if (
+            question.type === 'multi-select' &&
+            Array.isArray(value) &&
+            question.options
+          ) {
+            value.forEach((optionId) => {
+              const selectedOption = question.options.find(
+                (option) => option.id === optionId
+              );
+
+              if (selectedOption && selectedOption.effects) {
+                processEffects(
+                  selectedOption.effects,
+                  true,
+                  results,
+                  options,
+                  answers,
+                  question,
+                  selectedOption
+                );
+              }
+            });
+          }
+        });
+      }
+    });
+  }
+
+  // Calculate total price
+  const additionalCostsTotal = Object.values(
+    results.pricing.additionalCosts
+  ).reduce((sum, cost) => sum + cost, 0);
+
+  results.pricing.totalPrice =
+    results.pricing.basePrice + additionalCostsTotal;
+
+  // Add commission information for partner pricing
+  if (results.summary.pricingStructure === 'partner') {
+    // Calculate commission from commission items
+    let totalCommission = 0;
+
+    results.commissionItems.forEach((item) => {
+      // Try to extract commission amount from text strings like "X: £200 Commission"
+      const match = item.match(/£(\d+(\.\d+)?)/);
+      if (match && match[1]) {
+        totalCommission += parseFloat(match[1]);
+      }
+    });
+
+    results.pricing.commission = totalCommission;
+    results.summary.commission = totalCommission;
+  }
+
+  // Process recommendations if schema has them
+  if (schema.recommendations) {
+    const { recommendations, logic, products } =
+      schema.recommendations;
+
+    // Simple logic to select recommendations
+    if (logic === 'score-based' && Array.isArray(products)) {
+      products.forEach((product) => {
+        // Calculate score for this product
+        let score = 0;
+
+        if (Array.isArray(product.conditions)) {
+          product.conditions.forEach((condition) => {
+            const { questionId, value, weight = 1 } = condition;
+
+            // For multi-select questions
+            if (Array.isArray(answers[questionId])) {
+              if (answers[questionId].includes(value)) {
+                score += weight;
+              }
+            }
+            // For single-select and other question types
+            else if (answers[questionId] === value) {
+              score += weight;
+            }
+          });
+        }
+
+        // If score meets minimum, add to recommendations
+        if (score >= (product.minScore || 1)) {
+          // Determine tier based on score
+          let tier = 1;
+
+          if (product.tierMapping) {
+            const thresholds = Object.values(
+              product.tierMapping
+            ).sort((a, b) => b.score - a.score);
+
+            for (const threshold of thresholds) {
+              if (score >= threshold.score) {
+                tier = threshold.tier;
+                break;
+              }
+            }
+          }
+
+          results.recommendations.push({
+            id: product.id,
+            title: product.name,
+            description: product.description,
+            tier,
+            score,
+            features: product.features || [],
+          });
+        }
+      });
+
+      // Sort recommendations by score (highest first)
+      results.recommendations.sort((a, b) => b.score - a.score);
+    }
+  }
+
+  // Handle project details from answers if applicable
+  if (answers.projectDetails) {
+    results.summary.projectDetails = answers.projectDetails;
+  } else if (answers.projectDescription) {
+    results.summary.projectDetails = answers.projectDescription;
+  } else if (answers.additionalRequirements) {
+    results.summary.projectDetails +=
+      ' ' + answers.additionalRequirements;
+  }
+
+  // Add any partner-specific pricing adjustments
+  if (
+    options.partner &&
+    options.partner.config &&
+    options.partner.config.pricing
+  ) {
+    const pricingConfig = options.partner.config.pricing;
+
+    // Apply pricing tiers based on schema tier
+    if (results.summary.tier === 1 && pricingConfig.tier1) {
+      results.pricing.tierPrice = pricingConfig.tier1;
+    } else if (results.summary.tier === 2 && pricingConfig.tier2) {
+      results.pricing.tierPrice = pricingConfig.tier2;
+    } else if (results.summary.tier === 3 && pricingConfig.tier3) {
+      results.pricing.tierPrice = pricingConfig.tier3;
+    }
+
+    // Apply referral commission if applicable
+    if (
+      options.partner.config.pricingType === 'referral' &&
+      pricingConfig.commissionRate
+    ) {
+      results.pricing.commission =
+        results.pricing.totalPrice * pricingConfig.commissionRate;
+    }
+  }
+
+  // Log final calculation results for debugging
+  console.log('Final calculation results:', {
+    pricingStructure: results.summary.pricingStructure,
+    basePrice: results.pricing.basePrice,
+    additionalCosts: results.pricing.additionalCosts,
+    totalPrice: results.pricing.totalPrice,
+    commission: results.pricing.commission,
+    tier: results.summary.tier,
+    features: results.features.length,
+    commissionItems: results.commissionItems.length,
+  });
+
+  return results;
+}
+
+/**
+ * Process a list of effects to update results
+ *
+ * @param {Array} effects - List of effects to process
+ * @param {any} value - Answer value for the question
+ * @param {Object} results - Results object to update
+ * @param {Object} options - Global options
+ * @param {Object} answers - All answers
+ * @param {Object} question - Current question
+ * @param {Object} option - Selected option (for single/multi-select questions)
+ */
+function processEffects(
+  effects,
+  value,
+  results,
+  options,
+  answers,
+  question,
+  option = null
+) {
+  effects.forEach((effect) => {
+    // Skip if effect has a condition that isn't met
+    if (effect.condition) {
+      // Check pricing structure condition
+      if (effect.condition.pricingStructure !== undefined) {
+        const currentStructure =
+          options.pricingStructure ||
+          results.summary.pricingStructure;
+
+        if (effect.condition.pricingStructure !== currentStructure) {
+          console.log(
+            `Skipping effect due to pricing structure mismatch:`,
+            {
+              needed: effect.condition.pricingStructure,
+              current: currentStructure,
+              effect: effect,
+            }
+          );
+          return; // Skip this effect
+        }
+      }
+
+      // Simple boolean answer condition
+      if (
+        effect.condition.answer !== undefined &&
+        effect.condition.answer !== value
+      ) {
+        return;
+      }
+
+      // Min value condition
+      if (
+        effect.condition.minValue !== undefined &&
+        value < effect.condition.minValue
+      ) {
+        return;
+      }
+
+      // Max value condition
+      if (
+        effect.condition.maxValue !== undefined &&
+        value > effect.condition.maxValue
+      ) {
+        return;
+      }
+    }
+
+    // Process effect based on type
+    switch (effect.type) {
+      case 'add-feature':
+        if (Array.isArray(effect.value)) {
+          results.features.push(...effect.value);
+        } else {
+          results.features.push(effect.value);
+        }
+        break;
+
+      case 'add-commission':
+        results.commissionItems.push(effect.value);
+        break;
+
+      case 'set-base-price':
+        results.pricing.basePrice = effect.value;
+        break;
+
+      case 'add-price':
+        // If multiplying by quantity
+        if (effect.multiplier && effect.multiplier in answers) {
+          const quantity = Number(answers[effect.multiplier]);
+          if (!isNaN(quantity)) {
+            const name =
+              effect.name ||
+              `${option?.label || question.label} Cost`;
+            results.pricing.additionalCosts[name] =
+              effect.value * quantity;
+            console.log(
+              `Added price with multiplier: ${name} = ${effect.value} * ${quantity}`
+            );
+          }
+        } else {
+          const name =
+            effect.name || `${option?.label || question.label} Cost`;
+          results.pricing.additionalCosts[name] = effect.value;
+          console.log(`Added price: ${name} = ${effect.value}`);
+        }
+        break;
+
+      case 'set-tier':
+        results.summary.tier = effect.value;
+        console.log(`Set tier to: ${effect.value}`);
+        break;
+
+      case 'set-project-details':
+        results.summary.projectDetails = answers[effect.value] || '';
+        break;
+
+      case 'set-pricing-structure':
+        results.summary.pricingStructure = effect.value;
+        options.pricingStructure = effect.value; // Update in both places
+        console.log(`Set pricing structure to: ${effect.value}`);
+        break;
+    }
+  });
 }

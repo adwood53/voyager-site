@@ -1,5 +1,4 @@
 // src/app/components/dashboard/calculator/CalculatorContainer.js
-
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
@@ -9,6 +8,7 @@ import {
   initializeAnswers,
   validateAnswers,
 } from '@/src/lib/calculatorEngine';
+import { generateRecommendations } from '@/src/lib/recommendationEngine';
 import { generateAndSavePDF } from '@/src/lib/pdfService';
 import { usePartner } from '@/src/utils/partners';
 import QuestionRenderer from './QuestionRenderer';
@@ -137,7 +137,6 @@ export default function CalculatorContainer({
     }
   };
 
-  // Calculate final results
   const calculateFinalResults = () => {
     setIsCalculating(true);
 
@@ -187,23 +186,49 @@ export default function CalculatorContainer({
         partner: actualPartner,
       };
 
-      // Calculate results
+      // Calculate results using calculatorEngine
       const calculatedResults = calculateResults(
         schema,
         answers,
         options
       );
 
-      setResults(calculatedResults);
-
-      // If there are recommendations, show them first
+      // For scope builder, need to add recommendations via the recommendation engine
       if (
-        schema.actions?.showRecommendations &&
-        calculatedResults.recommendations &&
-        calculatedResults.recommendations.length > 0
+        calculatorType === 'scope-builder' &&
+        schema.recommendations
       ) {
-        setShowRecommendations(true);
+        // Import the recommendations only when needed
+        import('@/src/lib/recommendationEngine').then(
+          ({ generateRecommendations }) => {
+            const recommendations = generateRecommendations(
+              answers,
+              schema.recommendations.products,
+              {
+                maxRecommendations: 5,
+                sortByPriority: true,
+              }
+            );
+
+            // Add recommendations to results
+            calculatedResults.recommendations = recommendations;
+
+            setResults(calculatedResults);
+
+            // Show recommendations if there are any
+            if (
+              schema.actions?.showRecommendations &&
+              recommendations.length > 0
+            ) {
+              setShowRecommendations(true);
+            } else {
+              setShowResults(true);
+            }
+          }
+        );
       } else {
+        // For calculators other than scope builder, just set results and show them
+        setResults(calculatedResults);
         setShowResults(true);
       }
 
