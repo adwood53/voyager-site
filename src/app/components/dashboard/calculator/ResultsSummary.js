@@ -15,6 +15,37 @@ export default function ResultsSummary({
   if (!results) {
     return <div className="loading-results">Loading results...</div>;
   }
+  const handleExportPDF = () => {
+    try {
+      if (!results) {
+        throw new Error('No results available to export');
+      }
+
+      const success = generateAndSavePDF(
+        results,
+        {
+          title: schema.title || 'Voyager Calculator Results',
+          subtitle: calculatorType,
+          companyName:
+            organization?.name || selectedPartner?.name || 'Voyager',
+          user: {
+            firstName: user?.firstName,
+            lastName: user?.lastName,
+            email: user?.primaryEmailAddress?.emailAddress,
+          },
+        },
+        `voyager-${calculatorType}-results.pdf`
+      );
+
+      if (!success) {
+        // Show error to user
+        alert('Failed to generate PDF. Please try again.');
+      }
+    } catch (error) {
+      console.error('PDF Export Error:', error);
+      alert(`PDF Export Failed: ${error.message}`);
+    }
+  };
 
   // Format currency
   const formatCurrency = (amount) => {
@@ -258,11 +289,14 @@ export default function ResultsSummary({
           Start Over
         </button>
 
-        {onExportPDF && (
-          <button className="secondary-button" onClick={onExportPDF}>
+        {/* {onExportPDF && (
+          <button
+            className="secondary-button"
+            onClick={handleExportPDF}
+          >
             Export PDF
           </button>
-        )}
+        )} */}
 
         {onSubmitToHubspot && (
           <button

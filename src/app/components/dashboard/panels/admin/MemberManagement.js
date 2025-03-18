@@ -427,6 +427,14 @@ export default function MemberManagement({
                                   onClick={() =>
                                     handleRemoveMember(member.id)
                                   }
+                                  className="inline-flex items-center justify-center px-3 py-1 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none"
+                                  style={{
+                                    opacity: 1,
+                                    visibility: 'visible',
+                                    zIndex: 50,
+                                    position: 'relative',
+                                    display: 'inline-flex',
+                                  }}
                                 >
                                   Remove
                                 </Button>
@@ -435,6 +443,7 @@ export default function MemberManagement({
                                   size="sm"
                                   color="default"
                                   disabled
+                                  className="opacity-50 inline-flex"
                                 >
                                   {isCurrentUser
                                     ? 'You'
@@ -466,7 +475,17 @@ export default function MemberManagement({
       </Card>
 
       {/* Invite Member Modal */}
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal
+        isOpen={isOpen}
+        onClose={onClose}
+        classNames={{
+          backdrop: 'bg-white', // Add this line for the backdrop
+          base: 'bg-white border border-gray-200 shadow-xl',
+          body: 'p-6 bg-white',
+          header: 'bg-white border-b border-gray-200 p-6',
+          footer: 'bg-white border-t border-gray-200 p-6',
+        }}
+      >
         <ModalContent>
           <ModalHeader>Invite Team Member</ModalHeader>
           <ModalBody className="text-gray-800">

@@ -124,10 +124,22 @@ export default function DealForm({
       // Show success message briefly
       setSuccess(true);
 
-      // After short delay, redirect to partner dashboard home panel
+      // After short delay, close modal and reset
       setTimeout(() => {
-        // Navigate to partner dashboard home panel, not homepage
-        router.push('/partner');
+        // Close the modal first
+        setIsVisible(false);
+
+        // Then after animation completes, call onClose to return to home panel
+        setTimeout(() => {
+          if (onClose && typeof onClose === 'function') {
+            onClose();
+          }
+
+          // Navigate to home panel by redirecting to partner dashboard
+          // We set a localStorage flag to indicate to go to home panel
+          localStorage.setItem('dashboard_active_panel', 'home');
+          window.location.href = '/partner';
+        }, 300);
       }, 1500);
     } catch (err) {
       console.error('Error submitting to Hubspot:', err);

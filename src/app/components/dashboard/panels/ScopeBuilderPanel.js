@@ -23,8 +23,6 @@ export default function ScopeBuilderPanel() {
     console.log('Scope builder results:', data.results);
   };
 
-  // Handle PDF export - this is handled by the CalculatorContainer
-
   return (
     <div className="max-w-4xl mx-auto">
       <div className="mb-8">

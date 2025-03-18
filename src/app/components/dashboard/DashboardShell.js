@@ -68,6 +68,20 @@ export default function DashboardShell() {
     });
   }, [membership, isAdmin, organization, firestoreOrg]);
 
+  // Check for localStorage panel flag - Add this effect to handle redirection
+  useEffect(() => {
+    // Check for dashboard_active_panel in localStorage
+    const storedPanel = localStorage.getItem(
+      'dashboard_active_panel'
+    );
+    if (storedPanel && DASHBOARD_ROUTES[storedPanel.toUpperCase()]) {
+      // Set the active panel based on localStorage value
+      setActivePanel(storedPanel);
+      // Clear the localStorage flag after use
+      localStorage.removeItem('dashboard_active_panel');
+    }
+  }, []);
+
   // Get organization branding
   const brandColors = {
     primary: firestoreOrg?.primaryColor || '#E79023',
