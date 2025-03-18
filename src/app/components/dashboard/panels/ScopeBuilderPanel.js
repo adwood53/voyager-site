@@ -80,31 +80,6 @@ export default function ScopeBuilderPanel() {
                               </ul>
                             </div>
                           )}
-
-                        <Button
-                          className="w-full mt-4"
-                          style={{
-                            backgroundColor:
-                              'var(--primary-color, #E79023)',
-                            color: 'white', // Explicitly set the text color to white
-                          }}
-                          onClick={() => {
-                            // Navigate to appropriate calculator based on recommendation ID
-                            const target = recommendation.id.includes(
-                              'ar-nfc'
-                            )
-                              ? '/partner/merchandise'
-                              : recommendation.id.includes('event')
-                                ? '/partner/productions'
-                                : '/partner';
-
-                            // In a real implementation, use router.push
-                            // For simplicity in this example:
-                            window.location.href = target;
-                          }}
-                        >
-                          Learn More
-                        </Button>
                       </CardBody>
                     </Card>
                   )

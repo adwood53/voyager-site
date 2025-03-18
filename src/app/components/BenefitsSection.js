@@ -146,10 +146,7 @@ export default function BenefitsSection() {
           equalHeight={true}
         >
           {benefits.map((benefit, index) => (
-            <Tooltip
-              key={index}
-              content={`Learn more about ${benefit.title}`}
-            >
+            <Tooltip key={index} content={` about ${benefit.title}`}>
               <motion.div
                 whileHover={{
                   y: -10,
