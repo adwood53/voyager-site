@@ -397,3 +397,34 @@
   color: #6b7280;
   font-size: 0.875rem;
 }
+
+/* Highlight special merchandise features */
+.summary-item.highlight-item {
+  background-color: rgba(231, 144, 35, 0.1);
+  border-color: rgba(231, 144, 35, 0.3);
+}
+
+/* Merchandise-specific section styling */
+.tier-title {
+  color: var(--primary, #e79023);
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.commission-price .price-value {
+  color: #10b981; /* Green color for commission */
+  font-weight: 600;
+}
+
+/* Better organization for feature categories */
+.features-section + .features-section {
+  margin-top: 1.5rem;
+}
+
+.features-section .section-title {
+  color: var(--primary, #e79023);
+  font-size: 1.125rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(231, 144, 35, 0.2);
+  margin-bottom: 1rem;
+}

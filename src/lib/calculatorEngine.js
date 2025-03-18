@@ -1,4 +1,4 @@
-// src/lib/calculatorEngine.js - Complete file
+// src/lib/calculatorEngine.js - Complete file with updates
 /**
  * Initialize answers with default values from schema
  *
@@ -138,7 +138,7 @@ export function calculateResults(schema, answers, options = {}) {
       totalPrice: 0,
     },
     summary: {
-      tier: 1,
+      tier: 1, // Default tier
       type: schema.id || 'generic',
       projectDetails: '',
       pricingStructure: answers.pricingType || 'partner', // Default to partner pricing
@@ -146,14 +146,16 @@ export function calculateResults(schema, answers, options = {}) {
     recommendations: [],
   };
 
-  // Add the pricingStructure to options for effect conditions
-  options.pricingStructure = answers.pricingType;
-
-  // DEBUG: Log the initial state
+  // Add debugging for initial state
   console.log('Calculator initial state:', {
+    answers,
     pricingType: answers.pricingType,
-    options: options,
+    options,
   });
+
+  // Ensure pricingStructure is set in options for effect conditions
+  options.pricingStructure =
+    answers.pricingType || results.summary.pricingStructure;
 
   // Process single-select questions directly
   if (answers.pricingType) {
@@ -192,270 +194,97 @@ export function calculateResults(schema, answers, options = {}) {
             );
           }
 
-          // Skip if no value or no effects
+          // Process direct question effects if any
           if (
-            value === undefined ||
-            value === null ||
-            !question.effects
+            value !== undefined &&
+            value !== null &&
+            question.effects
           ) {
-            return;
+            processEffects(
+              question.effects,
+              value,
+              results,
+              options,
+              answers,
+              question
+            );
           }
 
-          // Process effects
-          question.effects.forEach((effect) => {
-            // Log effect for debugging
-            if (
-              effect.condition &&
-              effect.condition.pricingStructure
-            ) {
-              console.log(
-                'Processing effect with pricing condition:',
-                {
-                  effect,
-                  currentPricingStructure: options.pricingStructure,
-                  matches:
-                    effect.condition.pricingStructure ===
-                    options.pricingStructure,
-                }
-              );
-            }
-
-            // Skip if effect has a condition that isn't met
-            if (effect.condition) {
-              // Simple conditions
-              if (
-                effect.condition.answer !== undefined &&
-                effect.condition.answer !== value
-              ) {
-                return;
-              }
-
-              // Pricing structure condition - with extra logging
-              if (
-                effect.condition.pricingStructure !== undefined &&
-                effect.condition.pricingStructure !==
-                  options.pricingStructure
-              ) {
-                console.log(
-                  'Skipping effect due to pricing structure mismatch:',
-                  {
-                    effectCondition:
-                      effect.condition.pricingStructure,
-                    currentStructure: options.pricingStructure,
-                  }
-                );
-                return;
-              }
-
-              // Min value condition
-              if (
-                effect.condition.minValue !== undefined &&
-                value < effect.condition.minValue
-              ) {
-                return;
-              }
-
-              // Max value condition
-              if (
-                effect.condition.maxValue !== undefined &&
-                value > effect.condition.maxValue
-              ) {
-                return;
-              }
-            }
-
-            // Process effect based on type
-            switch (effect.type) {
-              case 'add-feature':
-                if (Array.isArray(effect.value)) {
-                  results.features.push(...effect.value);
-                } else {
-                  results.features.push(effect.value);
-                }
-                break;
-
-              case 'add-commission':
-                results.commissionItems.push(effect.value);
-                break;
-
-              case 'set-base-price':
-                results.pricing.basePrice = effect.value;
-                break;
-
-              case 'add-price':
-                // If multiplying by quantity
-                if (
-                  effect.multiplier &&
-                  effect.multiplier in answers
-                ) {
-                  const quantity = Number(answers[effect.multiplier]);
-                  if (!isNaN(quantity)) {
-                    const name =
-                      effect.name || `${question.label} Cost`;
-                    results.pricing.additionalCosts[name] =
-                      effect.value * quantity;
-                    console.log(
-                      `Added price with multiplier: ${name} = ${effect.value} * ${quantity}`
-                    );
-                  }
-                } else {
-                  const name =
-                    effect.name || `${question.label} Cost`;
-                  results.pricing.additionalCosts[name] =
-                    effect.value;
-                  console.log(
-                    `Added price: ${name} = ${effect.value}`
-                  );
-                }
-                break;
-
-              case 'set-tier':
-                results.summary.tier = effect.value;
-                break;
-
-              case 'set-project-details':
-                results.summary.projectDetails =
-                  answers[effect.value] || '';
-                break;
-
-              case 'set-pricing-structure':
-                results.summary.pricingStructure = effect.value;
-                break;
-            }
-          });
-
-          // For single-select questions, also add effects from the selected option
+          // Process effects from selected option for single-select questions
           if (
-            (question.type === 'single-select' ||
-              question.type === 'radio') &&
+            question.type === 'single-select' &&
+            value &&
             question.options
           ) {
             const selectedOption = question.options.find(
-              (opt) => opt.id === value
+              (option) => option.id === value
             );
+
             if (selectedOption && selectedOption.effects) {
-              // Process option effects
-              selectedOption.effects.forEach((effect) => {
-                // Check conditions
-                if (effect.condition) {
-                  // Pricing structure condition
-                  if (
-                    effect.condition.pricingStructure !== undefined &&
-                    effect.condition.pricingStructure !==
-                      options.pricingStructure
-                  ) {
-                    return;
-                  }
-
-                  // Simple conditions
-                  if (
-                    effect.condition.answer !== undefined &&
-                    effect.condition.answer !== true
-                  ) {
-                    return;
-                  }
-                }
-
-                switch (effect.type) {
-                  case 'add-feature':
-                    if (Array.isArray(effect.value)) {
-                      results.features.push(...effect.value);
-                    } else {
-                      results.features.push(effect.value);
-                    }
-                    break;
-
-                  case 'add-commission':
-                    results.commissionItems.push(effect.value);
-                    break;
-
-                  case 'set-base-price':
-                    results.pricing.basePrice = effect.value;
-                    break;
-
-                  case 'add-price':
-                    const name =
-                      effect.name || `${selectedOption.label} Cost`;
-                    results.pricing.additionalCosts[name] =
-                      effect.value;
-                    console.log(
-                      `Added price from option: ${name} = ${effect.value}`
-                    );
-                    break;
-
-                  case 'set-tier':
-                    results.summary.tier = effect.value;
-                    break;
-
-                  case 'set-pricing-structure':
-                    results.summary.pricingStructure = effect.value;
-                    break;
-                }
-              });
+              processEffects(
+                selectedOption.effects,
+                value,
+                results,
+                options,
+                answers,
+                question,
+                selectedOption
+              );
             }
           }
 
-          // For multi-select questions, add effects from all selected options
+          // Process effects from multiple selected options for multi-select questions
           if (
-            (question.type === 'multi-select' ||
-              question.type === 'checkbox') &&
-            question.options &&
-            Array.isArray(value)
+            question.type === 'multi-select' &&
+            Array.isArray(value) &&
+            question.options
           ) {
             value.forEach((optionId) => {
               const selectedOption = question.options.find(
-                (opt) => opt.id === optionId
+                (option) => option.id === optionId
               );
+
               if (selectedOption && selectedOption.effects) {
-                // Process option effects
-                selectedOption.effects.forEach((effect) => {
-                  // Check conditions
-                  if (effect.condition) {
-                    // Pricing structure condition
-                    if (
-                      effect.condition.pricingStructure !==
-                        undefined &&
-                      effect.condition.pricingStructure !==
-                        options.pricingStructure
-                    ) {
-                      return;
-                    }
-                  }
-
-                  switch (effect.type) {
-                    case 'add-feature':
-                      if (Array.isArray(effect.value)) {
-                        results.features.push(...effect.value);
-                      } else {
-                        results.features.push(effect.value);
-                      }
-                      break;
-
-                    case 'add-commission':
-                      results.commissionItems.push(effect.value);
-                      break;
-
-                    case 'set-base-price':
-                      results.pricing.basePrice = effect.value;
-                      break;
-
-                    case 'add-price':
-                      const name =
-                        effect.name || `${selectedOption.label} Cost`;
-                      results.pricing.additionalCosts[name] =
-                        effect.value;
-                      console.log(
-                        `Added price from multi-select option: ${name} = ${effect.value}`
-                      );
-                      break;
-                  }
-                });
+                processEffects(
+                  selectedOption.effects,
+                  true,
+                  results,
+                  options,
+                  answers,
+                  question,
+                  selectedOption
+                );
               }
             });
           }
         });
       }
     });
+  }
+
+  // Calculate total price
+  const additionalCostsTotal = Object.values(
+    results.pricing.additionalCosts
+  ).reduce((sum, cost) => sum + cost, 0);
+
+  results.pricing.totalPrice =
+    results.pricing.basePrice + additionalCostsTotal;
+
+  // Add commission information for partner pricing
+  if (results.summary.pricingStructure === 'partner') {
+    // Calculate commission from commission items
+    let totalCommission = 0;
+
+    results.commissionItems.forEach((item) => {
+      // Try to extract commission amount from text strings like "X: £200 Commission"
+      const match = item.match(/£(\d+(\.\d+)?)/);
+      if (match && match[1]) {
+        totalCommission += parseFloat(match[1]);
+      }
+    });
+
+    results.pricing.commission = totalCommission;
+    results.summary.commission = totalCommission;
   }
 
   // Process recommendations if schema has them
@@ -521,40 +350,13 @@ export function calculateResults(schema, answers, options = {}) {
   }
 
   // Handle project details from answers if applicable
-  if (answers.projectDescription) {
+  if (answers.projectDetails) {
+    results.summary.projectDetails = answers.projectDetails;
+  } else if (answers.projectDescription) {
     results.summary.projectDetails = answers.projectDescription;
   } else if (answers.additionalRequirements) {
     results.summary.projectDetails +=
       ' ' + answers.additionalRequirements;
-  } else if (answers.projectDetails) {
-    results.summary.projectDetails = answers.projectDetails;
-  }
-
-  // Calculate total price
-  const additionalCostsTotal = Object.values(
-    results.pricing.additionalCosts
-  ).reduce((sum, cost) => sum + cost, 0);
-
-  results.pricing.totalPrice =
-    results.pricing.basePrice + additionalCostsTotal;
-
-  // Add commission information for partner pricing
-  if (answers.pricingType === 'partner') {
-    // Calculate total commission based on commission items
-    const totalCommission = results.commissionItems.reduce(
-      (sum, item) => {
-        // Extract commission amount from item text if possible
-        const match = item.match(/£(\d+(\.\d+)?)/);
-        if (match && match[1]) {
-          return sum + parseFloat(match[1]);
-        }
-        return sum;
-      },
-      0
-    );
-
-    results.pricing.commission = totalCommission;
-    results.summary.commission = totalCommission;
   }
 
   // Add any partner-specific pricing adjustments
@@ -584,14 +386,142 @@ export function calculateResults(schema, answers, options = {}) {
     }
   }
 
-  // Log final price calculation
-  console.log('Final price calculation:', {
+  // Log final calculation results for debugging
+  console.log('Final calculation results:', {
+    pricingStructure: results.summary.pricingStructure,
     basePrice: results.pricing.basePrice,
     additionalCosts: results.pricing.additionalCosts,
-    additionalCostsTotal,
     totalPrice: results.pricing.totalPrice,
-    pricingStructure: options.pricingStructure,
+    commission: results.pricing.commission,
+    tier: results.summary.tier,
+    features: results.features.length,
+    commissionItems: results.commissionItems.length,
   });
 
   return results;
+}
+
+/**
+ * Process a list of effects to update results
+ *
+ * @param {Array} effects - List of effects to process
+ * @param {any} value - Answer value for the question
+ * @param {Object} results - Results object to update
+ * @param {Object} options - Global options
+ * @param {Object} answers - All answers
+ * @param {Object} question - Current question
+ * @param {Object} option - Selected option (for single/multi-select questions)
+ */
+function processEffects(
+  effects,
+  value,
+  results,
+  options,
+  answers,
+  question,
+  option = null
+) {
+  effects.forEach((effect) => {
+    // Skip if effect has a condition that isn't met
+    if (effect.condition) {
+      // Check pricing structure condition
+      if (effect.condition.pricingStructure !== undefined) {
+        const currentStructure =
+          options.pricingStructure ||
+          results.summary.pricingStructure;
+
+        if (effect.condition.pricingStructure !== currentStructure) {
+          console.log(
+            `Skipping effect due to pricing structure mismatch:`,
+            {
+              needed: effect.condition.pricingStructure,
+              current: currentStructure,
+              effect: effect,
+            }
+          );
+          return; // Skip this effect
+        }
+      }
+
+      // Simple boolean answer condition
+      if (
+        effect.condition.answer !== undefined &&
+        effect.condition.answer !== value
+      ) {
+        return;
+      }
+
+      // Min value condition
+      if (
+        effect.condition.minValue !== undefined &&
+        value < effect.condition.minValue
+      ) {
+        return;
+      }
+
+      // Max value condition
+      if (
+        effect.condition.maxValue !== undefined &&
+        value > effect.condition.maxValue
+      ) {
+        return;
+      }
+    }
+
+    // Process effect based on type
+    switch (effect.type) {
+      case 'add-feature':
+        if (Array.isArray(effect.value)) {
+          results.features.push(...effect.value);
+        } else {
+          results.features.push(effect.value);
+        }
+        break;
+
+      case 'add-commission':
+        results.commissionItems.push(effect.value);
+        break;
+
+      case 'set-base-price':
+        results.pricing.basePrice = effect.value;
+        break;
+
+      case 'add-price':
+        // If multiplying by quantity
+        if (effect.multiplier && effect.multiplier in answers) {
+          const quantity = Number(answers[effect.multiplier]);
+          if (!isNaN(quantity)) {
+            const name =
+              effect.name ||
+              `${option?.label || question.label} Cost`;
+            results.pricing.additionalCosts[name] =
+              effect.value * quantity;
+            console.log(
+              `Added price with multiplier: ${name} = ${effect.value} * ${quantity}`
+            );
+          }
+        } else {
+          const name =
+            effect.name || `${option?.label || question.label} Cost`;
+          results.pricing.additionalCosts[name] = effect.value;
+          console.log(`Added price: ${name} = ${effect.value}`);
+        }
+        break;
+
+      case 'set-tier':
+        results.summary.tier = effect.value;
+        console.log(`Set tier to: ${effect.value}`);
+        break;
+
+      case 'set-project-details':
+        results.summary.projectDetails = answers[effect.value] || '';
+        break;
+
+      case 'set-pricing-structure':
+        results.summary.pricingStructure = effect.value;
+        options.pricingStructure = effect.value; // Update in both places
+        console.log(`Set pricing structure to: ${effect.value}`);
+        break;
+    }
+  });
 }

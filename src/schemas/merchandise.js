@@ -27,7 +27,7 @@ const merchandiseSchema = {
               effects: [
                 {
                   type: 'add-feature',
-                  value: 'Pricing: Partner Commission',
+                  value: 'Pricing Structure: Partner Commission',
                 },
                 { type: 'set-pricing-structure', value: 'partner' },
               ],
@@ -39,7 +39,7 @@ const merchandiseSchema = {
               effects: [
                 {
                   type: 'add-feature',
-                  value: 'Pricing: White Label',
+                  value: 'Pricing Structure: White Label',
                 },
                 {
                   type: 'set-pricing-structure',
@@ -72,6 +72,7 @@ const merchandiseSchema = {
                   condition: { pricingStructure: 'white-label' },
                   name: 'New Experience Setup',
                 },
+                { type: 'set-tier', value: 2 }, // New experiences are more complex (tier 2)
               ],
             },
             {
@@ -84,6 +85,7 @@ const merchandiseSchema = {
                   value: 250,
                   name: 'New Target Setup',
                 },
+                { type: 'set-tier', value: 1 }, // New targets are simpler (tier 1)
               ],
             },
           ],
@@ -536,7 +538,7 @@ const merchandiseSchema = {
                 },
                 {
                   type: 'add-commission',
-                  value: 'Business Cards (50): £1350 Commission',
+                  value: 'Business Cards (50): £350 Commission',
                   condition: { pricingStructure: 'partner' },
                 },
                 {
@@ -560,7 +562,7 @@ const merchandiseSchema = {
                 },
                 {
                   type: 'add-commission',
-                  value: 'Business Cards (100): £1350 Commission',
+                  value: 'Business Cards (100): £450 Commission',
                   condition: { pricingStructure: 'partner' },
                 },
                 {
@@ -584,7 +586,7 @@ const merchandiseSchema = {
                 },
                 {
                   type: 'add-commission',
-                  value: 'Business Cards (500): £1350 Commission',
+                  value: 'Business Cards (500): £550 Commission',
                   condition: { pricingStructure: 'partner' },
                 },
                 {
@@ -611,7 +613,7 @@ const merchandiseSchema = {
                 },
                 {
                   type: 'add-commission',
-                  value: 'Business Cards (1000): £1350 Commission',
+                  value: 'Business Cards (1000): £650 Commission',
                   condition: { pricingStructure: 'partner' },
                 },
                 {
@@ -661,6 +663,7 @@ const merchandiseSchema = {
                   condition: { pricingStructure: 'white-label' },
                   name: 'Entry-Level Bundle',
                 },
+                { type: 'set-tier', value: 1 }, // Entry level is tier 1
               ],
             },
             {
@@ -689,6 +692,7 @@ const merchandiseSchema = {
                   condition: { pricingStructure: 'white-label' },
                   name: 'Enhanced Marketing Bundle',
                 },
+                { type: 'set-tier', value: 2 }, // Enhanced level is tier 2
               ],
             },
             {
@@ -713,6 +717,7 @@ const merchandiseSchema = {
                   condition: { pricingStructure: 'white-label' },
                   name: 'Premium Bundle',
                 },
+                { type: 'set-tier', value: 3 }, // Premium level is tier 3
               ],
             },
           ],
@@ -744,7 +749,7 @@ const merchandiseSchema = {
                 },
                 {
                   type: 'add-commission',
-                  value: '3D Logo Creation',
+                  value: '3D Logo Creation: 3D Prop Commission',
                   condition: { pricingStructure: 'partner' },
                 },
               ],
@@ -795,48 +800,6 @@ const merchandiseSchema = {
           type: 'text',
           label: 'What is the name of the project?',
           effects: [{ type: 'add-feature', value: 'Project Name' }],
-        },
-      ],
-    },
-    {
-      id: 'client-info',
-      title: 'Client Information',
-      questions: [
-        {
-          id: 'clientFirstName',
-          type: 'text',
-          label: 'Client First Name',
-          effects: [
-            { type: 'add-feature', value: 'Client First Name' },
-          ],
-        },
-        {
-          id: 'clientLastName',
-          type: 'text',
-          label: 'Client Last Name',
-          effects: [
-            { type: 'add-feature', value: 'Client Last Name' },
-          ],
-        },
-        {
-          id: 'clientOrganisation',
-          type: 'text',
-          label: 'Client Organisation',
-          effects: [
-            { type: 'add-feature', value: 'Client Organisation' },
-          ],
-        },
-        {
-          id: 'clientEmail',
-          type: 'text',
-          label: 'Client Email',
-          effects: [{ type: 'add-feature', value: 'Client Email' }],
-        },
-        {
-          id: 'clientPhone',
-          type: 'text',
-          label: 'Client Phone',
-          effects: [{ type: 'add-feature', value: 'Client Phone' }],
         },
       ],
     },

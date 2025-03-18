@@ -1,4 +1,4 @@
-// src/app/components/dashboard/calculator/ResultsSummary.js - Updated
+// src/app/components/dashboard/calculator/ResultsSummary.js
 'use client';
 
 import React from 'react';
@@ -21,7 +21,59 @@ export default function ResultsSummary({
     return `£${amount.toFixed(2)}`;
   };
 
-  // Render a feature item
+  // Categorize features for better display
+  const categorizeFeatures = () => {
+    const categories = {
+      pricing: [],
+      productType: [],
+      quantities: [],
+      other: [],
+    };
+
+    results.features.forEach((feature) => {
+      const featureStr =
+        typeof feature === 'string'
+          ? feature
+          : Array.isArray(feature)
+            ? `${feature[0]}: ${feature[1]}`
+            : feature.name
+              ? `${feature.name}: ${feature.value}`
+              : 'Unknown feature';
+
+      // Categorize based on feature content
+      if (
+        featureStr.includes('Pricing Structure') ||
+        featureStr.includes('price')
+      ) {
+        categories.pricing.push(feature);
+      } else if (
+        featureStr.includes('A1 Posters') ||
+        featureStr.includes('A2 Posters') ||
+        featureStr.includes('A3 Posters') ||
+        featureStr.includes('Business Cards') ||
+        featureStr.includes('Bundle')
+      ) {
+        categories.quantities.push(feature);
+      } else if (
+        featureStr.includes('Product Category') ||
+        featureStr.includes('New Experience') ||
+        featureStr.includes('New Scan Target') ||
+        featureStr.includes('3D Logo')
+      ) {
+        categories.productType.push(feature);
+      } else if (
+        !featureStr.includes('Project') &&
+        !featureStr.includes('Client')
+      ) {
+        // Add everything else except project and client info to 'other' category
+        categories.other.push(feature);
+      }
+    });
+
+    return categories;
+  };
+
+  // Render a feature item based on its type
   const renderFeatureItem = (feature, index) => {
     if (Array.isArray(feature)) {
       // Feature is [key, value] pair
@@ -31,7 +83,7 @@ export default function ResultsSummary({
           {feature[1]}
         </div>
       );
-    } else if (typeof feature === 'object') {
+    } else if (typeof feature === 'object' && feature !== null) {
       // Feature is object with name/value
       return (
         <div key={index} className="summary-item">
@@ -43,13 +95,30 @@ export default function ResultsSummary({
       );
     } else {
       // Feature is string
+      // Check for special merchandise features that should be highlighted
+      const isMerchandiseQuantity =
+        typeof feature === 'string' &&
+        (feature.includes('Posters:') ||
+          feature.includes('Business Cards:') ||
+          feature.includes('Bundle:'));
+
       return (
-        <div key={index} className="summary-item">
-          <span className="summary-item-title">{feature}</span>
+        <div
+          key={index}
+          className={`summary-item ${isMerchandiseQuantity ? 'highlight-item' : ''}`}
+        >
+          {isMerchandiseQuantity ? (
+            <span className="summary-item-title">{feature}</span>
+          ) : (
+            <span>{feature}</span>
+          )}
         </div>
       );
     }
   };
+
+  // Get all the categorized features
+  const featureCategories = categorizeFeatures();
 
   return (
     <div className="results-summary">
@@ -57,26 +126,36 @@ export default function ResultsSummary({
         {schema.resultsTitle || 'Your Results'}
       </h2>
 
-      {results.summary && results.summary.tier && (
-        <div className="tier-section">
-          <h3 className="tier-title">Tier {results.summary.tier}</h3>
-          <p className="tier-description">
-            {results.summary.tier === 1 &&
-              'Basic tier - Minimal complexity.'}
-            {results.summary.tier === 2 &&
-              'Intermediate tier - Moderate complexity.'}
-            {results.summary.tier === 3 &&
-              'Advanced tier - High complexity.'}
-          </p>
+      {/* Product & Experience Type Section */}
+      {featureCategories.productType.length > 0 && (
+        <div className="features-section">
+          <h3 className="section-title">Product Type</h3>
+          <div className="features-list">
+            {featureCategories.productType.map((feature, index) =>
+              renderFeatureItem(feature, index)
+            )}
+          </div>
         </div>
       )}
 
-      {/* Features Section */}
-      {results.features && results.features.length > 0 && (
+      {/* Merchandise Quantities Section */}
+      {featureCategories.quantities.length > 0 && (
         <div className="features-section">
-          <h3 className="section-title">Features</h3>
+          <h3 className="section-title">Selected Quantities</h3>
           <div className="features-list">
-            {results.features.map((feature, index) =>
+            {featureCategories.quantities.map((feature, index) =>
+              renderFeatureItem(feature, index)
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Other Features Section */}
+      {featureCategories.other.length > 0 && (
+        <div className="features-section">
+          <h3 className="section-title">Additional Features</h3>
+          <div className="features-list">
+            {featureCategories.other.map((feature, index) =>
               renderFeatureItem(feature, index)
             )}
           </div>
@@ -103,7 +182,7 @@ export default function ResultsSummary({
         )}
 
       {/* Pricing Section */}
-      {results.pricing && schema.showPrice !== false && (
+      {results.pricing && schema.actions?.showPrice !== false && (
         <div className="pricing-section">
           <h3 className="section-title">Pricing</h3>
 
@@ -137,6 +216,15 @@ export default function ResultsSummary({
                 <span className="price-label">Total:</span>
                 <span className="price-value total">
                   {formatCurrency(results.pricing.totalPrice)}
+                </span>
+              </div>
+            )}
+
+            {results.pricing.commission && (
+              <div className="commission-price price-item">
+                <span className="price-label">Commission:</span>
+                <span className="price-value commission">
+                  {formatCurrency(results.pricing.commission)}
                 </span>
               </div>
             )}

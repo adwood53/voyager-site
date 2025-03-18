@@ -1,4 +1,4 @@
-// src/app/components/dashboard/panels/MerchandisePanel.js - Updated
+// src/app/components/dashboard/panels/MerchandisePanel.js
 'use client';
 
 import { useState } from 'react';
@@ -29,11 +29,8 @@ export default function MerchandisePanel() {
         </p>
       </div>
 
-      {/* Added a card wrapper with shadow and padding */}
       <Card className="shadow-md rounded-lg overflow-hidden">
         <CardBody className="p-0">
-          {' '}
-          {/* Remove padding from the Card so the calculator padding works correctly */}
           <CalculatorContainer
             schema={merchandiseSchema}
             calculatorType="merchandise"
@@ -47,7 +44,6 @@ export default function MerchandisePanel() {
         </CardBody>
       </Card>
 
-      {/* Information card */}
       <Card className="mt-8">
         <CardHeader>
           <h2 className="text-xl font-semibold text-gray-800">
