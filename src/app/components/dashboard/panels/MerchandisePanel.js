@@ -6,10 +6,8 @@ import { Card, CardBody, CardHeader } from '@heroui/react';
 import { CalculatorContainer } from '../calculator';
 import { usePartner } from '@/src/utils/partners';
 import merchandiseSchema from '@/src/schemas/merchandise';
-import DealForm from '@/src/app/components/dashboard/calculator/DealForm';
 
 export default function MerchandisePanel() {
-  const [showDealForm, setShowDealForm] = useState(false);
   const [calculationResults, setCalculationResults] = useState(null);
   const partner = usePartner();
 
@@ -19,21 +17,21 @@ export default function MerchandisePanel() {
     console.log('Merchandise calculator results:', data.results);
   };
 
-  // Handle deal form submission
-  const handleSubmitToCRM = () => {
-    if (!calculationResults) return;
-    setShowDealForm(true);
+  // Handle deal form submission directly through the CalculatorContainer
+  const handleSubmitToCRM = (results) => {
+    console.log('Submitting merchandise results to CRM:', results);
+    // The DealForm will be shown by the CalculatorContainer
   };
 
   return (
     <div className="max-w-4xl mx-auto">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-800 mb-2">
-          Merchandise Calculator
+          Interactive Merchandise Calculator
         </h1>
         <p className="text-gray-600">
-          Configure your interactive merchandise and get detailed
-          pricing
+          Configure your interactive merchandise items with embedded
+          digital experiences
         </p>
       </div>
 
@@ -76,14 +74,6 @@ export default function MerchandisePanel() {
           </p>
         </CardBody>
       </Card>
-
-      {/* Deal Form Modal */}
-      {showDealForm && calculationResults && (
-        <DealForm
-          configurationData={calculationResults}
-          onClose={() => setShowDealForm(false)}
-        />
-      )}
     </div>
   );
 }

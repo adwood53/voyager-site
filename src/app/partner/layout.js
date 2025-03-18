@@ -1,6 +1,8 @@
 // src/app/partner/layout.js - updated
 import { ClerkProvider } from '@clerk/nextjs';
 import { PartnerProvider } from '@/src/utils/partners';
+import './partner-theme.css';
+import './partner-layout.css';
 
 // Define metadata for the partner section
 export const metadata = {

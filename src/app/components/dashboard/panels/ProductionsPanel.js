@@ -4,9 +4,8 @@
 import { useState } from 'react';
 import { Card, CardBody, CardHeader, Button } from '@heroui/react';
 import { usePartner } from '@/src/utils/partners';
-import { CalculatorContainer } from '../calculator';
-import productionsSchema from '@/src/schemas/productions';
-import MeetingScheduler from '@/src/app/components/partner-calculator/MeetingScheduler';
+import CalculatorContainer from '@/src/app/components/dashboard/calculator/CalculatorContainer';
+import MeetingScheduler from '@/src/app/components/dashboard/meeting/MeetingScheduler';
 
 export default function ProductionsPanel() {
   const partner = usePartner();

@@ -16,24 +16,25 @@ export default function ScopeBuilderPanel() {
   // Handle calculator completion
   const handleCalculatorComplete = (data) => {
     setCalculationResults(data.results);
-    setShowRecommendations(true);
+    setShowRecommendations(
+      data.results.recommendations &&
+        data.results.recommendations.length > 0
+    );
     console.log('Scope builder results:', data.results);
   };
 
-  // Handle PDF export (separate function if needed)
-  const handleExportPDF = () => {
-    // PDF export logic will be handled by CalculatorContainer
-  };
+  // Handle PDF export - this is handled by the CalculatorContainer
 
   return (
     <div className="max-w-4xl mx-auto">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-800 mb-2">
-          Project Scope Builder
+          Voyager Scope Builder
         </h1>
         <p className="text-gray-600">
-          Configure your project scope and get recommendations for the
-          best immersive solutions
+          Find the Perfect Solution for Your Brand! Configure your
+          project scope and get recommendations for the best immersive
+          solutions.
         </p>
       </div>
 
@@ -63,9 +64,26 @@ export default function ScopeBuilderPanel() {
                             Tier {recommendation.tier}
                           </span>
                         </div>
+
+                        {recommendation.features &&
+                          recommendation.features.length > 0 && (
+                            <div className="mt-4">
+                              <h4 className="text-sm font-medium text-gray-700 mb-2">
+                                Features:
+                              </h4>
+                              <ul className="list-disc pl-5 text-sm text-gray-600">
+                                {recommendation.features.map(
+                                  (feature, i) => (
+                                    <li key={i}>{feature}</li>
+                                  )
+                                )}
+                              </ul>
+                            </div>
+                          )}
+
                         <Button
                           color="primary"
-                          className="w-full"
+                          className="w-full mt-4"
                           style={{
                             backgroundColor:
                               'var(--primary-color, #E79023)',
@@ -73,12 +91,10 @@ export default function ScopeBuilderPanel() {
                           onClick={() => {
                             // Navigate to appropriate calculator based on recommendation ID
                             const target = recommendation.id.includes(
-                              'merchandise'
+                              'ar-nfc'
                             )
                               ? '/partner/merchandise'
-                              : recommendation.id.includes(
-                                    'production'
-                                  )
+                              : recommendation.id.includes('event')
                                 ? '/partner/productions'
                                 : '/partner';
 

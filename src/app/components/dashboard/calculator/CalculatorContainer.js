@@ -1,6 +1,8 @@
+// src/app/components/dashboard/calculator/CalculatorContainer.js
+
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useUser, useOrganization } from '@clerk/nextjs';
 import {
   calculateResults,
@@ -16,16 +18,6 @@ import DealForm from './DealForm';
 
 /**
  * Main calculator container component with multi-step form handling
- *
- * @param {Object} props
- * @param {Object} props.schema - Calculator schema definition
- * @param {Function} props.onSubmit - Callback on form completion
- * @param {boolean} props.showPdfExport - Whether to show PDF export option
- * @param {boolean} props.showSubmitToCRM - Whether to show submit to CRM option
- * @param {string} props.calculatorType - Type of calculator
- * @param {Object} props.pricingStructure - Pricing structure config
- * @param {Object} props.partner - Partner info (optional, will use context if not provided)
- * @param {Function} props.onSubmitToCRM - Custom CRM submission handler
  */
 export default function CalculatorContainer({
   schema,
@@ -60,6 +52,23 @@ export default function CalculatorContainer({
     setAnswers(initializeAnswers(schema));
   }, [schema]);
 
+  // Get visible sections based on dependencies
+  const visibleSections = useMemo(() => {
+    if (!schema.sections) return [];
+
+    return schema.sections.filter((section) => {
+      if (!section.dependsOn) return true;
+
+      const { questionId, value } = section.dependsOn;
+
+      // If the dependent question doesn't have an answer, don't show this section
+      if (answers[questionId] === undefined) return false;
+
+      // Return true if the answer matches the required value
+      return answers[questionId] === value;
+    });
+  }, [schema.sections, answers]);
+
   // Update answer for a specific question
   const updateAnswer = (questionId, value) => {
     setAnswers((prev) => ({
@@ -73,27 +82,32 @@ export default function CalculatorContainer({
     );
   };
 
-  // Calculate total number of sections in schema
+  // Calculate total number of visible sections
   const getTotalSections = () => {
-    if (!schema.sections) return 1;
-    return schema.sections.length || 1;
+    return visibleSections.length || 1;
+  };
+
+  // Get the current section object
+  const getCurrentSection = () => {
+    if (!visibleSections.length) return null;
+    return visibleSections[currentSection];
   };
 
   // Move to the next section or calculate results
   const handleNextSection = () => {
+    const currentSectionObj = getCurrentSection();
+
     // Validate current section
-    const currentSectionId = schema.sections[currentSection].id;
-    const currentSectionQuestions =
-      schema.sections[currentSection].questions;
+    if (currentSectionObj && currentSectionObj.questions) {
+      const sectionValidation = validateAnswers(
+        { questions: currentSectionObj.questions },
+        answers
+      );
 
-    const sectionValidation = validateAnswers(
-      { questions: currentSectionQuestions },
-      answers
-    );
-
-    if (!sectionValidation.valid) {
-      setErrors(sectionValidation.errors);
-      return;
+      if (!sectionValidation.valid) {
+        setErrors(sectionValidation.errors);
+        return;
+      }
     }
 
     // If this is the last section, calculate results
@@ -128,11 +142,26 @@ export default function CalculatorContainer({
     setIsCalculating(true);
 
     try {
-      // Validate all answers
-      const validation = validateAnswers(schema, answers);
+      // Validate all answers across visible sections
+      let allValid = true;
+      let allErrors = [];
 
-      if (!validation.valid) {
-        setErrors(validation.errors);
+      visibleSections.forEach((section) => {
+        if (section.questions) {
+          const sectionValidation = validateAnswers(
+            { questions: section.questions },
+            answers
+          );
+
+          if (!sectionValidation.valid) {
+            allValid = false;
+            allErrors = [...allErrors, ...sectionValidation.errors];
+          }
+        }
+      });
+
+      if (!allValid) {
+        setErrors(allErrors);
         setIsCalculating(false);
         return;
       }
@@ -169,9 +198,9 @@ export default function CalculatorContainer({
 
       // If there are recommendations, show them first
       if (
+        schema.actions?.showRecommendations &&
         calculatedResults.recommendations &&
-        calculatedResults.recommendations.length > 0 &&
-        schema.actions?.showRecommendations
+        calculatedResults.recommendations.length > 0
       ) {
         setShowRecommendations(true);
       } else {
@@ -212,7 +241,7 @@ export default function CalculatorContainer({
         companyName:
           organization?.name || actualPartner?.name || 'Voyager',
         showPrice:
-          schema.showPrice !== false &&
+          schema.actions?.showPrice !== false &&
           actualPartner?.config?.features?.showPrice !== false,
         includeRecommendations: true,
         contactInfo: {
@@ -263,6 +292,9 @@ export default function CalculatorContainer({
     );
   };
 
+  // Get the current visible section
+  const currentSectionObj = getCurrentSection();
+
   return (
     <div className="calculator-container">
       {showResults ? (
@@ -288,7 +320,7 @@ export default function CalculatorContainer({
           <div className="calculator-progress">
             <div className="progress-text">
               Section {currentSection + 1} of {getTotalSections()}:{' '}
-              {schema.sections[currentSection].title}
+              {currentSectionObj?.title || 'Basic Information'}
             </div>
             <div className="progress-bar">
               <div
@@ -298,14 +330,14 @@ export default function CalculatorContainer({
             </div>
           </div>
 
-          {schema.sections && schema.sections[currentSection] && (
+          {currentSectionObj && (
             <>
               <h3 className="section-title">
-                {schema.sections[currentSection].title}
+                {currentSectionObj.title}
               </h3>
 
               <QuestionRenderer
-                schema={schema.sections[currentSection]}
+                schema={currentSectionObj}
                 answers={answers}
                 updateAnswer={updateAnswer}
                 errors={errors}

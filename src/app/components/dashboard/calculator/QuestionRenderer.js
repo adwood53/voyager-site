@@ -1,4 +1,4 @@
-// src/app/components/dashboard/calculators/QuestionRenderer.js
+// src/app/components/dashboard/calculator/QuestionRenderer.js
 
 'use client';
 
@@ -7,6 +7,7 @@ import TextQuestion from './questions/TextQuestion';
 import NumericQuestion from './questions/NumericQuestion';
 import SingleSelectQuestion from './questions/SingleSelectQuestion';
 import YesNoQuestion from './questions/YesNoQuestion';
+import MultiSelectQuestion from './questions/MultiSelectQuestion';
 
 export default function QuestionRenderer({
   schema,
@@ -23,6 +24,21 @@ export default function QuestionRenderer({
 
     // If dependent question doesn't have an answer yet, don't show this question
     if (answers[questionId] === undefined) return false;
+
+    // For multi-select dependencies
+    if (Array.isArray(answers[questionId]) && Array.isArray(value)) {
+      return value.some((v) => answers[questionId].includes(v));
+    } else if (
+      Array.isArray(answers[questionId]) &&
+      !Array.isArray(value)
+    ) {
+      return answers[questionId].includes(value);
+    } else if (
+      !Array.isArray(answers[questionId]) &&
+      Array.isArray(value)
+    ) {
+      return value.includes(answers[questionId]);
+    }
 
     // Return true if the dependent question's answer matches the required value
     return answers[questionId] === value;
@@ -71,6 +87,17 @@ export default function QuestionRenderer({
             key={question.id}
             question={question}
             value={answers[question.id]}
+            onChange={(value) => updateAnswer(question.id, value)}
+            errors={error}
+          />
+        );
+
+      case 'multi-select':
+        return (
+          <MultiSelectQuestion
+            key={question.id}
+            question={question}
+            value={answers[question.id] || []}
             onChange={(value) => updateAnswer(question.id, value)}
             errors={error}
           />

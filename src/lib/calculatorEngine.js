@@ -1,4 +1,4 @@
-// src/lib/calculatorEngine.js additions
+// src/lib/calculatorEngine.js
 
 /**
  * Initialize answers with default values from schema
@@ -44,12 +44,27 @@ export function validateAnswers(schema, answers) {
   }
 
   // Get all questions from sections or directly from questions array
-  const questions = schema.sections
-    ? schema.sections.flatMap((section) => section.questions || [])
-    : schema.questions || [];
+  const allQuestions = [];
+
+  if (schema.sections) {
+    schema.sections.forEach((section) => {
+      if (section.questions) {
+        // Check if the section should be shown based on dependencies
+        if (shouldShowSection(section, answers)) {
+          section.questions.forEach((question) => {
+            allQuestions.push({ ...question, sectionId: section.id });
+          });
+        }
+      }
+    });
+  } else if (schema.questions) {
+    schema.questions.forEach((question) => {
+      allQuestions.push({ ...question });
+    });
+  }
 
   // Check required questions
-  questions.forEach((question) => {
+  allQuestions.forEach((question) => {
     // Skip if question shouldn't be displayed based on dependencies
     if (question.dependsOn) {
       const { questionId, value } = question.dependsOn;
@@ -86,6 +101,21 @@ export function validateAnswers(schema, answers) {
 }
 
 /**
+ * Check if a section should be shown based on dependencies
+ *
+ * @param {Object} section - Section to check
+ * @param {Object} answers - User's answers
+ * @returns {boolean} - Whether section should be shown
+ */
+function shouldShowSection(section, answers) {
+  if (!section.dependsOn) return true;
+
+  const { sectionId, questionId, value } = section.dependsOn;
+
+  return answers[questionId] === value;
+}
+
+/**
  * Calculate results based on answers and schema
  *
  * @param {Object} schema - Calculator schema
@@ -106,6 +136,7 @@ export function calculateResults(schema, answers, options = {}) {
     summary: {
       tier: 1,
       type: schema.id || 'generic',
+      projectDetails: '',
     },
     recommendations: [],
   };
@@ -113,6 +144,14 @@ export function calculateResults(schema, answers, options = {}) {
   // Process sections
   if (schema.sections) {
     schema.sections.forEach((section) => {
+      // Skip sections that shouldn't be shown based on dependencies
+      if (section.dependsOn) {
+        const { sectionId, questionId, value } = section.dependsOn;
+        if (answers[questionId] !== value) {
+          return;
+        }
+      }
+
       if (section.questions) {
         // Process each question's effects
         section.questions.forEach((question) => {
@@ -159,7 +198,11 @@ export function calculateResults(schema, answers, options = {}) {
             // Process effect based on type
             switch (effect.type) {
               case 'add-feature':
-                results.features.push(effect.value);
+                if (Array.isArray(effect.value)) {
+                  results.features.push(...effect.value);
+                } else {
+                  results.features.push(effect.value);
+                }
                 break;
 
               case 'add-commission':
@@ -194,20 +237,43 @@ export function calculateResults(schema, answers, options = {}) {
               case 'set-tier':
                 results.summary.tier = effect.value;
                 break;
+
+              case 'set-project-details':
+                results.summary.projectDetails = effect.value;
+                break;
             }
           });
 
           // For single-select questions, also add effects from the selected option
-          if (question.type === 'single-select' && question.options) {
+          if (
+            (question.type === 'single-select' ||
+              question.type === 'radio') &&
+            question.options
+          ) {
             const selectedOption = question.options.find(
               (opt) => opt.id === value
             );
             if (selectedOption && selectedOption.effects) {
               // Process option effects
               selectedOption.effects.forEach((effect) => {
+                // Check conditions
+                if (effect.condition) {
+                  // Simple conditions
+                  if (
+                    effect.condition.answer !== undefined &&
+                    effect.condition.answer !== true
+                  ) {
+                    return;
+                  }
+                }
+
                 switch (effect.type) {
                   case 'add-feature':
-                    results.features.push(effect.value);
+                    if (Array.isArray(effect.value)) {
+                      results.features.push(...effect.value);
+                    } else {
+                      results.features.push(effect.value);
+                    }
                     break;
 
                   case 'add-commission':
@@ -224,9 +290,56 @@ export function calculateResults(schema, answers, options = {}) {
                     results.pricing.additionalCosts[name] =
                       effect.value;
                     break;
+
+                  case 'set-tier':
+                    results.summary.tier = effect.value;
+                    break;
                 }
               });
             }
+          }
+
+          // For multi-select questions, add effects from all selected options
+          if (
+            (question.type === 'multi-select' ||
+              question.type === 'checkbox') &&
+            question.options &&
+            Array.isArray(value)
+          ) {
+            value.forEach((optionId) => {
+              const selectedOption = question.options.find(
+                (opt) => opt.id === optionId
+              );
+              if (selectedOption && selectedOption.effects) {
+                // Process option effects
+                selectedOption.effects.forEach((effect) => {
+                  switch (effect.type) {
+                    case 'add-feature':
+                      if (Array.isArray(effect.value)) {
+                        results.features.push(...effect.value);
+                      } else {
+                        results.features.push(effect.value);
+                      }
+                      break;
+
+                    case 'add-commission':
+                      results.commissionItems.push(effect.value);
+                      break;
+
+                    case 'set-base-price':
+                      results.pricing.basePrice = effect.value;
+                      break;
+
+                    case 'add-price':
+                      const name =
+                        effect.name || `${selectedOption.label} Cost`;
+                      results.pricing.additionalCosts[name] =
+                        effect.value;
+                      break;
+                  }
+                });
+              }
+            });
           }
         });
       }
@@ -248,8 +361,14 @@ export function calculateResults(schema, answers, options = {}) {
           product.conditions.forEach((condition) => {
             const { questionId, value, weight = 1 } = condition;
 
-            // If user's answer matches condition, add to score
-            if (answers[questionId] === value) {
+            // For multi-select questions
+            if (Array.isArray(answers[questionId])) {
+              if (answers[questionId].includes(value)) {
+                score += weight;
+              }
+            }
+            // For single-select and other question types
+            else if (answers[questionId] === value) {
               score += weight;
             }
           });
@@ -279,6 +398,7 @@ export function calculateResults(schema, answers, options = {}) {
             description: product.description,
             tier,
             score,
+            features: product.features || [],
           });
         }
       });
@@ -288,6 +408,14 @@ export function calculateResults(schema, answers, options = {}) {
     }
   }
 
+  // Handle project details from answers if applicable
+  if (answers.projectDescription) {
+    results.summary.projectDetails = answers.projectDescription;
+  } else if (answers.additionalRequirements) {
+    results.summary.projectDetails +=
+      ' ' + answers.additionalRequirements;
+  }
+
   // Calculate total price
   const additionalCostsTotal = Object.values(
     results.pricing.additionalCosts
@@ -295,6 +423,33 @@ export function calculateResults(schema, answers, options = {}) {
 
   results.pricing.totalPrice =
     results.pricing.basePrice + additionalCostsTotal;
+
+  // Add any partner-specific pricing adjustments
+  if (
+    options.partner &&
+    options.partner.config &&
+    options.partner.config.pricing
+  ) {
+    const pricingConfig = options.partner.config.pricing;
+
+    // Apply pricing tiers based on schema tier
+    if (results.summary.tier === 1 && pricingConfig.tier1) {
+      results.pricing.tierPrice = pricingConfig.tier1;
+    } else if (results.summary.tier === 2 && pricingConfig.tier2) {
+      results.pricing.tierPrice = pricingConfig.tier2;
+    } else if (results.summary.tier === 3 && pricingConfig.tier3) {
+      results.pricing.tierPrice = pricingConfig.tier3;
+    }
+
+    // Apply referral commission if applicable
+    if (
+      options.partner.config.pricingType === 'referral' &&
+      pricingConfig.commissionRate
+    ) {
+      results.pricing.commission =
+        results.pricing.totalPrice * pricingConfig.commissionRate;
+    }
+  }
 
   return results;
 }

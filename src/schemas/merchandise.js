@@ -124,15 +124,6 @@ const merchandiseSchema = {
       title: 'Quantity',
       questions: [
         {
-          id: 'quantity',
-          type: 'numeric',
-          label: 'How many items do you need?',
-          min: 25,
-          max: 10000,
-          helpText: 'Minimum order is 25 items',
-          effects: [{ type: 'add-feature', value: 'Quantity' }],
-        },
-        {
           id: 'businessCardQuantity',
           type: 'numeric',
           label: 'Number of Business Cards',
@@ -144,8 +135,14 @@ const merchandiseSchema = {
           },
           effects: [
             {
+              type: 'add-feature',
+              value: 'Business Card Quantity',
+            },
+            {
               type: 'add-price',
               value: 1.5, // £1.50 per card
+              multiplier: 'businessCardQuantity',
+              name: 'Business Cards Cost',
             },
           ],
         },
@@ -161,8 +158,14 @@ const merchandiseSchema = {
           },
           effects: [
             {
+              type: 'add-feature',
+              value: 'Brochure Quantity',
+            },
+            {
               type: 'add-price',
               value: 0.75, // £0.75 per brochure
+              multiplier: 'brochureQuantity',
+              name: 'Brochures Cost',
             },
           ],
         },
@@ -178,8 +181,14 @@ const merchandiseSchema = {
           },
           effects: [
             {
+              type: 'add-feature',
+              value: 'Packaging Quantity',
+            },
+            {
               type: 'add-price',
               value: 1.25, // £1.25 per packaging unit
+              multiplier: 'packagingQuantity',
+              name: 'Packaging Cost',
             },
           ],
         },
@@ -195,8 +204,14 @@ const merchandiseSchema = {
           },
           effects: [
             {
+              type: 'add-feature',
+              value: 'Poster Quantity',
+            },
+            {
               type: 'add-price',
               value: 5, // £5 per poster
+              multiplier: 'posterQuantity',
+              name: 'Posters Cost',
             },
           ],
         },
@@ -212,8 +227,14 @@ const merchandiseSchema = {
           },
           effects: [
             {
+              type: 'add-feature',
+              value: 'Clothing Quantity',
+            },
+            {
               type: 'add-price',
               value: 10, // £10 per clothing item
+              multiplier: 'clothingQuantity',
+              name: 'Clothing Cost',
             },
           ],
         },

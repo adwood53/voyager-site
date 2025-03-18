@@ -1,7 +1,8 @@
 // src/schemas/scopeBuilder.js
 const scopeBuilderSchema = {
   id: 'scope-builder',
-  title: 'Project Scope Builder',
+  title: 'Voyager Scope Builder',
+  subtitle: 'Find the Perfect Solution for Your Brand!',
   purpose: 'recommendation',
   actions: {
     submitToCRM: false,
@@ -12,514 +13,513 @@ const scopeBuilderSchema = {
     'This calculator helps you determine the best immersive technology approach for your project needs.',
   sections: [
     {
-      id: 'project-basics',
-      title: 'Project Basics',
+      id: 'define-goals',
+      title: 'Step 1: Define Your Goals',
       questions: [
         {
-          id: 'projectGoal',
-          type: 'single-select',
-          label: 'What is the primary goal of your project?',
-          helpText:
-            'Select the most important outcome you want to achieve.',
+          id: 'nfcGoals',
+          type: 'multi-select',
+          label: '1️⃣ What do you want to achieve with NFC?',
+          helpText: 'Select all that apply',
           options: [
             {
-              id: 'marketing',
-              label: 'Marketing & Brand Awareness',
+              id: 'engagement',
+              label: 'Increase customer engagement',
               effects: [
                 {
                   type: 'add-feature',
-                  value: 'Marketing & Brand Awareness',
+                  value: 'Goal: Increase customer engagement',
                 },
               ],
             },
             {
-              id: 'sales',
-              label: 'Sales & Conversion',
-              effects: [
-                { type: 'add-feature', value: 'Sales & Conversion' },
-              ],
-            },
-            {
-              id: 'training',
-              label: 'Training & Education',
+              id: 'product-info',
+              label: 'Provide interactive product information',
               effects: [
                 {
                   type: 'add-feature',
-                  value: 'Training & Education',
+                  value:
+                    'Goal: Provide interactive product information',
                 },
               ],
             },
             {
-              id: 'entertainment',
-              label: 'Entertainment & Engagement',
+              id: 'enhance-experiences',
+              label: 'Enhance in-store or event experiences',
               effects: [
                 {
                   type: 'add-feature',
-                  value: 'Entertainment & Engagement',
+                  value:
+                    'Goal: Enhance in-store or event experiences',
+                },
+              ],
+            },
+            {
+              id: 'customer-loyalty',
+              label: 'Reward customer loyalty',
+              effects: [
+                {
+                  type: 'add-feature',
+                  value: 'Goal: Reward customer loyalty',
+                },
+              ],
+            },
+            {
+              id: 'generate-sales',
+              label: 'Generate more sales through promotions',
+              effects: [
+                {
+                  type: 'add-feature',
+                  value:
+                    'Goal: Generate more sales through promotions',
+                },
+              ],
+            },
+            {
+              id: 'other-goal',
+              label: 'Other (please specify)',
+              effects: [
+                {
+                  type: 'add-feature',
+                  value: 'Goal: Other (custom)',
                 },
               ],
             },
           ],
         },
         {
-          id: 'audience',
-          type: 'single-select',
-          label: 'Who is your target audience?',
-          helpText:
-            'Understanding your audience helps determine the most effective approach.',
-          options: [
-            {
-              id: 'consumers',
-              label: 'General Consumers',
-              effects: [
-                {
-                  type: 'add-feature',
-                  value: 'General Consumer Audience',
-                },
-              ],
-            },
-            {
-              id: 'businesses',
-              label: 'Business Clients',
-              effects: [
-                { type: 'add-feature', value: 'Business Audience' },
-              ],
-            },
-            {
-              id: 'employees',
-              label: 'Internal Employees',
-              effects: [
-                { type: 'add-feature', value: 'Employee Audience' },
-              ],
-            },
-            {
-              id: 'students',
-              label: 'Students/Learners',
-              effects: [
-                {
-                  type: 'add-feature',
-                  value: 'Student/Learner Audience',
-                },
-              ],
-            },
-          ],
-        },
-        {
-          id: 'budget',
-          type: 'single-select',
-          label: 'What is your approximate budget range?',
-          helpText:
-            'This helps us recommend solutions within your budget constraints.',
-          options: [
-            {
-              id: 'small',
-              label: '£1,000 - £5,000',
-              effects: [
-                {
-                  type: 'add-feature',
-                  value: 'Budget: £1,000 - £5,000',
-                },
-              ],
-            },
-            {
-              id: 'medium',
-              label: '£5,000 - £15,000',
-              effects: [
-                {
-                  type: 'add-feature',
-                  value: 'Budget: £5,000 - £15,000',
-                },
-              ],
-            },
-            {
-              id: 'large',
-              label: '£15,000 - £50,000',
-              effects: [
-                {
-                  type: 'add-feature',
-                  value: 'Budget: £15,000 - £50,000',
-                },
-              ],
-            },
-            {
-              id: 'enterprise',
-              label: '£50,000+',
-              effects: [
-                { type: 'add-feature', value: 'Budget: £50,000+' },
-              ],
-            },
-          ],
-        },
-      ],
-    },
-    {
-      id: 'technology-preferences',
-      title: 'Technology Preferences',
-      questions: [
-        {
-          id: 'preferredTech',
-          type: 'single-select',
-          label: 'Which technology are you most interested in?',
-          helpText:
-            "Select the technology you're most drawn to for your project.",
-          options: [
-            {
-              id: 'ar',
-              label: 'Augmented Reality (AR)',
-              effects: [
-                {
-                  type: 'add-feature',
-                  value: 'Technology Preference: AR',
-                },
-              ],
-            },
-            {
-              id: 'vr',
-              label: 'Virtual Reality (VR)',
-              effects: [
-                {
-                  type: 'add-feature',
-                  value: 'Technology Preference: VR',
-                },
-              ],
-            },
-            {
-              id: 'mr',
-              label: 'Mixed Reality (MR)',
-              effects: [
-                {
-                  type: 'add-feature',
-                  value: 'Technology Preference: MR',
-                },
-              ],
-            },
-            {
-              id: 'unsure',
-              label: 'Not Sure / Need Guidance',
-              effects: [
-                {
-                  type: 'add-feature',
-                  value: 'Technology Preference: Needs Guidance',
-                },
-              ],
-            },
-          ],
-        },
-        {
-          id: 'deviceTarget',
-          type: 'single-select',
-          label: 'Which devices should your experience target?',
-          helpText:
-            'Select the primary device type for your audience.',
-          options: [
-            {
-              id: 'mobile',
-              label: 'Mobile Phones/Tablets',
-              effects: [
-                {
-                  type: 'add-feature',
-                  value: 'Target Device: Mobile',
-                },
-              ],
-            },
-            {
-              id: 'headset',
-              label: 'VR Headsets',
-              effects: [
-                {
-                  type: 'add-feature',
-                  value: 'Target Device: VR Headset',
-                },
-              ],
-            },
-            {
-              id: 'desktop',
-              label: 'Desktop/Laptop',
-              effects: [
-                {
-                  type: 'add-feature',
-                  value: 'Target Device: Desktop',
-                },
-              ],
-            },
-            {
-              id: 'multi',
-              label: 'Multiple Platforms',
-              effects: [
-                {
-                  type: 'add-feature',
-                  value: 'Target Device: Multi-platform',
-                },
-              ],
-            },
-          ],
-        },
-        {
-          id: 'contentAvailability',
-          type: 'yes-no',
-          label: 'Do you already have 3D content or assets?',
+          id: 'targetAudience',
+          type: 'text',
+          multiline: true,
+          label: '2️⃣ Who is your target audience?',
+          helpText: 'Age, interests, customer behavior, etc.',
           effects: [
+            { type: 'add-feature', value: 'Target Audience Details' },
+          ],
+        },
+        {
+          id: 'interactionLocations',
+          type: 'multi-select',
+          label: '3️⃣ Where will customers interact with NFC?',
+          helpText: 'Select all that apply',
+          options: [
             {
-              type: 'add-feature',
-              value: 'Has Existing 3D Content',
-              condition: { answer: true },
+              id: 'in-store',
+              label: 'In-store',
+              effects: [
+                { type: 'add-feature', value: 'Location: In-store' },
+              ],
             },
             {
-              type: 'add-feature',
-              value: 'Needs 3D Content Creation',
-              condition: { answer: false },
+              id: 'event',
+              label: 'At an event',
+              effects: [
+                {
+                  type: 'add-feature',
+                  value: 'Location: At an event',
+                },
+              ],
             },
             {
-              type: 'add-commission',
-              value: '3D Content Creation',
-              condition: { answer: false },
+              id: 'packaging',
+              label: 'On product packaging',
+              effects: [
+                {
+                  type: 'add-feature',
+                  value: 'Location: On product packaging',
+                },
+              ],
+            },
+            {
+              id: 'marketing-materials',
+              label: 'On posters or marketing materials',
+              effects: [
+                {
+                  type: 'add-feature',
+                  value: 'Location: On marketing materials',
+                },
+              ],
+            },
+            {
+              id: 'digital-experience',
+              label: 'Online (linked to a digital experience)',
+              effects: [
+                {
+                  type: 'add-feature',
+                  value: 'Location: Online/digital',
+                },
+              ],
+            },
+            {
+              id: 'other-location',
+              label: 'Other (please specify)',
+              effects: [
+                {
+                  type: 'add-feature',
+                  value: 'Location: Other (custom)',
+                },
+              ],
             },
           ],
         },
       ],
     },
     {
-      id: 'project-requirements',
-      title: 'Project Requirements',
+      id: 'interactive-experience',
+      title: 'Step 2: Choose Your Interactive Experience',
       questions: [
         {
-          id: 'timeline',
-          type: 'single-select',
-          label: 'What is your project timeline?',
-          helpText: 'When do you need the project completed by?',
+          id: 'interactionType',
+          type: 'multi-select',
+          label: '4️⃣ What type of interaction do you want?',
+          helpText: 'Select all that apply',
           options: [
             {
-              id: 'urgent',
-              label: 'Urgent (< 1 month)',
+              id: 'storytelling',
+              label: 'Storytelling & Brand Engagement',
+              description:
+                'Customers tap to see behind-the-scenes videos, meet the makers, or access exclusive content.',
               effects: [
                 {
                   type: 'add-feature',
-                  value: 'Timeline: Urgent (< 1 month)',
+                  value:
+                    'Interaction: Storytelling & Brand Engagement',
+                },
+                { type: 'add-price', value: 200 },
+              ],
+            },
+            {
+              id: 'gamification',
+              label: 'Gamification & Fun',
+              description:
+                'Customers participate in interactive challenges, scavenger hunts, or spin-the-wheel promotions.',
+              effects: [
+                {
+                  type: 'add-feature',
+                  value: 'Interaction: Gamification & Fun',
+                },
+                { type: 'add-price', value: 300 },
+              ],
+            },
+            {
+              id: 'augmented-reality',
+              label: 'Augmented Reality (AR) or Virtual Try-On',
+              description:
+                'Let customers visualize products in 3D or "try on" items digitally.',
+              effects: [
+                {
+                  type: 'add-feature',
+                  value: 'Interaction: Augmented Reality (AR)',
+                },
+                { type: 'add-price', value: 500 },
+              ],
+            },
+            {
+              id: 'rewards-loyalty',
+              label: 'Instant Rewards & Loyalty',
+              description:
+                'Customers unlock points, special offers, or VIP content.',
+              effects: [
+                {
+                  type: 'add-feature',
+                  value: 'Interaction: Instant Rewards & Loyalty',
+                },
+                { type: 'add-price', value: 250 },
+              ],
+            },
+            {
+              id: 'live-events',
+              label: 'Live Event Enhancements',
+              description:
+                'Tap to access maps, schedules, exclusive event content, or networking opportunities.',
+              effects: [
+                {
+                  type: 'add-feature',
+                  value: 'Interaction: Live Event Enhancements',
+                },
+                { type: 'add-price', value: 350 },
+              ],
+            },
+            {
+              id: 'authentication',
+              label: 'Product Authentication & Verification',
+              description:
+                'NFC confirms product authenticity, ideal for luxury brands.',
+              effects: [
+                {
+                  type: 'add-feature',
+                  value: 'Interaction: Product Authentication',
+                },
+                { type: 'add-price', value: 400 },
+              ],
+            },
+            {
+              id: 'data-collection',
+              label: 'Data Collection & CRM Integration',
+              description:
+                'Use NFC to gather customer insights for future marketing.',
+              effects: [
+                {
+                  type: 'add-feature',
+                  value: 'Interaction: Data Collection & CRM',
+                },
+                { type: 'add-price', value: 450 },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+    {
+      id: 'content-integration',
+      title: 'Step 3: Content & Integration',
+      questions: [
+        {
+          id: 'contentType',
+          type: 'multi-select',
+          label:
+            '5️⃣ What kind of digital content do you want to have in the experience?',
+          options: [
+            {
+              id: 'videos',
+              label: 'Videos & multimedia',
+              effects: [
+                {
+                  type: 'add-feature',
+                  value: 'Content: Videos & multimedia',
                 },
               ],
             },
             {
-              id: 'standard',
-              label: 'Standard (1-3 months)',
+              id: 'interactive-websites',
+              label: 'Interactive websites',
               effects: [
                 {
                   type: 'add-feature',
-                  value: 'Timeline: Standard (1-3 months)',
+                  value: 'Content: Interactive websites',
                 },
               ],
             },
             {
-              id: 'flexible',
-              label: 'Flexible (3+ months)',
+              id: 'ar-features',
+              label: 'Augmented reality features',
               effects: [
                 {
                   type: 'add-feature',
-                  value: 'Timeline: Flexible (3+ months)',
+                  value: 'Content: AR features',
+                },
+              ],
+            },
+            {
+              id: 'promotions',
+              label: 'Exclusive discounts or promotions',
+              effects: [
+                {
+                  type: 'add-feature',
+                  value: 'Content: Discounts/promotions',
+                },
+              ],
+            },
+            {
+              id: 'social-media',
+              label: 'Social media links & sharing options',
+              effects: [
+                {
+                  type: 'add-feature',
+                  value: 'Content: Social media integration',
+                },
+              ],
+            },
+            {
+              id: 'contact-info',
+              label: 'Contact information or booking forms',
+              effects: [
+                {
+                  type: 'add-feature',
+                  value: 'Content: Contact/booking',
                 },
               ],
             },
           ],
         },
         {
-          id: 'interactivity',
+          id: 'systemIntegration',
           type: 'single-select',
-          label: 'What level of interactivity do you need?',
+          label:
+            '6️⃣ Do you need NFC to integrate with an existing system?',
           helpText:
-            'How much will users be able to interact with your experience?',
+            'e.g., loyalty programs, e-commerce, CRM software, event apps',
           options: [
             {
-              id: 'low',
-              label: 'Basic (Viewing/Simple Interactions)',
+              id: 'yes-integration',
+              label: 'Yes, we have a system in place',
               effects: [
                 {
                   type: 'add-feature',
-                  value: 'Interactivity: Basic',
+                  value: 'Needs system integration',
                 },
-              ],
-            },
-            {
-              id: 'medium',
-              label: 'Moderate (Multiple Interactive Elements)',
-              effects: [
-                {
-                  type: 'add-feature',
-                  value: 'Interactivity: Moderate',
-                },
-              ],
-            },
-            {
-              id: 'high',
-              label: 'Advanced (Complex Interactions/Gamification)',
-              effects: [
-                {
-                  type: 'add-feature',
-                  value: 'Interactivity: Advanced',
-                },
+                { type: 'add-price', value: 350 },
                 {
                   type: 'add-commission',
-                  value: 'Advanced Interactive Elements',
+                  value: 'System Integration',
+                },
+              ],
+            },
+            {
+              id: 'no-integration',
+              label: 'No, we need a standalone experience',
+              effects: [
+                {
+                  type: 'add-feature',
+                  value: 'Standalone experience',
                 },
               ],
             },
           ],
         },
         {
-          id: 'dataCollection',
-          type: 'yes-no',
-          label: 'Do you need to collect user data or analytics?',
-          effects: [
-            {
-              type: 'add-feature',
-              value: 'Requires Data Collection',
-              condition: { answer: true },
-            },
-            {
-              type: 'add-commission',
-              value: 'Analytics Integration',
-              condition: { answer: true },
-            },
-          ],
-        },
-      ],
-    },
-    {
-      id: 'distribution',
-      title: 'Distribution & Deployment',
-      questions: [
-        {
-          id: 'distribution',
-          type: 'single-select',
-          label: 'How do you plan to distribute your experience?',
-          helpText:
-            'Select the primary method for delivering your experience to users.',
+          id: 'customerAccess',
+          type: 'multi-select',
+          label: '7️⃣ How will customers access the experience?',
           options: [
             {
-              id: 'web',
-              label: 'Web-based (No Download Required)',
+              id: 'nfc-product',
+              label: 'Tap an NFC-enabled product',
               effects: [
                 {
                   type: 'add-feature',
-                  value: 'Distribution: Web-based',
+                  value: 'Access: NFC-enabled product',
                 },
               ],
             },
             {
-              id: 'app',
-              label: 'Dedicated App (App Store/Play Store)',
+              id: 'nfc-poster',
+              label: 'Scan an NFC-powered poster or display',
               effects: [
                 {
                   type: 'add-feature',
-                  value: 'Distribution: Dedicated App',
+                  value: 'Access: NFC-powered poster/display',
                 },
               ],
             },
             {
-              id: 'kiosk',
-              label: 'On-site Kiosk/Installation',
+              id: 'nfc-badge',
+              label: 'Use NFC-enabled event badges or wristbands',
               effects: [
                 {
                   type: 'add-feature',
-                  value: 'Distribution: On-site Kiosk',
+                  value: 'Access: NFC-enabled badges/wristbands',
                 },
               ],
-            },
-            {
-              id: 'unsure',
-              label: 'Not Sure / Need Recommendations',
-              effects: [
-                {
-                  type: 'add-feature',
-                  value: 'Distribution: Needs Guidance',
-                },
-              ],
-            },
-          ],
-        },
-        {
-          id: 'physicalElements',
-          type: 'yes-no',
-          label:
-            'Do you need physical elements (e.g., QR codes, NFC tags)?',
-          effects: [
-            {
-              type: 'add-feature',
-              value: 'Requires Physical Elements',
-              condition: { answer: true },
-            },
-            {
-              type: 'add-commission',
-              value: 'Physical Elements Production',
-              condition: { answer: true },
-            },
-          ],
-        },
-        {
-          id: 'eventBased',
-          type: 'yes-no',
-          label: 'Is this for a specific event or ongoing use?',
-          helpText:
-            'Yes = Specific event, No = Ongoing/long-term use',
-          effects: [
-            {
-              type: 'add-feature',
-              value: 'For Specific Event',
-              condition: { answer: true },
-            },
-            {
-              type: 'add-feature',
-              value: 'For Ongoing Use',
-              condition: { answer: false },
             },
           ],
         },
       ],
     },
     {
-      id: 'additional-info',
-      title: 'Additional Information',
+      id: 'budget-complexity',
+      title: 'Step 4: Budget & Complexity',
       questions: [
         {
-          id: 'projectDescription',
-          type: 'text',
-          multiline: true,
-          rows: 4,
-          label: 'Please describe your project in more detail',
+          id: 'experienceLevel',
+          type: 'single-select',
+          label:
+            '8️⃣ How interactive or immersive do you want the experience to be?',
+          options: [
+            {
+              id: 'basic',
+              label: '💡 Basic (Tier 1)',
+              description:
+                'Simple website or video link, static NFC content, custom branding.',
+              effects: [
+                {
+                  type: 'add-feature',
+                  value: 'Experience Level: Basic (Tier 1)',
+                },
+                { type: 'set-tier', value: 1 },
+              ],
+            },
+            {
+              id: 'mid-level',
+              label: '⚡ Mid-Level (Tier 2)',
+              description: 'Gamification, interactive content.',
+              effects: [
+                {
+                  type: 'add-feature',
+                  value: 'Experience Level: Mid-Level (Tier 2)',
+                },
+                { type: 'set-tier', value: 2 },
+              ],
+            },
+            {
+              id: 'premium',
+              label: '🚀 Premium (Tier 3)',
+              description:
+                'Full AR/VR integration, advanced analytics, CRM connections.',
+              effects: [
+                {
+                  type: 'add-feature',
+                  value: 'Experience Level: Premium (Tier 3)',
+                },
+                { type: 'set-tier', value: 3 },
+              ],
+            },
+          ],
+        },
+        {
+          id: 'nfcQuantity',
+          type: 'numeric',
+          label: '9️⃣ How many NFC-enabled items do you need?',
           helpText:
-            'Include any specific requirements or ideas you have.',
-          placeholder: 'Enter your project description here...',
-          effects: [
-            {
-              type: 'add-feature',
-              value: 'Has Detailed Project Description',
-            },
-          ],
+            'E.g., number of products, posters, event passes, etc.',
+          min: 1,
+          max: 10000,
+          effects: [{ type: 'add-feature', value: 'NFC Quantity' }],
         },
         {
-          id: 'previousExperience',
+          id: 'ongoingSupport',
           type: 'yes-no',
-          label: 'Have you created AR/VR experiences before?',
-          effects: [
+          label:
+            '🔟 Do you need ongoing support and analytics tracking?',
+          options: [
             {
-              type: 'add-feature',
-              value: 'Has Previous AR/VR Experience',
-              condition: { answer: true },
+              id: 'yes-support',
+              label: 'Yes, I want insights on user interactions',
+              effects: [
+                {
+                  type: 'add-feature',
+                  value: 'Needs ongoing support & analytics',
+                  condition: { answer: true },
+                },
+                {
+                  type: 'add-price',
+                  value: 250,
+                  condition: { answer: true },
+                },
+              ],
             },
             {
-              type: 'add-feature',
-              value: 'New to AR/VR',
-              condition: { answer: false },
+              id: 'no-support',
+              label: 'No, I just need the initial setup',
+              effects: [
+                {
+                  type: 'add-feature',
+                  value: 'No ongoing support needed',
+                  condition: { answer: false },
+                },
+              ],
             },
           ],
         },
         {
-          id: 'additionalRequests',
+          id: 'additionalInfo',
           type: 'text',
           multiline: true,
-          rows: 3,
-          label: 'Any other requirements or questions?',
+          label: 'Any additional information or requirements?',
           required: false,
-          placeholder: 'Optional: Any other details or questions...',
-          effects: [],
+          effects: [
+            { type: 'add-feature', value: 'Additional Information' },
+          ],
         },
       ],
     },
@@ -528,124 +528,171 @@ const scopeBuilderSchema = {
     logic: 'score-based',
     products: [
       {
-        id: 'ar-experience',
-        name: 'AR Marketing Experience',
+        id: 'basic-nfc-package',
+        name: 'Basic NFC Engagement Package',
         description:
-          'An augmented reality experience designed to boost brand awareness and engagement through interactive elements overlaid on the real world.',
+          'An entry-level NFC solution with custom branding, simple tap-to-view content, and essential tracking.',
         conditions: [
           {
-            questionId: 'projectGoal',
-            value: 'marketing',
+            questionId: 'experienceLevel',
+            value: 'basic',
+            weight: 3,
+          },
+          {
+            questionId: 'interactionType',
+            value: 'storytelling',
+            weight: 1,
+          },
+          { questionId: 'nfcGoals', value: 'engagement', weight: 1 },
+        ],
+        minScore: 3,
+        tierMapping: {
+          threshold1: { score: 3, tier: 1 },
+          threshold2: { score: 5, tier: 1 },
+        },
+        features: [
+          'Custom-branded NFC tags',
+          'Simple website landing page',
+          'Basic analytics dashboard',
+          'Content hosting for 12 months',
+        ],
+      },
+      {
+        id: 'interactive-nfc-package',
+        name: 'Interactive NFC Experience',
+        description:
+          'A mid-level solution featuring gamification elements, interactive content, and data capture capabilities.',
+        conditions: [
+          {
+            questionId: 'experienceLevel',
+            value: 'mid-level',
+            weight: 3,
+          },
+          {
+            questionId: 'interactionType',
+            value: 'gamification',
             weight: 2,
           },
-          { questionId: 'preferredTech', value: 'ar', weight: 3 },
-          { questionId: 'audience', value: 'consumers', weight: 1 },
-          { questionId: 'deviceTarget', value: 'mobile', weight: 2 },
+          { questionId: 'ongoingSupport', value: true, weight: 1 },
         ],
         minScore: 3,
         tierMapping: {
-          threshold1: { score: 3, tier: 1 },
-          threshold2: { score: 5, tier: 2 },
-          threshold3: { score: 7, tier: 3 },
-        },
-      },
-      {
-        id: 'vr-experience',
-        name: 'VR Immersive Experience',
-        description:
-          'A fully immersive virtual reality environment that creates memorable experiences for users, ideal for events, training, or deep engagement.',
-        conditions: [
-          { questionId: 'preferredTech', value: 'vr', weight: 3 },
-          { questionId: 'deviceTarget', value: 'headset', weight: 2 },
-          { questionId: 'interactivity', value: 'high', weight: 1 },
-          {
-            questionId: 'projectGoal',
-            value: 'entertainment',
-            weight: 1,
-          },
-        ],
-        minScore: 3,
-        tierMapping: {
-          threshold1: { score: 3, tier: 1 },
-          threshold2: { score: 5, tier: 2 },
-          threshold3: { score: 6, tier: 3 },
-        },
-      },
-      {
-        id: 'web-ar',
-        name: 'Web-Based AR Solution',
-        description:
-          'A lightweight, accessible AR experience delivered through web browsers with no app download required, perfect for wide distribution.',
-        conditions: [
-          { questionId: 'distribution', value: 'web', weight: 3 },
-          { questionId: 'preferredTech', value: 'ar', weight: 2 },
-          { questionId: 'timeline', value: 'urgent', weight: 1 },
-          { questionId: 'budget', value: 'small', weight: 1 },
-        ],
-        minScore: 3,
-        tierMapping: {
-          threshold1: { score: 3, tier: 1 },
-          threshold2: { score: 5, tier: 2 },
-          threshold3: { score: 6, tier: 3 },
-        },
-      },
-      {
-        id: 'interactive-ar',
-        name: 'Interactive AR Product Visualization',
-        description:
-          'An augmented reality solution that allows customers to visualize and interact with products in their own environment before purchasing.',
-        conditions: [
-          { questionId: 'projectGoal', value: 'sales', weight: 3 },
-          { questionId: 'preferredTech', value: 'ar', weight: 2 },
-          { questionId: 'interactivity', value: 'medium', weight: 1 },
-          { questionId: 'deviceTarget', value: 'mobile', weight: 1 },
-        ],
-        minScore: 3,
-        tierMapping: {
-          threshold1: { score: 3, tier: 1 },
-          threshold2: { score: 5, tier: 2 },
-          threshold3: { score: 6, tier: 3 },
-        },
-      },
-      {
-        id: 'vr-training',
-        name: 'VR Training Simulation',
-        description:
-          'A virtual reality training environment that allows employees to practice skills in a safe, controlled, and immersive setting.',
-        conditions: [
-          { questionId: 'projectGoal', value: 'training', weight: 3 },
-          { questionId: 'preferredTech', value: 'vr', weight: 2 },
-          { questionId: 'audience', value: 'employees', weight: 2 },
-          { questionId: 'interactivity', value: 'high', weight: 1 },
-        ],
-        minScore: 3,
-        tierMapping: {
-          threshold1: { score: 3, tier: 1 },
+          threshold1: { score: 3, tier: 2 },
           threshold2: { score: 6, tier: 2 },
-          threshold3: { score: 7, tier: 3 },
         },
+        features: [
+          'Interactive gamification elements',
+          'Customer data capture',
+          'Detailed analytics reporting',
+          'Content management system',
+          'Monthly performance reports',
+        ],
       },
       {
-        id: 'event-experience',
-        name: 'Event-Based Immersive Experience',
+        id: 'premium-ar-nfc-package',
+        name: 'Premium AR-NFC Solution',
         description:
-          'A custom AR/VR solution designed specifically for events, exhibitions, or trade shows to create memorable brand interactions.',
+          'Our highest-tier offering with augmented reality experiences, CRM integration, and comprehensive analytics.',
         conditions: [
-          { questionId: 'eventBased', value: true, weight: 3 },
-          { questionId: 'physicalElements', value: true, weight: 2 },
           {
-            questionId: 'projectGoal',
-            value: 'marketing',
+            questionId: 'experienceLevel',
+            value: 'premium',
+            weight: 3,
+          },
+          {
+            questionId: 'interactionType',
+            value: 'augmented-reality',
+            weight: 2,
+          },
+          {
+            questionId: 'systemIntegration',
+            value: 'yes-integration',
             weight: 1,
           },
-          { questionId: 'audience', value: 'consumers', weight: 1 },
         ],
         minScore: 3,
         tierMapping: {
-          threshold1: { score: 3, tier: 1 },
-          threshold2: { score: 5, tier: 2 },
-          threshold3: { score: 7, tier: 3 },
+          threshold1: { score: 3, tier: 3 },
+          threshold2: { score: 6, tier: 3 },
         },
+        features: [
+          'Full AR integration',
+          'Custom 3D models and animations',
+          'CRM data integration',
+          'Advanced user journey analytics',
+          'Dedicated support team',
+          'Quarterly strategy reviews',
+        ],
+      },
+      {
+        id: 'event-package',
+        name: 'NFC Event Experience Package',
+        description:
+          'A specialized solution for events with NFC badges, check-ins, and real-time engagement features.',
+        conditions: [
+          {
+            questionId: 'interactionType',
+            value: 'live-events',
+            weight: 3,
+          },
+          {
+            questionId: 'customerAccess',
+            value: 'nfc-badge',
+            weight: 2,
+          },
+          {
+            questionId: 'interactionLocations',
+            value: 'event',
+            weight: 1,
+          },
+        ],
+        minScore: 3,
+        tierMapping: {
+          threshold1: { score: 3, tier: 2 },
+          threshold2: { score: 6, tier: 3 },
+        },
+        features: [
+          'NFC-enabled event badges or wristbands',
+          'Check-in/registration system',
+          'Exclusive content unlocks',
+          'Networking features',
+          'Post-event analytics',
+        ],
+      },
+      {
+        id: 'loyalty-package',
+        name: 'NFC Loyalty & Rewards System',
+        description:
+          'A dedicated solution for brands looking to enhance customer loyalty through NFC interactions.',
+        conditions: [
+          {
+            questionId: 'interactionType',
+            value: 'rewards-loyalty',
+            weight: 3,
+          },
+          {
+            questionId: 'nfcGoals',
+            value: 'customer-loyalty',
+            weight: 2,
+          },
+          {
+            questionId: 'nfcGoals',
+            value: 'generate-sales',
+            weight: 1,
+          },
+        ],
+        minScore: 3,
+        tierMapping: {
+          threshold1: { score: 3, tier: 2 },
+          threshold2: { score: 6, tier: 3 },
+        },
+        features: [
+          'Points accrual system',
+          'Reward redemption platform',
+          'Customer profile portal',
+          'Marketing automation triggers',
+          'Customizable loyalty tiers',
+        ],
       },
     ],
   },
