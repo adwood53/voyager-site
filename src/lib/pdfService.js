@@ -1,221 +1,186 @@
-'use client';
 // src/lib/pdfService.js
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
 
 /**
- * Generate and save PDF from calculator results
- *
- * @param {Object} results - Results from calculator
+ * Generates a comprehensive PDF from calculator results
+ * @param {Object} results - Full calculator results object
  * @param {Object} options - PDF generation options
- * @param {string} filename - Filename for saved PDF
- * @returns {boolean} Success status
+ * @param {string} filename - Output filename
+ * @returns {boolean} - Success status of PDF generation
  */
 export function generateAndSavePDF(
   results,
   options = {},
-  filename = 'voyager-calculator-results.pdf'
+  filename = 'voyager-configuration.pdf'
 ) {
   try {
-    const doc = new jsPDF();
+    const doc = new jsPDF('p', 'mm', 'a4');
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
+    let currentY = 20;
 
-    // Add logo if available
-    try {
-      doc.addImage('/Voyager-Box-Logo.png', 'PNG', 10, 10, 30, 30);
-    } catch (err) {
-      console.warn('Could not add logo image:', err);
-    }
+    // Helper function to add section headers
+    const addSectionHeader = (text) => {
+      doc.setFontSize(16);
+      doc.setTextColor(231, 144, 35); // Primary color
+      doc.text(text, pageWidth / 2, currentY, { align: 'center' });
+      currentY += 10;
+    };
 
-    // Add title
+    // Helper function to add text rows
+    const addTextRow = (label, value) => {
+      doc.setFontSize(10);
+      doc.setTextColor(50, 50, 50);
+      doc.text(`${label}:`, 20, currentY);
+      doc.text(String(value), 80, currentY);
+      currentY += 7;
+    };
+
+    // Document Title
     doc.setFontSize(22);
-    doc.setTextColor(231, 144, 35); // Primary color
-    doc.text(options.title || 'Voyager Calculator Results', 105, 20, {
-      align: 'center',
-    });
-
-    // Add subtitle
-    doc.setFontSize(16);
-    doc.setTextColor(50, 50, 50);
-    doc.text(options.subtitle || 'Configuration Summary', 105, 30, {
-      align: 'center',
-    });
-
-    // Add company info
-    doc.setFontSize(12);
+    doc.setTextColor(231, 144, 35);
     doc.text(
-      `Prepared for: ${options.companyName || 'Your Business'}`,
-      20,
-      50
+      options.title || 'Voyager Configuration',
+      pageWidth / 2,
+      15,
+      { align: 'center' }
     );
-    doc.text(`Date: ${new Date().toLocaleDateString()}`, 20, 58);
 
-    // Add features section
-    if (results.features && results.features.length > 0) {
-      doc.setFontSize(14);
-      doc.setTextColor(231, 144, 35); // Primary color
-      doc.text('Selected Features', 20, 75);
+    // Subtitle
+    doc.setFontSize(12);
+    doc.setTextColor(100, 100, 100);
+    doc.text(
+      `Generated: ${new Date().toLocaleDateString()}`,
+      pageWidth / 2,
+      25,
+      { align: 'center' }
+    );
 
-      // Create table data
-      const featuresData = results.features.map((feature) => {
-        if (Array.isArray(feature)) {
-          return [feature[0], feature[1]];
-        } else if (typeof feature === 'object') {
-          return [feature.name || 'Feature', feature.value || 'Yes'];
+    // Configuration Summary
+    if (results.summary) {
+      addSectionHeader('Configuration Summary');
+      Object.entries(results.summary).forEach(([key, value]) => {
+        if (value && typeof value !== 'object') {
+          addTextRow(
+            key
+              .replace(/_/g, ' ')
+              .replace(/\b\w/g, (l) => l.toUpperCase()),
+            value
+          );
         }
-        return [feature, ''];
       });
-
-      doc.autoTable({
-        startY: 80,
-        head: [['Feature', 'Value']],
-        body: featuresData,
-        theme: 'grid',
-        headStyles: {
-          fillColor: [231, 144, 35],
-          textColor: [255, 255, 255],
-        },
-        alternateRowStyles: { fillColor: [245, 245, 245] },
-      });
+      currentY += 10;
     }
 
-    // Add commission items if available
-    if (
-      results.commissionItems &&
-      results.commissionItems.length > 0
-    ) {
-      const tableEndY = doc.lastAutoTable
-        ? doc.lastAutoTable.finalY + 15
-        : 120;
-
-      doc.setFontSize(14);
-      doc.setTextColor(231, 144, 35); // Primary color
-      doc.text('Additional Items', 20, tableEndY);
-
-      const commissionData = results.commissionItems.map((item) => {
-        if (typeof item === 'object') {
-          return [item.name || item.description || 'Item'];
+    // Features
+    if (results.features && results.features.length) {
+      addSectionHeader('Selected Features');
+      results.features.forEach((feature) => {
+        if (typeof feature === 'object') {
+          Object.entries(feature).forEach(([key, value]) => {
+            addTextRow(key, value);
+          });
+        } else {
+          addTextRow('Feature', feature);
         }
-        return [item];
       });
-
-      doc.autoTable({
-        startY: tableEndY + 5,
-        head: [['Item']],
-        body: commissionData,
-        theme: 'grid',
-        headStyles: {
-          fillColor: [231, 144, 35],
-          textColor: [255, 255, 255],
-        },
-        alternateRowStyles: { fillColor: [245, 245, 245] },
-      });
+      currentY += 10;
     }
 
-    // Add pricing information if allowed
-    if (options.showPrice !== false) {
-      const tableEndY = doc.lastAutoTable
-        ? doc.lastAutoTable.finalY + 15
-        : 160;
+    // Pricing Details
+    if (results.pricing) {
+      addSectionHeader('Pricing Breakdown');
 
-      doc.setFontSize(14);
-      doc.setTextColor(231, 144, 35); // Primary color
-      doc.text('Pricing Details', 20, tableEndY);
+      // Base Price
+      if (results.pricing.basePrice) {
+        addTextRow(
+          'Base Price',
+          `£${results.pricing.basePrice.toFixed(2)}`
+        );
+      }
 
-      const pricingData = [
-        ['Base Price', `£${results.pricing.basePrice.toFixed(2)}`],
-      ];
-
-      // Add additional costs
+      // Additional Costs
       if (results.pricing.additionalCosts) {
         Object.entries(results.pricing.additionalCosts).forEach(
-          ([name, cost]) => {
-            pricingData.push([name, `£${cost.toFixed(2)}`]);
+          ([key, value]) => {
+            addTextRow(key, `£${value.toFixed(2)}`);
           }
         );
       }
 
-      // Add total
-      pricingData.push([
-        'Total',
-        `£${results.pricing.totalPrice.toFixed(2)}`,
-      ]);
+      // Total Price
+      if (results.pricing.totalPrice) {
+        doc.setFontSize(12);
+        doc.setTextColor(231, 144, 35);
+        addTextRow(
+          'Total Price',
+          `£${results.pricing.totalPrice.toFixed(2)}`
+        );
+      }
+      currentY += 10;
+    }
 
-      doc.autoTable({
-        startY: tableEndY + 5,
-        body: pricingData,
-        theme: 'grid',
-        alternateRowStyles: { fillColor: [245, 245, 245] },
-        bodyStyles: {
-          fontSize: 10,
-          textColor: [80, 80, 80],
-        },
-        styles: {
-          cellPadding: 5,
-        },
-        columnStyles: {
-          0: { fontStyle: 'bold' },
-          1: { halign: 'right' },
-        },
-        didDrawCell: function (data) {
-          // Make the total row bold
-          if (data.row.index === pricingData.length - 1) {
-            doc.setFont(undefined, 'bold');
-            doc.setTextColor(231, 144, 35);
-          }
-        },
+    // Commission Items
+    if (results.commissionItems && results.commissionItems.length) {
+      addSectionHeader('Commissioned Items');
+      results.commissionItems.forEach((item) => {
+        addTextRow('Item', item);
+      });
+      currentY += 10;
+    }
+
+    // Recommendations
+    if (results.recommendations && results.recommendations.length) {
+      addSectionHeader('Recommended Solutions');
+      results.recommendations.forEach((rec) => {
+        addTextRow('Solution', rec.title);
+        addTextRow('Description', rec.description);
+
+        if (rec.features) {
+          rec.features.forEach((feature, index) => {
+            addTextRow(`Feature ${index + 1}`, feature);
+          });
+        }
+        currentY += 5;
       });
     }
 
-    // Add footer
+    // Footer
     doc.setFontSize(10);
-    doc.setTextColor(100, 100, 100);
-    const footerText = `For more information contact: ${options.contactInfo?.email || 'connect@voyagervrlab.co.uk'}`;
-    doc.text(footerText, 105, 280, { align: 'center' });
+    doc.setTextColor(150);
     doc.text(
-      `Phone: ${options.contactInfo?.phone || '+44 7470 361585'}`,
-      105,
-      285,
-      { align: 'center' }
-    );
-    doc.text(
-      `Website: ${options.contactInfo?.website || 'voyagervrlab.co.uk'}`,
-      105,
-      290,
+      'Generated by Voyager Immersive',
+      pageWidth / 2,
+      pageHeight - 10,
       { align: 'center' }
     );
 
-    // Save the PDF
+    // Save the document
     doc.save(filename);
     return true;
   } catch (error) {
-    console.error('Error generating PDF:', error);
-    alert(
-      'Could not generate PDF. Please try again or contact support.'
-    );
+    console.error('PDF Generation Error:', error);
     return false;
   }
 }
 
 /**
- * Generate a PDF buffer without saving
- * Useful for preview or server-side generation
- *
- * @param {Object} results - Results from calculator
+ * Generates a PDF buffer for server-side or preview use
+ * @param {Object} results - Full calculator results object
  * @param {Object} options - PDF generation options
- * @returns {ArrayBuffer|null} PDF data as buffer or null on error
+ * @returns {ArrayBuffer|null} PDF buffer or null if generation fails
  */
 export function generatePDFBuffer(results, options = {}) {
   try {
     const doc = new jsPDF();
 
-    // Configuration is the same as generateAndSavePDF
-    // Just return the buffer instead of saving
-
-    // Logic would be identical to above, just without the doc.save() call
+    // Call existing generation method with buffer output
+    generateAndSavePDF(results, options);
 
     return doc.output('arraybuffer');
   } catch (error) {
-    console.error('Error generating PDF buffer:', error);
+    console.error('PDF Buffer Generation Error:', error);
     return null;
   }
 }

@@ -122,7 +122,7 @@ export default function MeetingScheduler({
             Studio Time Reserved!
           </h3>
           <p className="text-textLight opacity-80 mb-6">
-            Your studio time has been scheduled. You'll receive a
+            Your studio time has been scheduled. You&apos;ll receive a
             confirmation email shortly with all the details.
           </p>
           {onComplete && (

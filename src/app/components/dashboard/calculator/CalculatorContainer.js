@@ -62,6 +62,33 @@ export default function CalculatorContainer({
     });
   }, [schema.sections, answers]);
 
+  const handleExportPDF = () => {
+    if (!results) {
+      console.error('No results available for PDF export');
+      return;
+    }
+
+    try {
+      const success = generateAndSavePDF(
+        results,
+        {
+          title: schema.title || 'Voyager Calculator Results',
+          subtitle: calculatorType,
+          companyName:
+            organization?.name || partner?.name || 'Voyager',
+        },
+        `voyager-${calculatorType}-results.pdf`
+      );
+
+      if (!success) {
+        alert('Failed to generate PDF. Please try again.');
+      }
+    } catch (error) {
+      console.error('PDF Export Error:', error);
+      alert(`PDF Export Failed: ${error.message}`);
+    }
+  };
+
   // Update answer for a specific question
   const updateAnswer = (questionId, value) => {
     setAnswers((prev) => ({
@@ -249,31 +276,6 @@ export default function CalculatorContainer({
     } finally {
       setIsCalculating(false);
     }
-  };
-
-  // Export results as PDF
-  const handleExportPDF = () => {
-    if (!results) return;
-
-    generateAndSavePDF(
-      results,
-      {
-        title: schema.title || 'Voyager Calculator Results',
-        subtitle: calculatorType,
-        companyName:
-          organization?.name || actualPartner?.name || 'Voyager',
-        showPrice:
-          schema.actions?.showPrice !== false &&
-          actualPartner?.config?.features?.showPrice !== false,
-        includeRecommendations: true,
-        contactInfo: {
-          email: 'connect@voyagervrlab.co.uk',
-          phone: '+44 7470 361585',
-          website: 'voyagervrlab.co.uk',
-        },
-      },
-      `voyager-${calculatorType}-results.pdf`
-    );
   };
 
   // Submit results to HubSpot

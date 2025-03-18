@@ -151,7 +151,7 @@ export default function ScopeBuilderPanel() {
             most appropriate approach.
           </p>
           <p className="text-gray-600">
-            After completing the questionnaire, you'll receive
+            After completing the questionnaire, you&apos;ll receive
             tailored recommendations based on your answers, along with
             the option to explore our other calculators for specific
             solutions.
