@@ -110,7 +110,12 @@ export function validateAnswers(schema, answers) {
 function shouldShowSection(section, answers) {
   if (!section.dependsOn) return true;
 
-  const { sectionId, questionId, value } = section.dependsOn;
+  const { questionId, value } = section.dependsOn;
+
+  // Check for array values in multi-select questions
+  if (Array.isArray(answers[questionId])) {
+    return answers[questionId].includes(value);
+  }
 
   return answers[questionId] === value;
 }
@@ -137,16 +142,20 @@ export function calculateResults(schema, answers, options = {}) {
       tier: 1,
       type: schema.id || 'generic',
       projectDetails: '',
+      pricingStructure: answers.pricingType || 'partner', // Default to partner pricing
     },
     recommendations: [],
   };
+
+  // Add the pricingStructure to options for effect conditions
+  options.pricingStructure = answers.pricingType;
 
   // Process sections
   if (schema.sections) {
     schema.sections.forEach((section) => {
       // Skip sections that shouldn't be shown based on dependencies
       if (section.dependsOn) {
-        const { sectionId, questionId, value } = section.dependsOn;
+        const { questionId, value } = section.dependsOn;
         if (answers[questionId] !== value) {
           return;
         }
@@ -174,6 +183,15 @@ export function calculateResults(schema, answers, options = {}) {
               if (
                 effect.condition.answer !== undefined &&
                 effect.condition.answer !== value
+              ) {
+                return;
+              }
+
+              // Pricing structure condition
+              if (
+                effect.condition.pricingStructure !== undefined &&
+                effect.condition.pricingStructure !==
+                  options.pricingStructure
               ) {
                 return;
               }
@@ -239,7 +257,12 @@ export function calculateResults(schema, answers, options = {}) {
                 break;
 
               case 'set-project-details':
-                results.summary.projectDetails = effect.value;
+                results.summary.projectDetails =
+                  answers[effect.value] || '';
+                break;
+
+              case 'set-pricing-structure':
+                results.summary.pricingStructure = effect.value;
                 break;
             }
           });
@@ -258,6 +281,15 @@ export function calculateResults(schema, answers, options = {}) {
               selectedOption.effects.forEach((effect) => {
                 // Check conditions
                 if (effect.condition) {
+                  // Pricing structure condition
+                  if (
+                    effect.condition.pricingStructure !== undefined &&
+                    effect.condition.pricingStructure !==
+                      options.pricingStructure
+                  ) {
+                    return;
+                  }
+
                   // Simple conditions
                   if (
                     effect.condition.answer !== undefined &&
@@ -294,6 +326,10 @@ export function calculateResults(schema, answers, options = {}) {
                   case 'set-tier':
                     results.summary.tier = effect.value;
                     break;
+
+                  case 'set-pricing-structure':
+                    results.summary.pricingStructure = effect.value;
+                    break;
                 }
               });
             }
@@ -313,6 +349,19 @@ export function calculateResults(schema, answers, options = {}) {
               if (selectedOption && selectedOption.effects) {
                 // Process option effects
                 selectedOption.effects.forEach((effect) => {
+                  // Check conditions
+                  if (effect.condition) {
+                    // Pricing structure condition
+                    if (
+                      effect.condition.pricingStructure !==
+                        undefined &&
+                      effect.condition.pricingStructure !==
+                        options.pricingStructure
+                    ) {
+                      return;
+                    }
+                  }
+
                   switch (effect.type) {
                     case 'add-feature':
                       if (Array.isArray(effect.value)) {
@@ -414,6 +463,8 @@ export function calculateResults(schema, answers, options = {}) {
   } else if (answers.additionalRequirements) {
     results.summary.projectDetails +=
       ' ' + answers.additionalRequirements;
+  } else if (answers.projectDetails) {
+    results.summary.projectDetails = answers.projectDetails;
   }
 
   // Calculate total price
@@ -423,6 +474,25 @@ export function calculateResults(schema, answers, options = {}) {
 
   results.pricing.totalPrice =
     results.pricing.basePrice + additionalCostsTotal;
+
+  // Add commission information for partner pricing
+  if (answers.pricingType === 'partner') {
+    // Calculate total commission based on commission items
+    const totalCommission = results.commissionItems.reduce(
+      (sum, item) => {
+        // Extract commission amount from item text if possible
+        const match = item.match(/£(\d+(\.\d+)?)/);
+        if (match && match[1]) {
+          return sum + parseFloat(match[1]);
+        }
+        return sum;
+      },
+      0
+    );
+
+    results.pricing.commission = totalCommission;
+    results.summary.commission = totalCommission;
+  }
 
   // Add any partner-specific pricing adjustments
   if (

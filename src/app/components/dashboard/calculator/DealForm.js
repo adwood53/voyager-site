@@ -1,3 +1,4 @@
+// src/app/components/dashboard/calculator/DealForm.js
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -18,18 +19,20 @@ export default function DealForm({
 }) {
   const partner = usePartner();
 
-  // Form state with partner brandsource to ensure it's always populated
-  const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    phoneNumber: '',
-    companyName: '',
+  // Pre-fill with client info from configuration data if available
+  const initialFormData = {
+    firstName: configurationData?.clientFirstName || '',
+    lastName: configurationData?.clientLastName || '',
+    email: configurationData?.clientEmail || '',
+    phoneNumber: configurationData?.clientPhone || '',
+    companyName: configurationData?.clientOrganisation || '',
     sourceInfo: '',
-    projectDetails: '',
+    projectDetails: configurationData?.summary?.projectDetails || '',
     brandsource: partner?.brandSource || 'voyager', // Brandsource from partner
-  });
+  };
 
+  // Form state with partner brandsource to ensure it's always populated
+  const [formData, setFormData] = useState(initialFormData);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
@@ -180,7 +183,7 @@ export default function DealForm({
         <div className="p-6">
           {success ? (
             <div className="text-center py-8">
-              <div className="w-16 h-16 rounded-full bg-green-100 text-green-500 flex items-center justify-center text-2xl mx-auto mb-4">
+              <div className="w-16 h-16 rounded-full bg-green-900/20 text-green-500 flex items-center justify-center text-2xl mx-auto mb-4">
                 ✓
               </div>
               <h3 className="text-xl font-semibold mb-2 text-textLight">
@@ -319,6 +322,47 @@ export default function DealForm({
                   {error}
                 </div>
               )}
+
+              {/* Pricing Information */}
+              <div className="border border-primary border-opacity-20 rounded-lg p-4 bg-darkCard/50">
+                <h3 className="text-lg font-medium text-primary mb-3">
+                  Pricing Summary
+                </h3>
+                <div className="flex justify-between mb-2 text-textLight">
+                  <span>Base Price:</span>
+                  <span>
+                    £{configurationData.pricing.basePrice.toFixed(2)}
+                  </span>
+                </div>
+                {Object.entries(
+                  configurationData.pricing.additionalCosts
+                ).map(([name, cost], index) => (
+                  <div
+                    key={index}
+                    className="flex justify-between mb-2 text-textLight"
+                  >
+                    <span>{name}:</span>
+                    <span>£{cost.toFixed(2)}</span>
+                  </div>
+                ))}
+                <div className="flex justify-between mt-4 font-semibold text-primary border-t border-primary border-opacity-20 pt-2">
+                  <span>Total Price:</span>
+                  <span>
+                    £{configurationData.pricing.totalPrice.toFixed(2)}
+                  </span>
+                </div>
+                {configurationData.pricing.commission && (
+                  <div className="flex justify-between mt-2 text-green-400">
+                    <span>Commission:</span>
+                    <span>
+                      £
+                      {configurationData.pricing.commission.toFixed(
+                        2
+                      )}
+                    </span>
+                  </div>
+                )}
+              </div>
 
               {/* Form Buttons */}
               <div className="flex gap-4 justify-end">
