@@ -33,6 +33,11 @@ const nextConfig = {
         destination: '/sign-in',
         permanent: true,
       },
+      {
+        source: '/green-screen-productions',
+        destination: '/',
+        permanent: true,
+      },
     ];
   },
 };

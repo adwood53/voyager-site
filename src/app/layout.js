@@ -36,11 +36,11 @@ const labora = localFont({
 });
 
 export const metadata = {
-  title: 'Voyager Immersive',
+  title: 'Voyager Immersive - AR, VR & Interactive Experiences',
   description:
-    'Expand your services, elevate your brand, and earn more with our white label immersive technology solutions.',
+    'Expand your services, elevate your brand, and earn more with our white label immersive technology solutions. Specialists in AR, VR, and interactive experiences.',
   keywords:
-    'white label, immersive technology, AR, VR, virtual events, partner program, studio access',
+    'white label, immersive technology, AR, VR, virtual events, partner program, studio access, voyager vr lab',
   metadataBase: new URL(BASE_URL),
   alternates: {
     canonical: BASE_URL,
@@ -93,10 +93,33 @@ export const viewport = {
 };
 
 export default function RootLayout({ children }) {
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: 'Voyager VR Lab',
+    url: 'https://www.voyagervrlab.co.uk',
+    logo: 'https://www.voyagervrlab.co.uk/Voyager-Box-Logo.png',
+    description:
+      'Expand your services, elevate your brand, and earn more with our white label immersive technology solutions.',
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: 'The Hub, 58a Granby St',
+      addressLocality: 'Leicester',
+      postalCode: 'LE1 1DH',
+      addressCountry: 'UK',
+    },
+    telephone: '+447470361585',
+    email: 'connect@voyagervrlab.co.uk',
+  };
+
   return (
     <html lang="en-GB">
       <head>
         <link rel="shortcut icon" href="/favicon.ico" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
         <Script
           strategy="afterInteractive"
           src="https://www.googletagmanager.com/gtag/js?id=G-2W3TZYHJQ1"
