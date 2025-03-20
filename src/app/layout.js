@@ -5,7 +5,7 @@ import React from 'react';
 import './globals.css';
 import Script from 'next/script';
 import ClientWrapper from '@/src/app/components/ClientWrapper';
-import Analytics from '@src/app/components/Analytics';
+import Analytics from '@/src/app/components/Analytics';
 
 const SITE_NAME = 'Voyager';
 const BASE_URL = 'https://www.voyagervrlab.co.uk';
