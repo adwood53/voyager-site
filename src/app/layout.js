@@ -5,6 +5,7 @@ import React from 'react';
 import './globals.css';
 import Script from 'next/script';
 import ClientWrapper from '@/src/app/components/ClientWrapper';
+import Analytics from '@/components/Analytics';
 
 const SITE_NAME = 'Voyager';
 const BASE_URL = 'https://www.voyagervrlab.co.uk';
@@ -120,20 +121,7 @@ export default function RootLayout({ children }) {
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-        <Script
-          strategy="afterInteractive"
-          src="https://www.googletagmanager.com/gtag/js?id=G-2W3TZYHJQ1"
-        />
-        <Script strategy="afterInteractive" id="ga-script">
-          {`
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', 'G-2W3TZYHJQ1', {
-                page_path: window.location.pathname,
-              });
-            `}
-        </Script>
+        <Analytics />
       </head>
       <body
         className={`${quicksand.variable} ${labora.variable} font-body`}
