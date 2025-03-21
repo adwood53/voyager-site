@@ -10,19 +10,25 @@ export const metadata = {
   title: 'Voyager Partner Portal',
   description:
     'Manage your immersive technology projects and white-label resources',
-  // Use applicationName for PWA
   applicationName: 'Voyager Partner Portal',
-  // Link to manifest
   manifest: '/manifest.json',
-  // Additional PWA meta tags
   themeColor: '#E79023',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',
     title: 'Voyager Partner',
+    startupImage: [
+      '/apple-splash/apple-splash-2048-2732.png', // You'll need these splash screen images
+    ],
   },
   formatDetection: {
     telephone: false,
+  },
+  viewport: {
+    width: 'device-width',
+    initialScale: 1,
+    maximumScale: 1,
+    userScalable: 'no',
   },
 };
 

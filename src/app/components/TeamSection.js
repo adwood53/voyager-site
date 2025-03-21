@@ -47,7 +47,7 @@ export default function TeamSection() {
         'An academic researcher, seasoned creative technologist, and technical director dedicated to pioneering immersive experiences and building dynamic communities.',
       position: {
         top: '70%',
-        left: '42%',
+        left: '41.5%',
       },
     },
     {
@@ -58,7 +58,7 @@ export default function TeamSection() {
         'Seasoned developer and self-starter with roots in programming since the age of 10. Ariya leverages innovative tech to turn visions into reality.',
       position: {
         top: '70%',
-        left: '58.5%',
+        left: '58%',
       },
     },
     {
@@ -69,7 +69,7 @@ export default function TeamSection() {
         'Award-winning entrepreneur who leads with innovation and a purpose-driven vision. Stacey specialises in creating impactful strategies that drive business growth and meaningful change.',
       position: {
         top: '70%',
-        left: '73.5%',
+        left: '73%',
       },
     },
   ];
@@ -160,7 +160,7 @@ export default function TeamSection() {
         />
 
         {/* Heading text overlay */}
-        <div className="absolute inset-0 z-20 flex items-start justify-center pt-16 pointer-events-none">
+        <div className="absolute inset-0 z-20 flex items-start justify-center pt-4 md:pt-16 pointer-events-none">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -221,10 +221,7 @@ export default function TeamSection() {
 
         {/* Persistent info card container – its top position is calculated so it stays above the feature points.
             Adjust the "150px" offset as needed */}
-        <div
-          className="absolute inset-x-0 z-30 pointer-events-none flex justify-center"
-          style={{ top: 'calc(30% - 150px)' }}
-        >
+        <div className="absolute inset-x-0 z-30 lg:top-[30%] md:top-[10%] top-[-35%] pointer-events-none flex justify-center">
           {activeCard && (
             <motion.div
               layout

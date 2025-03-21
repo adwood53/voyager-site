@@ -160,7 +160,7 @@ export default function VoyagerNavbar() {
                     href="/about-us"
                     className="text-textLight hover:text-primary transition-colors text-base font-medium"
                   >
-                    About Us
+                    About
                   </Link>
                 </NavbarItem>
                 <NavbarItem

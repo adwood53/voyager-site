@@ -16,13 +16,35 @@ export default function AboutUsPage() {
       <Navbar />
 
       <div className="relative py-4">
-        {/* Background triangle elements */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute -top-20 -left-20 w-96 h-96 bg-primary opacity-10 transform rotate-45"></div>
-          <div className="absolute top-1/4 right-0 w-80 h-80 bg-primary opacity-5 transform -rotate-12"></div>
-          <div className="absolute bottom-0 left-1/4 w-[500px] h-[500px] bg-primary opacity-5 transform rotate-45"></div>
-          <div className="absolute -bottom-20 -right-20 w-96 h-96 bg-accent opacity-10 transform -rotate-12"></div>
-        </div>
+        {/* Floating particles/elements for depth */}
+        {[...Array(12)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute rounded-full z-10"
+            style={{
+              backgroundColor:
+                i % 2 === 0 ? 'var(--primary)' : 'var(--alt-primary)',
+              opacity: 0.2 + Math.random() * 0.2,
+              width: Math.random() * 200 + 50,
+              height: Math.random() * 200 + 50,
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+              filter: 'blur(2px)',
+            }}
+            animate={{
+              x: [0, Math.random() * 40 - 20],
+              y: [0, Math.random() * 40 - 20],
+              scale: [1, 1 + Math.random() * 0.1],
+              rotate: [0, Math.random() * 20 - 10],
+            }}
+            transition={{
+              duration: 5 + Math.random() * 5,
+              repeat: Infinity,
+              repeatType: 'reverse',
+              ease: 'easeInOut',
+            }}
+          />
+        ))}
 
         <div className="container-voyager relative z-10 max-w-5xl mx-auto px-6">
           {/* Header with logo */}
@@ -48,18 +70,26 @@ export default function AboutUsPage() {
               Immersive technology is no longer just an idea;
               it&apos;s a powerful tool to captivate audiences,
               inspire creativity, and forge connections in ways once
-              unimaginable. We are here to make the next level of
-              technology accessible and affordable. Bold ideas are
-              just the beginning. What follows is a clear, actionable
-              plan to bring those ideas to life. Collaboration lies at
-              the heart of every project, ensuring your vision is not
-              only understood but elevated. Behind Voyager is a team
-              like no other. Visionary thinkers, technical experts,
-              and creative innovators come together, each bringing
-              unique strengths to the table. This blend of talent
-              ensures every challenge is met from every angle,
-              resulting in projects that stand out and leave people
-              talking about it long after the experience has ended.
+              unimaginable.
+              <br /> <br />
+              We are here to make the next level of technology
+              accessible and affordable. Bold ideas are just the
+              beginning. What follows is a clear, actionable plan to
+              bring those ideas to life.
+              <br /> <br />
+              Collaboration lies at the heart of every project,
+              ensuring your vision is not only understood but
+              elevated.
+              <br /> <br />
+              Behind Voyager is a team like no other. Visionary
+              thinkers, technical experts, and creative innovators
+              come together, each bringing unique strengths to the
+              table.
+              <br /> <br />
+              This blend of talent ensures every challenge is met from
+              every angle, resulting in projects that stand out and
+              leave people talking about it long after the experience
+              has ended.
               <div />
               <motion.div
                 whileHover={{ scale: 1.05 }}
