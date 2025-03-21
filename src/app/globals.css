@@ -246,7 +246,7 @@ img {
     rgb(231 144 35 / 20%) 14%,
     transparent 14%
   );
-  animation: glitch 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both
+  animation: glitch 5.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both
     infinite;
   pointer-events: none;
 }

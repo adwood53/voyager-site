@@ -57,7 +57,15 @@ export default function Footer() {
               <ul className="space-y-3">
                 <li>
                   <Link
-                    href="#benefits"
+                    href="/about"
+                    className="text-textLight opacity-60 hover:text-primary hover:opacity-100 transition-colors hover:translate-x-1 transform inline-block"
+                  >
+                    About
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/#benefits"
                     className="text-textLight opacity-60 hover:text-primary hover:opacity-100 transition-colors hover:translate-x-1 transform inline-block"
                   >
                     Benefits
@@ -65,7 +73,7 @@ export default function Footer() {
                 </li>
                 <li>
                   <Link
-                    href="#services"
+                    href="/#services"
                     className="text-textLight opacity-60 hover:text-primary hover:opacity-100 transition-colors hover:translate-x-1 transform inline-block"
                   >
                     Services
@@ -73,7 +81,7 @@ export default function Footer() {
                 </li>
                 <li>
                   <Link
-                    href="#studio"
+                    href="/#studio"
                     className="text-textLight opacity-60 hover:text-primary hover:opacity-100 transition-colors hover:translate-x-1 transform inline-block"
                   >
                     Studio Access
@@ -81,7 +89,7 @@ export default function Footer() {
                 </li>
                 <li>
                   <Link
-                    href="#plans"
+                    href="/#plans"
                     className="text-textLight opacity-60 hover:text-primary hover:opacity-100 transition-colors hover:translate-x-1 transform inline-block"
                   >
                     Plans
@@ -89,7 +97,15 @@ export default function Footer() {
                 </li>
                 <li>
                   <Link
-                    href="#signup"
+                    href="/blog"
+                    className="text-textLight opacity-60 hover:text-primary hover:opacity-100 transition-colors hover:translate-x-1 transform inline-block"
+                  >
+                    Blog
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/#signup"
                     className="text-textLight opacity-60 hover:text-primary hover:opacity-100 transition-colors hover:translate-x-1 transform inline-block"
                   >
                     Sign Up

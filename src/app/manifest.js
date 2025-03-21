@@ -9,8 +9,8 @@ export default function manifest() {
     id: '/partner',
     display: 'standalone',
     background_color: '#ffffff',
-    theme_color: '#E79023',
-    categories: ['business', 'productivity'],
+    theme_color: '#ffffff',
+    categories: ['business', 'software'],
     orientation: 'any',
     icons: [
       {

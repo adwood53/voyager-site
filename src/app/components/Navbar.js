@@ -121,7 +121,7 @@ export default function VoyagerNavbar() {
                 >
                   <a
                     href="#"
-                    onClick={(e) => {
+                    onPress={(e) => {
                       e.preventDefault();
                       if (isHomePage) {
                         // If we're on home page, just scroll to the section
@@ -157,11 +157,22 @@ export default function VoyagerNavbar() {
                   style={{ listStyle: 'none' }}
                 >
                   <Link
-                    onClick={(e) => {
+                    href="/about-us"
+                    className="text-textLight hover:text-primary transition-colors text-base font-medium"
+                  >
+                    About Us
+                  </Link>
+                </NavbarItem>
+                <NavbarItem
+                  className="list-none"
+                  style={{ listStyle: 'none' }}
+                >
+                  <Link
+                    onPress={(e) => {
                       e.preventDefault();
                       handleNavigation('benefits');
                     }}
-                    href="#benefits"
+                    href="/#benefits"
                     className="text-textLight hover:text-primary transition-colors text-base font-medium"
                   >
                     Benefits
@@ -172,11 +183,11 @@ export default function VoyagerNavbar() {
                   style={{ listStyle: 'none' }}
                 >
                   <Link
-                    onClick={(e) => {
+                    onPress={(e) => {
                       e.preventDefault();
                       handleNavigation('services');
                     }}
-                    href="#services"
+                    href="/#services"
                     className="text-textLight hover:text-primary transition-colors text-base font-medium"
                   >
                     Services
@@ -187,11 +198,11 @@ export default function VoyagerNavbar() {
                   style={{ listStyle: 'none' }}
                 >
                   <Link
-                    onClick={(e) => {
+                    onPress={(e) => {
                       e.preventDefault();
                       handleNavigation('studio');
                     }}
-                    href="#studio"
+                    href="/#studio"
                     className="text-textLight hover:text-primary transition-colors text-base font-medium"
                   >
                     Studio
@@ -202,11 +213,11 @@ export default function VoyagerNavbar() {
                   style={{ listStyle: 'none' }}
                 >
                   <Link
-                    onClick={(e) => {
+                    onPress={(e) => {
                       e.preventDefault();
                       handleNavigation('plans');
                     }}
-                    href="#plans"
+                    href="/#plans"
                     className="text-textLight hover:text-primary transition-colors text-base font-medium"
                   >
                     Plans
@@ -257,11 +268,22 @@ export default function VoyagerNavbar() {
                   style={{ listStyle: 'none' }}
                 >
                   <Link
-                    onClick={(e) => {
+                    href="/about-us"
+                    className="text-textLight hover:text-primary transition-colors text-lg font-medium"
+                  >
+                    About
+                  </Link>
+                </NavbarItem>
+                <NavbarItem
+                  className="list-none"
+                  style={{ listStyle: 'none' }}
+                >
+                  <Link
+                    onPress={(e) => {
                       e.preventDefault();
                       handleNavigation('benefits');
                     }}
-                    href="#benefits"
+                    href="/#benefits"
                     className="text-textLight hover:text-primary transition-colors text-lg font-medium"
                   >
                     Benefits
@@ -272,11 +294,11 @@ export default function VoyagerNavbar() {
                   style={{ listStyle: 'none' }}
                 >
                   <Link
-                    onClick={(e) => {
+                    onPress={(e) => {
                       e.preventDefault();
                       handleNavigation('services');
                     }}
-                    href="#services"
+                    href="/#services"
                     className="text-textLight hover:text-primary transition-colors text-lg font-medium"
                   >
                     Services
@@ -287,11 +309,11 @@ export default function VoyagerNavbar() {
                   style={{ listStyle: 'none' }}
                 >
                   <Link
-                    onClick={(e) => {
+                    onPress={(e) => {
                       e.preventDefault();
                       handleNavigation('studio');
                     }}
-                    href="#studio"
+                    href="/#studio"
                     className="text-textLight hover:text-primary transition-colors text-lg font-medium"
                   >
                     Studio
@@ -302,11 +324,11 @@ export default function VoyagerNavbar() {
                   style={{ listStyle: 'none' }}
                 >
                   <Link
-                    onClick={(e) => {
+                    onPress={(e) => {
                       e.preventDefault();
                       handleNavigation('plans');
                     }}
-                    href="#plans"
+                    href="/#plans"
                     className="text-textLight hover:text-primary transition-colors text-lg font-medium"
                   >
                     Plans
@@ -346,7 +368,7 @@ export default function VoyagerNavbar() {
                 >
                   <a
                     href="#"
-                    onClick={(e) => {
+                    onPress={(e) => {
                       e.preventDefault();
                       if (isHomePage) {
                         // If we're on home page, just scroll to the section
