@@ -13,8 +13,6 @@ import {
   Timestamp,
   deleteDoc,
 } from 'firebase/firestore';
-import { logEvent } from 'firebase/analytics';
-import { analytics } from './firebase';
 
 // ===== ORGANIZATION FUNCTIONS =====
 
@@ -38,14 +36,6 @@ export async function getOrganizationByClerkId(clerkOrgId) {
     }
 
     const orgDoc = querySnapshot.docs[0];
-
-    // Log analytics event if available
-    if (analytics) {
-      logEvent(analytics, 'organization_loaded', {
-        organization_id: orgDoc.id,
-        clerk_org_id: clerkOrgId,
-      });
-    }
 
     return {
       id: orgDoc.id,
@@ -96,14 +86,6 @@ export async function createOrganization(orgData) {
     await setDoc(orgRef, finalOrgData);
     console.log(`Organization created: ${orgRef.id}`);
 
-    // Log analytics event if available
-    if (analytics) {
-      logEvent(analytics, 'organization_created', {
-        organization_id: orgRef.id,
-        clerk_org_id: orgData.clerkOrgId,
-      });
-    }
-
     return {
       id: orgRef.id,
       ...finalOrgData,
@@ -147,14 +129,6 @@ export async function updateOrganization(orgId, orgData) {
 
     console.log(`Organization updated: ${orgId}`);
 
-    // Log analytics event if available
-    if (analytics) {
-      logEvent(analytics, 'organization_updated', {
-        organization_id: orgId,
-        clerk_org_id: orgData.clerkOrgId || currentData.clerkOrgId,
-      });
-    }
-
     // Return the updated object with the id
     return {
       id: orgId,
@@ -187,14 +161,6 @@ export async function deleteOrganization(orgId) {
 
     await deleteDoc(orgRef);
     console.log(`Organization deleted: ${orgId}`);
-
-    // Log analytics event if available
-    if (analytics) {
-      logEvent(analytics, 'organization_deleted', {
-        organization_id: orgId,
-        clerk_org_id: orgData.clerkOrgId,
-      });
-    }
 
     return true;
   } catch (error) {
@@ -257,14 +223,6 @@ export async function createOrUpdateUser(userData) {
       await updateDoc(userRef, updateData);
       console.log(`User updated: ${existingUser.id}`);
 
-      // Log analytics event if available
-      if (analytics) {
-        logEvent(analytics, 'user_updated', {
-          user_id: existingUser.id,
-          clerk_user_id: userData.clerkId,
-        });
-      }
-
       // Return the updated user
       return {
         id: existingUser.id,
@@ -286,14 +244,6 @@ export async function createOrUpdateUser(userData) {
 
       await setDoc(userRef, newUserData);
       console.log(`User created: ${userRef.id}`);
-
-      // Log analytics event if available
-      if (analytics) {
-        logEvent(analytics, 'user_created', {
-          user_id: userRef.id,
-          clerk_user_id: userData.clerkId,
-        });
-      }
 
       // Return the new user
       return {
@@ -348,11 +298,6 @@ export async function testFirestoreConnection() {
     if (docSnap.exists()) {
       console.log('Firestore connection test successful');
 
-      // Log analytics event if available
-      if (analytics) {
-        logEvent(analytics, 'test_connection_successful');
-      }
-
       return true;
     } else {
       throw new Error(
@@ -361,13 +306,6 @@ export async function testFirestoreConnection() {
     }
   } catch (error) {
     console.error('Firestore connection test failed:', error);
-
-    // Log analytics event if available
-    if (analytics) {
-      logEvent(analytics, 'test_connection_failed', {
-        error: error.message,
-      });
-    }
 
     throw error;
   }
