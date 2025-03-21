@@ -45,9 +45,9 @@ export default function AboutUsPage() {
               About <span className="text-primary">Us</span>
             </h1>
             <div className="text-1xl md:text-2xl font-body text-center mb-6">
-              Immersive technology is no longer just an idea; it's a
-              powerful tool to captivate audiences, inspire
-              creativity, and forge connections in ways once
+              Immersive technology is no longer just an idea;
+              it&apos;s a powerful tool to captivate audiences,
+              inspire creativity, and forge connections in ways once
               unimaginable. We are here to make the next level of
               technology accessible and affordable. Bold ideas are
               just the beginning. What follows is a clear, actionable
