@@ -1,39 +1,63 @@
-// src/app/components/ServiceWorkerRegistration.js
-'use client';
+// public/service-worker.js
+const CACHE_NAME = 'voyager-partner-v1';
+const urlsToCache = [
+  '/partner',
+  '/Voyager-Box-Logo.png',
+  '/Voyager-Box-Logo-192.png',
+  '/manifest.json',
+];
 
-import { useEffect } from 'react';
+self.addEventListener('install', (event) => {
+  event.waitUntil(
+    caches.open(CACHE_NAME).then((cache) => {
+      return cache.addAll(urlsToCache);
+    })
+  );
+});
 
-export default function ServiceWorkerRegistration() {
-  useEffect(() => {
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', async () => {
-        try {
-          // First check if service worker is already registered
-          const registrations =
-            await navigator.serviceWorker.getRegistrations();
-          const isRegistered = registrations.some((reg) =>
-            reg.scope.includes('/partner')
-          );
+self.addEventListener('fetch', (event) => {
+  event.respondWith(
+    caches.match(event.request).then((response) => {
+      // Cache hit - return response
+      if (response) {
+        return response;
+      }
 
-          if (!isRegistered) {
-            const registration =
-              await navigator.serviceWorker.register(
-                '/service-worker.js',
-                {
-                  scope: '/partner',
-                }
-              );
-            console.log(
-              'ServiceWorker registration successful:',
-              registration
-            );
-          }
-        } catch (err) {
-          console.error('ServiceWorker registration failed:', err);
+      return fetch(event.request).then((response) => {
+        // Return the response as-is for non-GET requests or if it isn't valid
+        if (
+          !response ||
+          response.status !== 200 ||
+          response.type !== 'basic'
+        ) {
+          return response;
         }
-      });
-    }
-  }, []);
 
-  return null;
-}
+        // Clone the response
+        const responseToCache = response.clone();
+
+        caches.open(CACHE_NAME).then((cache) => {
+          cache.put(event.request, responseToCache);
+        });
+
+        return response;
+      });
+    })
+  );
+});
+
+self.addEventListener('activate', (event) => {
+  const cacheWhitelist = [CACHE_NAME];
+
+  event.waitUntil(
+    caches.keys().then((cacheNames) => {
+      return Promise.all(
+        cacheNames.map((cacheName) => {
+          if (cacheWhitelist.indexOf(cacheName) === -1) {
+            return caches.delete(cacheName);
+          }
+        })
+      );
+    })
+  );
+});

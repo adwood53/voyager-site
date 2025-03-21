@@ -8,57 +8,43 @@ import { Button } from '@heroui/react';
 export default function InstallPrompt() {
   const [showPrompt, setShowPrompt] = useState(false);
   const [deferredPrompt, setDeferredPrompt] = useState(null);
-  const [isInstalled, setIsInstalled] = useState(false);
-  const [browser, setBrowser] = useState('');
-  const [visitCount, setVisitCount] = useState(0);
+  const [isStandalone, setIsStandalone] = useState(false);
+  const [deviceType, setDeviceType] = useState('desktop'); // 'desktop', 'ios', or 'android'
 
   useEffect(() => {
-    // Run only on client
+    // Only run on client side
     if (typeof window === 'undefined') return;
 
-    // Check if already installed
-    if (window.matchMedia('(display-mode: standalone)').matches) {
-      setIsInstalled(true);
+    // Check if already running in standalone mode
+    const standalone =
+      window.matchMedia('(display-mode: standalone)').matches ||
+      window.navigator.standalone || // iOS Safari
+      document.referrer.includes('android-app://');
+
+    setIsStandalone(standalone);
+
+    // Don't show prompt if already in standalone mode
+    if (standalone) {
       return;
     }
 
-    // Check if user has dismissed the prompt
-    if (localStorage.getItem('installPromptDismissed') === 'true') {
-      return;
+    // Detect device type for specific instructions
+    const userAgent = navigator.userAgent.toLowerCase();
+    if (/iphone|ipad|ipod/.test(userAgent)) {
+      setDeviceType('ios');
+    } else if (/android/.test(userAgent)) {
+      setDeviceType('android');
+    } else {
+      setDeviceType('desktop');
     }
 
-    // Count site visits
-    const count = parseInt(
-      localStorage.getItem('siteVisitCount') || '0'
-    );
-    const newCount = count + 1;
-    localStorage.setItem('siteVisitCount', newCount.toString());
-    setVisitCount(newCount);
+    // Show the prompt immediately
+    setShowPrompt(true);
 
-    // Detect browser
-    const userAgent = navigator.userAgent;
-    let detectedBrowser = 'other';
-    if (userAgent.indexOf('Firefox') > -1) {
-      detectedBrowser = 'firefox';
-    } else if (userAgent.indexOf('Edg') > -1) {
-      detectedBrowser = 'edge';
-    } else if (userAgent.indexOf('Chrome') > -1) {
-      detectedBrowser = 'chrome';
-    } else if (userAgent.indexOf('Safari') > -1) {
-      detectedBrowser = 'safari';
-    }
-    setBrowser(detectedBrowser);
-
-    // For Firefox, show after 2+ visits
-    if (detectedBrowser === 'firefox' && newCount >= 2) {
-      setShowPrompt(true);
-    }
-
-    // For other browsers, use the beforeinstallprompt event
+    // For Chrome and Edge: Use beforeinstallprompt
     const handleBeforeInstallPrompt = (e) => {
       e.preventDefault();
       setDeferredPrompt(e);
-      setShowPrompt(true);
     };
 
     window.addEventListener(
@@ -66,11 +52,10 @@ export default function InstallPrompt() {
       handleBeforeInstallPrompt
     );
 
-    // Listen for installation
+    // Listen for successful installation
     window.addEventListener('appinstalled', () => {
       setShowPrompt(false);
-      setIsInstalled(true);
-      localStorage.setItem('appInstalled', 'true');
+      setIsStandalone(true);
     });
 
     // Cleanup
@@ -82,20 +67,6 @@ export default function InstallPrompt() {
       window.removeEventListener('appinstalled', () => {});
     };
   }, []);
-
-  // Force show prompt after component mounts
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      if (
-        !isInstalled &&
-        !localStorage.getItem('installPromptDismissed')
-      ) {
-        setShowPrompt(true);
-      }
-    }, 1500);
-
-    return () => clearTimeout(timer);
-  }, [isInstalled]);
 
   const handleInstallClick = async () => {
     if (deferredPrompt) {
@@ -112,11 +83,25 @@ export default function InstallPrompt() {
 
   const handleDismiss = () => {
     setShowPrompt(false);
-    localStorage.setItem('installPromptDismissed', 'true');
+
+    // Set a short-term dismissal (1 hour)
+    const dismissalTime = Date.now();
+    localStorage.setItem(
+      'installPromptDismissedAt',
+      dismissalTime.toString()
+    );
+
+    // Schedule to show again after 1 hour
+    setTimeout(
+      () => {
+        setShowPrompt(true);
+      },
+      60 * 60 * 1000
+    );
   };
 
-  // Nothing to show if already installed or dismissed
-  if (isInstalled || !showPrompt) return null;
+  // Don't show anything if in standalone mode or prompt is hidden
+  if (isStandalone || !showPrompt) return null;
 
   return (
     <motion.div
@@ -140,62 +125,40 @@ export default function InstallPrompt() {
           <button
             onClick={handleDismiss}
             className="text-gray-400 hover:text-gray-600 transition-colors"
-            aria-label="Close"
+            aria-label="Dismiss for now"
           >
             ✕
           </button>
         </div>
 
         <div className="mb-3">
-          {browser === 'firefox' ? (
+          {deviceType === 'ios' ? (
             <div className="text-gray-700 text-sm">
-              <p className="mb-2">To install in Firefox:</p>
+              <p className="mb-2">To install on your iOS device:</p>
               <ol className="list-decimal pl-5">
                 <li className="mb-1">
-                  Look for the + icon in your address bar
+                  Tap the Share icon{' '}
+                  <span className="text-lg">⎙</span> at the bottom of
+                  your browser
                 </li>
-                <li>Select &quot;Install&quot; when prompted</li>
+                <li>
+                  Scroll down and tap &quot;Add to Home Screen&quot;
+                </li>
+                <li>Tap &quot;Add&quot; in the top-right corner</li>
               </ol>
-              <div className="mt-2 flex justify-center">
-                <svg
-                  width="280"
-                  height="40"
-                  viewBox="0 0 280 40"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <rect
-                    width="280"
-                    height="40"
-                    rx="4"
-                    fill="#EFEFEF"
-                  />
-                  <text
-                    x="10"
-                    y="25"
-                    fontFamily="Arial"
-                    fontSize="14"
-                    fill="#333"
-                  >
-                    https://voyagervrlab.co.uk
-                  </text>
-                  <circle cx="260" cy="20" r="12" fill="#4285F4" />
-                  <text
-                    x="260"
-                    y="25"
-                    fontFamily="Arial"
-                    fontSize="16"
-                    fill="white"
-                    textAnchor="middle"
-                  >
-                    +
-                  </text>
-                  <path
-                    d="M230,15 L250,15 M230,20 L250,20 M230,25 L250,25"
-                    stroke="#666"
-                    strokeWidth="2"
-                  />
-                </svg>
-              </div>
+            </div>
+          ) : deviceType === 'android' ? (
+            <div className="text-gray-700 text-sm">
+              <p className="mb-2">
+                To install on your Android device:
+              </p>
+              <ol className="list-decimal pl-5">
+                <li className="mb-1">
+                  Tap the menu icon ⋮ in your browser
+                </li>
+                <li>Tap &quot;Add to Home Screen&quot;</li>
+                <li>Tap &quot;Add&quot; when prompted</li>
+              </ol>
             </div>
           ) : (
             <div className="text-gray-700 text-sm">
@@ -204,12 +167,10 @@ export default function InstallPrompt() {
               </p>
               <ol className="list-decimal pl-5">
                 <li className="mb-1">
-                  Click the menu {browser === 'chrome' ? '⋮' : '⋯'} in
-                  your browser
+                  Look for the install icon in your browser's address
+                  bar
                 </li>
-                <li>
-                  Select &quot;Install Voyager Partner Portal&quot;
-                </li>
+                <li>Click &quot;Install&quot; when prompted</li>
               </ol>
             </div>
           )}
