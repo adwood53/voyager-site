@@ -167,8 +167,8 @@ export default function InstallPrompt() {
               </p>
               <ol className="list-decimal pl-5">
                 <li className="mb-1">
-                  Look for the install icon in your browser's address
-                  bar
+                  Look for the install icon in your browser&apos;s
+                  address bar
                 </li>
                 <li>Click &quot;Install&quot; when prompted</li>
               </ol>
