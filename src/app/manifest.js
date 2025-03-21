@@ -7,7 +7,7 @@ export default function manifest() {
     start_url: '/partner',
     display: 'standalone',
     background_color: '#ffffff',
-    theme_color: '#000000',
+    theme_color: '#ffffff',
     icons: [
       {
         src: '/Voyager-Box-Logo-192.png',

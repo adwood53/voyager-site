@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { useUser, useOrganization } from '@clerk/nextjs';
 import { useFirebase } from '@/src/contexts/FirebaseContext';
+import InstallPrompt from '@/src/app/components/InstallPrompt';
 
 import TitleBar from './TitleBar';
 import NavigationBar from './NavigationBar';
@@ -194,6 +195,7 @@ export default function DashboardShell() {
 
   return (
     <>
+      <InstallPrompt />
       <div
         className="dashboard-shell flex flex-col h-screen overflow-hidden bg-gray-50"
         style={brandingStyles}
@@ -203,7 +205,6 @@ export default function DashboardShell() {
           organization={firestoreOrg || organization}
           toggleProfilePanel={toggleProfilePanel}
         />
-
         {/* Main content area with sidebar */}
         <div className="flex flex-1 overflow-hidden">
           {/* Navigation sidebar */}
