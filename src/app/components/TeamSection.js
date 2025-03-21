@@ -221,7 +221,7 @@ export default function TeamSection() {
 
         {/* Persistent info card container – its top position is calculated so it stays above the feature points.
             Adjust the "150px" offset as needed */}
-        <div className="absolute inset-x-0 z-30 lg:top-[30%] md:top-[10%] top-[-35%] pointer-events-none flex justify-center">
+        <div className="absolute inset-x-0 z-30 lg:top-[30%] md:top-[10%] top-[-45%] pointer-events-none flex justify-center">
           {activeCard && (
             <motion.div
               layout
