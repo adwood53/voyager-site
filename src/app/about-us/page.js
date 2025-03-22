@@ -69,7 +69,7 @@ export default function AboutUsPage() {
             <div className="text-1xl md:text-2xl font-body text-center mb-6">
               Immersive technology is no longer just an idea;
               it&apos;s a powerful tool to captivate audiences,
-              inspire creativity, and forge connections in ways once
+              inspire creativity, and create connections in ways once
               unimaginable.
               <br /> <br />
               We are here to make the next level of technology

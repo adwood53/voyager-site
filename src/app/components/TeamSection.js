@@ -36,7 +36,7 @@ export default function TeamSection() {
         "With 20 years of experience building brands and businesses, I've transformed challenges into opportunities. Combining real-world grit with sharp business insight to deliver impactful results.",
       position: {
         top: '70%',
-        left: '23%',
+        left: '42%',
       },
     },
     {
@@ -47,7 +47,7 @@ export default function TeamSection() {
         'An academic researcher, seasoned creative technologist, and technical director dedicated to pioneering immersive experiences and building dynamic communities.',
       position: {
         top: '70%',
-        left: '41.5%',
+        left: '58.5%',
       },
     },
     {
@@ -58,7 +58,7 @@ export default function TeamSection() {
         'Seasoned developer and self-starter with roots in programming since the age of 10. Ariya leverages innovative tech to turn visions into reality.',
       position: {
         top: '70%',
-        left: '58%',
+        left: '74%',
       },
     },
     {
@@ -66,10 +66,10 @@ export default function TeamSection() {
       name: 'Stacey',
       role: 'CEO',
       description:
-        'Award-winning entrepreneur who leads with innovation and a purpose-driven vision. Stacey specialises in creating impactful strategies that drive business growth and meaningful change.',
+        'Award-winning entrepreneur who leads with innovation and a purpose-driven vision. Stacey thrives on making bold visions a reality and elevating the potential of those around her.',
       position: {
         top: '70%',
-        left: '73%',
+        left: '23%',
       },
     },
   ];
