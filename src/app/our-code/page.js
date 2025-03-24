@@ -1,14 +1,18 @@
 // src/app/our-code/page.js
 'use client';
 
-import React from 'react';
+import React, { useState, useMemo } from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import Navbar from '@/src/app/components/Navbar';
 import Footer from '@/src/app/components/Footer';
+import LanguageToggle from '@/src/app/components/LanguageToggle';
 
 export default function OurCodePage() {
-  // Array of code statements
+  // State to track if we should use professional language
+  const [isProfessional, setIsProfessional] = useState(false);
+
+  // Define the original code statements
   const codeStatements = [
     {
       title: 'We show up.',
@@ -65,18 +69,76 @@ export default function OurCodePage() {
     },
   ];
 
+  // Function to replace swear words with professional alternatives
+  const getCleanContent = (text) => {
+    if (!isProfessional) return text;
+
+    return text
+      .replace(/shit/gi, 'stuff')
+      .replace(/f\*\*k/gi, 'mess')
+      .replace(/the hell /gi, '')
+      .replace(/damn/gi, 'darn')
+      .replace(/ass/gi, 'rear')
+      .replace(/crap/gi, 'rubbish');
+  };
+
+  // Generate background elements only once and reuse them
+  const backgroundElements = useMemo(() => {
+    return [...Array(12)].map((_, i) => {
+      // Create fixed random values for each element
+      const isEven = i % 2 === 0;
+      const opacity = 0.2 + (i / 12) * 0.2; // Deterministic opacity based on index
+      const width = 100 + i * 10 + 50;
+      const height = 100 + i * 10 + 50;
+      const leftPos = (i * 8) % 100;
+      const topPos = (i * 13) % 100;
+
+      // Fixed animation values
+      const xMove = (i % 4) * 10;
+      const yMove = (i % 3) * 8;
+      const scaleFactor = 0.05 + (i % 5) * 0.01;
+      const rotateAmount = i * 2;
+      const duration = 5 + (i % 3);
+
+      return (
+        <motion.div
+          key={`bg-element-${i}`}
+          className="absolute rounded-full z-10"
+          style={{
+            backgroundColor: isEven
+              ? 'var(--primary)'
+              : 'var(--alt-primary)',
+            opacity,
+            width,
+            height,
+            left: `${leftPos}%`,
+            top: `${topPos}%`,
+            filter: 'blur(2px)',
+          }}
+          animate={{
+            x: [0, xMove],
+            y: [0, yMove],
+            scale: [1, 1 + scaleFactor],
+            rotate: [0, rotateAmount],
+          }}
+          transition={{
+            duration,
+            repeat: Infinity,
+            repeatType: 'reverse',
+            ease: 'easeInOut',
+          }}
+        />
+      );
+    });
+  }, []); // Empty dependencies - only compute once
+
   return (
     <main className="min-h-screen bg-darkBg text-textLight overflow-hidden">
       <Navbar />
 
       <div className="relative py-12 md:py-24">
-        {/* Background triangle elements */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute -top-20 -left-20 w-96 h-96 bg-primary opacity-10 transform rotate-45"></div>
-          <div className="absolute top-1/4 right-0 w-80 h-80 bg-primary opacity-5 transform -rotate-12"></div>
-          <div className="absolute bottom-0 left-1/4 w-[500px] h-[500px] bg-primary opacity-5 transform rotate-45"></div>
-          <div className="absolute -bottom-20 -right-20 w-96 h-96 bg-accent opacity-10 transform -rotate-12"></div>
-        </div>
+        {/* Render pre-computed background elements */}
+        {backgroundElements}
 
         <div className="container-voyager relative z-10 max-w-5xl mx-auto px-6">
           {/* Header with logo */}
@@ -98,6 +160,18 @@ export default function OurCodePage() {
             <h1 className="text-6xl md:text-7xl font-heading text-center mb-6">
               Our <span className="text-primary">Code</span>
             </h1>
+
+            {/* Language toggle */}
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+            >
+              <LanguageToggle
+                isProfessional={isProfessional}
+                onChange={setIsProfessional}
+              />
+            </motion.div>
           </motion.div>
 
           {/* Code statements list */}
@@ -112,10 +186,10 @@ export default function OurCodePage() {
                 className="text-center max-w-4xl mx-auto"
               >
                 <h2 className="text-3xl md:text-4xl font-heading font-bold mb-6 text-primary">
-                  {statement.title}
+                  {getCleanContent(statement.title)}
                 </h2>
                 <p className="text-xl md:text-2xl leading-relaxed text-textLight opacity-90">
-                  {statement.description}
+                  {getCleanContent(statement.description)}
                 </p>
               </motion.div>
             ))}
