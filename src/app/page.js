@@ -10,8 +10,8 @@ import ProcessSection from '@/src/app/components/ProcessSection';
 import NewsCarousel from '@/src/app/components/NewsCarousel';
 import ContactSection from '@/src/app/components/ContactSection';
 import Footer from '@/src/app/components/Footer';
-import EasterEgg from '@/src/app/components/EasterEgg';
 import PartnerLogoCarousel from '@/src/app/components/PartnerLogoCarousel';
+import ChatbotComponent from '@/src/app/components/ChatbotComponent';
 
 export default function Home() {
   /**
@@ -64,6 +64,7 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-darkBg text-textLight overflow-hidden">
+      <ChatbotComponent />
       <div className="parallax-container">
         <Navbar />
         <HeroSection />
@@ -85,7 +86,6 @@ export default function Home() {
         <NewsCarousel />
         <ContactSection />
         <Footer />
-        <EasterEgg />
       </div>
     </main>
   );
