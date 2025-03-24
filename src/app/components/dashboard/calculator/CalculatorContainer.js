@@ -1,20 +1,18 @@
-// src/app/components/dashboard/calculator/CalculatorContainer.js
+// src/app/components/dashboard/calculator/CalculatorContainer.js (simplified version)
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
 import { useUser, useOrganization } from '@clerk/nextjs';
-import { calculateResults } from '@/src/lib/calculatorEngine';
 import {
+  calculateResults,
   initializeAnswers,
   validateAnswers,
   shouldShowSection,
-  generateRecommendations,
-} from '@/src/lib/recommendationEngine';
+} from '@/src/lib/calculatorEngine';
 import { generateAndSavePDF } from '@/src/lib/pdfService';
 import { usePartner } from '@/src/utils/partners';
 import QuestionRenderer from './QuestionRenderer';
 import ResultsSummary from './ResultsSummary';
-import RecommendationsPanel from './RecommendationsPanel';
 import DealForm from './DealForm';
 
 /**
@@ -44,8 +42,6 @@ export default function CalculatorContainer({
   const [errors, setErrors] = useState([]);
   const [isCalculating, setIsCalculating] = useState(false);
   const [showResults, setShowResults] = useState(false);
-  const [showRecommendations, setShowRecommendations] =
-    useState(false);
   const [showDealForm, setShowDealForm] = useState(false);
 
   // Initialize with any default answers from schema
@@ -213,49 +209,9 @@ export default function CalculatorContainer({
         options
       );
 
-      // For scope builder, need to add recommendations
-      if (
-        calculatorType === 'scope-builder' &&
-        schema.recommendations
-      ) {
-        try {
-          // Generate recommendations using the imported function
-          const recommendations = generateRecommendations(
-            answers,
-            schema.recommendations.products,
-            {
-              maxRecommendations: 5,
-              sortByPriority: true,
-            }
-          );
-
-          // Add recommendations to results
-          calculatedResults.recommendations = recommendations;
-
-          // Set results state
-          setResults(calculatedResults);
-
-          // Show recommendations if there are any
-          if (
-            schema.actions?.showRecommendations &&
-            recommendations.length > 0
-          ) {
-            setShowRecommendations(true);
-          } else {
-            setShowResults(true);
-          }
-        } catch (error) {
-          console.error('Error generating recommendations:', error);
-          // If there's an error with recommendations, still show results without them
-          setResults(calculatedResults);
-          setShowResults(true);
-        }
-      } else {
-        // For calculators other than scope builder, just set results and show them
-        setResults(calculatedResults);
-        setShowResults(true);
-      }
-
+      // Set results state
+      setResults(calculatedResults);
+      setShowResults(true);
       setErrors([]);
 
       // Call the onSubmit callback if provided
@@ -299,14 +255,7 @@ export default function CalculatorContainer({
     setResults(null);
     setErrors([]);
     setShowResults(false);
-    setShowRecommendations(false);
     setShowDealForm(false);
-  };
-
-  // Go back to results from recommendations
-  const handleBackToResults = () => {
-    setShowRecommendations(false);
-    setShowResults(true);
   };
 
   // Calculate progress percentage
@@ -332,12 +281,6 @@ export default function CalculatorContainer({
           }
           onReset={handleReset}
           partner={actualPartner}
-        />
-      ) : showRecommendations ? (
-        <RecommendationsPanel
-          recommendations={results.recommendations}
-          onBackToResults={handleBackToResults}
-          onReset={handleReset}
         />
       ) : (
         <div className="calculator-questions-container">
