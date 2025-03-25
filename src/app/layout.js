@@ -43,9 +43,6 @@ export const metadata = {
   keywords:
     'white label, immersive technology, AR, VR, virtual events, partner program, studio access, voyager vr lab',
   metadataBase: new URL(BASE_URL),
-  alternates: {
-    canonical: '/',
-  },
   robots: {
     index: true,
     follow: true,
@@ -122,6 +119,7 @@ export default function RootLayout({ children }) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
         <Analytics />
+        <meta name="googlebot" content="all" />
       </head>
       <body
         className={`${quicksand.variable} ${labora.variable} font-body`}
