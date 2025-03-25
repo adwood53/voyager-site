@@ -44,7 +44,7 @@ export const metadata = {
     'white label, immersive technology, AR, VR, virtual events, partner program, studio access, voyager vr lab',
   metadataBase: new URL(BASE_URL),
   alternates: {
-    canonical: BASE_URL,
+    canonical: '/',
   },
   robots: {
     index: true,

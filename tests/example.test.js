@@ -12,7 +12,7 @@ describe('HomePage', () => {
     render(<HomePage />);
     expect(
       screen.getByRole('heading', {
-        name: /SOCIAL INNOVATION Accelerator/i,
+        name: /Voyager/i,
       })
     ).toBeInTheDocument();
   });

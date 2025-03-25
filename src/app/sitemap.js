@@ -3,6 +3,7 @@ import { sanityClient } from '@/src/lib/sanity';
 
 export default async function sitemap() {
   const baseUrl = 'https://www.voyagervrlab.co.uk';
+  const lastModified = new Date();
 
   // Get all blog posts for dynamic sitemap entries
   const posts = await getAllPosts();
@@ -13,41 +14,47 @@ export default async function sitemap() {
     priority: 0.7,
   }));
 
-  return [
-    // Core pages
+  // Essential core pages with correct priorities
+  const corePages = [
     {
       url: baseUrl,
-      lastModified: new Date(),
+      lastModified,
       changeFrequency: 'weekly',
       priority: 1.0,
     },
     {
+      url: `${baseUrl}/about-us`,
+      lastModified,
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
       url: `${baseUrl}/blog`,
-      lastModified: new Date(),
+      lastModified,
       changeFrequency: 'weekly',
       priority: 0.8,
     },
     {
       url: `${baseUrl}/our-code`,
-      lastModified: new Date(),
+      lastModified,
       changeFrequency: 'monthly',
       priority: 0.7,
     },
     {
-      url: `${baseUrl}/partner`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.6,
+      url: `${baseUrl}/terms`,
+      lastModified,
+      changeFrequency: 'yearly',
+      priority: 0.3,
     },
     {
-      url: `${baseUrl}/sign-in`,
-      lastModified: new Date(),
+      url: `${baseUrl}/privacy`,
+      lastModified,
       changeFrequency: 'yearly',
-      priority: 0.5,
+      priority: 0.3,
     },
-    // Include all blog posts
-    ...blogPostsEntries,
   ];
+
+  return [...corePages, ...blogPostsEntries];
 }
 
 // Helper function to get all blog posts

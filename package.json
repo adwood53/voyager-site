@@ -9,7 +9,8 @@
     "start": "next start",
     "lint": "next lint",
     "lint:css": "stylelint \"src/**/*.{css,scss}\"",
-    "test": "jest"
+    "test": "jest",
+    "ping-search": "node scripts/ping-search-engines.js"
   },
   "overrides": {
     "swr": "1.3.0",

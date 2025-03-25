@@ -24,6 +24,21 @@ const nextConfig = {
   async redirects() {
     return [
       {
+        source: '/index.html',
+        destination: '/',
+        permanent: true,
+      },
+      {
+        source: '/green-screen-productions.html',
+        destination: '/',
+        permanent: true,
+      },
+      {
+        source: '/about-us.html',
+        destination: '/about-us',
+        permanent: true,
+      },
+      {
         source: '/login',
         destination: '/partner',
         permanent: true,
@@ -31,11 +46,6 @@ const nextConfig = {
       {
         source: '/signin',
         destination: '/sign-in',
-        permanent: true,
-      },
-      {
-        source: '/green-screen-productions',
-        destination: '/',
         permanent: true,
       },
     ];
