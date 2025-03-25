@@ -40,7 +40,7 @@ const nextConfig = {
       },
       {
         source: '/login',
-        destination: '/partner',
+        destination: '/sign-in',
         permanent: true,
       },
       {
