@@ -11,7 +11,14 @@ export default function robots() {
         '/terms',
         '/privacy',
       ],
-      disallow: ['/studio', '/partner', '/_next/', '/api/'], // Add any private paths
+      disallow: [
+        '/studio',
+        '/partner',
+        '/_next/',
+        '/api/',
+        '/about-us.html',
+        '/green-screen-productions.html',
+      ], // Add any private paths
     },
     sitemap: 'https://www.voyagervrlab.co.uk/sitemap.xml',
     content: 'all',
