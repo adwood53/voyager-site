@@ -16,6 +16,7 @@ import SettingsPanel from './panels/SettingsPanel';
 import ScopeBuilderPanel from './panels/ScopeBuilderPanel';
 import ProductionsPanel from './panels/ProductionsPanel';
 import MerchandisePanel from './panels/MerchandisePanel';
+import ResourcesPanel from './panels/ResourcesPanel';
 
 // Define dashboard pages/routes
 const DASHBOARD_ROUTES = {
@@ -25,6 +26,7 @@ const DASHBOARD_ROUTES = {
   SCOPE_BUILDER: 'scope-builder',
   PRODUCTIONS: 'productions',
   MERCHANDISE: 'merchandise',
+  RESOURCES: 'resources',
 };
 
 export default function DashboardShell() {
@@ -188,6 +190,8 @@ export default function DashboardShell() {
         return <ProductionsPanel />;
       case DASHBOARD_ROUTES.MERCHANDISE:
         return <MerchandisePanel />;
+      case DASHBOARD_ROUTES.RESOURCES:
+        return <ResourcesPanel />;
       default:
         return <HomePanel />;
     }
@@ -197,7 +201,7 @@ export default function DashboardShell() {
     <>
       <InstallPrompt />
       <div
-        className="dashboard-shell flex flex-col h-screen overflow-hidden bg-gray-50"
+        className="dashboard-shell partner-dashboard flex flex-col h-screen overflow-hidden bg-gray-50"
         style={brandingStyles}
       >
         {/* Title Bar with organization and Voyager logos */}

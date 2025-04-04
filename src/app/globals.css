@@ -397,20 +397,20 @@ img {
   }
 }
 
-/* Custom scrollbar for webkit browsers */
-::-webkit-scrollbar {
+/* Custom scrollbar for webkit browsers - only for main site */
+body:not(.partner-dashboard)::-webkit-scrollbar {
   width: 8px;
 }
 
-::-webkit-scrollbar-track {
+body:not(.partner-dashboard)::-webkit-scrollbar-track {
   background: #121212;
 }
 
-::-webkit-scrollbar-thumb {
+body:not(.partner-dashboard)::-webkit-scrollbar-thumb {
   background: rgb(231 144 35 / 30%);
   border-radius: 4px;
 }
 
-::-webkit-scrollbar-thumb:hover {
+body:not(.partner-dashboard)::-webkit-scrollbar-thumb:hover {
   background: rgb(231 144 35 / 50%);
 }
