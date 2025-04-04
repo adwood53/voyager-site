@@ -13,8 +13,6 @@ import {
   ModalFooter,
   useDisclosure,
 } from '@heroui/react';
-import { motion } from 'framer-motion';
-import Image from 'next/image';
 
 export default function ResourcesPanel() {
   // State for active resource
@@ -29,9 +27,11 @@ export default function ResourcesPanel() {
       title: 'Partner Training Presentation',
       icon: '🎓',
       color: '#3B82F6', // Blue
+      bgColor: '#EFF6FF', // Light blue background
       description:
         'Comprehensive presentation on becoming a successful Voyager partner.',
       type: 'presentation',
+      fileType: 'Presentation',
       canvaUrl: 'https://www.canva.com/design/123456/view',
     },
     {
@@ -39,18 +39,22 @@ export default function ResourcesPanel() {
       title: 'vCard Pricing Rubric',
       icon: '💰',
       color: '#10B981', // Green
+      bgColor: '#ECFDF5', // Light green background
       description:
         'Detailed breakdown of pricing structures for our vCard offerings.',
       type: 'pricing',
+      fileType: 'Spreadsheet',
     },
     {
       id: 'demos',
       title: 'Demo Collection',
       icon: '🎮',
       color: '#F59E0B', // Amber
+      bgColor: '#FFFBEB', // Light amber background
       description:
         'Access interactive demos to showcase to your clients.',
       type: 'demos',
+      fileType: 'Interactive',
       demos: [
         {
           name: 'AR Business Card',
@@ -76,21 +80,139 @@ export default function ResourcesPanel() {
       title: 'Card Design Templates',
       icon: '🎨',
       color: '#EC4899', // Pink
+      bgColor: '#FCE7F3', // Light pink background
       description:
         'Templates for creating effective AR business cards.',
       type: 'templates',
+      fileType: 'Templates',
       templates: [
         {
-          name: 'Corporate Style',
-          url: 'https://www.canva.com/design/corporate123/edit',
+          name: 'NFC1000',
+          url: 'https://www.canva.com/design/DAGjr3bX_lY/iXE8NQwA4BZ60dyNm-amqQ/edit?utm_content=DAGjr3bX_lY&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
         },
         {
-          name: 'Creative Style',
-          url: 'https://www.canva.com/design/creative456/edit',
+          name: 'NFC1001',
+          url: 'https://www.canva.com/design/DAGjr86cnIk/5ORDEfmbmwNZcTdkR6VWzg/edit?utm_content=DAGjr86cnIk&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
         },
         {
-          name: 'Minimalist Style',
-          url: 'https://www.canva.com/design/minimal789/edit',
+          name: 'NFC1002',
+          url: 'https://www.canva.com/design/DAGjr4KNQQk/EU9SXQWhi2zyrJ73QNmWjQ/edit?utm_content=DAGjr4KNQQk&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
+        },
+        {
+          name: 'NFC1003',
+          url: 'https://www.canva.com/design/DAGjrx-ITUw/I1K4LSzQXGcREaE8966q9Q/edit?utm_content=DAGjrx-ITUw&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
+        },
+        {
+          name: 'NFC1004',
+          url: 'https://www.canva.com/design/DAGjr7DLQIg/MmhUi879ycyY0JT-gG73Vg/edit?utm_content=DAGjr7DLQIg&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
+        },
+        {
+          name: 'NFC1005',
+          url: 'https://www.canva.com/design/DAGjryGOhPs/G2qQSDyxL0KIN4bNrSzOiw/edit?utm_content=DAGjryGOhPs&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
+        },
+        {
+          name: 'NFC1006',
+          url: 'https://www.canva.com/design/DAGjr9MGHx8/8gS9rwqR1DShs-Mq6iKRQQ/edit?utm_content=DAGjr9MGHx8&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
+        },
+        {
+          name: 'NFC1007',
+          url: 'https://www.canva.com/design/DAGjry9_w7w/oksOMxOBF548Hxn1eazOdQ/edit?utm_content=DAGjry9_w7w&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
+        },
+        {
+          name: 'NFC1008',
+          url: 'https://www.canva.com/design/DAGjr55aAzc/b9GXW-B5fH85G97JBtk7VQ/edit?utm_content=DAGjr55aAzc&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
+        },
+        {
+          name: 'NFC1009',
+          url: 'https://www.canva.com/design/DAGjr1lkEY0/yQTMMdzvN-3meEffQLvMuw/edit?utm_content=DAGjr1lkEY0&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
+        },
+        {
+          name: 'NFC1010',
+          url: 'https://www.canva.com/design/DAGjr5yI-zw/g3O4uTR4cxEQ5PdERUfpsA/edit?utm_content=DAGjr5yI-zw&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
+        },
+        {
+          name: 'NFC1011',
+          url: 'https://www.canva.com/design/DAGjrxBxqck/9WkQZLbRWU7eaK4mfG3Rew/edit?utm_content=DAGjrxBxqck&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
+        },
+        {
+          name: 'NFC1034',
+          url: 'https://www.canva.com/design/DAGjryTMKFE/Wqq7fab9MOc24e5JLM2Rrw/edit?utm_content=DAGjryTMKFE&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
+        },
+        {
+          name: 'NFC1035',
+          url: 'https://www.canva.com/design/DAGjr-iIKU0/i3ml8u1VQa74xHVFbM_yKg/edit?utm_content=DAGjr-iIKU0&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
+        },
+        {
+          name: 'NFC1036',
+          url: 'https://www.canva.com/design/DAGjr55ItT0/S82e3JFC--ubBdpukonxKQ/edit?utm_content=DAGjr55ItT0&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
+        },
+        {
+          name: 'NFC1037',
+          url: 'https://www.canva.com/design/DAGjr6HNHDk/Dzt8XuRBLOP-lUAdbDF82A/edit?utm_content=DAGjr6HNHDk&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
+        },
+        {
+          name: 'NFC1038',
+          url: 'https://www.canva.com/design/DAGjr4WUsuI/xlhIgjBEtOaqHyiYEB1vag/edit?utm_content=DAGjr4WUsuI&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
+        },
+        {
+          name: 'NFC1039',
+          url: 'https://www.canva.com/design/DAGjr2DAlT4/gPxIZFkpG3Ad_IuPQFkbzA/edit?utm_content=DAGjr2DAlT4&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
+        },
+        {
+          name: 'NFC1040',
+          url: 'https://www.canva.com/design/DAGjr-63XuQ/Lcv05aLag7Of52EuAewerg/edit?utm_content=DAGjr-63XuQ&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
+        },
+        {
+          name: 'NFC1041',
+          url: 'https://www.canva.com/design/DAGjr17CMm8/LvysQmSGprcOqyFnIjPLTA/edit?utm_content=DAGjr17CMm8&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
+        },
+        {
+          name: 'NFC1042',
+          url: 'https://www.canva.com/design/DAGjr4_g2ck/WmI3wpZ3sc99sOMZmk875g/edit?utm_content=DAGjr4_g2ck&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
+        },
+        {
+          name: 'NFC1043',
+          url: 'https://www.canva.com/design/DAGjr3acdc8/G7OflnAdQ1JM3GJ0mnF1fQ/edit?utm_content=DAGjr3acdc8&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
+        },
+        {
+          name: 'NFC1044',
+          url: 'https://www.canva.com/design/DAGjrzEWyGI/5SWc6XtR4rnqh9ayq7cRZQ/edit?utm_content=DAGjrzEWyGI&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
+        },
+        {
+          name: 'NFC1045',
+          url: 'https://www.canva.com/design/DAGjr2Dkq90/7tAjy0RUGI6d8VLpLsDFnw/edit?utm_content=DAGjr2Dkq90&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
+        },
+        {
+          name: 'NFC1046',
+          url: 'https://www.canva.com/design/DAGjr-vpi_Y/92HMxHaiNVWB_8SPPpue0g/edit?utm_content=DAGjr-vpi_Y&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
+        },
+        {
+          name: 'NFC1047',
+          url: 'https://www.canva.com/design/DAGjr8fv3UE/ILCbuXTIokKbNMdZ7WBM8Q/edit?utm_content=DAGjr8fv3UE&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
+        },
+        {
+          name: 'NFC1048',
+          url: 'https://www.canva.com/design/DAGjr8TyM6U/eNQYpZk2bEM64AkrpvC_0w/edit?utm_content=DAGjr8TyM6U&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
+        },
+        {
+          name: 'NFC1049',
+          url: 'https://www.canva.com/design/DAGjr8PticA/7k5BM5CXClzNyhbXrmiNtA/edit?utm_content=DAGjr8PticA&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
+        },
+        {
+          name: 'NFC1050',
+          url: 'https://www.canva.com/design/DAGjr_--Q-s/6BD0tk562-sZROG-SZzTqQ/edit?utm_content=DAGjr_--Q-s&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
+        },
+        {
+          name: 'NFC1051',
+          url: 'https://www.canva.com/design/DAGjr-RwT-Y/7DZOutHTvvSoAi_1RY_mag/edit?utm_content=DAGjr-RwT-Y&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
+        },
+        {
+          name: 'NFC1052',
+          url: 'https://www.canva.com/design/DAGjr052w7s/KoI08v-Io_8sO_a7lDj8nQ/edit?utm_content=DAGjr052w7s&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
+        },
+        {
+          name: 'NFC1053',
+          url: 'https://www.canva.com/design/DAGjr1l-Qbs/ksQ5xJdcmny6NCRJJpcw7Q/edit?utm_content=DAGjr1l-Qbs&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
         },
       ],
     },
@@ -99,27 +221,33 @@ export default function ResourcesPanel() {
       title: 'Sales Scripts',
       icon: '📝',
       color: '#8B5CF6', // Purple
+      bgColor: '#F5F3FF', // Light purple background
       description:
         'Ready-to-use scripts for pitching immersive tech to clients.',
       type: 'scripts',
+      fileType: 'Document',
     },
     {
       id: 'case-studies',
       title: 'Case Studies',
       icon: '📊',
       color: '#EF4444', // Red
+      bgColor: '#FEF2F2', // Light red background
       description:
         'Success stories and case studies to share with prospects.',
       type: 'case-studies',
+      fileType: 'PDF',
     },
     {
       id: 'marketing-materials',
       title: 'Marketing Materials',
       icon: '📣',
       color: '#0EA5E9', // Sky blue
+      bgColor: '#F0F9FF', // Light sky blue background
       description:
         'Brochures, social media assets, and marketing collateral.',
       type: 'marketing',
+      fileType: 'Assets',
     },
   ];
 
@@ -400,18 +528,6 @@ export default function ResourcesPanel() {
     }
   };
 
-  // Calculate grid layout for proper centering of incomplete rows
-  const resourceCount = resources.length;
-  const rowsNeeded = Math.ceil(resourceCount / 3);
-  const tilesInLastRow =
-    resourceCount % 3 === 0 ? 3 : resourceCount % 3;
-  const lastRowCenteringClass =
-    tilesInLastRow === 1
-      ? 'justify-center'
-      : tilesInLastRow === 2
-        ? 'justify-center gap-16'
-        : '';
-
   return (
     <div className="max-w-6xl mx-auto">
       <div className="mb-8">
@@ -424,88 +540,86 @@ export default function ResourcesPanel() {
         </p>
       </div>
 
-      {/* Resource Tiles Grid */}
-      <div className="grid grid-rows-3 gap-8 mb-12">
-        {/* Create complete rows of 3 */}
-        {Array.from({ length: rowsNeeded }).map((_, rowIndex) => {
-          const isLastRow = rowIndex === rowsNeeded - 1;
-          const startIdx = rowIndex * 3;
-          const rowResources = resources.slice(
-            startIdx,
-            startIdx + 3
-          );
-
-          return (
-            <div
-              key={`row-${rowIndex}`}
-              className={`grid grid-cols-3 gap-8 ${isLastRow && lastRowCenteringClass}`}
+      {/* Resource Tiles Grid - Improved layout with fixed dimensions */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {resources.map((resource) => (
+          <div key={resource.id} className="flex">
+            <Card
+              isPressable
+              onPress={() => handleResourceClick(resource)}
+              className="w-full border border-gray-200 shadow-sm overflow-hidden"
             >
-              {rowResources.map((resource) => (
+              <div className="h-full flex flex-col">
                 <div
-                  key={resource.id}
-                  className="flex justify-center items-center"
+                  className="p-10 flex flex-col items-center justify-center"
+                  style={{ backgroundColor: resource.bgColor }}
                 >
-                  <motion.div
-                    whileHover={{
-                      scale: 1.05,
-                      boxShadow: '0 10px 25px rgba(0,0,0,0.1)',
-                      transition: { duration: 0.2 },
-                    }}
-                    onClick={() => handleResourceClick(resource)}
-                    className="w-56 h-56 cursor-pointer rounded-lg overflow-hidden"
+                  <span className="text-4xl mb-4">
+                    {resource.icon}
+                  </span>
+                  <h3
+                    className="text-xl font-semibold text-center"
+                    style={{ color: resource.color }}
                   >
-                    <Card className="w-full h-full bg-white">
-                      <CardBody className="flex flex-col items-center justify-center p-0">
-                        <div
-                          className="w-full flex flex-col items-center justify-center p-6 text-center"
-                          style={{
-                            background: `${resource.color}10`,
-                          }}
-                        >
-                          <span className="text-5xl mb-4">
-                            {resource.icon}
-                          </span>
-                          <h3
-                            className="text-lg font-semibold"
-                            style={{ color: resource.color }}
-                          >
-                            {resource.title}
-                          </h3>
-                        </div>
-                        <div className="p-4 text-center">
-                          <p className="text-gray-600 text-sm line-clamp-2">
-                            {resource.description}
-                          </p>
-                          <Button
-                            className="mt-3"
-                            style={{
-                              backgroundColor: resource.color,
-                              color: 'white',
-                            }}
-                            size="sm"
-                          >
-                            Open Resource
-                          </Button>
-                        </div>
-                      </CardBody>
-                    </Card>
-                  </motion.div>
+                    {resource.title}
+                  </h3>
                 </div>
-              ))}
-            </div>
-          );
-        })}
+                <div className="flex-grow bg-white p-4 flex justify-between items-center">
+                  <span className="text-sm text-gray-600">
+                    {resource.fileType}
+                  </span>
+                  <span
+                    className="text-sm font-medium flex items-center"
+                    style={{ color: resource.color }}
+                  >
+                    Access <span className="ml-1">→</span>
+                  </span>
+                </div>
+              </div>
+            </Card>
+          </div>
+        ))}
       </div>
 
       {/* HeroUI Modal */}
       <Modal
         isOpen={isOpen}
         onClose={onClose}
-        size="5xl"
+        size="5xl" // Extra large modal - easier to control size than setting custom width
         scrollBehavior="inside"
         classNames={{
-          backdrop: 'bg-black/70 backdrop-blur-sm',
-          base: 'border-none shadow-xl',
+          // Important styling overrides
+          backdrop: 'bg-black/70 backdrop-blur-sm', // Semi-transparent black backdrop with blur
+          base: 'w-[80%] max-w-[90vw] m-auto border-none rounded-lg shadow-xl', // Width control and proper margins
+          wrapper:
+            'fixed inset-0 z-50 flex items-center justify-center', // Center positioning
+          body: 'bg-white p-6', // White background with padding
+          header: 'bg-white border-b border-gray-200 p-6', // White background with border
+          footer: 'bg-white border-t border-gray-200 p-6', // White background with border
+          closeButton: 'text-gray-500 hover:text-gray-700',
+        }}
+        motionProps={{
+          variants: {
+            enter: {
+              opacity: 1,
+              scale: 1,
+              transition: {
+                duration: 0.3,
+                ease: 'easeOut',
+              },
+            },
+            exit: {
+              opacity: 0,
+              scale: 0.95,
+              transition: {
+                duration: 0.2,
+                ease: 'easeIn',
+              },
+            },
+          },
+          initial: 'exit',
+          animate: 'enter',
+          exit: 'exit',
         }}
       >
         <ModalContent>
@@ -533,8 +647,10 @@ export default function ResourcesPanel() {
                   </div>
                 )}
               </ModalHeader>
-              <ModalBody>{renderModalContent()}</ModalBody>
-              <ModalFooter>
+              <ModalBody className="bg-white">
+                {renderModalContent()}
+              </ModalBody>
+              <ModalFooter className="bg-white">
                 <Button
                   onPress={onClose}
                   style={{

@@ -219,7 +219,7 @@ export default function DashboardShell() {
           />
 
           {/* Main content area */}
-          <div className="flex-1 overflow-auto relative">
+          <div className="flex-1 overflow-auto pt-4 pb-8 relative">
             {/* Dynamic content - tab switching instead of modals */}
             <div className="h-full p-6">{renderPanel()}</div>
           </div>
