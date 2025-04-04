@@ -25,8 +25,8 @@ const DASHBOARD_ROUTES = {
   SETTINGS: 'settings',
   SCOPE_BUILDER: 'scope-builder',
   PRODUCTIONS: 'productions',
-  MERCHANDISE: 'merchandise',
   RESOURCES: 'resources',
+  MERCHANDISE: 'merchandise',
 };
 
 export default function DashboardShell() {
@@ -188,10 +188,10 @@ export default function DashboardShell() {
         return <ScopeBuilderPanel />;
       case DASHBOARD_ROUTES.PRODUCTIONS:
         return <ProductionsPanel />;
-      case DASHBOARD_ROUTES.MERCHANDISE:
-        return <MerchandisePanel />;
       case DASHBOARD_ROUTES.RESOURCES:
         return <ResourcesPanel />;
+      case DASHBOARD_ROUTES.MERCHANDISE:
+        return <MerchandisePanel />;
       default:
         return <HomePanel />;
     }
@@ -201,7 +201,7 @@ export default function DashboardShell() {
     <>
       <InstallPrompt />
       <div
-        className="dashboard-shell partner-dashboard flex flex-col h-screen overflow-hidden bg-gray-50"
+        className="dashboard-shell flex flex-col h-screen overflow-hidden bg-gray-50"
         style={brandingStyles}
       >
         {/* Title Bar with organization and Voyager logos */}
