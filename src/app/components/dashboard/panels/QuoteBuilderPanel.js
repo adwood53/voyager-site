@@ -1,11 +1,11 @@
-// src/app/components/dashboard/panels/ScopeBuilderPanel.js
+// src/app/components/dashboard/panels/QuoteBuilderPanel.js
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
 import { Card, CardBody, CardHeader, Button } from '@heroui/react';
 import Script from 'next/script';
 
-export default function ScopeBuilderPanel() {
+export default function QuoteBuilderPanel() {
   const [isLoading, setIsLoading] = useState(true);
   const [scriptLoaded, setScriptLoaded] = useState(false);
   const iframeRef = useRef(null);
@@ -31,11 +31,11 @@ export default function ScopeBuilderPanel() {
     <div className="max-w-4xl mx-auto">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-800 mb-2">
-          Voyager Scope Builder
+          Voyager Quote Builder
         </h1>
         <p className="text-gray-600">
           Find the Perfect Solution for Your Brand! Configure your
-          project scope and get recommendations for the best immersive
+          project quote and get recommendations for the best immersive
           solutions.
         </p>
       </div>
@@ -54,7 +54,7 @@ export default function ScopeBuilderPanel() {
             {/* JotForm iframe */}
             <iframe
               id="JotFormIFrame-250822679363060"
-              title="Scope Builder"
+              title="Quote Builder"
               ref={iframeRef}
               onLoad={handleIframeLoad}
               allowTransparency="true"
@@ -82,12 +82,12 @@ export default function ScopeBuilderPanel() {
       <Card className="mt-8">
         <CardHeader>
           <h2 className="text-xl font-semibold text-gray-800">
-            About the Scope Builder
+            About the Quote Builder
           </h2>
         </CardHeader>
         <CardBody>
           <p className="text-gray-600 mb-4">
-            The Scope Builder helps you understand what type of
+            The Quote Builder helps you understand what type of
             immersive experience would best suit your project needs.
             Fill out the form above to help us understand your
             requirements.

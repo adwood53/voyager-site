@@ -13,7 +13,7 @@ import ProfilePanel from './ProfilePanel';
 import HomePanel from './panels/HomePanel';
 import AdminDashboard from './panels/AdminDashboard';
 import SettingsPanel from './panels/SettingsPanel';
-import ScopeBuilderPanel from './panels/ScopeBuilderPanel';
+import QuoteBuilderPanel from './panels/QuoteBuilderPanel';
 import ProductionsPanel from './panels/ProductionsPanel';
 import MerchandisePanel from './panels/MerchandisePanel';
 import ResourcesPanel from './panels/ResourcesPanel';
@@ -24,7 +24,7 @@ const DASHBOARD_ROUTES = {
   HOME: 'home',
   ADMIN: 'admin',
   SETTINGS: 'settings',
-  SCOPE_BUILDER: 'scope-builder',
+  QUOTE_BUILDER: 'quote-builder',
   PRODUCTIONS: 'productions',
   RESOURCES: 'resources',
   MERCHANDISE: 'merchandise',
@@ -186,8 +186,8 @@ export default function DashboardShell() {
         return isAdmin ? <AdminDashboard /> : <HomePanel />;
       case DASHBOARD_ROUTES.SETTINGS:
         return <SettingsPanel isAdmin={isAdmin} />;
-      case DASHBOARD_ROUTES.SCOPE_BUILDER:
-        return <ScopeBuilderPanel />;
+      case DASHBOARD_ROUTES.QUOTE_BUILDER:
+        return <QuoteBuilderPanel />;
       case DASHBOARD_ROUTES.PRODUCTIONS:
         return <ProductionsPanel />;
       case DASHBOARD_ROUTES.RESOURCES:

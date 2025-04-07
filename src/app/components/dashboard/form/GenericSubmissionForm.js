@@ -19,7 +19,7 @@ import { usePartner } from '@/src/utils/partners';
  */
 export default function GenericSubmissionForm({
   formTitle = 'Submit Request',
-  formType = 'scope',
+  formType = 'quote',
   onSubmit,
   onCancel,
   extraFields = [],

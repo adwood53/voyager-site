@@ -15,8 +15,8 @@ export default function NavigationBar({ activeRoute, onNavigate }) {
       icon: '🏠',
     },
     {
-      id: 'scope-builder',
-      label: 'Scope Builder',
+      id: 'quote-builder',
+      label: 'Quote Builder',
       icon: '📄',
     },
     {

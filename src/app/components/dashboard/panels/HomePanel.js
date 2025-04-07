@@ -21,13 +21,13 @@ export default function HomePanel() {
   // Features for dashboard cards
   const features = [
     {
-      id: 'scope-builder',
-      title: 'Scope Builder',
+      id: 'quote-builder',
+      title: 'Quote Builder',
       description:
-        'Create and manage project scopes, quotes, and proposals for your clients',
+        'Create project scopes, quotes, and proposals for your clients',
       icon: '📄',
       color: '#3B82F6',
-      route: 'scope-builder',
+      route: 'quote-builder',
     },
     {
       id: 'productions',
@@ -140,10 +140,9 @@ export default function HomePanel() {
               </li>
               <li>
                 <strong className="text-gray-800">
-                  Create Your First Scope:
+                  Create Your First Quote:
                 </strong>{' '}
-                Start by creating a project scope to generate a quote
-                for your client.
+                Start by creating a project quote for your client.
               </li>
               <li>
                 <strong className="text-gray-800">
