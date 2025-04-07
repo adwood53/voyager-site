@@ -2,6 +2,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import {
   Card,
   CardBody,
@@ -32,7 +33,8 @@ export default function ResourcesPanel() {
         'Comprehensive presentation on becoming a successful Voyager partner.',
       type: 'presentation',
       fileType: 'Presentation',
-      canvaUrl: 'https://www.canva.com/design/123456/view',
+      canvaUrl:
+        'https://www.canva.com/design/DAGj8Gf0ImQ/yYW3l8O6Uii1vSPuHrX15Q/edit?utm_content=DAGj8Gf0ImQ&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
     },
     {
       id: 'vcard-pricing',
@@ -86,135 +88,78 @@ export default function ResourcesPanel() {
       type: 'templates',
       fileType: 'Templates',
       templates: [
-        {
-          name: 'NFC1000',
-          url: 'https://www.canva.com/design/DAGjr3bX_lY/iXE8NQwA4BZ60dyNm-amqQ/edit?utm_content=DAGjr3bX_lY&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
-        },
-        {
-          name: 'NFC1001',
-          url: 'https://www.canva.com/design/DAGjr86cnIk/5ORDEfmbmwNZcTdkR6VWzg/edit?utm_content=DAGjr86cnIk&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
-        },
-        {
-          name: 'NFC1002',
-          url: 'https://www.canva.com/design/DAGjr4KNQQk/EU9SXQWhi2zyrJ73QNmWjQ/edit?utm_content=DAGjr4KNQQk&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
-        },
-        {
-          name: 'NFC1003',
-          url: 'https://www.canva.com/design/DAGjrx-ITUw/I1K4LSzQXGcREaE8966q9Q/edit?utm_content=DAGjrx-ITUw&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
-        },
-        {
-          name: 'NFC1004',
-          url: 'https://www.canva.com/design/DAGjr7DLQIg/MmhUi879ycyY0JT-gG73Vg/edit?utm_content=DAGjr7DLQIg&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
-        },
-        {
-          name: 'NFC1005',
-          url: 'https://www.canva.com/design/DAGjryGOhPs/G2qQSDyxL0KIN4bNrSzOiw/edit?utm_content=DAGjryGOhPs&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
-        },
-        {
-          name: 'NFC1006',
-          url: 'https://www.canva.com/design/DAGjr9MGHx8/8gS9rwqR1DShs-Mq6iKRQQ/edit?utm_content=DAGjr9MGHx8&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
-        },
-        {
-          name: 'NFC1007',
-          url: 'https://www.canva.com/design/DAGjry9_w7w/oksOMxOBF548Hxn1eazOdQ/edit?utm_content=DAGjry9_w7w&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
-        },
-        {
-          name: 'NFC1008',
-          url: 'https://www.canva.com/design/DAGjr55aAzc/b9GXW-B5fH85G97JBtk7VQ/edit?utm_content=DAGjr55aAzc&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
-        },
-        {
-          name: 'NFC1009',
-          url: 'https://www.canva.com/design/DAGjr1lkEY0/yQTMMdzvN-3meEffQLvMuw/edit?utm_content=DAGjr1lkEY0&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
-        },
-        {
-          name: 'NFC1010',
-          url: 'https://www.canva.com/design/DAGjr5yI-zw/g3O4uTR4cxEQ5PdERUfpsA/edit?utm_content=DAGjr5yI-zw&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
-        },
-        {
-          name: 'NFC1011',
-          url: 'https://www.canva.com/design/DAGjrxBxqck/9WkQZLbRWU7eaK4mfG3Rew/edit?utm_content=DAGjrxBxqck&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
-        },
-        {
-          name: 'NFC1034',
-          url: 'https://www.canva.com/design/DAGjryTMKFE/Wqq7fab9MOc24e5JLM2Rrw/edit?utm_content=DAGjryTMKFE&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
-        },
-        {
-          name: 'NFC1035',
-          url: 'https://www.canva.com/design/DAGjr-iIKU0/i3ml8u1VQa74xHVFbM_yKg/edit?utm_content=DAGjr-iIKU0&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
-        },
-        {
-          name: 'NFC1036',
-          url: 'https://www.canva.com/design/DAGjr55ItT0/S82e3JFC--ubBdpukonxKQ/edit?utm_content=DAGjr55ItT0&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
-        },
-        {
-          name: 'NFC1037',
-          url: 'https://www.canva.com/design/DAGjr6HNHDk/Dzt8XuRBLOP-lUAdbDF82A/edit?utm_content=DAGjr6HNHDk&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
-        },
-        {
-          name: 'NFC1038',
-          url: 'https://www.canva.com/design/DAGjr4WUsuI/xlhIgjBEtOaqHyiYEB1vag/edit?utm_content=DAGjr4WUsuI&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
-        },
-        {
-          name: 'NFC1039',
-          url: 'https://www.canva.com/design/DAGjr2DAlT4/gPxIZFkpG3Ad_IuPQFkbzA/edit?utm_content=DAGjr2DAlT4&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
-        },
-        {
-          name: 'NFC1040',
-          url: 'https://www.canva.com/design/DAGjr-63XuQ/Lcv05aLag7Of52EuAewerg/edit?utm_content=DAGjr-63XuQ&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
-        },
-        {
-          name: 'NFC1041',
-          url: 'https://www.canva.com/design/DAGjr17CMm8/LvysQmSGprcOqyFnIjPLTA/edit?utm_content=DAGjr17CMm8&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
-        },
-        {
-          name: 'NFC1042',
-          url: 'https://www.canva.com/design/DAGjr4_g2ck/WmI3wpZ3sc99sOMZmk875g/edit?utm_content=DAGjr4_g2ck&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
-        },
-        {
-          name: 'NFC1043',
-          url: 'https://www.canva.com/design/DAGjr3acdc8/G7OflnAdQ1JM3GJ0mnF1fQ/edit?utm_content=DAGjr3acdc8&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
-        },
-        {
-          name: 'NFC1044',
-          url: 'https://www.canva.com/design/DAGjrzEWyGI/5SWc6XtR4rnqh9ayq7cRZQ/edit?utm_content=DAGjrzEWyGI&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
-        },
-        {
-          name: 'NFC1045',
-          url: 'https://www.canva.com/design/DAGjr2Dkq90/7tAjy0RUGI6d8VLpLsDFnw/edit?utm_content=DAGjr2Dkq90&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
-        },
-        {
-          name: 'NFC1046',
-          url: 'https://www.canva.com/design/DAGjr-vpi_Y/92HMxHaiNVWB_8SPPpue0g/edit?utm_content=DAGjr-vpi_Y&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
-        },
-        {
-          name: 'NFC1047',
-          url: 'https://www.canva.com/design/DAGjr8fv3UE/ILCbuXTIokKbNMdZ7WBM8Q/edit?utm_content=DAGjr8fv3UE&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
-        },
-        {
-          name: 'NFC1048',
-          url: 'https://www.canva.com/design/DAGjr8TyM6U/eNQYpZk2bEM64AkrpvC_0w/edit?utm_content=DAGjr8TyM6U&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
-        },
-        {
-          name: 'NFC1049',
-          url: 'https://www.canva.com/design/DAGjr8PticA/7k5BM5CXClzNyhbXrmiNtA/edit?utm_content=DAGjr8PticA&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
-        },
-        {
-          name: 'NFC1050',
-          url: 'https://www.canva.com/design/DAGjr_--Q-s/6BD0tk562-sZROG-SZzTqQ/edit?utm_content=DAGjr_--Q-s&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
-        },
-        {
-          name: 'NFC1051',
-          url: 'https://www.canva.com/design/DAGjr-RwT-Y/7DZOutHTvvSoAi_1RY_mag/edit?utm_content=DAGjr-RwT-Y&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
-        },
-        {
-          name: 'NFC1052',
-          url: 'https://www.canva.com/design/DAGjr052w7s/KoI08v-Io_8sO_a7lDj8nQ/edit?utm_content=DAGjr052w7s&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
-        },
-        {
-          name: 'NFC1053',
-          url: 'https://www.canva.com/design/DAGjr1l-Qbs/ksQ5xJdcmny6NCRJJpcw7Q/edit?utm_content=DAGjr1l-Qbs&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
-        },
+        { name: 'Template 1000', id: '1000' },
+        { name: 'Template 1001', id: '1001' },
+        { name: 'Template 1002', id: '1002' },
+        { name: 'Template 1003', id: '1003' },
+        { name: 'Template 1004', id: '1004' },
+        { name: 'Template 1005', id: '1005' },
+        { name: 'Template 1006', id: '1006' },
+        { name: 'Template 1007', id: '1007' },
+        { name: 'Template 1008', id: '1008' },
+        { name: 'Template 1009', id: '1009' },
+        { name: 'Template 1010', id: '1010' },
+        { name: 'Template 1011', id: '1011' },
+        { name: 'Template 1034', id: '1034' },
+        { name: 'Template 1035', id: '1035' },
+        { name: 'Template 1036', id: '1036' },
+        { name: 'Template 1037', id: '1037' },
+        { name: 'Template 1038', id: '1038' },
+        { name: 'Template 1039', id: '1039' },
+        { name: 'Template 1040', id: '1040' },
+        { name: 'Template 1041', id: '1041' },
+        { name: 'Template 1042', id: '1042' },
+        { name: 'Template 1043', id: '1043' },
+        { name: 'Template 1044', id: '1044' },
+        { name: 'Template 1045', id: '1045' },
+        { name: 'Template 1046', id: '1046' },
+        { name: 'Template 1047', id: '1047' },
+        { name: 'Template 1048', id: '1048' },
+        { name: 'Template 1049', id: '1049' },
+        { name: 'Template 1050', id: '1050' },
+        { name: 'Template 1051', id: '1051' },
+        { name: 'Template 1052', id: '1052' },
+        { name: 'Template 1053', id: '1053' },
       ],
+      // Add Canva URL generation function
+      getCanvaUrl: (templateId) => {
+        const templateMap = {
+          1000: 'https://www.canva.com/design/DAGjr3bX_lY/iXE8NQwA4BZ60dyNm-amqQ/edit?utm_content=DAGjr3bX_lY&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
+          1001: 'https://www.canva.com/design/DAGjr86cnIk/5ORDEfmbmwNZcTdkR6VWzg/edit?utm_content=DAGjr86cnIk&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
+          1002: 'https://www.canva.com/design/DAGjr4KNQQk/EU9SXQWhi2zyrJ73QNmWjQ/edit?utm_content=DAGjr4KNQQk&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
+          1003: 'https://www.canva.com/design/DAGjrx-ITUw/I1K4LSzQXGcREaE8966q9Q/edit?utm_content=DAGjrx-ITUw&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
+          1004: 'https://www.canva.com/design/DAGjr7DLQIg/MmhUi879ycyY0JT-gG73Vg/edit?utm_content=DAGjr7DLQIg&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
+          1005: 'https://www.canva.com/design/DAGjryGOhPs/G2qQSDyxL0KIN4bNrSzOiw/edit?utm_content=DAGjryGOhPs&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
+          1006: 'https://www.canva.com/design/DAGjr9MGHx8/8gS9rwqR1DShs-Mq6iKRQQ/edit?utm_content=DAGjr9MGHx8&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
+          1007: 'https://www.canva.com/design/DAGjry9_w7w/oksOMxOBF548Hxn1eazOdQ/edit?utm_content=DAGjry9_w7w&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
+          1008: 'https://www.canva.com/design/DAGjr55aAzc/b9GXW-B5fH85G97JBtk7VQ/edit?utm_content=DAGjr55aAzc&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
+          1009: 'https://www.canva.com/design/DAGjr1lkEY0/yQTMMdzvN-3meEffQLvMuw/edit?utm_content=DAGjr1lkEY0&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
+          1010: 'https://www.canva.com/design/DAGjr5yI-zw/g3O4uTR4cxEQ5PdERUfpsA/edit?utm_content=DAGjr5yI-zw&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
+          1011: 'https://www.canva.com/design/DAGjrxBxqck/9WkQZLbRWU7eaK4mfG3Rew/edit?utm_content=DAGjrxBxqck&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
+          1034: 'https://www.canva.com/design/DAGjryTMKFE/Wqq7fab9MOc24e5JLM2Rrw/edit?utm_content=DAGjryTMKFE&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
+          1035: 'https://www.canva.com/design/DAGjr-iIKU0/i3ml8u1VQa74xHVFbM_yKg/edit?utm_content=DAGjr-iIKU0&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
+          1036: 'https://www.canva.com/design/DAGjr55ItT0/S82e3JFC--ubBdpukonxKQ/edit?utm_content=DAGjr55ItT0&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
+          1037: 'https://www.canva.com/design/DAGjr6HNHDk/Dzt8XuRBLOP-lUAdbDF82A/edit?utm_content=DAGjr6HNHDk&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
+          1038: 'https://www.canva.com/design/DAGjr4WUsuI/xlhIgjBEtOaqHyiYEB1vag/edit?utm_content=DAGjr4WUsuI&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
+          1039: 'https://www.canva.com/design/DAGjr2DAlT4/gPxIZFkpG3Ad_IuPQFkbzA/edit?utm_content=DAGjr2DAlT4&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
+          1040: 'https://www.canva.com/design/DAGjr-63XuQ/Lcv05aLag7Of52EuAewerg/edit?utm_content=DAGjr-63XuQ&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
+          1041: 'https://www.canva.com/design/DAGjr17CMm8/LvysQmSGprcOqyFnIjPLTA/edit?utm_content=DAGjr17CMm8&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
+          1042: 'https://www.canva.com/design/DAGjr4_g2ck/WmI3wpZ3sc99sOMZmk875g/edit?utm_content=DAGjr4_g2ck&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
+          1043: 'https://www.canva.com/design/DAGjr3acdc8/G7OflnAdQ1JM3GJ0mnF1fQ/edit?utm_content=DAGjr3acdc8&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
+          1044: 'https://www.canva.com/design/DAGjrzEWyGI/5SWc6XtR4rnqh9ayq7cRZQ/edit?utm_content=DAGjrzEWyGI&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
+          1045: 'https://www.canva.com/design/DAGjr2Dkq90/7tAjy0RUGI6d8VLpLsDFnw/edit?utm_content=DAGjr2Dkq90&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
+          1046: 'https://www.canva.com/design/DAGjr-vpi_Y/92HMxHaiNVWB_8SPPpue0g/edit?utm_content=DAGjr-vpi_Y&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
+          1047: 'https://www.canva.com/design/DAGjr8fv3UE/ILCbuXTIokKbNMdZ7WBM8Q/edit?utm_content=DAGjr8fv3UE&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
+          1048: 'https://www.canva.com/design/DAGjr8TyM6U/eNQYpZk2bEM64AkrpvC_0w/edit?utm_content=DAGjr8TyM6U&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
+          1049: 'https://www.canva.com/design/DAGjr8PticA/7k5BM5CXClzNyhbXrmiNtA/edit?utm_content=DAGjr8PticA&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
+          1050: 'https://www.canva.com/design/DAGjr_--Q-s/6BD0tk562-sZROG-SZzTqQ/edit?utm_content=DAGjr_--Q-s&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
+          1051: 'https://www.canva.com/design/DAGjr-RwT-Y/7DZOutHTvvSoAi_1RY_mag/edit?utm_content=DAGjr-RwT-Y&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
+          1052: 'https://www.canva.com/design/DAGjr052w7s/KoI08v-Io_8sO_a7lDj8nQ/edit?utm_content=DAGjr052w7s&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
+          1053: 'https://www.canva.com/design/DAGjr1l-Qbs/ksQ5xJdcmny6NCRJJpcw7Q/edit?utm_content=DAGjr1l-Qbs&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
+        };
+
+        return templateMap[templateId] || '';
+      },
     },
     {
       id: 'sales-scripts',
@@ -265,20 +210,49 @@ export default function ResourcesPanel() {
     });
   };
 
+  // Function to handle opening a template in Canva
+  const openTemplateInCanva = (templateId) => {
+    const resource = resources.find((r) => r.id === 'card-templates');
+    if (resource && resource.getCanvaUrl) {
+      const url = resource.getCanvaUrl(templateId);
+      if (url) {
+        window.open(url, '_blank', 'noopener,noreferrer');
+      }
+    }
+  };
+
   // Function to render modal content based on resource type
   const renderModalContent = () => {
     if (!activeResource) return null;
 
     switch (activeResource.type) {
       case 'presentation':
+        // Get the URL from the resource and ensure it has the embed parameter
+        const presentationUrl = activeResource.canvaUrl.includes(
+          '?embed'
+        )
+          ? activeResource.canvaUrl
+          : `${activeResource.canvaUrl}${activeResource.canvaUrl.endsWith('/') ? '' : '/'}?embed`;
+
         return (
           <div className="w-full h-[70vh]">
             <iframe
-              src={activeResource.canvaUrl}
+              src={presentationUrl}
               className="w-full h-full border-0"
+              allowFullScreen={true}
               allow="fullscreen"
               title="Partner Training Presentation"
             ></iframe>
+
+            <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-md">
+              <h4 className="text-lg font-medium text-yellow-800 mb-2">
+                Presentation Controls
+              </h4>
+              <p className="text-yellow-700">
+                Use the arrows to navigate or press the full-screen
+                button for the best viewing experience.
+              </p>
+            </div>
           </div>
         );
 
@@ -477,44 +451,50 @@ export default function ResourcesPanel() {
       case 'templates':
         return (
           <div className="space-y-6">
-            {activeResource.templates.map((template) => (
-              <div
-                key={template.name}
-                className="bg-white rounded-lg border border-gray-200 overflow-hidden shadow-sm"
-              >
-                <div className="flex justify-between items-center p-4 border-b border-gray-100">
-                  <h4 className="text-lg font-medium text-gray-800">
-                    {template.name}
-                  </h4>
-                  <Button
-                    color="primary"
-                    onClick={() =>
-                      window.open(
-                        template.url,
-                        '_blank',
-                        'noopener,noreferrer'
-                      )
-                    }
-                  >
-                    Open in Canva
-                  </Button>
-                </div>
+            <p className="text-gray-600 mb-4">
+              Click on any template to open it in Canva for
+              customization. Images shown are previews of the
+              templates.
+            </p>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+              {activeResource.templates.map((template) => (
+                <div
+                  key={template.id}
+                  className="bg-white rounded-lg border border-gray-200 overflow-hidden shadow-sm hover:shadow-md transition-shadow"
+                >
+                  <div className="p-2 border-b border-gray-100">
+                    <h4 className="text-sm font-medium text-gray-800 truncate">
+                      {template.name}
+                    </h4>
+                  </div>
 
-                <div className="p-4 bg-gray-50">
-                  <div className="aspect-[85/55] bg-white rounded border border-gray-200 shadow-sm relative overflow-hidden">
-                    {/* Template preview image - replace with actual previews */}
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="text-5xl opacity-20">🎨</div>
+                  <div className="relative aspect-[304/229] overflow-hidden group">
+                    <div className="relative w-full h-full">
+                      <Image
+                        src={`/vcards/${template.id}.webp`}
+                        alt={`Template ${template.id}`}
+                        fill
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        className="object-cover"
+                      />
                     </div>
-                    <div className="absolute inset-0 bg-gradient-to-t from-gray-800/50 to-transparent flex items-end">
-                      <div className="p-3 text-white text-sm">
-                        {template.name} Template
-                      </div>
+
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-all flex items-center justify-center opacity-0 group-hover:opacity-100">
+                      <Button
+                        size="sm"
+                        color="primary"
+                        onClick={() =>
+                          openTemplateInCanva(template.id)
+                        }
+                        className="bg-white text-gray-800 border border-gray-300 hover:bg-gray-100"
+                      >
+                        Open in Canva
+                      </Button>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         );
 
@@ -585,41 +565,17 @@ export default function ResourcesPanel() {
       <Modal
         isOpen={isOpen}
         onClose={onClose}
-        size="5xl" // Extra large modal - easier to control size than setting custom width
+        size="5xl"
         scrollBehavior="inside"
         classNames={{
-          // Important styling overrides
-          backdrop: 'bg-black/70 backdrop-blur-sm', // Semi-transparent black backdrop with blur
-          base: 'w-[80%] max-w-[90vw] m-auto border-none rounded-lg shadow-xl', // Width control and proper margins
+          backdrop: 'bg-black/70 backdrop-blur-sm',
+          base: 'w-[85%] max-w-[90vw] m-auto border-none rounded-lg shadow-xl',
           wrapper:
-            'fixed inset-0 z-50 flex items-center justify-center', // Center positioning
-          body: 'bg-white p-6', // White background with padding
-          header: 'bg-white border-b border-gray-200 p-6', // White background with border
-          footer: 'bg-white border-t border-gray-200 p-6', // White background with border
+            'fixed inset-0 z-50 flex items-center justify-center',
+          body: 'bg-white p-6',
+          header: 'bg-white border-b border-gray-200 p-6',
+          footer: 'bg-white border-t border-gray-200 p-6',
           closeButton: 'text-gray-500 hover:text-gray-700',
-        }}
-        motionProps={{
-          variants: {
-            enter: {
-              opacity: 1,
-              scale: 1,
-              transition: {
-                duration: 0.3,
-                ease: 'easeOut',
-              },
-            },
-            exit: {
-              opacity: 0,
-              scale: 0.95,
-              transition: {
-                duration: 0.2,
-                ease: 'easeIn',
-              },
-            },
-          },
-          initial: 'exit',
-          animate: 'enter',
-          exit: 'exit',
         }}
       >
         <ModalContent>
@@ -648,7 +604,55 @@ export default function ResourcesPanel() {
                 )}
               </ModalHeader>
               <ModalBody className="bg-white">
-                {renderModalContent()}
+                {activeResource &&
+                  activeResource.type === 'templates' && (
+                    <div className="space-y-6">
+                      <p className="text-gray-600 mb-4">
+                        Below are the available business card
+                        templates. Click "Open in Canva" to customize
+                        a template.
+                      </p>
+                      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+                        {activeResource.templates.map((template) => (
+                          <div
+                            key={template.id}
+                            className="bg-white rounded-lg border border-gray-200 overflow-hidden shadow-sm hover:shadow-md transition-shadow"
+                          >
+                            <div className="p-2 border-b border-gray-100">
+                              <h4 className="text-sm font-medium text-gray-800 truncate">
+                                {template.name}
+                              </h4>
+                            </div>
+                            <div className="relative group">
+                              <div className="w-full aspect-[304/229] relative">
+                                <Image
+                                  src={`/vcards/${template.id}.webp`}
+                                  alt={`Template ${template.id}`}
+                                  fill
+                                  sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
+                                  className="object-contain"
+                                />
+                              </div>
+                              <div className="absolute inset-0 flex items-center justify-center bg-black/0 group-hover:bg-black/40 transition-colors">
+                                <Button
+                                  size="sm"
+                                  className="opacity-0 group-hover:opacity-100 transition-opacity bg-white text-gray-800 border border-gray-200"
+                                  onClick={() =>
+                                    openTemplateInCanva(template.id)
+                                  }
+                                >
+                                  Open in Canva
+                                </Button>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                {activeResource &&
+                  activeResource.type !== 'templates' &&
+                  renderModalContent()}
               </ModalBody>
               <ModalFooter className="bg-white">
                 <Button
