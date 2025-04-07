@@ -3,6 +3,7 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
+import { QRCodeSVG } from 'qrcode.react';
 import {
   Card,
   CardBody,
@@ -13,6 +14,9 @@ import {
   ModalBody,
   ModalFooter,
   useDisclosure,
+  Tabs,
+  Tab,
+  Divider,
 } from '@heroui/react';
 
 export default function ResourcesPanel() {
@@ -20,6 +24,7 @@ export default function ResourcesPanel() {
   const [activeResource, setActiveResource] = useState(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [copiedIndex, setCopiedIndex] = useState(null);
+  const [copiedWhat, setCopiedWhat] = useState(null);
 
   // Define our resources
   const resources = [
@@ -63,26 +68,38 @@ export default function ResourcesPanel() {
       demos: [
         {
           name: '360 Studio Explainer',
+          type: 'standalone',
           demoUrl:
             'https://immerse.voyagervrlab.co.uk/VOY/3D-Model-VR',
+          description:
+            'Explore our virtual studio in 360°. Works best on mobile devices or desktop with webcam.',
         },
         {
           name: 'Music Banner',
+          type: 'tracked',
           demoUrl: 'https://immerse.voyagervrlab.co.uk/VOY/Automatom',
           imageUrl:
             'https://immerse.voyagervrlab.co.uk/VOY/brand/images/voyager-banner.png',
+          description:
+            'Interactive AR experience triggered by scanning the music banner image.',
         },
         {
           name: 'AR Business Card',
+          type: 'tracked',
           demoUrl:
             'https://immerse.voyagervrlab.co.uk/VOY/Business-Card/Demo',
           imageUrl:
             'https://immerse.voyagervrlab.co.uk/VOY/brand/images/business-card/front.png',
+          description:
+            'Virtual content that appears when scanning our business card design.',
         },
         {
           name: 'Voyager Lens',
+          type: 'standalone',
           demoUrl:
             'https://immerse.voyagervrlab.co.uk/VOY/Face-Tracking',
+          description:
+            'AR face filter experience. Works best on mobile devices or desktop with webcam.',
         },
       ],
     },
@@ -211,23 +228,16 @@ export default function ResourcesPanel() {
     onOpen();
   };
 
-  // Function to copy URL to clipboard
-  const copyToClipboard = (url, index) => {
-    navigator.clipboard.writeText(url).then(() => {
+  // Function to copy URL to clipboard with enhanced feedback
+  const copyToClipboard = (text, index, type = 'url') => {
+    navigator.clipboard.writeText(text).then(() => {
       setCopiedIndex(index);
-      setTimeout(() => setCopiedIndex(null), 2000);
+      setCopiedWhat(type);
+      setTimeout(() => {
+        setCopiedIndex(null);
+        setCopiedWhat(null);
+      }, 2000);
     });
-  };
-
-  // Function to handle opening a template in Canva
-  const openTemplateInCanva = (templateId) => {
-    const resource = resources.find((r) => r.id === 'card-templates');
-    if (resource && resource.getCanvaUrl) {
-      const url = resource.getCanvaUrl(templateId);
-      if (url) {
-        window.open(url, '_blank', 'noopener,noreferrer');
-      }
-    }
   };
 
   // Function to render modal content based on resource type
@@ -299,72 +309,77 @@ export default function ResourcesPanel() {
 
       case 'demos':
         return (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {activeResource.demos.map((demo, index) => (
-              <div
-                key={demo.name}
-                className="bg-white rounded-lg border border-gray-200 overflow-hidden shadow-sm"
-              >
-                <div className="p-4 border-b border-gray-100">
-                  <h4 className="text-lg font-medium text-gray-800">
-                    {demo.name}
-                  </h4>
+          <div className="w-full">
+            {/* Instructions at the top */}
+            <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+              <h3 className="text-lg font-semibold text-blue-800 mb-2">
+                How to Use These Demos
+              </h3>
+              <p className="text-blue-700 mb-2">
+                Our demos come in two types:
+              </p>
+              <ul className="list-disc pl-5 space-y-2 text-blue-700">
+                <li>
+                  <strong>Tracked Image Demos:</strong> These require
+                  both a phone and a tracking image. Open the tracking
+                  image on your computer, then scan it with your phone
+                  using the demo link.
+                </li>
+                <li>
+                  <strong>Standalone Demos:</strong> These work
+                  directly on your mobile device without needing a
+                  separate tracking image. Simply open the link on
+                  your phone.
+                </li>
+              </ul>
+              <p className="mt-2 text-blue-700">
+                All demos can work on desktop with a webcam, but the
+                experience is optimized for mobile devices.
+              </p>
+            </div>
+
+            {/* Tabs to separate demo types */}
+            <Tabs
+              aria-label="Demo Types"
+              className="mb-6"
+              classNames={{
+                tabList: 'border-b border-gray-200 mb-4',
+                tab: 'data-[selected=true]:text-primary data-[selected=true]:border-primary',
+              }}
+            >
+              <Tab key="tracked" title="Tracked Image Demos">
+                <div className="grid grid-cols-1 gap-6">
+                  {activeResource.demos
+                    .filter((demo) => demo.type === 'tracked')
+                    .map((demo, index) => (
+                      <DemoCard
+                        key={demo.name}
+                        demo={demo}
+                        index={index}
+                        copiedIndex={copiedIndex}
+                        copiedWhat={copiedWhat}
+                        copyToClipboard={copyToClipboard}
+                      />
+                    ))}
                 </div>
-
-                <div className="p-4 flex flex-col gap-4">
-                  <div className="flex flex-wrap gap-2">
-                    <Button
-                      color="primary"
-                      onClick={() =>
-                        window.open(
-                          demo.demoUrl,
-                          '_blank',
-                          'noopener,noreferrer'
-                        )
-                      }
-                      className="flex-1"
-                    >
-                      Open Demo
-                    </Button>
-
-                    <Button
-                      variant="bordered"
-                      onClick={() =>
-                        copyToClipboard(demo.demoUrl, index)
-                      }
-                      className="min-w-[120px]"
-                    >
-                      {copiedIndex === index
-                        ? '✓ Copied!'
-                        : 'Copy URL'}
-                    </Button>
-
-                    <Button
-                      color="secondary"
-                      onClick={() =>
-                        window.open(
-                          demo.imageUrl,
-                          '_blank',
-                          'noopener,noreferrer'
-                        )
-                      }
-                      className="flex-1"
-                    >
-                      View Image
-                    </Button>
-                  </div>
-
-                  <div className="text-xs text-gray-500 mt-2">
-                    <p className="mb-1">
-                      <strong>Demo URL:</strong> {demo.demoUrl}
-                    </p>
-                    <p>
-                      <strong>Image URL:</strong> {demo.imageUrl}
-                    </p>
-                  </div>
+              </Tab>
+              <Tab key="standalone" title="Standalone Demos">
+                <div className="grid grid-cols-1 gap-6">
+                  {activeResource.demos
+                    .filter((demo) => demo.type === 'standalone')
+                    .map((demo, index) => (
+                      <DemoCard
+                        key={demo.name}
+                        demo={demo}
+                        index={index}
+                        copiedIndex={copiedIndex}
+                        copiedWhat={copiedWhat}
+                        copyToClipboard={copyToClipboard}
+                      />
+                    ))}
                 </div>
-              </div>
-            ))}
+              </Tab>
+            </Tabs>
           </div>
         );
 
@@ -425,6 +440,127 @@ export default function ResourcesPanel() {
           </div>
         );
     }
+  };
+
+  // DemoCard component to encapsulate the demo display logic
+  const DemoCard = ({
+    demo,
+    index,
+    copiedIndex,
+    copiedWhat,
+    copyToClipboard,
+  }) => {
+    const isTracked = demo.type === 'tracked';
+
+    return (
+      <Card className="overflow-hidden">
+        <CardBody className="p-0">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-0">
+            {/* Left side - Demo Info */}
+            <div className="p-5 bg-white">
+              <h4 className="text-xl font-semibold text-gray-800 mb-2">
+                {demo.name}
+              </h4>
+              <p className="text-gray-600 mb-4">{demo.description}</p>
+
+              <div className="flex flex-col space-y-3">
+                <Button
+                  color="primary"
+                  className="w-full"
+                  onClick={() =>
+                    window.open(
+                      demo.demoUrl,
+                      '_blank',
+                      'noopener,noreferrer'
+                    )
+                  }
+                >
+                  Open Demo
+                </Button>
+
+                <Button
+                  variant="bordered"
+                  className="w-full"
+                  onClick={() =>
+                    copyToClipboard(demo.demoUrl, index, 'url')
+                  }
+                >
+                  {copiedIndex === index && copiedWhat === 'url'
+                    ? '✓ URL Copied!'
+                    : 'Copy Demo URL'}
+                </Button>
+
+                {isTracked && demo.imageUrl && (
+                  <>
+                    <Button
+                      color="secondary"
+                      className="w-full"
+                      onPress={() =>
+                        window.open(
+                          demo.imageUrl,
+                          '_blank',
+                          'noopener,noreferrer'
+                        )
+                      }
+                    >
+                      Open Tracking Image
+                    </Button>
+
+                    <Button
+                      variant="bordered"
+                      className="w-full"
+                      onPress={() =>
+                        copyToClipboard(demo.imageUrl, index, 'image')
+                      }
+                    >
+                      {copiedIndex === index && copiedWhat === 'image'
+                        ? '✓ Image URL Copied!'
+                        : 'Copy Image URL'}
+                    </Button>
+                  </>
+                )}
+              </div>
+            </div>
+
+            {/* Middle - Divider for larger screens */}
+            <div className="hidden md:block">
+              <Divider orientation="vertical" className="h-full" />
+            </div>
+
+            {/* Right side - QR Code and Instructions */}
+            <div className="p-5 bg-gray-50 flex flex-col items-center justify-center">
+              <div className="text-center mb-4">
+                <h5 className="text-lg font-medium text-gray-700 mb-1">
+                  Scan to open on mobile
+                </h5>
+                <p className="text-sm text-gray-500">
+                  {isTracked
+                    ? 'Display the tracking image on your computer, then scan this QR code with your phone'
+                    : 'Scan this QR code to open the demo directly on your phone'}
+                </p>
+              </div>
+
+              <div className="p-4 bg-white rounded-lg shadow-sm">
+                <QRCodeSVG
+                  value={demo.demoUrl}
+                  size={180}
+                  level="H"
+                  includeMargin={true}
+                  imageSettings={{
+                    src: '/Voyager-Box-Logo.png',
+                    x: undefined,
+                    y: undefined,
+                    height: 36,
+                    width: 36,
+                    excavate: true,
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+        </CardBody>
+      </Card>
+    );
   };
 
   return (
@@ -525,55 +661,7 @@ export default function ResourcesPanel() {
                 )}
               </ModalHeader>
               <ModalBody className="bg-white">
-                {activeResource &&
-                  activeResource.type === 'templates' && (
-                    <div className="space-y-6">
-                      <p className="text-gray-600 mb-4">
-                        Below are the available business card
-                        templates. Click "Open in Canva" to customize
-                        a template.
-                      </p>
-                      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-                        {activeResource.templates.map((template) => (
-                          <div
-                            key={template.id}
-                            className="bg-white rounded-lg border border-gray-200 overflow-hidden shadow-sm hover:shadow-md transition-shadow"
-                          >
-                            <div className="p-2 border-b border-gray-100">
-                              <h4 className="text-sm font-medium text-gray-800 truncate">
-                                {template.name}
-                              </h4>
-                            </div>
-                            <div className="relative group">
-                              <div className="w-full aspect-[304/229] relative">
-                                <Image
-                                  src={`/vcards/${template.id}.webp`}
-                                  alt={`Template ${template.id}`}
-                                  fill
-                                  sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
-                                  className="object-contain"
-                                />
-                              </div>
-                              <div className="absolute inset-0 flex items-center justify-center bg-black/0 group-hover:bg-black/40 transition-colors">
-                                <Button
-                                  size="sm"
-                                  className="opacity-0 group-hover:opacity-100 transition-opacity bg-white text-gray-800 border border-gray-200"
-                                  onClick={() =>
-                                    openTemplateInCanva(template.id)
-                                  }
-                                >
-                                  Open in Canva
-                                </Button>
-                              </div>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                {activeResource &&
-                  activeResource.type !== 'templates' &&
-                  renderModalContent()}
+                {renderModalContent()}
               </ModalBody>
               <ModalFooter className="bg-white">
                 <Button
