@@ -105,7 +105,7 @@ export default function ProductionsPanel() {
                     <div className="text-4xl mb-4 text-primary">
                       {option.id}
                     </div>
-                    <h3 className="text-lg font-semibold mb-2">
+                    <h3 className="text-lg font-semibold text-black mb-2">
                       {option.title}
                     </h3>
                     <p className="text-gray-600 text-sm">

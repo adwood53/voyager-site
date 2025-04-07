@@ -1,4 +1,4 @@
-// src/app/components/dashboard/NavigationBar.js
+// src/app/components/dashboard/NavigationBar.js - updated to handle overflow
 'use client';
 
 import { Button } from '@heroui/react';
@@ -8,7 +8,6 @@ import { useAuth, useOrganization } from '@clerk/nextjs';
 
 export default function NavigationBar({ activeRoute, onNavigate }) {
   const { membership } = useOrganization();
-
   const [navItems, setNavItems] = useState([
     {
       id: 'home',
@@ -90,8 +89,12 @@ export default function NavigationBar({ activeRoute, onNavigate }) {
   }, [hasAdminRole, membership?.role, activeRoute, onNavigate]);
 
   return (
-    <div className="w-20 md:w-64 h-full bg-white border-r border-gray-200 flex flex-col">
-      <div className="flex-1 py-4">
+    <div className="w-20 md:w-64 h-full flex flex-col border-r border-gray-200">
+      {/* Add flex-1 and overflow-y-auto for scrolling */}
+      <div
+        className="flex-1 py-4 overflow-y-auto"
+        style={{ scrollbarWidth: 'thin' }}
+      >
         <ul className="space-y-2 px-2">
           {navItems.map((item) => (
             <li key={item.id}>
@@ -128,7 +131,6 @@ function NavItem({ id, label, icon, active, onClick, customStyle }) {
 
   return (
     <div className="relative">
-      {' '}
       {/* Add a parent container for positioning context */}
       {/* Active indicator - positioned absolutely relative to the parent div */}
       {active && (
@@ -160,7 +162,7 @@ function NavItem({ id, label, icon, active, onClick, customStyle }) {
             <span className="text-xl">{icon}</span>
           </div>
           <span
-            className={`hidden md:block ml-3 ${
+            className={`hidden md:block ml-3 truncate ${
               active ? 'font-medium' : ''
             }`}
             style={{

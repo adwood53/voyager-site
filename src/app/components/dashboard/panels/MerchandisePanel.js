@@ -1,20 +1,30 @@
 // src/app/components/dashboard/panels/MerchandisePanel.js
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Card, CardBody, CardHeader } from '@heroui/react';
-import { CalculatorContainer } from '../calculator';
-import merchandiseSchema from '@/src/schemas/merchandise';
-import { usePartner } from '@/src/utils/partners';
+import Script from 'next/script';
 
 export default function MerchandisePanel() {
-  const partner = usePartner();
-  const [calculationResults, setCalculationResults] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [scriptLoaded, setScriptLoaded] = useState(false);
+  const iframeRef = useRef(null);
 
-  // Handle calculator completion
-  const handleCalculatorComplete = (data) => {
-    setCalculationResults(data.results);
-    console.log('Merchandise calculator results:', data.results);
+  // Function to handle script load
+  const handleScriptLoad = () => {
+    setScriptLoaded(true);
+    // Initialize Jotform embed handler
+    if (window.jotformEmbedHandler && iframeRef.current) {
+      window.jotformEmbedHandler(
+        "iframe[id='JotFormIFrame-250921428503048']",
+        'https://form.jotform.com/'
+      );
+    }
+  };
+
+  // Handle iframe load
+  const handleIframeLoad = () => {
+    setIsLoading(false);
   };
 
   return (
@@ -31,19 +41,43 @@ export default function MerchandisePanel() {
 
       <Card className="shadow-md rounded-lg overflow-hidden">
         <CardBody className="p-0">
-          <CalculatorContainer
-            schema={merchandiseSchema}
-            calculatorType="merchandise"
-            showPdfExport={
-              partner?.config?.features?.showPdfExport ?? true
-            }
-            showSubmitToCRM={true}
-            partner={partner}
-            onSubmit={handleCalculatorComplete}
-          />
+          <div className="relative">
+            {/* Loading state */}
+            {isLoading && (
+              <div className="absolute inset-0 flex flex-col items-center justify-center bg-white z-10 p-6">
+                <div className="w-12 h-12 border-4 border-t-transparent rounded-full animate-spin mb-4"></div>
+                <p className="text-gray-700">Loading form...</p>
+              </div>
+            )}
+
+            {/* JotForm iframe */}
+            <iframe
+              id="JotFormIFrame-250921428503048"
+              title="Merchandise Form"
+              ref={iframeRef}
+              onLoad={handleIframeLoad}
+              allowTransparency="true"
+              allow="geolocation; microphone; camera; fullscreen"
+              src="https://form.jotform.com/250921428503048"
+              style={{
+                minWidth: '100%',
+                maxWidth: '100%',
+                height: '539px',
+                border: 'none',
+              }}
+            ></iframe>
+
+            {/* JotForm scripts */}
+            <Script
+              src="https://cdn.jotfor.ms/s/umd/latest/for-form-embed-handler.js"
+              onLoad={handleScriptLoad}
+              strategy="afterInteractive"
+            />
+          </div>
         </CardBody>
       </Card>
 
+      {/* Information card */}
       <Card className="mt-8">
         <CardHeader>
           <h2 className="text-xl font-semibold text-gray-800">

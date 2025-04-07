@@ -1,8 +1,24 @@
+// src/app/components/dashboard/panels/HomePanel.js
 'use client';
 
 import { Card, CardBody, CardHeader, Button } from '@heroui/react';
+import { useUser, useOrganization } from '@clerk/nextjs';
+import { useFirebase } from '@/src/contexts/FirebaseContext';
+import Image from 'next/image';
+import Link from 'next/link';
 
 export default function HomePanel() {
+  const { user } = useUser();
+  const { organization } = useOrganization();
+  const { organization: firestoreOrg } = useFirebase();
+
+  // Get organization name from either Firebase or Clerk
+  const orgName =
+    firestoreOrg?.name ||
+    organization?.name ||
+    'Partner Organisation';
+
+  // Features for dashboard cards
   const features = [
     {
       id: 'scope-builder',
@@ -11,79 +27,95 @@ export default function HomePanel() {
         'Create and manage project scopes, quotes, and proposals for your clients',
       icon: '📄',
       color: '#3B82F6',
+      route: 'scope-builder',
     },
     {
       id: 'productions',
-      title: 'Productions',
+      title: 'Studio Bookings',
       description:
         'Book our virtual production studio for your client projects',
       icon: '🎬',
       color: '#10B981',
+      route: 'productions',
     },
     {
       id: 'merchandise',
-      title: 'Merchandise',
+      title: 'Interactive Merchandise',
       description:
-        'Browse and order branded merchandise for your clients',
+        'Order branded AR business cards, posters, and marketing materials',
       icon: '🛍️',
       color: '#F59E0B',
+      route: 'merchandise',
     },
     {
-      id: 'settings',
-      title: 'Settings',
+      id: 'resources',
+      title: 'Partner Resources',
       description:
-        'Configure your account, organisation, and preferences',
-      icon: '⚙️',
+        'Access sales tools, design templates, and technical documents',
+      icon: '📚',
       color: '#6366F1',
+      route: 'resources',
     },
   ];
 
   return (
     <div className="max-w-6xl mx-auto">
+      {/* Welcome Section */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-800 mb-2">
-          Welcome to Your Partner Dashboard
-        </h1>
-        <p className="text-gray-600">
-          Manage your projects, access resources, and collaborate with
-          our team through this central hub.
-        </p>
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-800 mb-2">
+              Welcome back, {user?.firstName || 'Partner'}
+            </h1>
+            <p className="text-gray-600">
+              Your {orgName} partner dashboard
+            </p>
+          </div>
+        </div>
       </div>
 
       {/* Dashboard features */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
-        {features.map((feature) => (
-          <Card
-            key={feature.id}
-            className="hover:shadow-md transition-shadow"
-          >
-            <CardHeader className="flex gap-3">
-              <div
-                className="p-2 rounded-full"
-                style={{ backgroundColor: `${feature.color}20` }}
-              >
-                <span
-                  className="text-2xl"
-                  style={{ color: feature.color }}
-                >
-                  {feature.icon}
-                </span>
-              </div>
-              <div>
-                <h2 className="text-xl font-semibold text-gray-800">
-                  {feature.title}
-                </h2>
-              </div>
-            </CardHeader>
-            <CardBody className="pt-0">
-              <p className="text-gray-600">{feature.description}</p>
-            </CardBody>
-          </Card>
-        ))}
+      <div className="mb-8">
+        <h2 className="text-2xl font-semibold text-gray-800 mb-4">
+          Quick Access
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {features.map((feature) => (
+            <Card
+              key={feature.id}
+              className="border border-gray-200 hover:shadow-md transition-all hover:border-primary/30 cursor-pointer"
+            >
+              <CardBody>
+                <div className="flex flex-col h-full">
+                  <div
+                    className="w-12 h-12 rounded-full flex items-center justify-center mb-4"
+                    style={{
+                      backgroundColor: `${feature.color}20`,
+                      color: feature.color,
+                    }}
+                  >
+                    <span className="text-2xl">{feature.icon}</span>
+                  </div>
+
+                  <h3
+                    className="text-xl font-semibold mb-2"
+                    style={{ color: feature.color }}
+                  >
+                    {feature.title}
+                  </h3>
+
+                  <p className="text-gray-600 mb-4 flex-grow">
+                    {feature.description}
+                  </p>
+                </div>
+              </CardBody>
+            </Card>
+          ))}
+        </div>
       </div>
 
       {/* Getting started section */}
-      <Card className="mb-8">
+      <Card className="mb-8 border border-gray-200">
         <CardHeader>
           <h2 className="text-2xl font-semibold text-gray-800">
             Getting Started
@@ -132,13 +164,12 @@ export default function HomePanel() {
             <p className="mt-4">
               Need help? Contact your Voyager representative at{' '}
               <a
-                href="mailto:conect@voyagervrlab.co.uk"
+                href="mailto:connect@voyagervrlab.co.uk"
                 className="text-blue-600 hover:underline"
                 style={{ color: 'var(--primary-color, #2563EB)' }}
               >
                 connect@voyagervrlab.co.uk
               </a>
-              .
             </p>
           </div>
         </CardBody>

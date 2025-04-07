@@ -1,7 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import { useClerk, useUser, useOrganization } from '@clerk/nextjs';
+import {
+  useClerk,
+  useUser,
+  useOrganization,
+  UserButton,
+} from '@clerk/nextjs';
 import {
   Card,
   CardBody,
@@ -110,14 +115,17 @@ export default function SettingsPanel({ isAdmin }) {
             </CardHeader>
             <CardBody>
               <div className="flex items-start gap-6 mb-6">
-                <div className="relative h-24 w-24 overflow-hidden rounded-full">
-                  <Image
-                    src={user?.imageUrl || '/placeholder-avatar.jpg'}
-                    alt="Profile"
-                    fill
-                    className="object-cover"
-                  />
-                </div>
+                <UserButton
+                  afterSignOutUrl="/sign-in"
+                  appearance={{
+                    elements: {
+                      userButtonAvatarBox: {
+                        width: '48px',
+                        height: '48px',
+                      },
+                    },
+                  }}
+                />
                 <div className="flex-1">
                   <h3 className="text-lg font-medium text-gray-800">
                     {user?.fullName || 'Your Name'}
