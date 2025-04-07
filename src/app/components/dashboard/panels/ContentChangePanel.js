@@ -88,8 +88,8 @@ export default function ContentChangePanel() {
           <p className="text-gray-600 mb-4">
             Use this form to request changes to the content of your
             existing immersive experiences. Whether you need to update
-            text, images, videos, or interactive elements, we're here
-            to help.
+            text, images, videos, or interactive elements, we&apos;re
+            here to help.
           </p>
           <p className="text-gray-600">
             Our team will review your request and provide a timeline
