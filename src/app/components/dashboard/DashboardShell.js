@@ -17,6 +17,7 @@ import ScopeBuilderPanel from './panels/ScopeBuilderPanel';
 import ProductionsPanel from './panels/ProductionsPanel';
 import MerchandisePanel from './panels/MerchandisePanel';
 import ResourcesPanel from './panels/ResourcesPanel';
+import ContactPanel from './panels/ContactPanel';
 
 // Define dashboard pages/routes
 const DASHBOARD_ROUTES = {
@@ -27,6 +28,7 @@ const DASHBOARD_ROUTES = {
   PRODUCTIONS: 'productions',
   RESOURCES: 'resources',
   MERCHANDISE: 'merchandise',
+  CONTACT: 'contact',
 };
 
 export default function DashboardShell() {
@@ -192,6 +194,8 @@ export default function DashboardShell() {
         return <ResourcesPanel />;
       case DASHBOARD_ROUTES.MERCHANDISE:
         return <MerchandisePanel />;
+      case DASHBOARD_ROUTES.CONTACT:
+        return <ContactPanel />;
       default:
         return <HomePanel />;
     }

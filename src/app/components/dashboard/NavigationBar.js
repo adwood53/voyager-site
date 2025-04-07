@@ -8,6 +8,7 @@ import { useAuth, useOrganization } from '@clerk/nextjs';
 
 export default function NavigationBar({ activeRoute, onNavigate }) {
   const { membership } = useOrganization();
+
   const [navItems, setNavItems] = useState([
     {
       id: 'home',
@@ -33,6 +34,11 @@ export default function NavigationBar({ activeRoute, onNavigate }) {
       id: 'resources',
       label: 'Resources',
       icon: '📚',
+    },
+    {
+      id: 'contact',
+      label: 'Contact',
+      icon: '📞',
     },
     {
       id: 'settings',

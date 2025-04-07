@@ -299,7 +299,7 @@ export default function ResourcesPanel() {
               </h4>
               <p className="text-yellow-700">
                 Use the arrows to navigate or press the full-screen
-                button for the best viewing experience. If you're
+                button for the best viewing experience. If you&apos;re
                 having trouble viewing the presentation, please use
                 the link above to open it in a new tab.
               </p>
@@ -321,9 +321,9 @@ export default function ResourcesPanel() {
               <ul className="list-disc pl-5 space-y-2 text-blue-700">
                 <li>
                   <strong>Tracked Image Demos:</strong> These require
-                  both a phone and a tracking image. Open the tracking
-                  image on your computer, then scan it with your phone
-                  using the demo link.
+                  both a camera and a tracking image. Open the
+                  tracking image on your computer, then scan it with
+                  your phone using the demo link.
                 </li>
                 <li>
                   <strong>Standalone Demos:</strong> These work
@@ -334,7 +334,7 @@ export default function ResourcesPanel() {
               </ul>
               <p className="mt-2 text-blue-700">
                 All demos can work on desktop with a webcam, but the
-                experience is optimized for mobile devices.
+                experience is optimised for mobile devices.
               </p>
             </div>
 
@@ -342,9 +342,15 @@ export default function ResourcesPanel() {
             <Tabs
               aria-label="Demo Types"
               className="mb-6"
+              variant="underlined"
               classNames={{
-                tabList: 'border-b border-gray-200 mb-4',
-                tab: 'data-[selected=true]:text-primary data-[selected=true]:border-primary',
+                base: 'w-full', // Ensure full width
+                tabList:
+                  'flex justify-center border-b border-gray-200 mb-6 gap-8 mx-auto',
+                tab: 'px-6 py-2 data-[selected=true]:text-primary data-[selected=true]:border-primary data-[selected=false]:text-black-500 data-[selected=false]:hover:text-gray-800 transition-colors',
+                tabContent: 'w-full',
+                cursor: 'bg-primary',
+                panel: 'pt-4',
               }}
             >
               <Tab key="tracked" title="Tracked Image Demos">
@@ -388,8 +394,9 @@ export default function ResourcesPanel() {
           <div className="space-y-6">
             <p className="text-gray-600 mb-4">
               Click on any template to open it in Canva for
-              customization. Images shown are previews of the
-              templates.
+              customisation. Images shown are previews of the
+              templates. Be sure to include an NFC branded logo to
+              notify your users of the vCards capabilities.
             </p>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
               {activeResource.templates.map((template) => (
@@ -436,7 +443,7 @@ export default function ResourcesPanel() {
       default:
         return (
           <div className="p-8 text-center text-gray-500">
-            Content coming soon
+            Hmm... I don&apos;t think this content is ready yet!
           </div>
         );
     }
@@ -453,10 +460,10 @@ export default function ResourcesPanel() {
     const isTracked = demo.type === 'tracked';
 
     return (
-      <Card className="overflow-hidden">
+      <Card className="overflow-hidden shadow-sm border border-gray-200">
         <CardBody className="p-0">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-0">
-            {/* Left side - Demo Info */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
+            {/* Left side - Demo Info & Primary Actions */}
             <div className="p-5 bg-white">
               <h4 className="text-xl font-semibold text-gray-800 mb-2">
                 {demo.name}
@@ -466,8 +473,8 @@ export default function ResourcesPanel() {
               <div className="flex flex-col space-y-3">
                 <Button
                   color="primary"
-                  className="w-full"
-                  onClick={() =>
+                  className="w-full bg-primary text-white hover:bg-accent"
+                  onPress={() =>
                     window.open(
                       demo.demoUrl,
                       '_blank',
@@ -480,7 +487,7 @@ export default function ResourcesPanel() {
 
                 <Button
                   variant="bordered"
-                  className="w-full"
+                  className="w-full border-primary text-primary hover:bg-primary/10"
                   onClick={() =>
                     copyToClipboard(demo.demoUrl, index, 'url')
                   }
@@ -494,7 +501,7 @@ export default function ResourcesPanel() {
                   <>
                     <Button
                       color="secondary"
-                      className="w-full"
+                      className="w-full bg-blue-500 text-white hover:bg-blue-600"
                       onPress={() =>
                         window.open(
                           demo.imageUrl,
@@ -508,7 +515,7 @@ export default function ResourcesPanel() {
 
                     <Button
                       variant="bordered"
-                      className="w-full"
+                      className="w-full border-blue-500 text-blue-500 hover:bg-blue-50"
                       onPress={() =>
                         copyToClipboard(demo.imageUrl, index, 'image')
                       }
@@ -522,13 +529,8 @@ export default function ResourcesPanel() {
               </div>
             </div>
 
-            {/* Middle - Divider for larger screens */}
-            <div className="hidden md:block">
-              <Divider orientation="vertical" className="h-full" />
-            </div>
-
-            {/* Right side - QR Code and Instructions */}
-            <div className="p-5 bg-gray-50 flex flex-col items-center justify-center">
+            {/* Right side - QR Code with direct correlation to Open Demo */}
+            <div className="p-5 bg-gray-50 flex flex-col items-center justify-center border-t md:border-t-0 md:border-l border-gray-200">
               <div className="text-center mb-4">
                 <h5 className="text-lg font-medium text-gray-700 mb-1">
                   Scan to open on mobile
@@ -540,7 +542,7 @@ export default function ResourcesPanel() {
                 </p>
               </div>
 
-              <div className="p-4 bg-white rounded-lg shadow-sm">
+              <div className="p-4 bg-white rounded-lg shadow-sm border border-gray-100">
                 <QRCodeSVG
                   value={demo.demoUrl}
                   size={180}
@@ -555,6 +557,12 @@ export default function ResourcesPanel() {
                     excavate: true,
                   }}
                 />
+              </div>
+
+              <div className="mt-4 text-center text-sm text-gray-500">
+                <span>
+                  Same link as &aquot;Open Demo&aquot; button
+                </span>
               </div>
             </div>
           </div>
