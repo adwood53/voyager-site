@@ -57,7 +57,7 @@ export default function MerchandisePanel() {
               ref={iframeRef}
               onLoad={handleIframeLoad}
               allowTransparency="true"
-              allow="geolocation; microphone; camera; fullscreen"
+              allow="geolocation; microphone; camera"
               src="https://form.jotform.com/250921428503048"
               style={{
                 minWidth: '100%',

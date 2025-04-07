@@ -58,7 +58,7 @@ export default function ScopeBuilderPanel() {
               ref={iframeRef}
               onLoad={handleIframeLoad}
               allowTransparency="true"
-              allow="geolocation; microphone; camera; fullscreen"
+              allow="geolocation; microphone; camera"
               src="https://form.jotform.com/250822679363060"
               style={{
                 minWidth: '100%',
