@@ -248,6 +248,13 @@ export default function Footer() {
               >
                 Privacy Policy
               </Link>
+              <span>•</span>
+              <Link
+                href="/bug-report"
+                className="hover:text-primary hover:opacity-100 transition-colors"
+              >
+                Report a Bug
+              </Link>
             </div>
           </div>
         </div>

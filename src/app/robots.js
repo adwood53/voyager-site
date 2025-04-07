@@ -10,6 +10,7 @@ export default function robots() {
         '/our-code',
         '/terms',
         '/privacy',
+        '/bug-report',
       ],
       disallow: [
         '/studio',
