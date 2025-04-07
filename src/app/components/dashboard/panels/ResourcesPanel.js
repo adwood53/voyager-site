@@ -34,7 +34,10 @@ export default function ResourcesPanel() {
       type: 'presentation',
       fileType: 'Presentation',
       canvaUrl:
-        'https://www.canva.com/design/DAGj8Gf0ImQ/yYW3l8O6Uii1vSPuHrX15Q/edit?utm_content=DAGj8Gf0ImQ&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton',
+        'https://www.canva.com/design/DAGj8Gf0ImQ/4rAB-G8t6E95T-69c0KeKw/view',
+      embedUrl:
+        'https://www.canva.com/design/DAGj8Gf0ImQ/4rAB-G8t6E95T-69c0KeKw/view?embed',
+      utm: 'utm_content=DAGj8Gf0ImQ&utm_campaign=designshare&utm_medium=embeds&utm_source=link',
     },
     {
       id: 'vcard-pricing',
@@ -59,21 +62,27 @@ export default function ResourcesPanel() {
       fileType: 'Interactive',
       demos: [
         {
+          name: '360 Studio Explainer',
+          demoUrl:
+            'https://immerse.voyagervrlab.co.uk/VOY/3D-Model-VR',
+        },
+        {
+          name: 'Music Banner',
+          demoUrl: 'https://immerse.voyagervrlab.co.uk/VOY/Automatom',
+          imageUrl:
+            'https://immerse.voyagervrlab.co.uk/VOY/brand/images/voyager-banner.png',
+        },
+        {
           name: 'AR Business Card',
-          demoUrl: 'https://demos.voyagervrlab.co.uk/ar-card',
-          imageUrl: 'https://demos.voyagervrlab.co.uk/ar-card-image',
+          demoUrl:
+            'https://immerse.voyagervrlab.co.uk/VOY/Business-Card/Demo',
+          imageUrl:
+            'https://immerse.voyagervrlab.co.uk/VOY/brand/images/business-card/front.png',
         },
         {
-          name: 'Virtual Event Space',
-          demoUrl: 'https://demos.voyagervrlab.co.uk/virtual-event',
-          imageUrl:
-            'https://demos.voyagervrlab.co.uk/virtual-event-image',
-        },
-        {
-          name: 'Product Configurator',
-          demoUrl: 'https://demos.voyagervrlab.co.uk/product-config',
-          imageUrl:
-            'https://demos.voyagervrlab.co.uk/product-config-image',
+          name: 'Voyager Lens',
+          demoUrl:
+            'https://immerse.voyagervrlab.co.uk/VOY/Face-Tracking',
         },
       ],
     },
@@ -227,152 +236,63 @@ export default function ResourcesPanel() {
 
     switch (activeResource.type) {
       case 'presentation':
-        // Get the URL from the resource and ensure it has the embed parameter
-        const presentationUrl = activeResource.canvaUrl.includes(
-          '?embed'
-        )
-          ? activeResource.canvaUrl
-          : `${activeResource.canvaUrl}${activeResource.canvaUrl.endsWith('/') ? '' : '/'}?embed`;
+        const directUrl = `${activeResource.canvaUrl}?${activeResource.utm}`;
 
         return (
           <div className="w-full h-[70vh]">
-            <iframe
-              src={presentationUrl}
-              className="w-full h-full border-0"
-              allowFullScreen={true}
-              allow="fullscreen"
-              title="Partner Training Presentation"
-            ></iframe>
+            {/* Embedding container */}
+            <div
+              style={{
+                position: 'relative',
+                width: '100%',
+                height: '100%',
+                padding: 0,
+                overflow: 'hidden',
+                borderRadius: '8px',
+              }}
+            >
+              <iframe
+                loading="lazy"
+                style={{
+                  position: 'absolute',
+                  width: '100%',
+                  height: '100%',
+                  top: 0,
+                  left: 0,
+                  border: 'none',
+                  padding: 0,
+                  margin: 0,
+                }}
+                src={activeResource.embedUrl}
+                allowFullScreen={true}
+                allow="fullscreen"
+                title={activeResource.title}
+              ></iframe>
+            </div>
 
+            {/* Direct link */}
+            <div className="flex justify-center mt-2">
+              <a
+                href={directUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm text-primary hover:text-accent transition-colors"
+              >
+                Open Presentation in New Tab
+              </a>
+            </div>
+
+            {/* Instructions */}
             <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-md">
               <h4 className="text-lg font-medium text-yellow-800 mb-2">
                 Presentation Controls
               </h4>
               <p className="text-yellow-700">
                 Use the arrows to navigate or press the full-screen
-                button for the best viewing experience.
+                button for the best viewing experience. If you're
+                having trouble viewing the presentation, please use
+                the link above to open it in a new tab.
               </p>
-            </div>
-          </div>
-        );
-
-      case 'pricing':
-        // Sample pricing data for the table
-        const pricingData = [
-          {
-            tier: 'Basic',
-            unitPrice: '£1.50',
-            bulkPrice: '£1.20',
-            setupFee: '£250',
-            minOrder: '100',
-          },
-          {
-            tier: 'Standard',
-            unitPrice: '£2.20',
-            bulkPrice: '£1.80',
-            setupFee: '£350',
-            minOrder: '250',
-          },
-          {
-            tier: 'Premium',
-            unitPrice: '£3.00',
-            bulkPrice: '£2.50',
-            setupFee: '£500',
-            minOrder: '500',
-          },
-          {
-            tier: 'Enterprise',
-            unitPrice: '£4.00',
-            bulkPrice: '£3.20',
-            setupFee: '£750',
-            minOrder: '1000',
-          },
-        ];
-
-        return (
-          <div>
-            <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th
-                      scope="col"
-                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                    >
-                      Tier
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                    >
-                      Unit Price
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                    >
-                      Bulk Price (1000+)
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                    >
-                      Setup Fee
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                    >
-                      Min Order
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                  {pricingData.map((tier) => (
-                    <tr key={tier.tier} className="hover:bg-gray-50">
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                        {tier.tier}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {tier.unitPrice}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {tier.bulkPrice}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {tier.setupFee}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {tier.minOrder}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-
-            <div className="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
-              <h4 className="text-lg font-medium text-blue-800 mb-2">
-                Pricing Notes
-              </h4>
-              <ul className="list-disc pl-5 text-blue-700 space-y-1">
-                <li>All prices are exclusive of VAT</li>
-                <li>
-                  Setup fee includes design assistance and one round
-                  of revisions
-                </li>
-                <li>
-                  Partner commission is 20% of the total order value
-                </li>
-                <li>
-                  Volume discounts available for orders exceeding 2500
-                  units
-                </li>
-                <li>
-                  Annual maintenance fee of £150 applies after the
-                  first year
-                </li>
-              </ul>
             </div>
           </div>
         );
@@ -498,7 +418,6 @@ export default function ResourcesPanel() {
           </div>
         );
 
-      // Add more cases for other resource types as needed
       default:
         return (
           <div className="p-8 text-center text-gray-500">
@@ -520,7 +439,7 @@ export default function ResourcesPanel() {
         </p>
       </div>
 
-      {/* Resource Tiles Grid - Improved layout with fixed dimensions */}
+      {/* Resource Tiles Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {resources.map((resource) => (
           <div key={resource.id} className="flex">
@@ -530,8 +449,9 @@ export default function ResourcesPanel() {
               className="w-full border border-gray-200 shadow-sm overflow-hidden"
             >
               <div className="h-full flex flex-col">
+                {/* Title section with fixed height */}
                 <div
-                  className="p-10 flex flex-col items-center justify-center"
+                  className="p-6 flex flex-col items-center justify-center min-h-[180px]"
                   style={{ backgroundColor: resource.bgColor }}
                 >
                   <span className="text-4xl mb-4">
@@ -544,7 +464,8 @@ export default function ResourcesPanel() {
                     {resource.title}
                   </h3>
                 </div>
-                <div className="flex-grow bg-white p-4 flex justify-between items-center">
+                {/* Footer section with fixed height */}
+                <div className="flex-grow bg-white p-4 flex justify-between items-center min-h-[56px]">
                   <span className="text-sm text-gray-600">
                     {resource.fileType}
                   </span>
