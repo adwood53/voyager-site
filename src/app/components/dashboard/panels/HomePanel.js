@@ -48,6 +48,15 @@ export default function HomePanel() {
       route: 'merchandise',
     },
     {
+      id: 'content-change', // Add this new feature card
+      title: 'Content Changes',
+      description:
+        'Request updates to your existing immersive experiences',
+      icon: '✏️',
+      color: '#EC4899', // Pink color
+      route: 'content-change',
+    },
+    {
       id: 'resources',
       title: 'Partner Resources',
       description:

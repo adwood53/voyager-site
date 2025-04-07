@@ -18,6 +18,7 @@ import ProductionsPanel from './panels/ProductionsPanel';
 import MerchandisePanel from './panels/MerchandisePanel';
 import ResourcesPanel from './panels/ResourcesPanel';
 import ContactPanel from './panels/ContactPanel';
+import ContentChangePanel from './panels/ContentChangePanel';
 
 // Define dashboard pages/routes
 const DASHBOARD_ROUTES = {
@@ -28,6 +29,7 @@ const DASHBOARD_ROUTES = {
   PRODUCTIONS: 'productions',
   RESOURCES: 'resources',
   MERCHANDISE: 'merchandise',
+  CONTENT_CHANGE: 'content-change',
   CONTACT: 'contact',
 };
 
@@ -194,6 +196,8 @@ export default function DashboardShell() {
         return <ResourcesPanel />;
       case DASHBOARD_ROUTES.MERCHANDISE:
         return <MerchandisePanel />;
+      case DASHBOARD_ROUTES.CONTENT_CHANGE:
+        return <ContentChangePanel />;
       case DASHBOARD_ROUTES.CONTACT:
         return <ContactPanel />;
       default:

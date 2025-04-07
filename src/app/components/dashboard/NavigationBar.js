@@ -30,6 +30,11 @@ export default function NavigationBar({ activeRoute, onNavigate }) {
       icon: '🛍️',
     },
     {
+      id: 'content-change',
+      label: 'Content Changes',
+      icon: '✏️',
+    },
+    {
       id: 'resources',
       label: 'Resources',
       icon: '📚',
