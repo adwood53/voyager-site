@@ -25,6 +25,8 @@ export default function ResourcesPanel() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [copiedIndex, setCopiedIndex] = useState(null);
   const [copiedWhat, setCopiedWhat] = useState(null);
+  // State for active industry in sales resources
+  const [activeIndustry, setActiveIndustry] = useState(null);
 
   // Define our resources
   const resources = [
@@ -210,21 +212,41 @@ export default function ResourcesPanel() {
       fileType: 'PDF',
     },
     {
-      id: 'marketing-materials',
-      title: 'Marketing Materials',
+      id: 'sales-resources',
+      title: 'Sales Resources',
       icon: '📣',
       color: '#0EA5E9', // Sky blue
       bgColor: '#F0F9FF', // Light sky blue background
       description:
-        'Brochures, social media assets, and marketing collateral.',
-      type: 'marketing',
-      fileType: 'Assets',
+        'Industry-specific sales presentations to use with prospects.',
+      type: 'sales-resources',
+      fileType: 'Presentations',
+      // Define industry-specific presentations
+      industries: [
+        {
+          id: 'construction',
+          name: 'Construction Industry',
+          description: 'Sales materials for construction clients',
+          color: '#F59E0B', // Amber
+          canvaUrl:
+            'https://www.canva.com/design/DAGkt3Rm-T0/FjCfY_ddWxJpM237g-LIJg/view',
+          embedUrl:
+            'https://www.canva.com/design/DAGkt3Rm-T0/FjCfY_ddWxJpM237g-LIJg/view?embed',
+          utm: 'utm_content=DAGkt3Rm-T0&utm_campaign=designshare&utm_medium=embeds&utm_source=link',
+        },
+      ],
     },
   ];
 
   // Function to handle resource click
   const handleResourceClick = (resource) => {
     setActiveResource(resource);
+
+    // Reset active industry when opening a resource
+    if (resource.type !== 'sales-resources') {
+      setActiveIndustry(null);
+    }
+
     onOpen();
   };
 
@@ -238,6 +260,21 @@ export default function ResourcesPanel() {
         setCopiedWhat(null);
       }, 2000);
     });
+  };
+
+  // Handle the selection of an industry within the sales resources
+  const handleIndustrySelect = (industry) => {
+    setActiveIndustry(industry);
+  };
+
+  // Function to open template in Canva
+  const openTemplateInCanva = (templateId) => {
+    if (activeResource && activeResource.getCanvaUrl) {
+      const canvaUrl = activeResource.getCanvaUrl(templateId);
+      if (canvaUrl) {
+        window.open(canvaUrl, '_blank', 'noopener,noreferrer');
+      }
+    }
   };
 
   // Function to render modal content based on resource type
@@ -320,16 +357,20 @@ export default function ResourcesPanel() {
               </p>
               <ul className="list-disc pl-5 space-y-2 text-blue-700">
                 <li>
-                  <strong>Tracked Image Demos:</strong> These require
-                  both a camera and a tracking image. Open the
-                  tracking image on your computer, then scan it with
-                  your phone using the demo link.
+                  <strong className="text-blue-800">
+                    Tracked Image Demos:
+                  </strong>{' '}
+                  These require both a camera and a tracking image.
+                  Open the tracking image on your computer, then scan
+                  it with your phone using the demo link.
                 </li>
                 <li>
-                  <strong>Standalone Demos:</strong> These work
-                  directly on your mobile device without needing a
-                  separate tracking image. Simply open the link on
-                  your phone.
+                  <strong className="text-blue-800">
+                    Standalone Demos:
+                  </strong>{' '}
+                  These work directly on your mobile device without
+                  needing a separate tracking image. Simply open the
+                  link on your phone.
                 </li>
               </ul>
               <p className="mt-2 text-blue-700">
@@ -347,7 +388,7 @@ export default function ResourcesPanel() {
                 base: 'w-full', // Ensure full width
                 tabList:
                   'flex justify-center border-b border-gray-200 mb-6 gap-8 mx-auto',
-                tab: 'px-6 py-2 data-[selected=true]:text-primary data-[selected=true]:border-primary data-[selected=false]:text-black-500 data-[selected=false]:hover:text-gray-800 transition-colors',
+                tab: 'px-6 py-2 text-gray-700 data-[selected=true]:text-primary data-[selected=true]:border-primary data-[selected=false]:text-gray-700 data-[selected=false]:hover:text-gray-800 transition-colors',
                 tabContent: 'w-full',
                 cursor: 'bg-primary',
                 panel: 'pt-4',
@@ -440,10 +481,148 @@ export default function ResourcesPanel() {
           </div>
         );
 
+      case 'sales-resources':
+        return (
+          <div className="w-full">
+            {/* If no industry selected, show the industry selection grid */}
+            {!activeIndustry ? (
+              <div className="space-y-6">
+                <p className="text-gray-600 mb-4">
+                  Select an industry to access sales resources
+                  specific to that client type. These presentations
+                  contain value propositions, use cases, and ROI
+                  metrics tailored for each sector.
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                  {activeResource.industries.map((industry) => (
+                    <div
+                      key={industry.id}
+                      className="bg-white rounded-lg border border-gray-200 overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer"
+                      onClick={() => handleIndustrySelect(industry)}
+                    >
+                      <div
+                        className="p-4 flex flex-col items-center text-center"
+                        style={{
+                          borderTop: `4px solid ${industry.color}`,
+                        }}
+                      >
+                        <h4
+                          className="text-lg font-semibold mb-2"
+                          style={{ color: industry.color }}
+                        >
+                          {industry.name}
+                        </h4>
+                        <p className="text-gray-600 text-sm">
+                          {industry.description}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              // Show the selected industry's presentation
+              <div className="w-full">
+                <div className="flex justify-between items-center mb-4">
+                  <Button
+                    size="sm"
+                    variant="light"
+                    className="flex items-center gap-1 text-gray-600"
+                    onClick={() => setActiveIndustry(null)}
+                  >
+                    <span>&#8592;</span> Back to Industries
+                  </Button>
+                  <h3
+                    className="text-lg font-semibold"
+                    style={{ color: activeIndustry.color }}
+                  >
+                    {activeIndustry.name}
+                  </h3>
+                </div>
+
+                {/* Embedding container */}
+                <div className="w-full h-[70vh]">
+                  <div
+                    style={{
+                      position: 'relative',
+                      width: '100%',
+                      height: '100%',
+                      padding: 0,
+                      overflow: 'hidden',
+                      borderRadius: '8px',
+                    }}
+                  >
+                    <iframe
+                      loading="lazy"
+                      style={{
+                        position: 'absolute',
+                        width: '100%',
+                        height: '100%',
+                        top: 0,
+                        left: 0,
+                        border: 'none',
+                        padding: 0,
+                        margin: 0,
+                      }}
+                      src={activeIndustry.embedUrl}
+                      allowFullScreen={true}
+                      allow="fullscreen"
+                      title={activeIndustry.name}
+                    ></iframe>
+                  </div>
+
+                  {/* Direct link */}
+                  <div className="flex justify-center mt-2">
+                    <a
+                      href={`${activeIndustry.canvaUrl}?${activeIndustry.utm}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm text-primary hover:text-accent transition-colors"
+                    >
+                      Open Presentation in New Tab
+                    </a>
+                  </div>
+
+                  {/* Instructions and information about the presentation */}
+                  <div className="mt-4 p-4 bg-gray-50 border border-gray-200 rounded-md">
+                    <h4 className="text-lg font-medium text-gray-800 mb-2">
+                      How to Use This Resource
+                    </h4>
+                    <p className="text-gray-600 mb-2">
+                      This presentation is designed for{' '}
+                      {activeIndustry.name.toLowerCase()} prospects
+                      and contains:
+                    </p>
+                    <ul className="list-disc pl-5 space-y-1 text-gray-600">
+                      <li>
+                        Industry-specific case studies and success
+                        stories
+                      </li>
+                      <li>
+                        Common pain points and solutions for this
+                        sector
+                      </li>
+                      <li>
+                        Recommended products and pricing strategies
+                      </li>
+                    </ul>
+                    <p className="mt-2 text-gray-600">
+                      You can download, customise, or present this
+                      directly to your clients. All sales resources
+                      are white-labeled for your use.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        );
+
       default:
         return (
           <div className="p-8 text-center text-gray-500">
-            Hmm... I don&apos;t think this content is ready yet!
+            <p>This content is currently in development.</p>
+            <p className="mt-2">Check back soon for updates!</p>
           </div>
         );
     }
@@ -560,9 +739,7 @@ export default function ResourcesPanel() {
               </div>
 
               <div className="mt-4 text-center text-sm text-gray-500">
-                <span>
-                  Same link as &aquot;Open Demo&aquot; button
-                </span>
+                <span>Same link as &quot;Open Demo&quot; button</span>
               </div>
             </div>
           </div>
@@ -629,7 +806,16 @@ export default function ResourcesPanel() {
       {/* HeroUI Modal */}
       <Modal
         isOpen={isOpen}
-        onClose={onClose}
+        onClose={() => {
+          // Reset states before closing modal
+          onClose();
+          // Slight delay to ensure modal is closed before resetting states
+          setTimeout(() => {
+            setActiveIndustry(null);
+            setCopiedIndex(null);
+            setCopiedWhat(null);
+          }, 100);
+        }}
         size="5xl"
         scrollBehavior="inside"
         classNames={{
@@ -673,7 +859,16 @@ export default function ResourcesPanel() {
               </ModalBody>
               <ModalFooter className="bg-white">
                 <Button
-                  onPress={onClose}
+                  onPress={() => {
+                    // Reset states before closing modal
+                    onClose();
+                    // Slight delay to ensure modal is closed before resetting states
+                    setTimeout(() => {
+                      setActiveIndustry(null);
+                      setCopiedIndex(null);
+                      setCopiedWhat(null);
+                    }, 100);
+                  }}
                   style={{
                     backgroundColor:
                       activeResource?.color || '#10B981',
