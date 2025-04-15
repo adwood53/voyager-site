@@ -384,8 +384,11 @@ export default function ResourcesPanel() {
               aria-label="Demo Types"
               className="mb-6"
               variant="underlined"
+              disableAnimation={true} // Add this line to prevent animation-related event issues
+              // Ensure tab selection doesn't bubble up to the modal backdrop
+              onClick={(e) => e.stopPropagation()} // Add this event handler
               classNames={{
-                base: 'w-full', // Ensure full width
+                base: 'w-full',
                 tabList:
                   'flex justify-center border-b border-gray-200 mb-6 gap-8 mx-auto',
                 tab: 'px-6 py-2 text-gray-700 data-[selected=true]:text-primary data-[selected=true]:border-primary data-[selected=false]:text-gray-700 data-[selected=false]:hover:text-gray-800 transition-colors',
@@ -806,21 +809,13 @@ export default function ResourcesPanel() {
       {/* HeroUI Modal */}
       <Modal
         isOpen={isOpen}
-        onClose={() => {
-          // Reset states before closing modal
-          onClose();
-          // Slight delay to ensure modal is closed before resetting states
-          setTimeout(() => {
-            setActiveIndustry(null);
-            setCopiedIndex(null);
-            setCopiedWhat(null);
-          }, 100);
-        }}
+        onClose={onClose}
         size="5xl"
         scrollBehavior="inside"
         classNames={{
           backdrop: 'bg-black/70 backdrop-blur-sm',
-          base: 'w-[85%] max-w-[90vw] m-auto border-none rounded-lg shadow-xl',
+          // Update only the max dimensions to ensure the modal stays within viewport with margins
+          base: 'w-[85%] max-w-[calc(100vw-40px)] max-h-[calc(100vh-40px)] m-auto border-none rounded-lg shadow-xl',
           wrapper:
             'fixed inset-0 z-50 flex items-center justify-center',
           body: 'bg-white p-6',
