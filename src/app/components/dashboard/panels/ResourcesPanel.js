@@ -234,6 +234,17 @@ export default function ResourcesPanel() {
             'https://www.canva.com/design/DAGkt3Rm-T0/FjCfY_ddWxJpM237g-LIJg/view?embed',
           utm: 'utm_content=DAGkt3Rm-T0&utm_campaign=designshare&utm_medium=embeds&utm_source=link',
         },
+        {
+          id: 'fashion',
+          name: 'Fashion Industry',
+          description: 'Sales materials for fashion clients',
+          color: '#d5f409', // Lime
+          canvaUrl:
+            'https://www.canva.com/design/DAGk36bVM3M/k9FghjNFLb9uHqy9aLjdGg/view',
+          embedUrl:
+            'https://www.canva.com/design/DAGk36bVM3M/k9FghjNFLb9uHqy9aLjdGg/view?embed',
+          utm: 'utm_content=DAGk36bVM3M&utm_campaign=designshare&utm_medium=embeds&utm_source=link',
+        },
       ],
     },
   ];
