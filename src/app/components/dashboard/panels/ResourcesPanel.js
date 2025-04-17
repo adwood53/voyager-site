@@ -245,6 +245,17 @@ export default function ResourcesPanel() {
             'https://www.canva.com/design/DAGk36bVM3M/k9FghjNFLb9uHqy9aLjdGg/view?embed',
           utm: 'utm_content=DAGk36bVM3M&utm_campaign=designshare&utm_medium=embeds&utm_source=link',
         },
+        {
+          id: 'music',
+          name: 'Music Industry',
+          description: 'Sales materials for music clients',
+          color: '#09d1f4', // Cyan
+          canvaUrl:
+            'https://www.canva.com/design/DAGk4F7eVeA/BX-rKUn_IKV6sfBALgFBQQ/view',
+          embedUrl:
+            'https://www.canva.com/design/DAGk4F7eVeA/BX-rKUn_IKV6sfBALgFBQQ/view',
+          utm: 'utm_content=DAGk4F7eVeA&utm_campaign=designshare&utm_medium=embeds&utm_source=link',
+        },
       ],
     },
   ];
