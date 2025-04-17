@@ -253,7 +253,7 @@ export default function ResourcesPanel() {
           canvaUrl:
             'https://www.canva.com/design/DAGk4F7eVeA/BX-rKUn_IKV6sfBALgFBQQ/view',
           embedUrl:
-            'https://www.canva.com/design/DAGk4F7eVeA/BX-rKUn_IKV6sfBALgFBQQ/view',
+            'https://www.canva.com/design/DAGk4F7eVeA/BX-rKUn_IKV6sfBALgFBQQ/view?embed',
           utm: 'utm_content=DAGk4F7eVeA&utm_campaign=designshare&utm_medium=embeds&utm_source=link',
         },
       ],
