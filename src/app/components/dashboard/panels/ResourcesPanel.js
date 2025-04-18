@@ -209,7 +209,21 @@ export default function ResourcesPanel() {
       description:
         'Success stories and case studies to share with prospects.',
       type: 'case-studies',
-      fileType: 'PDF',
+      fileType: 'Presentations',
+      // Define case studies
+      caseStudies: [
+        {
+          id: 'chris-lake-mainfactor',
+          name: 'Chris Lake x Mainfactor Case Study',
+          description: 'AR marketing campaign for artist merchandise',
+          color: '#EF4444', // Red
+          canvaUrl:
+            'https://www.canva.com/design/DAGk-R3nzbY/pRSuYe1RbSSFxM0qOz99Rg/view',
+          embedUrl:
+            'https://www.canva.com/design/DAGk-R3nzbY/pRSuYe1RbSSFxM0qOz99Rg/view?embed',
+          utm: 'utm_content=DAGk-R3nzbY&utm_campaign=designshare&utm_medium=embeds&utm_source=link',
+        },
+      ],
     },
     {
       id: 'sales-resources',
@@ -503,6 +517,137 @@ export default function ResourcesPanel() {
                 </div>
               ))}
             </div>
+          </div>
+        );
+
+      case 'case-studies':
+        return (
+          <div className="w-full">
+            {/* If no case study selected, show the case study selection grid */}
+            {!activeIndustry ? (
+              <div className="space-y-6">
+                <p className="text-gray-600 mb-4">
+                  Select a case study to access detailed success
+                  stories and ROI metrics. These presentations
+                  demonstrate how immersive technology has delivered
+                  measurable results for real clients.
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                  {activeResource.caseStudies.map((caseStudy) => (
+                    <div
+                      key={caseStudy.id}
+                      className="bg-white rounded-lg border border-gray-200 overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer"
+                      onClick={() => handleIndustrySelect(caseStudy)}
+                    >
+                      <div
+                        className="p-4 flex flex-col items-center text-center"
+                        style={{
+                          borderTop: `4px solid ${caseStudy.color}`,
+                        }}
+                      >
+                        <h4
+                          className="text-lg font-semibold mb-2"
+                          style={{ color: caseStudy.color }}
+                        >
+                          {caseStudy.name}
+                        </h4>
+                        <p className="text-gray-600 text-sm">
+                          {caseStudy.description}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              // Show the selected case study's presentation
+              <div className="w-full">
+                <div className="flex justify-between items-center mb-4">
+                  <Button
+                    size="sm"
+                    variant="light"
+                    className="flex items-center gap-1 text-gray-600"
+                    onClick={() => setActiveIndustry(null)}
+                  >
+                    <span>&#8592;</span> Back to Case Studies
+                  </Button>
+                  <h3
+                    className="text-lg font-semibold"
+                    style={{ color: activeIndustry.color }}
+                  >
+                    {activeIndustry.name}
+                  </h3>
+                </div>
+
+                {/* Embedding container */}
+                <div className="w-full h-[70vh]">
+                  <div
+                    style={{
+                      position: 'relative',
+                      width: '100%',
+                      height: '100%',
+                      padding: 0,
+                      overflow: 'hidden',
+                      borderRadius: '8px',
+                    }}
+                  >
+                    <iframe
+                      loading="lazy"
+                      style={{
+                        position: 'absolute',
+                        width: '100%',
+                        height: '100%',
+                        top: 0,
+                        left: 0,
+                        border: 'none',
+                        padding: 0,
+                        margin: 0,
+                      }}
+                      src={activeIndustry.embedUrl}
+                      allowFullScreen={true}
+                      allow="fullscreen"
+                      title={activeIndustry.name}
+                    ></iframe>
+                  </div>
+
+                  {/* Direct link */}
+                  <div className="flex justify-center mt-2">
+                    <a
+                      href={`${activeIndustry.canvaUrl}?${activeIndustry.utm}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm text-primary hover:text-accent transition-colors"
+                    >
+                      Open Case Study in New Tab
+                    </a>
+                  </div>
+
+                  {/* Instructions and information about the case study */}
+                  <div className="mt-4 p-4 bg-gray-50 border border-gray-200 rounded-md">
+                    <h4 className="text-lg font-medium text-gray-800 mb-2">
+                      How to Use This Case Study
+                    </h4>
+                    <p className="text-gray-600 mb-2">
+                      This case study demonstrates real results and
+                      contains:
+                    </p>
+                    <ul className="list-disc pl-5 space-y-1 text-gray-600">
+                      <li>Client challenge and project objectives</li>
+                      <li>
+                        Implementation strategy and technology used
+                      </li>
+                      <li>Measurable outcomes and ROI metrics</li>
+                      <li>Testimonials and key takeaways</li>
+                    </ul>
+                    <p className="mt-2 text-gray-600">
+                      You can present this directly to prospects to
+                      demonstrate proven success with similar clients.
+                      All case studies are white-labeled for your use.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         );
 
