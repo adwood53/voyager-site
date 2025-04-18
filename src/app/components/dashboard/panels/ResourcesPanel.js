@@ -197,8 +197,23 @@ export default function ResourcesPanel() {
       bgColor: '#F5F3FF', // Light purple background
       description:
         'Ready-to-use scripts for pitching immersive tech to clients.',
-      type: 'scripts',
+      type: 'case-studies', // Changed from 'scripts' to 'case-studies' to use the same interface
       fileType: 'Document',
+      // Define sales scripts as case studies
+      caseStudies: [
+        {
+          id: 'objections-responses',
+          name: 'Objections & Responses',
+          description: 'How to handle common client objections',
+          color: '#8B5CF6', // Purple
+          canvaUrl:
+            'https://www.canva.com/design/DAGk_DwUN3A/XAe5QX53FdgoyFlwVux_Rg/view',
+          embedUrl:
+            'https://www.canva.com/design/DAGk_DwUN3A/XAe5QX53FdgoyFlwVux_Rg/view?embed',
+          utm: 'utm_content=DAGk_DwUN3A&utm_campaign=designshare&utm_medium=embeds&utm_source=link',
+        },
+        // Additional sales scripts can be added here in the same format
+      ],
     },
     {
       id: 'case-studies',
