@@ -48,14 +48,39 @@ export default function ResourcesPanel() {
     },
     {
       id: 'vcard-pricing',
-      title: 'vCard Pricing Rubric',
+      title: 'Pricing',
       icon: '💰',
       color: '#10B981', // Green
       bgColor: '#ECFDF5', // Light green background
       description:
         'Detailed breakdown of pricing structures for our vCard offerings.',
-      type: 'pricing',
+      type: 'case-studies',
       fileType: 'Spreadsheet',
+      caseStudies: [
+        {
+          id: 'voyager-service-pricing',
+          name: 'Voyager Service Costs',
+          description:
+            'Cost rubric for Voyager Services & NFC unit costs',
+          color: '#3B82F6', // Red
+          canvaUrl:
+            'https://www.canva.com/design/DAGk_u7Rn2Y/CE8Fp4sGtH74gU9l0JtHcQ/view',
+          embedUrl:
+            'https://www.canva.com/design/DAGk_u7Rn2Y/CE8Fp4sGtH74gU9l0JtHcQ/view?embed',
+          utm: 'utm_content=DAGk_u7Rn2Y&utm_campaign=designshare&utm_medium=embeds&utm_source=link',
+        },
+        {
+          id: 'voyager-feature-comparison',
+          name: 'Voyager Feature Comparison',
+          description: 'Feature Comparison Table',
+          color: '#10B981', // Red
+          canvaUrl:
+            'https://www.canva.com/design/DAGk_itvhXM/tkcEPoJw9H1_4p_zCIYnLw/view',
+          embedUrl:
+            'https://www.canva.com/design/DAGk_itvhXM/tkcEPoJw9H1_4p_zCIYnLw/view?embed',
+          utm: 'utm_content=DDAGk_itvhXM&utm_campaign=designshare&utm_medium=embeds&utm_source=link',
+        },
+      ],
     },
     {
       id: 'demos',
@@ -264,7 +289,7 @@ export default function ResourcesPanel() {
     },
     {
       id: 'sales-resources',
-      title: 'Sales Resources',
+      title: 'Sales Presentations',
       icon: '📣',
       color: '#0EA5E9', // Sky blue
       bgColor: '#F0F9FF', // Light sky blue background
