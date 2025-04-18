@@ -223,6 +223,28 @@ export default function ResourcesPanel() {
             'https://www.canva.com/design/DAGk-R3nzbY/pRSuYe1RbSSFxM0qOz99Rg/view?embed',
           utm: 'utm_content=DAGk-R3nzbY&utm_campaign=designshare&utm_medium=embeds&utm_source=link',
         },
+        {
+          id: 'pepsi',
+          name: 'Pepsi Case Study',
+          description: 'AR marketing campaign for Pepsi',
+          color: '#8B5CF6', // Purple
+          canvaUrl:
+            'https://www.canva.com/design/DAGk-_lh0PY/y9P3GZcpf4A6Y9k6qZY9ww/view',
+          embedUrl:
+            'https://www.canva.com/design/DAGk-_lh0PY/y9P3GZcpf4A6Y9k6qZY9ww/view?embed',
+          utm: 'utm_content=DAGk-_lh0PY&utm_campaign=designshare&utm_medium=embeds&utm_source=link',
+        },
+        {
+          id: 'adidas',
+          name: 'Adidas Case Study',
+          description: 'AR marketing campaign for Adidas',
+          color: '#0EA5E9', // Sky Blue
+          canvaUrl:
+            'https://www.canva.com/design/DAGk-3L39DI/WJK85zWqxzp-qkfdc5cXGw/view',
+          embedUrl:
+            'https://www.canva.com/design/DAGk-3L39DI/WJK85zWqxzp-qkfdc5cXGw/view?embed',
+          utm: 'utm_content=DAGk-3L39DI&utm_campaign=designshare&utm_medium=embeds&utm_source=link',
+        },
       ],
     },
     {
