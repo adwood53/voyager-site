@@ -60,14 +60,24 @@ export default function ResourcesPanel() {
         {
           id: 'voyager-service-pricing',
           name: 'Voyager Service Costs',
-          description:
-            'Cost rubric for Voyager Services & NFC unit costs',
+          description: 'Cost rubric for Voyager Services',
           color: '#3B82F6', // Red
           canvaUrl:
             'https://www.canva.com/design/DAGk_u7Rn2Y/CE8Fp4sGtH74gU9l0JtHcQ/view',
           embedUrl:
             'https://www.canva.com/design/DAGk_u7Rn2Y/CE8Fp4sGtH74gU9l0JtHcQ/view?embed',
           utm: 'utm_content=DAGk_u7Rn2Y&utm_campaign=designshare&utm_medium=embeds&utm_source=link',
+        },
+        {
+          id: 'voyager-nfc-pricing',
+          name: 'Voyager NFC Unit Costs',
+          description: 'Cost rubric for Voyager NFC units',
+          color: '#EF4444', // Red
+          canvaUrl:
+            'https://www.canva.com/design/DAGlXxC3OJY/-PQx5SAZsjh0M-n_fG4iAg/view',
+          embedUrl:
+            'https://www.canva.com/design/DAGlXxC3OJY/-PQx5SAZsjh0M-n_fG4iAg/view?embed',
+          utm: 'utm_content=DAGlXxC3OJY&utm_campaign=designshare&utm_medium=embeds&utm_source=link',
         },
         {
           id: 'voyager-feature-comparison',
