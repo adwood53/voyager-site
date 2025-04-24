@@ -4,9 +4,7 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { QRCodeSVG } from 'qrcode.react';
-import { Document, Page, pdfjs } from 'react-pdf';
-import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
-import 'react-pdf/dist/esm/Page/TextLayer.css';
+import { Document, Page, PDFViewer } from '@react-pdf/renderer';
 import {
   Card,
   CardBody,
@@ -21,9 +19,6 @@ import {
   Tab,
   Divider,
 } from '@heroui/react';
-
-// Set up PDF.js worker
-pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
 
 export default function ResourcesPanel() {
   // State for active resource
@@ -735,7 +730,7 @@ export default function ResourcesPanel() {
                 </h3>
               </div>
 
-              {/* PDF Viewer with react-pdf */}
+              {/* PDF Viewer with @react-pdf/renderer */}
               <div className="w-full mb-4">
                 <div className="flex justify-between items-center mb-2">
                   {/* PDF Controls */}
@@ -792,24 +787,21 @@ export default function ResourcesPanel() {
                       <span className="ml-2">Loading PDF...</span>
                     </div>
                   )}
-                  <Document
-                    file={activePdf.pdfUrl}
-                    onLoadSuccess={onDocumentLoadSuccess}
-                    onLoadError={(error) => {
-                      console.error('Error loading PDF:', error);
-                      setPdfLoading(false);
-                    }}
-                    loading={<div className="h-full" />}
-                    className="flex justify-center overflow-auto h-full bg-gray-100"
+
+                  <PDFViewer
+                    width="100%"
+                    height="100%"
+                    className="pdf-viewer"
+                    showToolbar={true}
                   >
-                    <Page
-                      pageNumber={pageNumber}
-                      scale={pdfScale}
-                      renderTextLayer={true}
-                      renderAnnotationLayer={true}
-                      className="Page"
+                    <iframe
+                      src={activePdf.pdfUrl}
+                      width="100%"
+                      height="100%"
+                      style={{ border: 'none' }}
+                      title={activePdf.name}
                     />
-                  </Document>
+                  </PDFViewer>
                 </div>
               </div>
 
@@ -1390,23 +1382,17 @@ export default function ResourcesPanel() {
       </Modal>
       {/* Add custom CSS for PDF viewer */}
       <style jsx global>{`
-        .Page {
-          margin: 10px auto;
-          padding: 0;
-          background-color: white;
-          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        .pdf-viewer {
+          border: none;
+          width: 100%;
+          height: 100%;
         }
 
-        .Page > canvas {
-          max-width: 100%;
-          height: auto !important;
-        }
-
-        .react-pdf__Document {
-          min-height: 60vh;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
+        /* PDF viewer iframe */
+        .pdf-viewer iframe {
+          width: 100%;
+          height: 100%;
+          border: none;
         }
       `}</style>
     </div>
