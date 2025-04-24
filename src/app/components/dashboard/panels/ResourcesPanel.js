@@ -4,7 +4,9 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { QRCodeSVG } from 'qrcode.react';
-import { Document, Page, PDFViewer } from '@react-pdf/renderer';
+import { Document, Page, pdfjs } from 'react-pdf';
+import 'react-pdf/dist/Page/AnnotationLayer.css';
+import 'react-pdf/dist/Page/TextLayer.css';
 import {
   Card,
   CardBody,
@@ -19,6 +21,9 @@ import {
   Tab,
   Divider,
 } from '@heroui/react';
+
+// NEW (use .min.mjs for React-PDF v9+)
+pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
 export default function ResourcesPanel() {
   // State for active resource
@@ -37,7 +42,6 @@ export default function ResourcesPanel() {
   const [pdfScale, setPdfScale] = useState(1.0);
   const [pdfLoading, setPdfLoading] = useState(true);
 
-  // Function to handle successful PDF loading
   function onDocumentLoadSuccess({ numPages }) {
     setNumPages(numPages);
     setPageNumber(1);
@@ -712,123 +716,67 @@ export default function ResourcesPanel() {
         // If a PDF is active, show the PDF viewer
         if (activePdf) {
           return (
-            <div className="w-full h-full">
-              <div className="flex justify-between items-center mb-4">
+            <div className="w-full h-full flex flex-col">
+              {/* 1) PDF Viewer */}
+              <div className="flex-1 overflow-auto flex items-center justify-center">
+                <Document
+                  file={activePdf.pdfUrl}
+                  onLoadSuccess={onDocumentLoadSuccess}
+                  loading={<p>Loading PDF…</p>}
+                >
+                  {/* wrap the <Page> in its own centering div */}
+                  <div className="flex justify-center">
+                    <Page
+                      pageNumber={pageNumber}
+                      scale={pdfScale}
+                      renderAnnotationLayer={false}
+                      renderTextLayer={false}
+                    />
+                  </div>
+                </Document>
+              </div>
+
+              {/* 2) Navigation & Page Controls */}
+              <div className="mt-4 flex justify-center items-center gap-4">
                 <Button
                   size="sm"
-                  variant="light"
-                  className="flex items-center gap-1 text-gray-600"
-                  onClick={() => setActivePdf(null)}
+                  onPress={previousPage}
+                  isDisabled={pageNumber <= 1}
+                  style={{
+                    backgroundColor: activeResource.color,
+                    color: 'white',
+                  }}
                 >
-                  <span>&#8592;</span> Back to Resources
+                  ‹
                 </Button>
-                <h3
-                  className="text-lg font-semibold"
-                  style={{ color: activePdf.color }}
-                >
-                  {activePdf.name}
-                </h3>
-              </div>
 
-              {/* PDF Viewer with @react-pdf/renderer */}
-              <div className="w-full mb-4">
-                <div className="flex justify-between items-center mb-2">
-                  {/* PDF Controls */}
-                  <div className="flex items-center gap-2">
-                    <Button
-                      size="sm"
-                      isDisabled={pageNumber <= 1}
-                      onClick={previousPage}
-                      className="border border-gray-300 px-2"
-                    >
-                      ‹
-                    </Button>
-                    <span className="text-sm">
-                      Page {pageNumber} of {numPages || '--'}
-                    </span>
-                    <Button
-                      size="sm"
-                      isDisabled={pageNumber >= numPages}
-                      onClick={nextPage}
-                      className="border border-gray-300 px-2"
-                    >
-                      ›
-                    </Button>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Button
-                      size="sm"
-                      onClick={zoomOut}
-                      className="border border-gray-300 px-2"
-                    >
-                      -
-                    </Button>
-                    <span className="text-sm">
-                      {Math.round(pdfScale * 100)}%
-                    </span>
-                    <Button
-                      size="sm"
-                      onClick={zoomIn}
-                      className="border border-gray-300 px-2"
-                    >
-                      +
-                    </Button>
-                  </div>
-                </div>
+                <span className="text-gray-600 text-sm">
+                  Page {pageNumber} of {numPages || '--'}
+                </span>
 
-                {/* PDF Viewer */}
-                <div
-                  className="border border-gray-200 rounded-lg overflow-hidden"
-                  style={{ height: '65vh' }}
-                >
-                  {pdfLoading && (
-                    <div className="flex items-center justify-center h-full bg-gray-50">
-                      <div className="w-12 h-12 border-4 border-t-transparent rounded-full animate-spin"></div>
-                      <span className="ml-2">Loading PDF...</span>
-                    </div>
-                  )}
-
-                  <PDFViewer
-                    width="100%"
-                    height="100%"
-                    className="pdf-viewer"
-                    showToolbar={true}
-                  >
-                    <iframe
-                      src={activePdf.pdfUrl}
-                      width="100%"
-                      height="100%"
-                      style={{ border: 'none' }}
-                      title={activePdf.name}
-                    />
-                  </PDFViewer>
-                </div>
-              </div>
-
-              {/* Download and Open buttons */}
-              <div className="flex justify-center gap-4 mt-4">
                 <Button
-                  as="a"
-                  href={activePdf.pdfUrl}
-                  download
-                  className="bg-primary text-white hover:bg-accent transition-colors"
+                  size="sm"
+                  onPress={nextPage}
+                  isDisabled={pageNumber >= (numPages || 1)}
+                  style={{
+                    backgroundColor: activeResource.color,
+                    color: 'white',
+                  }}
                 >
+                  ›
+                </Button>
+              </div>
+
+              {/* 3) Download Buttons */}
+              <div className="mt-4 flex justify-center">
+                <a href={activePdf.pdfUrl} download className="btn">
                   Download PDF
-                </Button>
-                <Button
-                  as="a"
-                  href={activePdf.pdfUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="border border-primary text-primary hover:bg-primary hover:bg-opacity-10 transition-colors"
-                >
-                  Open in New Tab
-                </Button>
+                </a>
               </div>
 
-              {/* Description */}
-              <div className="mt-6 p-4 bg-gray-50 border border-gray-200 rounded-lg">
-                <h4 className="text-lg font-semibold mb-2 text-gray-800">
+              {/* 4) About this Resource */}
+              <div className="mt-6 p-4 bg-gray-50 border rounded-lg">
+                <h4 className="text-lg text-gray-600 font-semibold mb-2">
                   About this Resource
                 </h4>
                 <p className="text-gray-600">

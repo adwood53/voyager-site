@@ -1,4 +1,4 @@
-// next.config.mjs - updated
+// next.config.mjs
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
@@ -20,6 +20,13 @@ const nextConfig = {
       },
     ],
   },
+
+  // React-PDF needs the `canvas` alias disabled in Next’s webpack
+  webpack(config) {
+    config.resolve.alias.canvas = false;
+    return config;
+  },
+
   // Handle redirects for common paths
   async redirects() {
     return [
