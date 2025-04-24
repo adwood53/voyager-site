@@ -27,6 +27,8 @@ export default function ResourcesPanel() {
   const [copiedWhat, setCopiedWhat] = useState(null);
   // State for active industry in sales resources
   const [activeIndustry, setActiveIndustry] = useState(null);
+  // State for active PDF
+  const [activePdf, setActivePdf] = useState(null);
 
   // Define our resources
   const resources = [
@@ -258,7 +260,15 @@ export default function ResourcesPanel() {
             'https://www.canva.com/design/DAGlips28fo/rUu-ivWH9jqfFN7ncAQ5Zg/view?embed',
           utm: 'utm_content=DAGlips28fo&utm_campaign=designshare&utm_medium=embeds&utm_source=link',
         },
-        // Additional sales scripts can be added here in the same format
+        // New PDF resource
+        {
+          id: 'immersive-tech-guide',
+          name: 'A Simple Guide to Immersive Tech',
+          description: 'Comprehensive guide to immersive technology',
+          color: '#6366F1', // Indigo
+          pdfUrl: '/PDFs/A-Simple-Guide-to-Immersive-Tech.pdf',
+          fileType: 'pdf',
+        },
       ],
     },
     {
@@ -355,6 +365,52 @@ export default function ResourcesPanel() {
         },
       ],
     },
+    {
+      id: 'studio-resources',
+      title: 'Studio Resources',
+      icon: '🎬',
+      color: '#22C55E', // Green
+      bgColor: '#ECFDF5', // Light green background
+      description:
+        'Studio guides and information for your production sessions.',
+      type: 'case-studies', // Reusing case-studies layout
+      fileType: 'PDF Documents',
+      // Define studio resources as case studies
+      caseStudies: [
+        {
+          id: 'green-screen-beginners',
+          name: 'Green Screen for Beginners',
+          description: 'Learn the basics of green screen production',
+          color: '#22C55E', // Green
+          pdfUrl: '/PDFs/Green-Screen-for-Beginners.pdf',
+          fileType: 'pdf',
+        },
+        {
+          id: 'podcast-howto',
+          name: 'Voyager Podcast How-To',
+          description: 'Guide to recording podcasts in our studio',
+          color: '#6366F1', // Indigo
+          pdfUrl: '/PDFs/Voyager-Podcast-HowTopdf.pdf',
+          fileType: 'pdf',
+        },
+        {
+          id: 'studio-safety',
+          name: 'Studio Safety Procedure',
+          description: 'Safety guidelines for using our studio',
+          color: '#EF4444', // Red
+          pdfUrl: '/PDFs/Voyager-VR-Studio-Safety-Procedure.pdf',
+          fileType: 'pdf',
+        },
+        {
+          id: 'studio-terms',
+          name: 'Studio Terms & Conditions',
+          description: 'Terms of use for our production studio',
+          color: '#3B82F6', // Blue
+          pdfUrl: '/PDFs/Voyager-VR-Studio-Terms-and-Conditions.pdf',
+          fileType: 'pdf',
+        },
+      ],
+    },
   ];
 
   // Function to handle resource click
@@ -366,7 +422,15 @@ export default function ResourcesPanel() {
       setActiveIndustry(null);
     }
 
+    // Reset active PDF when opening a resource
+    setActivePdf(null);
+
     onOpen();
+  };
+
+  // Function to handle PDF selection
+  const handlePdfSelect = (pdf) => {
+    setActivePdf(pdf);
   };
 
   // Function to copy URL to clipboard with enhanced feedback
@@ -604,23 +668,96 @@ export default function ResourcesPanel() {
         );
 
       case 'case-studies':
+        // Check if we're dealing with a PDF resource
+        const hasPdfResources = activeResource.caseStudies.some(
+          (study) => study.fileType === 'pdf'
+        );
+
+        // If a PDF is active, show the PDF viewer
+        if (activePdf) {
+          return (
+            <div className="w-full h-full">
+              <div className="flex justify-between items-center mb-4">
+                <Button
+                  size="sm"
+                  variant="light"
+                  className="flex items-center gap-1 text-gray-600"
+                  onClick={() => setActivePdf(null)}
+                >
+                  <span>&#8592;</span> Back to Resources
+                </Button>
+                <h3
+                  className="text-lg font-semibold"
+                  style={{ color: activePdf.color }}
+                >
+                  {activePdf.name}
+                </h3>
+              </div>
+
+              {/* PDF Embed */}
+              <div className="w-full h-[70vh] mb-4 border border-gray-200 rounded-lg overflow-hidden">
+                <iframe
+                  src={activePdf.pdfUrl}
+                  className="w-full h-full"
+                  title={activePdf.name}
+                  allowFullScreen
+                ></iframe>
+              </div>
+
+              {/* Download button */}
+              <div className="flex justify-center gap-4">
+                <Button
+                  as="a"
+                  href={activePdf.pdfUrl}
+                  target="_blank"
+                  download
+                  className="bg-primary text-white hover:bg-accent transition-colors"
+                >
+                  Download PDF
+                </Button>
+                <Button
+                  as="a"
+                  href={activePdf.pdfUrl}
+                  target="_blank"
+                  className="border border-primary text-primary hover:bg-primary hover:bg-opacity-10 transition-colors"
+                >
+                  Open in New Tab
+                </Button>
+              </div>
+
+              {/* Description */}
+              <div className="mt-6 p-4 bg-gray-50 border border-gray-200 rounded-lg">
+                <h4 className="text-lg font-semibold mb-2 text-gray-800">
+                  About this Resource
+                </h4>
+                <p className="text-gray-600">
+                  {activePdf.description}
+                </p>
+              </div>
+            </div>
+          );
+        }
+
         return (
           <div className="w-full">
             {/* If no case study selected, show the case study selection grid */}
             {!activeIndustry ? (
               <div className="space-y-6">
                 <p className="text-gray-600 mb-4">
-                  Select a case study to access detailed success
-                  stories and ROI metrics. These presentations
-                  demonstrate how immersive technology has delivered
-                  measurable results for real clients.
+                  {hasPdfResources
+                    ? 'Select a resource to access detailed information, guides, and downloadable content.'
+                    : 'Select a case study to access detailed success stories and ROI metrics. These presentations demonstrate how immersive technology has delivered measurable results for real clients.'}
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                   {activeResource.caseStudies.map((caseStudy) => (
                     <div
                       key={caseStudy.id}
                       className="bg-white rounded-lg border border-gray-200 overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer"
-                      onClick={() => handleIndustrySelect(caseStudy)}
+                      onClick={() =>
+                        caseStudy.fileType === 'pdf'
+                          ? handlePdfSelect(caseStudy)
+                          : handleIndustrySelect(caseStudy)
+                      }
                     >
                       <div
                         className="p-4 flex flex-col items-center text-center"
@@ -634,9 +771,14 @@ export default function ResourcesPanel() {
                         >
                           {caseStudy.name}
                         </h4>
-                        <p className="text-gray-600 text-sm">
+                        <p className="text-gray-600 text-sm mb-2">
                           {caseStudy.description}
                         </p>
+                        {caseStudy.fileType === 'pdf' && (
+                          <span className="inline-block bg-gray-100 text-gray-600 px-3 py-1 rounded-full text-xs">
+                            PDF Document
+                          </span>
+                        )}
                       </div>
                     </div>
                   ))}
