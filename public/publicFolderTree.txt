@@ -8,24 +8,85 @@ D:\Work\AlphaX\Codebase\Voyager Website\voyager-site\public
 -----------------------------------------------------
 
 Folder PATH listing for volume Tertiary Drive
-Volume serial number is 00000065 4257:C030
+Volume serial number is 00000096 4257:C030
 D:\WORK\ALPHAX\CODEBASE\VOYAGER WEBSITE\VOYAGER-SITE\PUBLIC
 |   generatePublicTree.bat
 |   hyrox2.jpg
 |   lfd-stall.webp
+|   partner-screenshot.jpg
 |   placeholder-avatar.jpg
 |   placeholder.jpg
 |   publicFolderTree.txt
 |   re.jpg
+|   service-worker.js
 |   studiobackground.jpeg
 |   studioimage.jpg
+|   team.webp
 |   virtualworlds.jpg
 |   Voyager Logo V1.png
+|   Voyager-Box-Logo-192.png
 |   Voyager-Box-Logo.png
 |   
-\---fonts
-        Labora-Italic.otf
-        Labora-Italic.ttf
-        Labora-Regular.otf
-        Labora-Regular.ttf
++---apple-splash
+|       apple-splash-2048-2732.png
+|       
++---fonts
+|       Labora-Italic.otf
+|       Labora-Italic.ttf
+|       Labora-Regular.otf
+|       Labora-Regular.ttf
+|       
++---partners
+|       cc.png
+|       cross_productions_limited_logo.jpeg
+|       cross_productions_limited_logo.png
+|       eb.jpeg
+|       eb.png
+|       lps.png
+|       smartwaymedia_logo.jpeg
+|       smartwaymedia_logo.png
+|       tp.png
+|       White-Clean-Marketing-Manager-Business-Card-7-e1735902806609.png
+|       
++---PDFs
+|       A-Simple-Guide-to-Immersive-Tech.pdf
+|       Green-Screen-for-Beginners.pdf
+|       Voyager-Podcast-HowTopdf.pdf
+|       Voyager-VR-Studio-Safety-Procedure.pdf
+|       Voyager-VR-Studio-Terms-and-Conditions.pdf
+|       
+\---vcards
+        1000.webp
+        1001.webp
+        1002.webp
+        1003.webp
+        1004.webp
+        1005.webp
+        1006.webp
+        1007.webp
+        1008.webp
+        1009.webp
+        1010.webp
+        1011.webp
+        1034.webp
+        1035.webp
+        1036.webp
+        1037.webp
+        1038.webp
+        1039.webp
+        1040.webp
+        1041.webp
+        1042.webp
+        1043.png
+        1043.webp
+        1044.webp
+        1045.webp
+        1046.webp
+        1047.webp
+        1048.webp
+        1049.webp
+        1050.webp
+        1051.webp
+        1052.webp
+        1053.webp
         
