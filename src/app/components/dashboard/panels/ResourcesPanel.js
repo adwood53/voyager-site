@@ -247,6 +247,17 @@ export default function ResourcesPanel() {
             'https://www.canva.com/design/DAGk_DwUN3A/XAe5QX53FdgoyFlwVux_Rg/view?embed',
           utm: 'utm_content=DAGk_DwUN3A&utm_campaign=designshare&utm_medium=embeds&utm_source=link',
         },
+        {
+          id: 'jargon-buster',
+          name: 'Jargon Buster',
+          description: 'Terms and Phrases explained.',
+          color: '#EF4444', // Purple
+          canvaUrl:
+            'https://www.canva.com/design/DAGlips28fo/rUu-ivWH9jqfFN7ncAQ5Zg/view',
+          embedUrl:
+            'https://www.canva.com/design/DAGlips28fo/rUu-ivWH9jqfFN7ncAQ5Zg/view?embed',
+          utm: 'utm_content=DAGlips28fo&utm_campaign=designshare&utm_medium=embeds&utm_source=link',
+        },
         // Additional sales scripts can be added here in the same format
       ],
     },
