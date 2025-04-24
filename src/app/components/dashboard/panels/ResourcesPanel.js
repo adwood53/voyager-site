@@ -1,9 +1,12 @@
 // src/app/components/dashboard/panels/ResourcesPanel.js
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { QRCodeSVG } from 'qrcode.react';
+import { Document, Page, pdfjs } from 'react-pdf';
+import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
+import 'react-pdf/dist/esm/Page/TextLayer.css';
 import {
   Card,
   CardBody,
@@ -19,6 +22,9 @@ import {
   Divider,
 } from '@heroui/react';
 
+// Set up PDF.js worker
+pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
+
 export default function ResourcesPanel() {
   // State for active resource
   const [activeResource, setActiveResource] = useState(null);
@@ -29,6 +35,41 @@ export default function ResourcesPanel() {
   const [activeIndustry, setActiveIndustry] = useState(null);
   // State for active PDF
   const [activePdf, setActivePdf] = useState(null);
+
+  // State for PDF viewer
+  const [numPages, setNumPages] = useState(null);
+  const [pageNumber, setPageNumber] = useState(1);
+  const [pdfScale, setPdfScale] = useState(1.0);
+  const [pdfLoading, setPdfLoading] = useState(true);
+
+  // Function to handle successful PDF loading
+  function onDocumentLoadSuccess({ numPages }) {
+    setNumPages(numPages);
+    setPageNumber(1);
+    setPdfLoading(false);
+  }
+
+  // Functions for navigation
+  function previousPage() {
+    setPageNumber((prevPageNumber) =>
+      Math.max(prevPageNumber - 1, 1)
+    );
+  }
+
+  function nextPage() {
+    setPageNumber((prevPageNumber) =>
+      Math.min(prevPageNumber + 1, numPages || 1)
+    );
+  }
+
+  // Functions for zooming
+  function zoomIn() {
+    setPdfScale((prevScale) => Math.min(prevScale + 0.2, 2.0));
+  }
+
+  function zoomOut() {
+    setPdfScale((prevScale) => Math.max(prevScale - 0.2, 0.5));
+  }
 
   // Define our resources
   const resources = [
@@ -694,22 +735,89 @@ export default function ResourcesPanel() {
                 </h3>
               </div>
 
-              {/* PDF Embed */}
-              <div className="w-full h-[70vh] mb-4 border border-gray-200 rounded-lg overflow-hidden">
-                <iframe
-                  src={activePdf.pdfUrl}
-                  className="w-full h-full"
-                  title={activePdf.name}
-                  allowFullScreen
-                ></iframe>
+              {/* PDF Viewer with react-pdf */}
+              <div className="w-full mb-4">
+                <div className="flex justify-between items-center mb-2">
+                  {/* PDF Controls */}
+                  <div className="flex items-center gap-2">
+                    <Button
+                      size="sm"
+                      isDisabled={pageNumber <= 1}
+                      onClick={previousPage}
+                      className="border border-gray-300 px-2"
+                    >
+                      ‹
+                    </Button>
+                    <span className="text-sm">
+                      Page {pageNumber} of {numPages || '--'}
+                    </span>
+                    <Button
+                      size="sm"
+                      isDisabled={pageNumber >= numPages}
+                      onClick={nextPage}
+                      className="border border-gray-300 px-2"
+                    >
+                      ›
+                    </Button>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      size="sm"
+                      onClick={zoomOut}
+                      className="border border-gray-300 px-2"
+                    >
+                      -
+                    </Button>
+                    <span className="text-sm">
+                      {Math.round(pdfScale * 100)}%
+                    </span>
+                    <Button
+                      size="sm"
+                      onClick={zoomIn}
+                      className="border border-gray-300 px-2"
+                    >
+                      +
+                    </Button>
+                  </div>
+                </div>
+
+                {/* PDF Viewer */}
+                <div
+                  className="border border-gray-200 rounded-lg overflow-hidden"
+                  style={{ height: '65vh' }}
+                >
+                  {pdfLoading && (
+                    <div className="flex items-center justify-center h-full bg-gray-50">
+                      <div className="w-12 h-12 border-4 border-t-transparent rounded-full animate-spin"></div>
+                      <span className="ml-2">Loading PDF...</span>
+                    </div>
+                  )}
+                  <Document
+                    file={activePdf.pdfUrl}
+                    onLoadSuccess={onDocumentLoadSuccess}
+                    onLoadError={(error) => {
+                      console.error('Error loading PDF:', error);
+                      setPdfLoading(false);
+                    }}
+                    loading={<div className="h-full" />}
+                    className="flex justify-center overflow-auto h-full bg-gray-100"
+                  >
+                    <Page
+                      pageNumber={pageNumber}
+                      scale={pdfScale}
+                      renderTextLayer={true}
+                      renderAnnotationLayer={true}
+                      className="Page"
+                    />
+                  </Document>
+                </div>
               </div>
 
-              {/* Download button */}
-              <div className="flex justify-center gap-4">
+              {/* Download and Open buttons */}
+              <div className="flex justify-center gap-4 mt-4">
                 <Button
                   as="a"
                   href={activePdf.pdfUrl}
-                  target="_blank"
                   download
                   className="bg-primary text-white hover:bg-accent transition-colors"
                 >
@@ -719,6 +827,7 @@ export default function ResourcesPanel() {
                   as="a"
                   href={activePdf.pdfUrl}
                   target="_blank"
+                  rel="noopener noreferrer"
                   className="border border-primary text-primary hover:bg-primary hover:bg-opacity-10 transition-colors"
                 >
                   Open in New Tab
@@ -1201,12 +1310,22 @@ export default function ResourcesPanel() {
       {/* HeroUI Modal */}
       <Modal
         isOpen={isOpen}
-        onClose={onClose}
+        onClose={() => {
+          onClose();
+          // Reset PDF viewer state when closing modal
+          setTimeout(() => {
+            setActiveIndustry(null);
+            setActivePdf(null);
+            setCopiedIndex(null);
+            setCopiedWhat(null);
+            setNumPages(null);
+            setPageNumber(1);
+          }, 100);
+        }}
         size="5xl"
         scrollBehavior="inside"
         classNames={{
           backdrop: 'bg-black/70 backdrop-blur-sm',
-          // Update only the max dimensions to ensure the modal stays within viewport with margins
           base: 'w-[85%] max-w-[calc(100vw-40px)] max-h-[calc(100vh-40px)] m-auto border-none rounded-lg shadow-xl',
           wrapper:
             'fixed inset-0 z-50 flex items-center justify-center',
@@ -1269,6 +1388,27 @@ export default function ResourcesPanel() {
           )}
         </ModalContent>
       </Modal>
+      {/* Add custom CSS for PDF viewer */}
+      <style jsx global>{`
+        .Page {
+          margin: 10px auto;
+          padding: 0;
+          background-color: white;
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .Page > canvas {
+          max-width: 100%;
+          height: auto !important;
+        }
+
+        .react-pdf__Document {
+          min-height: 60vh;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        }
+      `}</style>
     </div>
   );
 }
