@@ -451,6 +451,17 @@ export default function ResourcesPanel() {
         },
       ],
     },
+    {
+      id: 'idea-factory',
+      title: 'Idea Factory',
+      icon: '💡',
+      color: '#EC4899', // Pink
+      bgColor: '#FCE7F3', // Light pink background
+      description: 'A collection of ideas to use in your pitches.',
+      type: 'case-studies',
+      fileType: 'Spreadsheet',
+      caseStudies: [],
+    },
   ];
 
   // Function to handle resource click
