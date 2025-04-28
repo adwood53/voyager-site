@@ -1,5 +1,5 @@
-'use client';
 // src/app/components/dashboard/panels/admin/MemberManagement.js
+'use client';
 
 import { useState, useEffect, useCallback } from 'react';
 import {
@@ -7,8 +7,6 @@ import {
   CardBody,
   CardHeader,
   Button,
-  Select,
-  SelectItem,
   Spinner,
   Modal,
   ModalContent,
@@ -20,27 +18,12 @@ import {
 } from '@heroui/react';
 import Image from 'next/image';
 
-// Role mapping constants
-const ROLE_DISPLAY = {
-  'org:admin': 'Admin',
-  'org:member': 'Member',
-};
-
-const ROLE_VALUE = {
-  Admin: 'org:admin',
-  Member: 'org:member',
-};
-
 /**
  * MemberManagement component - Handles organization member management
- * @param {Object} props
- * @param {Object} props.organization - The Clerk organization object
- * @param {Object} props.currentUser - The current Clerk user object
- * @param {Object} props.membership - The current user's membership in the organization
  */
 export default function MemberManagement({
   organization,
-  currentUser
+  currentUser,
   membership,
 }) {
   // Invitation modal state
@@ -58,9 +41,7 @@ export default function MemberManagement({
   const [isLoading, setIsLoading] = useState(true);
 
   // Check user permissions
-  const userRole = membership?.role;
-  // Admin has management permissions
-  const isAdmin = userRole === 'org:admin';
+  const isAdmin = membership?.role === 'org:admin';
 
   /**
    * Load organization members
@@ -137,14 +118,10 @@ export default function MemberManagement({
   };
 
   /**
-   * Handle member removal with improved error handling and debugging
+   * Handle member removal with improved error handling
    */
   const handleRemoveMember = async (membershipId) => {
-    // Debug member removal request
-    console.log('Attempting to remove member:', membershipId);
-    console.log('Current user role:', membership?.role);
-
-    // Allow both owners and admins to remove members
+    // Allow only admins to remove members
     if (!isAdmin) {
       console.warn('Remove attempt by non-admin user');
       return;
@@ -191,33 +168,7 @@ export default function MemberManagement({
   };
 
   /**
-   * Handle role change
-   */
-  const handleRoleChange = async (membershipId, newRole) => {
-    // Only admins can change roles
-    if (!isAdmin) return;
-
-    try {
-      await organization.updateMembership(membershipId, {
-        role: newRole,
-      });
-
-      // Update local state
-      setMembers((prev) =>
-        prev.map((m) =>
-          m.id === membershipId ? { ...m, role: newRole } : m
-        )
-      );
-    } catch (error) {
-      console.error('Error updating role:', error);
-      alert(`Error: ${error.message}`);
-    }
-  };
-
-  /**
    * Gets the member's primary email address
-   * @param {Object} member - Member object from Clerk
-   * @returns {string} Email address or fallback text
    */
   const getMemberEmail = (member) => {
     // Check if the member has publicUserData with emailAddresses
@@ -228,7 +179,6 @@ export default function MemberManagement({
     // Check for identifier that might contain an email
     if (member.publicUserData?.identifier) {
       const identifier = member.publicUserData.identifier;
-      // Simple regex to check if identifier looks like an email
       if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(identifier)) {
         return identifier;
       }
@@ -243,14 +193,26 @@ export default function MemberManagement({
   };
 
   /**
-   * Creates a mailto link for the member's email
-   * @param {string} email - Email address
-   * @returns {string} Mailto URL or empty string
+   * Get member name
    */
-  const createMailtoLink = (email) => {
-    return email && email !== 'No email available'
-      ? `mailto:${email}`
-      : '';
+  const getMemberName = (member) => {
+    const firstName = member.publicUserData?.firstName || '';
+    const lastName = member.publicUserData?.lastName || '';
+    if (firstName || lastName) {
+      return `${firstName} ${lastName}`.trim();
+    }
+    return 'Unknown Member';
+  };
+
+  /**
+   * Get role display name
+   */
+  const getRoleDisplay = (role) => {
+    const roleMap = {
+      'org:admin': 'Admin',
+      'org:member': 'Member',
+    };
+    return roleMap[role] || 'Member';
   };
 
   return (
@@ -263,10 +225,9 @@ export default function MemberManagement({
           <Button
             color="primary"
             onClick={onOpen}
-            // Only admins and owners can invite
             disabled={!isAdmin}
             style={{
-              backgroundColor: 'var(--primary-color, #2563EB)',
+              backgroundColor: 'var(--primary-color, #E79023)',
               color: '#FFFFFF',
               opacity: isAdmin ? 1 : 0.5,
             }}
@@ -282,183 +243,123 @@ export default function MemberManagement({
             </div>
           ) : (
             <div className="border rounded-lg overflow-hidden">
-              <div className="overflow-x-auto">
-                <table className="min-w-full table-auto">
-                  <thead className="bg-gray-50">
-                    <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Member
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Role
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Status
-                      </th>
-                      <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Actions
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
-                    {members.length > 0 ? (
-                      members.map((member) => {
-                        const isCurrentUser =
-                          member.publicUserData?.userId ===
-                          currentUser?.id;
-                        const memberRole = member.role;
-                        const isMemberOwner =
-                          memberRole === 'org:owner' ||
-                          memberRole === 'owner';
-                        const memberEmail = getMemberEmail(member);
-                        const mailtoLink =
-                          createMailtoLink(memberEmail);
+              <table className="min-w-full table-auto">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Member
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Role
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Status
+                    </th>
+                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Actions
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {members.length > 0 ? (
+                    members.map((member) => {
+                      const isCurrentUser =
+                        member.publicUserData?.userId ===
+                        currentUser?.id;
+                      const memberEmail = getMemberEmail(member);
+                      const memberName = getMemberName(member);
+                      const memberRole = getRoleDisplay(member.role);
+                      const isActive =
+                        !!member.publicUserData?.identifier;
 
-                        return (
-                          <tr key={member.id}>
-                            <td className="px-6 py-4 whitespace-nowrap">
-                              <div className="flex items-center">
-                                <div className="relative h-10 w-10 flex-shrink-0">
-                                  <Image
-                                    src={
-                                      member.publicUserData
-                                        ?.imageUrl ||
-                                      '/placeholder-avatar.jpg'
-                                    }
-                                    alt="Member avatar"
-                                    fill
-                                    className="rounded-full object-cover"
-                                  />
+                      return (
+                        <tr key={member.id}>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="flex items-center">
+                              <div className="relative h-10 w-10 flex-shrink-0">
+                                <Image
+                                  src={
+                                    member.publicUserData?.imageUrl ||
+                                    '/placeholder-avatar.jpg'
+                                  }
+                                  alt={memberName}
+                                  fill
+                                  className="rounded-full object-cover"
+                                />
+                              </div>
+                              <div className="ml-4">
+                                <div className="text-sm font-medium text-gray-900">
+                                  {memberName}
+                                  {isCurrentUser && ' (You)'}
                                 </div>
-                                <div className="ml-4">
-                                  <div className="text-sm font-medium text-gray-900">
-                                    {member.publicUserData
-                                      ?.firstName || ''}{' '}
-                                    {member.publicUserData
-                                      ?.lastName || ''}
-                                    {isCurrentUser && ' (You)'}
-                                  </div>
-                                  <div className="text-sm text-gray-500">
-                                    {mailtoLink ? (
-                                      <a
-                                        href={mailtoLink}
-                                        className="hover:underline text-primary-color"
-                                        style={{
-                                          color:
-                                            'var(--primary-color, #2563EB)',
-                                        }}
-                                      >
-                                        {memberEmail}
-                                      </a>
-                                    ) : (
-                                      memberEmail
-                                    )}
-                                  </div>
+                                <div className="text-sm text-gray-500">
+                                  <a
+                                    href={`mailto:${memberEmail}`}
+                                    className="hover:underline text-primary-color"
+                                    style={{
+                                      color:
+                                        'var(--primary-color, #E79023)',
+                                    }}
+                                  >
+                                    {memberEmail}
+                                  </a>
                                 </div>
                               </div>
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap">
-                              {isOwner &&
-                              !isMemberOwner &&
-                              !isCurrentUser ? (
-                                <Select
-                                  size="sm"
-                                  aria-label="Change role"
-                                  className="max-w-[140px]"
-                                  defaultSelectedKeys={[
-                                    ROLE_DISPLAY[memberRole] ||
-                                      'Member',
-                                  ]}
-                                  onChange={(e) =>
-                                    handleRoleChange(
-                                      member.id,
-                                      ROLE_VALUE[e.target.value]
-                                    )
-                                  }
-                                >
-                                  <SelectItem
-                                    key="Admin"
-                                    value="Admin"
-                                  >
-                                    Admin
-                                  </SelectItem>
-                                  <SelectItem
-                                    key="Member"
-                                    value="Member"
-                                  >
-                                    Member
-                                  </SelectItem>
-                                </Select>
-                              ) : (
-                                <span className="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
-                                  {ROLE_DISPLAY[memberRole] ||
-                                    'Member'}
-                                </span>
-                              )}
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap">
-                              {member.publicUserData?.identifier ? (
-                                <span className="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                  Active
-                                </span>
-                              ) : (
-                                <span className="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
-                                  Pending
-                                </span>
-                              )}
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                              {isAdmin &&
-                              !isCurrentUser &&
-                              !isMemberOwner ? (
-                                <Button
-                                  size="sm"
-                                  color="danger"
-                                  onClick={() =>
-                                    handleRemoveMember(member.id)
-                                  }
-                                  className="inline-flex items-center justify-center px-3 py-1 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none"
-                                  style={{
-                                    opacity: 1,
-                                    visibility: 'visible',
-                                    zIndex: 50,
-                                    position: 'relative',
-                                    display: 'inline-flex',
-                                  }}
-                                >
-                                  Remove
-                                </Button>
-                              ) : (
-                                <Button
-                                  size="sm"
-                                  color="default"
-                                  disabled
-                                  className="opacity-50 inline-flex"
-                                >
-                                  {isCurrentUser
-                                    ? 'You'
-                                    : isMemberOwner
-                                      ? 'Owner'
-                                      : 'Remove'}
-                                </Button>
-                              )}
-                            </td>
-                          </tr>
-                        );
-                      })
-                    ) : (
-                      <tr>
-                        <td
-                          colSpan="4"
-                          className="px-6 py-4 text-center text-gray-500"
-                        >
-                          No members found.
-                        </td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
-              </div>
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <span className="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                              {memberRole}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            {isActive ? (
+                              <span className="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                Active
+                              </span>
+                            ) : (
+                              <span className="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                                Pending
+                              </span>
+                            )}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            {isAdmin && !isCurrentUser ? (
+                              <Button
+                                size="sm"
+                                color="danger"
+                                onClick={() =>
+                                  handleRemoveMember(member.id)
+                                }
+                                className="bg-red-600 hover:bg-red-700 text-white font-medium rounded-md px-4 py-1"
+                              >
+                                Remove
+                              </Button>
+                            ) : (
+                              <Button
+                                size="sm"
+                                disabled
+                                className="opacity-50"
+                              >
+                                {isCurrentUser ? 'You' : 'Remove'}
+                              </Button>
+                            )}
+                          </td>
+                        </tr>
+                      );
+                    })
+                  ) : (
+                    <tr>
+                      <td
+                        colSpan="4"
+                        className="px-6 py-4 text-center text-gray-500"
+                      >
+                        No members found.
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
             </div>
           )}
         </CardBody>
@@ -469,7 +370,7 @@ export default function MemberManagement({
         isOpen={isOpen}
         onClose={onClose}
         classNames={{
-          backdrop: 'bg-white', // Add this line for the backdrop
+          backdrop: 'bg-black/50 backdrop-blur-sm',
           base: 'bg-white border border-gray-200 shadow-xl',
           body: 'p-6 bg-white',
           header: 'bg-white border-b border-gray-200 p-6',
@@ -498,24 +399,14 @@ export default function MemberManagement({
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Role
                 </label>
-                <Select
-                  className="w-full text-gray-800"
+                <select
                   value={inviteRole}
                   onChange={(e) => setInviteRole(e.target.value)}
-                  classNames={{
-                    trigger:
-                      'bg-white border border-gray-300 text-gray-800',
-                    popover: 'bg-white border border-gray-300',
-                    listbox: 'text-gray-800 bg-white',
-                  }}
+                  className="w-full p-2 bg-white border border-gray-300 rounded-md text-gray-800"
                 >
-                  <SelectItem key="org:admin" value="org:admin">
-                    Admin
-                  </SelectItem>
-                  <SelectItem key="org:member" value="org:member">
-                    Member
-                  </SelectItem>
-                </Select>
+                  <option value="org:admin">Admin</option>
+                  <option value="org:member">Member</option>
+                </select>
                 <p className="text-xs text-gray-500 mt-1">
                   Admins can manage the organization. Members have
                   limited access.
@@ -544,12 +435,12 @@ export default function MemberManagement({
               form="invite-form"
               color="primary"
               style={{
-                backgroundColor: 'var(--primary-color, #2563EB)',
+                backgroundColor: 'var(--primary-color, #E79023)',
                 color: '#FFFFFF',
               }}
               disabled={isInviting}
             >
-              {isInviting ? <Spinner size="sm" /> : 'Send Invitation'}
+              {isInviting ? 'Sending...' : 'Send Invitation'}
             </Button>
           </ModalFooter>
         </ModalContent>

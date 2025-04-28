@@ -64,6 +64,16 @@ export default function TitleBar({ organization, onNavigate }) {
                   // Hide manage button from the UI since we're overriding its behavior
                   organizationSwitcherPopoverActionButton:
                     'hover:bg-gray-100',
+                  organizationSwitcherTriggerIcon:
+                    'w-[20px] h-[20px]', // Larger icon
+                  organizationPreviewAvatarContainer:
+                    'w-[40px] h-[40px]', // Larger avatar container
+                  organizationPreviewAvatarBox:
+                    'w-[40px] h-[40px] bg-gray-800', // Larger avatar box
+                },
+                variables: {
+                  fontFamily: "'Quicksand', sans-serif",
+                  fontSize: '16px', // Base font size
                 },
               }}
               // Override manage button behavior
