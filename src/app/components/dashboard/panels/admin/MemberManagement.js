@@ -22,21 +22,13 @@ import Image from 'next/image';
 
 // Role mapping constants
 const ROLE_DISPLAY = {
-  'org:owner': 'Owner',
   'org:admin': 'Admin',
   'org:member': 'Member',
-  'org:guest': 'Guest',
-  owner: 'Owner',
-  admin: 'Admin',
-  member: 'Member',
-  basic_member: 'Member',
 };
 
 const ROLE_VALUE = {
-  Owner: 'org:owner',
   Admin: 'org:admin',
   Member: 'org:member',
-  Guest: 'org:guest',
 };
 
 /**
@@ -48,7 +40,7 @@ const ROLE_VALUE = {
  */
 export default function MemberManagement({
   organization,
-  currentUser,
+  currentUser
   membership,
 }) {
   // Invitation modal state
@@ -67,10 +59,8 @@ export default function MemberManagement({
 
   // Check user permissions
   const userRole = membership?.role;
-  const isOwner = userRole === 'org:owner' || userRole === 'owner';
-  // Modified admin check to include owner roles as well
-  const isAdmin =
-    isOwner || userRole === 'org:admin' || userRole === 'admin';
+  // Admin has management permissions
+  const isAdmin = userRole === 'org:admin';
 
   /**
    * Load organization members
@@ -204,8 +194,8 @@ export default function MemberManagement({
    * Handle role change
    */
   const handleRoleChange = async (membershipId, newRole) => {
-    // Only owners can change roles
-    if (!isOwner) return;
+    // Only admins can change roles
+    if (!isAdmin) return;
 
     try {
       await organization.updateMembership(membershipId, {

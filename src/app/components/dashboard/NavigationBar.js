@@ -52,20 +52,16 @@ export default function NavigationBar({ activeRoute, onNavigate }) {
   ]);
 
   // Check if the user has admin privileges
-  const hasAdminRole =
-    membership?.role === 'org:admin' ||
-    membership?.role === 'org:owner' ||
-    membership?.role === 'admin' ||
-    membership?.role === 'owner';
+  const isAdmin = membership?.role === 'org:admin';
 
   // Update nav items based on admin status
   useEffect(() => {
     console.log('Admin role check in NavigationBar:', {
       membershipRole: membership?.role,
-      hasAdminRole,
+      isAdmin,
     });
 
-    if (hasAdminRole) {
+    if (isAdmin) {
       // Add admin tab if user is an admin
       setNavItems((prev) => {
         if (!prev.some((item) => item.id === 'admin')) {
@@ -91,7 +87,7 @@ export default function NavigationBar({ activeRoute, onNavigate }) {
         onNavigate('home');
       }
     }
-  }, [hasAdminRole, membership?.role, activeRoute, onNavigate]);
+  }, [isAdmin, membership?.role, activeRoute, onNavigate]);
 
   return (
     <div className="w-20 md:w-64 h-full flex flex-col border-r border-gray-200">

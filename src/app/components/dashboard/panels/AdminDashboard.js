@@ -22,11 +22,7 @@ export default function AdminDashboard() {
   const { organization, membership, isLoaded } = useOrganization();
 
   // Check if user is admin or owner
-  const isAdmin =
-    membership?.role === 'org:admin' ||
-    membership?.role === 'admin' ||
-    membership?.role === 'org:owner' ||
-    membership?.role === 'owner';
+  const isAdmin = membership?.role === 'org:admin';
 
   // Redirect if not admin
   useEffect(() => {

@@ -59,11 +59,7 @@ export default function DashboardShell() {
   );
 
   // Check if user is admin based on Clerk membership
-  const isAdmin =
-    membership?.role === 'org:admin' ||
-    membership?.role === 'org:owner' ||
-    membership?.role === 'admin' ||
-    membership?.role === 'owner';
+  const isAdmin = membership?.role === 'org:admin';
 
   // Debug admin status
   useEffect(() => {
@@ -216,6 +212,8 @@ export default function DashboardShell() {
         <TitleBar
           organization={firestoreOrg || organization}
           toggleProfilePanel={toggleProfilePanel}
+          isAdmin={isAdmin}
+          setActivePanel={setActivePanel}
         />
         {/* Main content area with sidebar */}
         <div className="flex flex-1 overflow-hidden">

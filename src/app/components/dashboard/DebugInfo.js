@@ -21,11 +21,7 @@ export default function DebugInfo() {
   const { organization: firestoreOrg } = useFirebase();
 
   // Only admins can see this component
-  const isAdmin =
-    membership?.role === 'org:admin' ||
-    membership?.role === 'org:owner' ||
-    membership?.role === 'admin' ||
-    membership?.role === 'owner';
+  const isAdmin = membership?.role === 'org:admin';
 
   if (!isAdmin) return null;
 

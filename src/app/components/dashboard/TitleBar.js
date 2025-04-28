@@ -1,19 +1,20 @@
 'use client';
 
-import { Button } from '@heroui/react';
+import { OrganizationSwitcher, useOrganization } from '@clerk/nextjs';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
-export default function TitleBar({
-  organization,
-  toggleProfilePanel,
-}) {
+export default function TitleBar({ organization, onNavigate }) {
   // Get organization details (fallback to defaults if not available)
   const orgName = organization?.name || 'Partner Organisation';
+  const { membership } = useOrganization();
 
   // Use the correct logo path from the organization data
   const [orgLogo, setOrgLogo] = useState('/Voyager-Box-Logo.png');
+
+  // Check if user is admin
+  const isAdmin = membership?.role === 'org:admin';
 
   // Update the logo when organization data changes
   useEffect(() => {
@@ -23,6 +24,18 @@ export default function TitleBar({
       setOrgLogo(organization.imageUrl);
     }
   }, [organization]);
+
+  // Custom handler for the manage button
+  const handleManageOrg = (e) => {
+    e.preventDefault();
+    // Navigate to admin panel if admin, otherwise to settings
+    if (isAdmin) {
+      onNavigate('admin');
+    } else {
+      onNavigate('settings');
+    }
+    return false; // Prevent default navigation
+  };
 
   return (
     <div className="w-full border-b border-gray-200 bg-white z-10">
@@ -35,22 +48,29 @@ export default function TitleBar({
             transition={{ duration: 0.3 }}
             className="relative"
           >
-            <Image
-              src={orgLogo}
-              alt={orgName}
-              width={40}
-              height={40}
-              className="rounded-md mr-3"
+            <OrganizationSwitcher
+              hidePersonal={true}
+              afterSelectOrganizationUrl="/partner"
+              afterLeaveOrganizationUrl="/partner"
+              createOrganizationMode="none"
+              appearance={{
+                elements: {
+                  rootBox: 'w-auto',
+                  organizationSwitcherTrigger:
+                    'flex items-center gap-2 hover:bg-gray-100 rounded-md px-2 py-1 transition-colors',
+                  organizationPreviewTextContainer: 'text-gray-700',
+                  organizationSwitcherPopoverCard:
+                    'bg-white border border-gray-200 shadow-lg',
+                  // Hide manage button from the UI since we're overriding its behavior
+                  organizationSwitcherPopoverActionButton:
+                    'hover:bg-gray-100',
+                },
+              }}
+              // Override manage button behavior
+              organizationProfileUrl="#"
+              organizationProfileMode="modal" // Use modal mode to prevent navigation
+              onOrganizationProfileClick={handleManageOrg}
             />
-          </motion.div>
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.3, delay: 0.1 }}
-          >
-            <span className="font-medium text-gray-700 hidden md:inline">
-              {orgName}
-            </span>
           </motion.div>
         </div>
 
