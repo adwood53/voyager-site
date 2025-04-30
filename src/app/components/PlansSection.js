@@ -157,7 +157,7 @@ export default function PlansSection() {
               <CardFooter className="mt-auto">
                 <Button
                   as={Link}
-                  href="#signup"
+                  href="/waitlist"
                   className="w-full bg-primary text-textLight font-medium hover:bg-accent transition-all duration-300 rounded-md py-3 hover:shadow-glow"
                 >
                   Apply now for Free →

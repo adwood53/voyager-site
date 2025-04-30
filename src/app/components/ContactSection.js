@@ -49,6 +49,7 @@ export default function ContactSection() {
   // Define services for the dropdown
   const services = [
     { value: 'partnership', label: 'Voyager Partnership' },
+    { value: 'upgrade', label: 'Upgrade Partnership' },
     { value: 'ar', label: 'AR' },
     { value: 'vr', label: 'VR' },
     { value: 'studio', label: 'Studio' },

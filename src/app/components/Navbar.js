@@ -120,28 +120,7 @@ export default function VoyagerNavbar() {
                   style={{ listStyle: 'none' }}
                 >
                   <a
-                    href="#"
-                    onPress={(e) => {
-                      e.preventDefault();
-                      if (isHomePage) {
-                        // If we're on home page, just scroll to the section
-                        const section =
-                          document.getElementById('signup');
-                        if (section) {
-                          section.scrollIntoView({
-                            behavior: 'smooth',
-                          });
-                        }
-                      } else {
-                        // Store the target section in sessionStorage for retrieval after navigation
-                        sessionStorage.setItem(
-                          'scrollToSection',
-                          'signup'
-                        );
-                        // Navigate to the home page (using plain href to avoid chunk loading issues)
-                        window.location.href = '/';
-                      }
-                    }}
+                    href="/waitlist"
                     className="bg-primary text-textLight font-medium px-3 py-1 text-sm rounded-md hover:bg-accent transition-all duration-300 inline-block"
                   >
                     Join!
@@ -367,31 +346,10 @@ export default function VoyagerNavbar() {
                   style={{ listStyle: 'none' }}
                 >
                   <a
-                    href="#"
-                    onPress={(e) => {
-                      e.preventDefault();
-                      if (isHomePage) {
-                        // If we're on home page, just scroll to the section
-                        const section =
-                          document.getElementById('signup');
-                        if (section) {
-                          section.scrollIntoView({
-                            behavior: 'smooth',
-                          });
-                        }
-                      } else {
-                        // Store the target section in sessionStorage for retrieval after navigation
-                        sessionStorage.setItem(
-                          'scrollToSection',
-                          'signup'
-                        );
-                        // Navigate to the home page (using plain href to avoid chunk loading issues)
-                        window.location.href = '/';
-                      }
-                    }}
+                    href="/waitlist"
                     className="bg-primary text-textLight font-medium px-6 py-2 rounded-md hover:bg-accent transition-all duration-300 inline-block"
                   >
-                    Join For Free
+                    Join!
                   </a>
                 </NavbarItem>
               </div>

@@ -128,7 +128,7 @@ export default function HeroSection() {
           >
             <Button
               as={Link}
-              href="#signup"
+              href="/waitlist"
               className="bg-primary text-textLight text-lg font-medium hover:bg-accent px-8 py-4 rounded-md transition-all hover:scale-105 transform hover:shadow-glow glitch-effect"
             >
               Join For Free →
