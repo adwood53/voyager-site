@@ -10,6 +10,7 @@ import {
 } from '@heroui/react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
+//import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 
 export default function VoyagerNavbar() {
@@ -119,12 +120,13 @@ export default function VoyagerNavbar() {
                   className="list-none"
                   style={{ listStyle: 'none' }}
                 >
-                  <a
+                  {/* Changed to Next.js Link component */}
+                  <Link
                     href="/waitlist"
                     className="bg-primary text-textLight font-medium px-3 py-1 text-sm rounded-md hover:bg-accent transition-all duration-300 inline-block"
                   >
                     Join!
-                  </a>
+                  </Link>
                 </NavbarItem>
               </div>
             </div>
@@ -345,12 +347,12 @@ export default function VoyagerNavbar() {
                   className="list-none"
                   style={{ listStyle: 'none' }}
                 >
-                  <a
+                  <Link
                     href="/waitlist"
                     className="bg-primary text-textLight font-medium px-6 py-2 rounded-md hover:bg-accent transition-all duration-300 inline-block"
                   >
                     Join!
-                  </a>
+                  </Link>
                 </NavbarItem>
               </div>
             </div>
