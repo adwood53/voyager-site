@@ -489,7 +489,7 @@ export default function ServicesPanel() {
                     </h4>
                     <p className="text-gray-600 mb-4">
                       As a Voyager partner, you can offer this service
-                      under your own brand. Here's how it works:
+                      under your own brand. Here&apos;s how it works:
                     </p>
                     <ol className="list-decimal pl-5 space-y-2 text-gray-600">
                       <li>
