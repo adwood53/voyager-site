@@ -35,6 +35,11 @@ export default function NavigationBar({ activeRoute, onNavigate }) {
       icon: '✏️',
     },
     {
+      id: 'services', // Add this new item
+      label: 'Services',
+      icon: '🧩', // Using puzzle piece icon for services
+    },
+    {
       id: 'resources',
       label: 'Resources',
       icon: '📚',

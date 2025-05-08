@@ -57,6 +57,15 @@ export default function HomePanel() {
       route: 'content-change',
     },
     {
+      id: 'services', // Add this new feature
+      title: 'Services Marketplace',
+      description:
+        'Explore and resell our complete range of immersive technology services',
+      icon: '🧩',
+      color: '#4F46E5', // Indigo color
+      route: 'services',
+    },
+    {
       id: 'resources',
       title: 'Partner Resources',
       description:
