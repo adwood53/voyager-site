@@ -14,6 +14,7 @@ import {
   ModalFooter,
   useDisclosure,
   Chip,
+  image,
 } from '@heroui/react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -122,6 +123,61 @@ export default function ServicesPanel() {
           ],
           pricing: 'Starting from £800 per CRM',
         },
+        {
+          id: 'game-dev',
+          title: 'Game Development',
+          image: '/services/game-dev.webp',
+          description:
+            'Create immersive and engaging games for various platforms.',
+          category: 'software',
+          features: [
+            'Custom game design and development',
+            'Cross-platform compatibility',
+            '2D and 3D graphics',
+            'User-friendly interfaces',
+            'Ongoing support and maintenance',
+          ],
+          pricing: 'Starting from £1,500 per game for a simple game.',
+        },
+      ],
+    },
+    {
+      id: '3d',
+      title: '3D Modelling and Animation',
+      color: '#FBBF24', // Amber color
+      bgColor: '#FFFBEB', // Light amber background,
+      services: [
+        {
+          id: '3d-design',
+          title: '3D Design Services',
+          image: '/services/3d-design.webp',
+          description:
+            'Create stunning 3D designs for various applications, including games, films, and VR.',
+          category: '3d',
+          features: [],
+          pricing:
+            'Ranging from £54 to £180 depending on the complexity of the project.',
+        },
+        {
+          id: '3d-render',
+          title: '3D Render Services',
+          image: '/services/3d-render.webp',
+          description:
+            'Create stunning 3D renders for in still and video form.',
+          category: '3d',
+          features: [],
+          pricing: '£30 per still image, £60 per every 10s of video.',
+        },
+        {
+          id: '3d-brand',
+          title: '3D Brand Services',
+          image: '/services/3d-brand.png',
+          description:
+            'Create stunning 3D Brand Assets for use in Animation, Games, Software and Video from a PNG or SVG file.',
+          category: '3d',
+          features: [],
+          pricing: '£72 per logo depending on complexity.',
+        },
       ],
     },
     /* Adding additional categories with custom colors
@@ -170,7 +226,7 @@ export default function ServicesPanel() {
     title: 'Suggest a Service',
     description:
       'Have an idea for a service we should offer? Let us know!',
-    image: '/services/suggest-service.png', // You'll need to create this image
+    image: '/services/service.png', // You'll need to create this image
     category: 'all', // This makes it visible in all categories
     categoryName: 'Feedback',
     categoryColor: '#9333EA', // Purple color
@@ -216,10 +272,15 @@ export default function ServicesPanel() {
   const filteredServices =
     activeCategory === 'all'
       ? allServices
-      : allServices.filter(
-          (service) => service.category === activeCategory
-        );
-
+      : allServices
+          .filter(
+            (service) =>
+              // show if it matches the current category…
+              service.category === activeCategory ||
+              // …or if it's the “Suggest a Service” form
+              service.isJotform
+          )
+          .sort((a, b) => a.title.localeCompare(b.title));
   return (
     <div className="mb-8">
       <div className="flex flex-col-reverse md:flex-row md:items-center md:justify-between mb-2">
