@@ -1,8 +1,9 @@
 // src/app/components/dashboard/panels/ResourcesPanel.js
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import Image from 'next/image';
+import Script from 'next/script';
 import { QRCodeSVG } from 'qrcode.react';
 import { Document, Page, pdfjs } from 'react-pdf';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
@@ -28,6 +29,8 @@ pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/b
 export default function ResourcesPanel() {
   // State for active resource
   const [activeResource, setActiveResource] = useState(null);
+  // State for active gallery item
+  const [activeGalleryItem, setActiveGalleryItem] = useState(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [copiedIndex, setCopiedIndex] = useState(null);
   const [copiedWhat, setCopiedWhat] = useState(null);
@@ -41,6 +44,30 @@ export default function ResourcesPanel() {
   const [pageNumber, setPageNumber] = useState(1);
   const [pdfScale, setPdfScale] = useState(1.0);
   const [pdfLoading, setPdfLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
+  const [scriptLoaded, setScriptLoaded] = useState(false);
+  const iframeRef = useRef(null);
+
+  // Function to handle script load
+  const handleScriptLoad = () => {
+    setScriptLoaded(true);
+    // Initialize Jotform embed handler
+    if (
+      window.jotformEmbedHandler &&
+      iframeRef.current &&
+      activeGalleryItem?.formId
+    ) {
+      window.jotformEmbedHandler(
+        `iframe[id='JotFormIFrame-${activeGalleryItem.formId}']`,
+        'https://form.jotform.com/'
+      );
+    }
+  };
+
+  // Handle iframe load
+  const handleIframeLoad = () => {
+    setIsLoading(false);
+  };
 
   function onDocumentLoadSuccess({ numPages }) {
     setNumPages(numPages);
@@ -131,6 +158,71 @@ export default function ResourcesPanel() {
           embedUrl:
             'https://www.canva.com/design/DAGk_itvhXM/tkcEPoJw9H1_4p_zCIYnLw/view?embed',
           utm: 'utm_content=DDAGk_itvhXM&utm_campaign=designshare&utm_medium=embeds&utm_source=link',
+        },
+      ],
+    },
+    {
+      id: 'idea-factory',
+      title: 'Idea Factory',
+      icon: '💡',
+      color: '#EC4899', // Pink
+      bgColor: '#FCE7F3', // Light pink background
+      description: 'A collection of ideas to use in your pitches.',
+      type: 'gallery', // Change from 'case-studies' to 'gallery'
+      fileType: 'Ideas',
+      // Add gallery items instead of case studies
+      galleryItems: [
+        {
+          id: 'suggest-idea',
+          name: 'Suggest an Idea',
+          description:
+            'Have a great immersive tech idea? Share it with the community!',
+          author: 'Voyager Team',
+          image: '/ideas/suggest-idea.jpg',
+          isSuggestCard: true,
+          formId: '251312979017054', // Replace the jotformUrl property with formId
+        },
+        {
+          id: 'ar-business-card',
+          name: 'AR Business Card with Voice Notes',
+          description:
+            'Business cards that play recorded voice messages when scanned.',
+          purpose:
+            'Create more personal connections with potential clients through voice greetings.',
+          author: 'Michael Chen',
+          image: '/ideas/ar-business-card.jpg',
+          status: {
+            liked: false,
+            commissioned: true,
+          },
+        },
+        {
+          id: 'ar-business-card2',
+          name: 'AR Business Card with Voice Notes',
+          description:
+            'Business cards that play recorded voice messages when scanned.',
+          purpose:
+            'Create more personal connections with potential clients through voice greetings.',
+          author: 'Michael Chen',
+          image: '/ideas/ar-business-card.jpg',
+          status: {
+            liked: false,
+            commissioned: true,
+          },
+        },
+        {
+          id: 'ar-business-card3',
+          name: 'AR Business Card with Voice Notes',
+          description:
+            'Business cards that play recorded voice messages when scanned.',
+          purpose:
+            'Create more personal connections with potential clients through voice greetings.',
+          author: 'Michael Chen',
+          image: '/ideas/ar-business-card.jpg',
+          status: {
+            liked: false,
+            commissioned: true,
+          },
         },
       ],
     },
@@ -451,17 +543,6 @@ export default function ResourcesPanel() {
         },
       ],
     },
-    {
-      id: 'idea-factory',
-      title: 'Idea Factory',
-      icon: '💡',
-      color: '#EC4899', // Pink
-      bgColor: '#FCE7F3', // Light pink background
-      description: 'A collection of ideas to use in your pitches.',
-      type: 'case-studies',
-      fileType: 'Spreadsheet',
-      caseStudies: [],
-    },
   ];
 
   // Function to handle resource click
@@ -717,7 +798,183 @@ export default function ResourcesPanel() {
             </div>
           </div>
         );
+      case 'gallery':
+        // If a "Suggest Idea" card is clicked
+        if (activeGalleryItem && activeGalleryItem.isSuggestCard) {
+          return (
+            <div className="relative">
+              {/* Loading state */}
+              {isLoading && (
+                <div className="absolute inset-0 flex flex-col items-center justify-center bg-white z-10 p-6">
+                  <div className="w-12 h-12 border-4 border-t-transparent rounded-full animate-spin mb-4"></div>
+                  <p className="text-gray-700">Loading form...</p>
+                </div>
+              )}
 
+              {/* JotForm iframe */}
+              <iframe
+                id={`JotFormIFrame-${activeGalleryItem.formId}`}
+                title="Suggest an Idea Form"
+                ref={iframeRef}
+                onLoad={handleIframeLoad}
+                allowTransparency="true"
+                allow="geolocation; microphone; camera; fullscreen"
+                src={`https://form.jotform.com/${activeGalleryItem.formId}`}
+                style={{
+                  minWidth: '100%',
+                  maxWidth: '100%',
+                  height: '539px',
+                  border: 'none',
+                }}
+              ></iframe>
+
+              {/* JotForm scripts */}
+              <Script
+                src="https://cdn.jotfor.ms/s/umd/latest/for-form-embed-handler.js"
+                onLoad={handleScriptLoad}
+                strategy="afterInteractive"
+              />
+            </div>
+          );
+        }
+
+        // If no gallery item is selected, show the grid of gallery items
+        if (!activeGalleryItem) {
+          return (
+            <div className="space-y-6">
+              <p className="text-gray-600 mb-4">
+                Browse our collection of innovative immersive
+                technology ideas or suggest your own ideas to pitch to
+                clients.
+              </p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {activeResource.galleryItems.map((item) => (
+                  <div
+                    key={item.id}
+                    className="bg-white rounded-lg border border-gray-200 overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer"
+                    onClick={() => setActiveGalleryItem(item)}
+                  >
+                    <div className="relative aspect-video w-full">
+                      <Image
+                        src={item.image}
+                        alt={item.name}
+                        fill
+                        className="object-cover"
+                      />
+                      {/* For normal idea cards, show status badges */}
+                      {!item.isSuggestCard && item.status && (
+                        <div className="absolute top-2 right-2 flex gap-1">
+                          {item.status.liked && (
+                            <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">
+                              Liked
+                            </span>
+                          )}
+                          {item.status.commissioned && (
+                            <span className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">
+                              Commissioned
+                            </span>
+                          )}
+                        </div>
+                      )}
+                      {/* For the Suggest Idea card, show a special badge */}
+                      {item.isSuggestCard && (
+                        <div className="absolute top-2 right-2">
+                          <span className="bg-pink-100 text-pink-800 text-xs px-2 py-1 rounded-full">
+                            New Idea
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                    <div className="p-4">
+                      <h4 className="text-lg font-semibold text-gray-800 mb-1">
+                        {item.name}
+                      </h4>
+                      <p className="text-gray-500 text-sm mb-1">
+                        {item.isSuggestCard
+                          ? 'Create your own idea'
+                          : `By ${item.author}`}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          );
+        }
+
+        // Show selected gallery item (for normal idea cards, not for "Suggest Idea")
+        return (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {/* Image on the left */}
+            <div className="relative aspect-video rounded-lg overflow-hidden border border-gray-200">
+              <Image
+                src={activeGalleryItem.image}
+                alt={activeGalleryItem.name}
+                fill
+                className="object-cover"
+              />
+              <div className="absolute top-2 right-2 flex gap-1">
+                {activeGalleryItem.status.liked && (
+                  <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">
+                    Liked by Clients
+                  </span>
+                )}
+                {activeGalleryItem.status.commissioned && (
+                  <span className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">
+                    Successfully Commissioned
+                  </span>
+                )}
+              </div>
+            </div>
+
+            {/* Details on the right */}
+            <div className="space-y-4">
+              <div>
+                <h3 className="text-2xl font-semibold text-gray-800 mb-1">
+                  {activeGalleryItem.name}
+                </h3>
+                <p className="text-gray-500">
+                  Submitted by {activeGalleryItem.author}
+                </p>
+              </div>
+
+              <div>
+                <h4 className="text-lg font-medium text-gray-800 mb-1">
+                  Description
+                </h4>
+                <p className="text-gray-600">
+                  {activeGalleryItem.description}
+                </p>
+              </div>
+
+              <div>
+                <h4 className="text-lg font-medium text-gray-800 mb-1">
+                  Purpose
+                </h4>
+                <p className="text-gray-600">
+                  {activeGalleryItem.purpose}
+                </p>
+              </div>
+
+              <div className="mt-6 flex flex-col sm:flex-row gap-3">
+                <Button
+                  size="md"
+                  variant="bordered"
+                  style={{
+                    borderColor: activeResource.color,
+                    color: activeResource.color,
+                  }}
+                  onClick={() => {
+                    // Return to gallery view
+                    setActiveGalleryItem(null);
+                  }}
+                >
+                  Back to Ideas
+                </Button>
+              </div>
+            </div>
+          </div>
+        );
       case 'case-studies':
         // Check if we're dealing with a PDF resource
         const hasPdfResources = activeResource.caseStudies.some(
@@ -1267,10 +1524,12 @@ export default function ResourcesPanel() {
           setTimeout(() => {
             setActiveIndustry(null);
             setActivePdf(null);
+            setActiveGalleryItem(null); // Add this line to reset the gallery item
             setCopiedIndex(null);
             setCopiedWhat(null);
             setNumPages(null);
             setPageNumber(1);
+            setIsLoading(true); // Reset the loading state
           }, 100);
         }}
         size="5xl"

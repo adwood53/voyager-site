@@ -17,6 +17,7 @@ import {
 } from '@heroui/react';
 import Image from 'next/image';
 import Link from 'next/link';
+import Script from 'next/script';
 
 export default function ServicesPanel() {
   // Modal control
@@ -25,7 +26,30 @@ export default function ServicesPanel() {
   const [activeService, setActiveService] = useState(null);
   // Category filter
   const [activeCategory, setActiveCategory] = useState('all');
+  // Add these with your other state variables at the top
+  const [isLoading, setIsLoading] = useState(true);
+  const [scriptLoaded, setScriptLoaded] = useState(false);
+  const iframeRef = useRef(null);
 
+  // Add these functions
+  const handleScriptLoad = () => {
+    setScriptLoaded(true);
+    // Initialize Jotform embed handler for the current form
+    if (
+      window.jotformEmbedHandler &&
+      iframeRef.current &&
+      activeService?.formId
+    ) {
+      window.jotformEmbedHandler(
+        `iframe[id='JotFormIFrame-${activeService.formId}']`,
+        'https://form.jotform.com/'
+      );
+    }
+  };
+
+  const handleIframeLoad = () => {
+    setIsLoading(false);
+  };
   // Service categories with their respective services and custom colors
   const categories = [
     {
@@ -141,6 +165,20 @@ export default function ServicesPanel() {
     }))
   );
 
+  allServices.push({
+    id: 'suggest-service',
+    title: 'Suggest a Service',
+    description:
+      'Have an idea for a service we should offer? Let us know!',
+    image: '/services/suggest-service.png', // You'll need to create this image
+    category: 'all', // This makes it visible in all categories
+    categoryName: 'Feedback',
+    categoryColor: '#9333EA', // Purple color
+    categoryBgColor: '#F5F3FF', // Light purple background
+    isJotform: true, // Flag to identify this as a Jotform link
+    formId: '251315082459052', // Replace with your actual Jotform ID
+  });
+
   // Get all unique categories for filter chips
   const allCategories = [
     {
@@ -183,19 +221,31 @@ export default function ServicesPanel() {
         );
 
   return (
-    <div className="max-w-6xl mx-auto">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-800 mb-2">
+    <div className="mb-8">
+      <div className="flex flex-col-reverse md:flex-row md:items-center md:justify-between mb-2">
+        <h1 className="text-3xl font-bold text-gray-800">
           Voyager Services
         </h1>
-        <p className="text-gray-600">
-          Explore our range of immersive technology solutions that you
-          can offer to your clients.
-        </p>
+        <div className="flex items-center mb-4 md:mb-0 justify-start md:justify-end">
+          <span className="text-gray-600 mr-2 text-sm">
+            Provided by:
+          </span>
+          <Image
+            src="/partners/CC-Main.png"
+            alt="Creative Collaborators Logo"
+            width={153}
+            height={40}
+            className="h-10 w-auto"
+          />
+        </div>
       </div>
+      <p className="text-gray-600">
+        Explore our range of immersive technology solutions that you
+        can offer to your clients.
+      </p>
 
       {/* Category Filter Chips with custom category colors */}
-      <div className="flex flex-wrap gap-2 mb-8 mx-8">
+      <div className="flex flex-wrap gap-2 mt-4 mb-8 mx-8">
         {allCategories.map((category) => (
           <Chip
             key={category.id}
@@ -304,9 +354,10 @@ export default function ServicesPanel() {
         isOpen={isOpen}
         onClose={() => {
           onClose();
-          // Reset active service after modal closes
+          // Reset active service and loading state after modal closes
           setTimeout(() => {
             setActiveService(null);
+            setIsLoading(true); // Reset loading state for next form
           }, 100);
         }}
         size="5xl"
@@ -362,116 +413,159 @@ export default function ServicesPanel() {
               </ModalHeader>
 
               <ModalBody className="bg-white">
-                {activeService && (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    {/* Service Image */}
-                    <div className="relative aspect-video rounded-lg overflow-hidden border border-gray-200">
-                      <Image
-                        src={
-                          activeService.image || '/placeholder.jpg'
-                        }
-                        alt={activeService.title}
-                        fill
-                        className="object-cover"
+                {activeService && activeService.isJotform ? (
+                  // Jotform Embed - correct implementation
+                  <div className="relative min-h-[539px]">
+                    {/* Loading state */}
+                    {isLoading && (
+                      <div className="absolute inset-0 flex flex-col items-center justify-center bg-white z-10 p-6">
+                        <div className="w-12 h-12 border-4 border-t-transparent rounded-full animate-spin mb-4"></div>
+                        <p className="text-gray-700">
+                          Loading form...
+                        </p>
+                      </div>
+                    )}
+
+                    {/* JotForm iframe */}
+                    <iframe
+                      id={`JotFormIFrame-${activeService.formId}`}
+                      title="Suggest a Service Form"
+                      ref={iframeRef}
+                      onLoad={handleIframeLoad}
+                      allowTransparency="true"
+                      allow="geolocation; microphone; camera; fullscreen"
+                      src={`https://form.jotform.com/${activeService.formId}`}
+                      style={{
+                        minWidth: '100%',
+                        maxWidth: '100%',
+                        height: '539px',
+                        border: 'none',
+                      }}
+                    ></iframe>
+
+                    {/* JotForm scripts loaded via Next.js Script component */}
+                    {scriptLoaded === false && (
+                      <Script
+                        src="https://cdn.jotfor.ms/s/umd/latest/for-form-embed-handler.js"
+                        onLoad={handleScriptLoad}
+                        strategy="afterInteractive"
                       />
-                    </div>
-
-                    {/* Service Details */}
-                    <div className="space-y-6">
-                      <div>
-                        <h3 className="text-xl font-semibold text-gray-800 mb-2">
-                          Description
-                        </h3>
-                        <p className="text-gray-600">
-                          {activeService.description}
-                        </p>
+                    )}
+                  </div>
+                ) : (
+                  activeService && (
+                    // Regular service details (keep your existing code here)
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                      {/* Service Image */}
+                      <div className="relative aspect-video rounded-lg overflow-hidden border border-gray-200">
+                        <Image
+                          src={
+                            activeService.image || '/placeholder.jpg'
+                          }
+                          alt={activeService.title}
+                          fill
+                          className="object-cover"
+                        />
                       </div>
 
-                      <div>
-                        <h3 className="text-xl font-semibold text-gray-800 mb-2">
-                          Features
-                        </h3>
-                        <ul className="list-disc pl-5 space-y-1 text-gray-600">
-                          {activeService.features.map(
-                            (feature, index) => (
-                              <li key={index}>{feature}</li>
-                            )
-                          )}
-                        </ul>
-                      </div>
+                      {/* Service Details */}
+                      <div className="space-y-6">
+                        <div>
+                          <h3 className="text-xl font-semibold text-gray-800 mb-2">
+                            Description
+                          </h3>
+                          <p className="text-gray-600">
+                            {activeService.description}
+                          </p>
+                        </div>
 
-                      <div>
-                        <h3 className="text-xl font-semibold text-gray-800 mb-2">
-                          Pricing
-                        </h3>
-                        <p className="text-gray-600">
-                          {activeService.pricing}
-                        </p>
-                      </div>
+                        <div>
+                          <h3 className="text-xl font-semibold text-gray-800 mb-2">
+                            Features
+                          </h3>
+                          <ul className="list-disc pl-5 space-y-1 text-gray-600">
+                            {activeService.features?.map(
+                              (feature, index) => (
+                                <li key={index}>{feature}</li>
+                              )
+                            ) || <li>No features listed</li>}
+                          </ul>
+                        </div>
 
-                      {/* Contact Buttons */}
-                      <div>
-                        <h3 className="text-xl font-semibold text-gray-800 mb-2">
-                          Interested in this service?
-                        </h3>
-                        <div className="flex flex-col sm:flex-row gap-3 mt-4">
-                          <Button
-                            as={Link}
-                            href="https://wa.me/447514020340"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex items-center justify-center gap-2"
-                            style={{
-                              backgroundColor: '#25D366',
-                              color: 'white',
-                            }}
-                          >
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              width="16"
-                              height="16"
-                              viewBox="0 0 24 24"
-                              fill="currentColor"
+                        <div>
+                          <h3 className="text-xl font-semibold text-gray-800 mb-2">
+                            Pricing
+                          </h3>
+                          <p className="text-gray-600">
+                            {activeService.pricing ||
+                              'Contact us for pricing'}
+                          </p>
+                        </div>
+
+                        {/* Contact Buttons */}
+                        <div>
+                          <h3 className="text-xl font-semibold text-gray-800 mb-2">
+                            Interested in this service?
+                          </h3>
+                          <div className="flex flex-col sm:flex-row gap-3 mt-4">
+                            <Button
+                              as={Link}
+                              href="https://wa.me/447514020340"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex items-center justify-center gap-2"
+                              style={{
+                                backgroundColor: '#25D366',
+                                color: 'white',
+                              }}
                             >
-                              <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z" />
-                            </svg>
-                            Contact via WhatsApp
-                          </Button>
-                          <Button
-                            as={Link}
-                            href="mailto:connect@voyagervrlab.co.uk"
-                            className="flex items-center justify-center gap-2"
-                            style={{
-                              backgroundColor:
-                                activeService.categoryColor ||
-                                'var(--primary-color, #E79023)',
-                              color: 'white',
-                            }}
-                          >
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              width="16"
-                              height="16"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="2"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="16"
+                                height="16"
+                                viewBox="0 0 24 24"
+                                fill="currentColor"
+                              >
+                                <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z" />
+                              </svg>
+                              Contact via WhatsApp
+                            </Button>
+                            <Button
+                              as={Link}
+                              href="mailto:connect@voyagervrlab.co.uk"
+                              className="flex items-center justify-center gap-2"
+                              style={{
+                                backgroundColor:
+                                  activeService.categoryColor ||
+                                  'var(--primary-color, #E79023)',
+                                color: 'white',
+                              }}
                             >
-                              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-                              <polyline points="22,6 12,13 2,6"></polyline>
-                            </svg>
-                            Contact via Email
-                          </Button>
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="16"
+                                height="16"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                              >
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                                <polyline points="22,6 12,13 2,6"></polyline>
+                              </svg>
+                              Contact via Email
+                            </Button>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
+                  )
                 )}
 
-                {/* Additional Information */}
-                {activeService && (
+                {/* Additional Information - only show for regular services */}
+                {activeService && !activeService.isJotform && (
                   <div
                     className="mt-8 p-4 rounded-md"
                     style={{

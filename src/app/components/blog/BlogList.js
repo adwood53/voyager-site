@@ -5,105 +5,126 @@ import { Button } from '@heroui/react';
 import BlogCard from './BlogCard';
 import FlexGrid from '../FlexGrid';
 import { useSearchParams, useRouter } from 'next/navigation';
+import { sanityClient } from '@/src/lib/sanity';
 
-export default function BlogList({ posts = [] }) {
-  // Store both the selected category ID and filtered posts in state
+/**
+ * BlogList component fetches posts on mount (client-side), maintains original
+ * category filtering, pagination, and URL-sync behavior.
+ */
+export default function BlogList({ posts: initialPosts = [] }) {
+  // 1. allPosts holds the full list of posts (initial from props + fetched)
+  const [allPosts, setAllPosts] = useState(initialPosts);
+  // 2. categoryId for current filter (default "all")
   const [categoryId, setCategoryId] = useState('all');
+  // 3. visiblePosts is the filtered list based on category
   const [visiblePosts, setVisiblePosts] = useState([]);
+  // 4. visibleCount controls pagination ("Load More" button)
   const [visibleCount, setVisibleCount] = useState(6);
 
-  // Navigation
+  // Next.js navigation hooks
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  // Get all unique categories from posts - memoized to prevent recalculation on every render
+  // Compute unique categories from allPosts (memoized)
   const allCategories = useMemo(
-    () => getAllCategories(posts),
-    [posts]
+    () => getAllCategories(allPosts),
+    [allPosts]
   );
 
-  // Create a memoized filter function to prevent unnecessary re-renders
+  // Memoized filter function to avoid recreating on every render
   const filterPosts = useCallback(
-    (categoryId) => {
-      return filterPostsByCategory(posts, categoryId);
-    },
-    [posts]
+    (id) => filterPostsByCategory(allPosts, id),
+    [allPosts]
   );
 
-  // Initialize from URL and set up category/filtering - runs only once on mount
+  // Fetch fresh posts on client mount
   useEffect(() => {
-    // Check URL for category
-    const categoryParam = searchParams.get('category');
-    let initialCategoryId = 'all';
+    const query = `*[_type=="post"] | order(publishedAt desc)[0...200]{
+      _id,
+      title,
+      slug{ current },
+      excerpt,
+      publishedAt,
+      mainImage{ asset->{ url } },
+      "categories": categories[]->{ _id, title },
+      "author": author->{ _id, name, profileImage{ asset->{ url } } }
+    }`;
 
-    if (categoryParam) {
-      const matchingCategory = allCategories.find(
-        (cat) =>
-          cat.title?.toLowerCase() === categoryParam.toLowerCase()
+    sanityClient
+      .fetch(query)
+      .then((data) => {
+        // Normalize shape: flatten slug and image URLs
+        const normalized = data.map((post) => ({
+          ...post,
+          slug: post.slug.current,
+          mainImage: post.mainImage?.asset?.url || null,
+          author: post.author
+            ? {
+                ...post.author,
+                profileImage:
+                  post.author.profileImage?.asset?.url || null,
+              }
+            : null,
+        }));
+        setAllPosts(normalized);
+      })
+      .catch((err) => console.error('Error fetching posts:', err));
+  }, []);
+
+  // Initialize category from URL query
+  useEffect(() => {
+    const catParam = searchParams.get('category');
+    let initialId = 'all';
+    if (catParam) {
+      const match = allCategories.find(
+        (c) => c.title.toLowerCase() === catParam.toLowerCase()
       );
-
-      if (matchingCategory) {
-        initialCategoryId = matchingCategory._id;
-      }
+      if (match) initialId = match._id;
     }
-
-    // Set the initial category
-    setCategoryId(initialCategoryId);
-
-    // Initial filtering is now handled by the second useEffect
+    setCategoryId(initialId);
   }, [searchParams, allCategories]);
 
-  // Re-filter when posts or category changes
+  // Re-filter and reset pagination on category change or when posts update
   useEffect(() => {
-    // Filter posts based on selected category
     const filtered = filterPosts(categoryId);
-
-    // Update visible posts
     setVisiblePosts(filtered);
-
-    // Reset pagination when category changes
     setVisibleCount(6);
   }, [categoryId, filterPosts]);
 
-  // Handle category selection
+  // Handle clicking a category button
   function handleCategoryChange(newCategoryId) {
     if (newCategoryId === categoryId) return;
-
-    // Update category
     setCategoryId(newCategoryId);
 
-    // Update URL
+    // Sync URL
     if (newCategoryId === 'all') {
       router.push('/blog');
     } else {
-      const categoryTitle = allCategories.find(
-        (cat) => cat._id === newCategoryId
+      const title = allCategories.find(
+        (c) => c._id === newCategoryId
       )?.title;
-
-      if (categoryTitle) {
-        router.push(
-          `/blog?category=${encodeURIComponent(categoryTitle)}`
-        );
+      if (title) {
+        router.push(`/blog?category=${encodeURIComponent(title)}`);
       }
     }
   }
 
-  // Show more posts button handler
+  // "Load More" pagination
   function loadMore() {
     setVisibleCount((prev) => prev + 6);
   }
 
-  // Posts to display based on pagination
+  // Slice the filtered posts for display
   const displayedPosts = visiblePosts.slice(0, visibleCount);
 
   return (
     <div className="container-voyager py-8">
       {/* Header */}
       <div className="text-center mb-12">
-        <h1 className="heading-voyager text-4xl md:text-5xl text-textLight mb-6 text-center">
+        <h1 className="heading-voyager text-4xl md:text-5xl text-textLight mb-6">
           Our <span className="text-primary">Blog</span>
         </h1>
-        <p className="text-xl text-textLight opacity-80 max-w-3xl mx-auto text-center">
+        <p className="text-xl text-textLight opacity-80 max-w-3xl mx-auto">
           Insights, updates, and stories from the world of immersive
           technology
         </p>
@@ -114,12 +135,13 @@ export default function BlogList({ posts = [] }) {
         <div className="flex flex-wrap justify-center gap-3 mb-10">
           {allCategories.map((category) => (
             <Button
-              key={`category-${category._id}`}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
-                categoryId === category._id
+              key={category._id}
+              className={
+                `px-4 py-2 rounded-full text-sm font-medium transition-all ` +
+                (categoryId === category._id
                   ? 'bg-primary text-textLight'
-                  : 'bg-darkCard text-textLight hover:bg-primary hover:bg-opacity-20'
-              }`}
+                  : 'bg-darkCard text-textLight hover:bg-primary hover:bg-opacity-20')
+              }
               onClick={() => handleCategoryChange(category._id)}
             >
               {category.title}
@@ -129,26 +151,24 @@ export default function BlogList({ posts = [] }) {
       )}
 
       {/* Posts Grid */}
-      <div>
+      <div className="mb-8">
         {displayedPosts.length > 0 ? (
           <>
             <FlexGrid
               columns={{ sm: 1, md: 2, lg: 3 }}
               gap="8"
               animate={false}
-              equalHeight={true}
+              equalHeight
             >
               {displayedPosts.map((post) => (
-                <BlogCard key={`post-${post._id}`} post={post} />
+                <BlogCard key={post._id} post={post} />
               ))}
             </FlexGrid>
-
-            {/* Load More Button */}
             {visibleCount < visiblePosts.length && (
               <div className="mt-12 text-center">
                 <Button
                   onClick={loadMore}
-                  className="bg-primary text-textLight font-medium hover:bg-accent px-6 py-3 rounded-md transition-all hover:scale-105 transform hover:shadow-glow"
+                  className="bg-primary text-textLight font-medium hover:bg-accent px-6 py-3 rounded-md transition-all hover:scale-105"
                 >
                   Load More
                 </Button>
@@ -162,8 +182,8 @@ export default function BlogList({ posts = [] }) {
             </p>
             {categoryId !== 'all' && (
               <Button
-                className="mt-4 bg-primary text-textLight font-medium hover:bg-accent px-4 py-2 rounded-md transition-all"
                 onClick={() => handleCategoryChange('all')}
+                className="mt-4 bg-primary text-textLight px-4 py-2 rounded-md"
               >
                 View All Posts
               </Button>
@@ -175,51 +195,27 @@ export default function BlogList({ posts = [] }) {
   );
 }
 
-// Helper function to get all unique categories from posts
+// Helper: get unique categories
 function getAllCategories(posts) {
-  // Start with "All" category
   const result = [{ _id: 'all', title: 'All' }];
-
-  // Ensure posts is an array
-  if (!Array.isArray(posts) || posts.length === 0) {
-    return result;
-  }
-
-  // Extract unique categories
-  const categoryMap = new Map();
-
-  posts.forEach((post) => {
-    if (post?.categories && Array.isArray(post.categories)) {
-      post.categories.forEach((category) => {
-        if (
-          category &&
-          category._id &&
-          !categoryMap.has(category._id)
-        ) {
-          categoryMap.set(category._id, category);
-          result.push(category);
-        }
-      });
-    }
+  if (!Array.isArray(posts) || posts.length === 0) return result;
+  const map = new Map();
+  posts.forEach((p) => {
+    p.categories?.forEach((c) => {
+      if (c?._id && !map.has(c._id)) {
+        map.set(c._id, c);
+        result.push(c);
+      }
+    });
   });
-
   return result;
 }
 
-// Helper function to filter posts by category
+// Helper: filter posts by category
 function filterPostsByCategory(posts, categoryId) {
-  // Ensure posts is an array
-  if (!Array.isArray(posts) || posts.length === 0) {
-    return [];
-  }
-
-  // Return all posts for 'all' category
-  if (categoryId === 'all') {
-    return [...posts];
-  }
-
-  // Filter posts by category
-  return posts.filter((post) =>
-    post?.categories?.some((category) => category._id === categoryId)
+  if (!Array.isArray(posts)) return [];
+  if (categoryId === 'all') return [...posts];
+  return posts.filter((p) =>
+    p.categories?.some((c) => c._id === categoryId)
   );
 }
