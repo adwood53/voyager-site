@@ -95,7 +95,7 @@ export default function TitleBar({ organization, onNavigate }) {
             className="flex items-center"
           >
             <div className="flex items-center px-4">
-              <HelpVideo videoId="dQw4w9WgXcQ" />{' '}
+              <HelpVideo videoId="v4Tx6QNV7-c" />{' '}
               {/* Add your actual YouTube video ID */}
             </div>
             <span className="text-gray-500 mr-2 hidden md:inline">
