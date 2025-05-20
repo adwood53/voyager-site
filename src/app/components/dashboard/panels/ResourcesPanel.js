@@ -22,6 +22,7 @@ import {
   Tab,
   Divider,
 } from '@heroui/react';
+import author from '@/src/schemas/author';
 
 // NEW (use .min.mjs for React-PDF v9+)
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
@@ -178,50 +179,314 @@ export default function ResourcesPanel() {
           description:
             'Have a great immersive tech idea? Share it with the community!',
           author: 'Voyager Team',
-          image: '/ideas/suggest-idea.jpg',
+          image: '/ideas/submit-idea.png',
           isSuggestCard: true,
           formId: '251312979017054', // Replace the jotformUrl property with formId
         },
         {
-          id: 'ar-business-card',
-          name: 'AR Business Card with Voice Notes',
+          id: 'hole-in-wall',
+          name: 'Hole in the Wall',
           description:
-            'Business cards that play recorded voice messages when scanned.',
+            'An image on a wall that, when scanned, reveals a virtual hole in the wall that acts as a portal to another world.',
           purpose:
-            'Create more personal connections with potential clients through voice greetings.',
-          author: 'Michael Chen',
-          image: '/ideas/ar-business-card.jpg',
+            'Offer a view inside for your audience to explore a different environment.',
+          author: 'Voyager Team',
+          image: '/ideas/holeinwall.webp',
+          status: {
+            liked: false,
+            commissioned: false,
+          },
+        },
+        {
+          id: 'barn-door-bottle',
+          name: 'Barn Door Bottle',
+          description:
+            'A Bottle that, when scanned, opens a barn door to reveal a virtual world or character inside.',
+          purpose:
+            'Create a fun and engaging way to showcase products or characters.',
+          author: 'Voyager Team',
+          image: '/ideas/barndoorbottle.webp',
           status: {
             liked: false,
             commissioned: true,
           },
         },
         {
-          id: 'ar-business-card2',
-          name: 'AR Business Card with Voice Notes',
+          id: 'hollow-can',
+          name: 'Hollow Can',
           description:
-            'Business cards that play recorded voice messages when scanned.',
+            'A can that, when scanned, reveals a hidden message or animation inside popping out of the top of the can.',
           purpose:
-            'Create more personal connections with potential clients through voice greetings.',
-          author: 'Michael Chen',
-          image: '/ideas/ar-business-card.jpg',
+            'Create a fun and engaging way to showcase products or characters.',
+          author: 'Voyager Team',
+          image: '/ideas/hollowcan.webp',
           status: {
             liked: false,
             commissioned: true,
           },
         },
         {
-          id: 'ar-business-card3',
-          name: 'AR Business Card with Voice Notes',
+          id: 'animated-street-art',
+          name: 'Animated Street Art',
           description:
-            'Business cards that play recorded voice messages when scanned.',
+            'Street art that comes to life with AR when viewed through a device.',
           purpose:
-            'Create more personal connections with potential clients through voice greetings.',
-          author: 'Michael Chen',
-          image: '/ideas/ar-business-card.jpg',
+            'Engage viewers with interactive and immersive art experiences.',
+          author: 'Voyager Team',
+          image: '/ideas/animatedstreetart.webp',
+          status: {
+            liked: false,
+            commissioned: false,
+          },
+        },
+        {
+          id: 'open-augmented-gallery',
+          name: 'Open Augmented Gallery',
+          description:
+            'An open gallery space where users can explore various AR artworks.',
+          purpose:
+            'Provide a platform for artists to showcase their digital creations.',
+          author: 'Voyager Team',
+          image: '/ideas/openaugmentedgallery.webp',
+          status: {
+            liked: false,
+            commissioned: false,
+          },
+        },
+        {
+          id: 'headwear-try-on',
+          name: 'Headwear Try-On',
+          description:
+            'An AR experience that allows users to try on different headwear styles virtually.',
+          purpose:
+            'Enhance online shopping experiences for fashion retailers.',
+          author: 'Voyager Team',
+          image: '/ideas/headweartryon.webp',
+          status: {
+            liked: false,
+            commissioned: false,
+          },
+        },
+        {
+          id: 'try-at-home',
+          name: 'Try at Home',
+          description:
+            'An AR experience that allows users to visualise products in their own space before purchasing.',
+          purpose:
+            'Help customers make informed decisions by visualising products in their environment.',
+          author: 'Voyager Team',
+          image: '/ideas/tryathome.webp',
+          status: {
+            liked: false,
+            commissioned: false,
+          },
+        },
+        {
+          id: 'augmented-digital-signage',
+          name: 'Augmented Digital Signage',
+          description:
+            'Signage that incorporates augmented reality elements as interactive displays.',
+          purpose:
+            'Transform traditional advertising spaces into interactive experiences.',
+          author: 'Voyager Team',
+          image: '/ideas/augmenteddigitalsignage.webp',
+          status: {
+            liked: false,
+            commissioned: false,
+          },
+        },
+        {
+          id: 'immersive-pos',
+          name: 'Immersive Point of Sale',
+          description:
+            'An AR experience that enhances the point of sale with interactive elements.',
+          purpose:
+            'Improve customer engagement and drive sales in retail environments.',
+          author: 'Voyager Team',
+          image: '/ideas/immersivepos.webp',
+          status: {
+            liked: false,
+            commissioned: false,
+          },
+        },
+        {
+          id: 'immersive-menu',
+          name: 'Immersive Menu',
+          description:
+            'An AR experience that transforms traditional menus into interactive displays.',
+          purpose:
+            'Enhance the dining experience and engage customers with dynamic content.',
+          author: 'Voyager Team',
+          image: '/ideas/immersivemenu.webp',
+          status: {
+            liked: false,
+            commissioned: false,
+          },
+        },
+        {
+          id: 'augmented-signage',
+          name: 'Augmented Signage',
+          description:
+            'Augmented Reality elements in the place of Signage.',
+          purpose:
+            'Transform traditional advertising spaces into interactive experiences.',
+          author: 'Voyager Team',
+          image: '/ideas/augmentedsignage.webp',
+          status: {
+            liked: false,
+            commissioned: false,
+          },
+        },
+        {
+          id: 'immersive-storefront',
+          name: 'Immersive Storefront',
+          description:
+            'An AR experience that transforms traditional storefronts into interactive displays.',
+          purpose:
+            'Enhance the shopping experience and engage customers with dynamic content.',
+          author: 'Voyager Team',
+          image: '/ideas/immersivestorefront.webp',
+          status: {
+            liked: false,
+            commissioned: false,
+          },
+        },
+        {
+          id: 'augmented-trophies',
+          name: 'Augmented Trophies',
+          description:
+            'AR trophies that can be awarded to users for various achievements.',
+          purpose:
+            'Gamify the user experience and encourage engagement.',
+          author: 'Voyager Team',
+          image: '/ideas/augmentedtrophies.webp',
+          status: {
+            liked: false,
+            commissioned: false,
+          },
+        },
+        {
+          id: 'ar-season-tickets',
+          name: 'AR Season Tickets',
+          description:
+            'Augmented Reality tickets for events, providing interactive experiences.',
+          purpose:
+            'Enhance event experiences and provide additional value to attendees.',
+          author: 'Voyager Team',
+          image: '/ideas/arseasontickets.webp',
+          status: {
+            liked: false,
+            commissioned: false,
+          },
+        },
+        {
+          id: 'immersive-venue',
+          name: 'Immersive Venue',
+          description:
+            'An AR experience that transforms traditional venues into interactive spaces.',
+          purpose:
+            'Enhance the event experience and engage attendees with dynamic content.',
+          author: 'Voyager Team',
+          image: '/ideas/immersivevenue.webp',
+          status: {
+            liked: false,
+            commissioned: false,
+          },
+        },
+        {
+          id: '360-countdown',
+          name: '360 Countdown',
+          description: 'An immersive countdown experience in 360°.',
+          purpose: 'Create excitement and anticipation for events.',
+          author: 'Voyager Team',
+          image: '/ideas/360countdown.webp',
+          status: {
+            liked: false,
+            commissioned: false,
+          },
+        },
+        {
+          id: 'treasure-hunt',
+          name: 'Treasure Hunt',
+          description:
+            'An AR experience that guides users on a treasure hunt with interactive clues.',
+          purpose:
+            'Engage users in a fun and immersive way, encouraging exploration and discovery.',
+          author: 'Voyager Team',
+          image: '/ideas/treasurehunt.webp',
+          status: {
+            liked: false,
+            commissioned: false,
+          },
+        },
+        {
+          id: 'immersive-album',
+          name: 'Immersive Album',
+          description:
+            'An AR experience that transforms traditional photo albums into interactive displays.',
+          purpose:
+            'Enhance the storytelling experience and engage users with dynamic content.',
+          author: 'Voyager Team',
+          image: '/ideas/immersivealbum.webp',
           status: {
             liked: false,
             commissioned: true,
+          },
+        },
+        {
+          id: 'immersive-music-merch',
+          name: 'Immersive Music Merch',
+          description:
+            'An AR experience that brings music merchandise to life.',
+          purpose:
+            'Enhance the music experience and engage fans with interactive content.',
+          author: 'Voyager Team',
+          image: '/ideas/immersivemusicmerch.webp',
+          status: {
+            liked: false,
+            commissioned: false,
+          },
+        },
+        {
+          id: 'album-jukebox',
+          name: 'Album Jukebox',
+          description:
+            'An AR experience that allows users to interact with album artwork and play music.',
+          purpose:
+            'Enhance the music listening experience and engage fans with interactive content.',
+          author: 'Voyager Team',
+          image: '/ideas/albumjukebox.webp',
+          status: {
+            liked: false,
+            commissioned: false,
+          },
+        },
+        {
+          id: 'album-stem-player',
+          name: 'Album Stem Player',
+          description:
+            'An AR experience that allows users to interact with album stems and create their own mixes.',
+          purpose:
+            'Enhance the music creation experience and engage fans with interactive content.',
+          author: 'Voyager Team',
+          image: '/ideas/albumstemplayer.webp',
+          status: {
+            liked: false,
+            commissioned: false,
+          },
+        },
+        {
+          id: 'immersive-song-lyrics',
+          name: 'Immersive Song Lyrics',
+          description:
+            'An AR experience that displays song lyrics in an interactive way.',
+          purpose:
+            'Enhance the music listening experience and engage fans with dynamic content.',
+          author: 'Voyager Team',
+          image: '/ideas/immersivesonglyrics.webp',
+          status: {
+            liked: false,
+            commissioned: false,
           },
         },
       ],

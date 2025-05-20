@@ -1,9 +1,11 @@
+// src/app/components/dashboard/TitleBar.js
 'use client';
 
 import { OrganizationSwitcher, useOrganization } from '@clerk/nextjs';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
+import HelpVideo from './HelpVideo';
 
 export default function TitleBar({ organization, onNavigate }) {
   // Get organization details (fallback to defaults if not available)
@@ -92,6 +94,10 @@ export default function TitleBar({ organization, onNavigate }) {
             transition={{ duration: 0.3, delay: 0.2 }}
             className="flex items-center"
           >
+            <div className="flex items-center px-4">
+              <HelpVideo videoId="dQw4w9WgXcQ" />{' '}
+              {/* Add your actual YouTube video ID */}
+            </div>
             <span className="text-gray-500 mr-2 hidden md:inline">
               Powered by
             </span>
