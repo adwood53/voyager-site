@@ -5,7 +5,7 @@ import { OrganizationSwitcher, useOrganization } from '@clerk/nextjs';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
-import HelpVideo from './HelpVideo';
+import WalkthroughButton from './WalkthroughButton';
 
 export default function TitleBar({ organization, onNavigate }) {
   // Get organization details (fallback to defaults if not available)
@@ -37,6 +37,12 @@ export default function TitleBar({ organization, onNavigate }) {
       onNavigate('settings');
     }
     return false; // Prevent default navigation
+  };
+
+  // Handle walkthrough video opening (optional analytics/tracking)
+  const handleWalkthroughOpen = () => {
+    console.log('Walkthrough video opened');
+    // Add any analytics tracking here if needed
   };
 
   return (
@@ -95,7 +101,10 @@ export default function TitleBar({ organization, onNavigate }) {
             className="flex items-center"
           >
             <div className="flex items-center px-4">
-              <HelpVideo videoId="v4Tx6QNV7-c" />{' '}
+              <WalkthroughButton
+                videoId="v4Tx6QNV7-c" // Replace with your actual YouTube video ID
+                onVideoOpen={handleWalkthroughOpen}
+              />
               {/* Add your actual YouTube video ID */}
             </div>
             <span className="text-gray-500 mr-2 hidden md:inline">

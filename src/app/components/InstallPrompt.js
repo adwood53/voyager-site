@@ -108,7 +108,7 @@ export default function InstallPrompt() {
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
-      className="fixed top-4 right-4 z-50 max-w-sm shadow-lg"
+      className="fixed top-4 mt-16 right-4 z-50 max-w-sm shadow-lg"
       style={{ maxWidth: '90vw' }}
     >
       <div

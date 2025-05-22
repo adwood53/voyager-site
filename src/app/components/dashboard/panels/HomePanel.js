@@ -4,8 +4,7 @@
 import { Card, CardBody, CardHeader, Button } from '@heroui/react';
 import { useUser, useOrganization } from '@clerk/nextjs';
 import { useFirebase } from '@/src/contexts/FirebaseContext';
-import Image from 'next/image';
-import Link from 'next/link';
+import WalkthroughCard from '../WalkthroughCard';
 
 export default function HomePanel() {
   const { user } = useUser();
@@ -131,7 +130,11 @@ export default function HomePanel() {
           ))}
         </div>
       </div>
-
+      {/* Walkthrough Card - Prominent placement */}
+      <WalkthroughCard
+        videoId="v4Tx6QNV7-c" // Replace with your actual YouTube video ID
+        className="mb-8"
+      />
       {/* Getting started section */}
       <Card className="mb-8 border border-gray-200">
         <CardHeader>
