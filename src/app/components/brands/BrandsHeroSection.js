@@ -96,13 +96,13 @@ export default function BrandsHeroSection() {
             transition={{ duration: 0.8, delay: 0.6 }}
             className="text-lg md:text-xl lg:text-2xl text-textLight opacity-90 max-w-4xl mx-auto mb-12 leading-relaxed"
           >
-            We help bold brands create campaigns that don't just get
-            seen - they get felt.
+            We help bold brands create campaigns that don&apos;t just
+            get seen - they get felt.
             <br />
             <span className="text-primary font-medium">
               Because when people can explore, touch, and play - they
-              don't just watch your brand, they experience it. They
-              remember it.
+              don&apos;t just watch your brand, they experience it.
+              They remember it.
             </span>
           </motion.p>
 

@@ -206,9 +206,9 @@ export default function WhyVoyagerSection() {
             viewport={{ once: true }}
             className="text-lg text-textLight opacity-80 text-center mb-12 max-w-4xl mx-auto"
           >
-            Whether you're a bold brand or a creative partner, we help
-            you craft immersive experiences that people remember -
-            guiding you through the process from start to finish.
+            Whether you&apos;re a bold brand or a creative partner, we
+            help you craft immersive experiences that people remember
+            - guiding you through the process from start to finish.
           </motion.p>
 
           <FlexGrid

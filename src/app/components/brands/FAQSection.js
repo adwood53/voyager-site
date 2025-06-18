@@ -229,7 +229,7 @@ export default function FAQSection() {
               Still have questions?
             </h3>
             <p className="text-textLight opacity-80 mb-6">
-              We're here to help you create the perfect immersive
+              We&apos;re here to help you create the perfect immersive
               campaign for your brand.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
