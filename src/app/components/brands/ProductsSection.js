@@ -221,7 +221,7 @@ export default function ProductsSection() {
               </p>
               <Button
                 as={Link}
-                href="#contact"
+                href="#signup"
                 className="bg-primary text-textLight font-semibold px-8 py-3 rounded-md hover:bg-accent transition-all hover:scale-105 transform"
               >
                 Get Custom Quote

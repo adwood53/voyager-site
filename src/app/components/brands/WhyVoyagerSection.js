@@ -162,17 +162,17 @@ export default function WhyVoyagerSection() {
           viewport={{ once: true }}
           className="mb-16"
         >
-          <FlexGrid
-            columns={{ sm: 1, md: 3, lg: 3 }}
-            gap="6"
-            animate={true}
-            container={container}
-            item={item}
-            equalHeight={true}
+          <motion.div
+            className="grid grid-cols-1 md:grid-cols-3 gap-6"
+            variants={container}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true }}
           >
             {keyFeatures.map((feature, index) => (
               <motion.div
                 key={index}
+                variants={item}
                 whileHover={{
                   y: -5,
                   transition: { duration: 0.2 },
@@ -194,7 +194,7 @@ export default function WhyVoyagerSection() {
                 </Card>
               </motion.div>
             ))}
-          </FlexGrid>
+          </motion.div>
         </motion.div>
 
         {/* Audience Types */}
@@ -206,9 +206,9 @@ export default function WhyVoyagerSection() {
             viewport={{ once: true }}
             className="text-lg text-textLight opacity-80 text-center mb-12 max-w-4xl mx-auto"
           >
-            Whether you&apos;re a bold brand or a creative partner, we
-            help you craft immersive experiences that people remember
-            - guiding you through the process from start to finish.
+            Whether you're a bold brand or a creative partner, we help
+            you craft immersive experiences that people remember -
+            guiding you through the process from start to finish.
           </motion.p>
 
           <FlexGrid
@@ -283,7 +283,7 @@ export default function WhyVoyagerSection() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Button
               as={Link}
-              href="#contact"
+              href="#signup"
               className="bg-primary text-textLight font-semibold px-8 py-4 rounded-md hover:bg-accent transition-all hover:scale-105 transform hover:shadow-glow-lg text-lg"
             >
               Start Your Campaign

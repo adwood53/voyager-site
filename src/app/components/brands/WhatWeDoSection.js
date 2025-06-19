@@ -3,7 +3,6 @@
 import { Card, CardBody, Button, Link } from '@heroui/react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useRef } from 'react';
-import FlexGrid from '../FlexGrid';
 
 export default function WhatWeDoSection() {
   const sectionRef = useRef(null);
@@ -137,17 +136,17 @@ export default function WhatWeDoSection() {
             How it works:
           </motion.h3>
 
-          <FlexGrid
-            columns={{ sm: 1, md: 3, lg: 3 }}
-            gap="8"
-            animate={true}
-            container={container}
-            item={item}
-            equalHeight={true}
+          <motion.div
+            className="grid grid-cols-1 md:grid-cols-3 gap-8"
+            variants={container}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true }}
           >
             {howItWorks.map((step, index) => (
               <motion.div
                 key={index}
+                variants={item}
                 whileHover={{
                   y: -10,
                   transition: { duration: 0.2 },
@@ -172,7 +171,7 @@ export default function WhatWeDoSection() {
                 </Card>
               </motion.div>
             ))}
-          </FlexGrid>
+          </motion.div>
         </div>
 
         {/* Compatibility */}

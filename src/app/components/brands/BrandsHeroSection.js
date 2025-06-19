@@ -3,7 +3,6 @@
 import { Button, Link } from '@heroui/react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useRef } from 'react';
-import Image from 'next/image';
 
 export default function BrandsHeroSection() {
   const containerRef = useRef(null);
@@ -26,16 +25,9 @@ export default function BrandsHeroSection() {
       className="relative min-h-[calc(100vh-4rem)] lg:min-h-[calc(100vh-4rem)] flex items-center overflow-hidden bg-darkBg"
       style={{ marginTop: '0' }}
     >
-      {/* Cinematic background with parallax effect */}
+      {/* Cinematic video background with parallax effect */}
       <motion.div className="absolute inset-0 z-0" style={{ y: bgY }}>
         <div className="absolute inset-0 bg-gradient-to-b from-darkBg via-darkBg/60 to-darkBg z-10"></div>
-        <Image
-          src="/placeholder.jpg"
-          alt="NFC Marketing Experience"
-          fill
-          className="object-cover"
-          priority
-        />
       </motion.div>
 
       {/* Floating particles for depth */}
@@ -129,27 +121,11 @@ export default function BrandsHeroSection() {
             </Button>
             <Button
               as={Link}
-              href="#contact"
+              href="#signup"
               className="bg-altPrimary text-textLight font-semibold px-8 py-4 rounded-md hover:bg-altAccent transition-all hover:scale-105 transform text-lg"
             >
               Book a Discovery Call
             </Button>
-          </motion.div>
-        </motion.div>
-
-        {/* Scroll indicator */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.5, duration: 0.5 }}
-          className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
-        >
-          <motion.div
-            animate={{ y: [0, 10, 0] }}
-            transition={{ duration: 2, repeat: Infinity }}
-            className="text-primary text-2xl"
-          >
-            ↓
           </motion.div>
         </motion.div>
       </motion.div>

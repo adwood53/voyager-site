@@ -8,12 +8,19 @@ import {
   Link,
   Chip,
 } from '@heroui/react';
-import { motion, useScroll, useTransform } from 'framer-motion';
-import { useRef } from 'react';
-import FlexGrid from '../FlexGrid';
+import {
+  motion,
+  useScroll,
+  useTransform,
+  AnimatePresence,
+} from 'framer-motion';
+import { useRef, useState, useEffect } from 'react';
 
 export default function ExperiencesSection() {
   const sectionRef = useRef(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isHovered, setIsHovered] = useState(false);
+
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ['start end', 'end start'],
@@ -29,6 +36,34 @@ export default function ExperiencesSection() {
     [0, 0.2, 0.8, 1],
     [100, 0, 0, -100]
   );
+
+  // Auto-advance carousel every 10 seconds (pause on hover)
+  useEffect(() => {
+    if (!isHovered) {
+      const interval = setInterval(() => {
+        setCurrentIndex(
+          (prevIndex) => (prevIndex + 1) % experiences.length
+        );
+      }, 10000);
+      return () => clearInterval(interval);
+    }
+  }, [isHovered]);
+
+  const nextSlide = () => {
+    setCurrentIndex(
+      (prevIndex) => (prevIndex + 1) % experiences.length
+    );
+  };
+
+  const prevSlide = () => {
+    setCurrentIndex((prevIndex) =>
+      prevIndex === 0 ? experiences.length - 1 : prevIndex - 1
+    );
+  };
+
+  const goToSlide = (index) => {
+    setCurrentIndex(index);
+  };
 
   const experiences = [
     {
@@ -158,116 +193,228 @@ export default function ExperiencesSection() {
           </motion.p>
         </div>
 
-        {/* Experiences Grid */}
-        <FlexGrid
-          columns={{ sm: 1, md: 1, lg: 3 }}
-          gap="8"
-          animate={true}
-          container={container}
-          item={item}
-          equalHeight={true}
+        {/* Experiences Carousel */}
+        <div
+          className="relative max-w-6xl mx-auto h-[650px] mb-16"
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
         >
-          {experiences.map((experience, index) => (
-            <motion.div
-              key={index}
-              whileHover={{
-                y: -10,
-                transition: { duration: 0.3 },
-              }}
-              className="h-full"
-            >
-              <Card
-                className={`card-voyager h-full bg-gradient-to-br ${experience.color} border ${experience.borderColor} border-opacity-30 hover:border-opacity-60 transition-all duration-300 hover:shadow-glow-sm group`}
-              >
-                <CardBody className="p-8">
-                  {/* Header */}
-                  <div className="flex items-center mb-6">
-                    <div className="text-4xl mr-4 group-hover:scale-110 transition-transform duration-300">
-                      {experience.icon}
-                    </div>
-                    <h3 className="font-heading text-2xl text-textLight">
-                      {experience.title}
-                    </h3>
-                  </div>
+          {/* Carousel Container */}
+          <div className="relative w-full h-full flex items-center justify-center">
+            {experiences.map((experience, index) => {
+              const offset = index - currentIndex;
+              const isCenter = offset === 0;
+              const isLeft =
+                offset === -1 ||
+                (offset === 2 && experiences.length === 3);
+              const isRight =
+                offset === 1 ||
+                (offset === -2 && experiences.length === 3);
+              const isVisible = isCenter || isLeft || isRight;
 
-                  {/* Description */}
-                  <p className="text-textLight opacity-80 mb-6 leading-relaxed">
-                    {experience.description}
-                  </p>
+              if (!isVisible) return null;
 
-                  {/* Features */}
-                  <div className="mb-6">
-                    <h4 className="text-primary font-semibold mb-3">
-                      Users can:
-                    </h4>
-                    <ul className="space-y-2">
-                      {experience.features.map(
-                        (feature, featureIndex) => (
-                          <li
-                            key={featureIndex}
-                            className="flex items-start"
-                          >
-                            <span className="text-primary mr-2 mt-1">
-                              •
-                            </span>
-                            <span className="text-textLight opacity-75 text-sm">
-                              {feature}
-                            </span>
-                          </li>
-                        )
-                      )}
-                    </ul>
-                  </div>
+              let xOffset = 0;
+              let scale = 0.75;
+              let opacity = 0.5;
+              let zIndex = 1;
 
-                  {/* Perfect For */}
-                  <div className="mb-6">
-                    <h4 className="text-primary font-semibold mb-2">
-                      Perfect for:
-                    </h4>
-                    <p className="text-textLight opacity-75 text-sm">
-                      {experience.perfectFor}
-                    </p>
-                  </div>
+              if (isCenter) {
+                xOffset = 0;
+                scale = 1;
+                opacity = 1;
+                zIndex = 3;
+              } else if (isLeft) {
+                xOffset = -300;
+                scale = 0.75;
+                opacity = 0.6;
+                zIndex = 2;
+              } else if (isRight) {
+                xOffset = 300;
+                scale = 0.75;
+                opacity = 0.6;
+                zIndex = 2;
+              }
 
-                  {/* Compatibility */}
-                  <div>
-                    <h4 className="text-primary font-semibold mb-3">
-                      Compatible with:
-                    </h4>
-                    <div className="flex flex-wrap gap-2">
-                      {experience.compatibility.map(
-                        (device, deviceIndex) => (
-                          <Chip
-                            key={deviceIndex}
-                            variant="flat"
-                            size="sm"
-                            className="bg-darkCard border border-primary border-opacity-20"
-                          >
-                            <span className="mr-1">
-                              {device.icon}
-                            </span>
-                            {device.device}
-                          </Chip>
-                        )
-                      )}
-                    </div>
-                  </div>
-                </CardBody>
-
-                <CardFooter className="pt-0 pb-8 px-8">
-                  <Button
-                    as={Link}
-                    href="#contact"
-                    variant="flat"
-                    className="w-full bg-primary/10 border border-primary border-opacity-30 text-primary hover:bg-primary hover:text-textLight transition-all"
+              return (
+                <motion.div
+                  key={index}
+                  className="absolute w-110 cursor-pointer"
+                  style={{ zIndex }}
+                  initial={false}
+                  animate={{
+                    x: xOffset,
+                    scale,
+                    opacity,
+                  }}
+                  transition={{
+                    duration: 0.6,
+                    ease: 'easeInOut',
+                  }}
+                  onClick={() => !isCenter && goToSlide(index)}
+                  whileHover={
+                    isCenter
+                      ? { scale: 1.02 }
+                      : { scale: scale * 1.05 }
+                  }
+                >
+                  <Card
+                    className={`card-voyager h-[550px] bg-gradient-to-br ${experience.color} border ${experience.borderColor} border-opacity-30 hover:border-opacity-60 transition-all duration-300 hover:shadow-glow-sm group overflow-hidden`}
                   >
-                    Learn More About {experience.title}
-                  </Button>
-                </CardFooter>
-              </Card>
-            </motion.div>
-          ))}
-        </FlexGrid>
+                    <CardBody className="p-6 h-full flex flex-col">
+                      {/* Header */}
+                      <div className="flex items-center mb-4">
+                        <div className="text-3xl mr-3 group-hover:scale-110 transition-transform duration-300">
+                          {experience.icon}
+                        </div>
+                        <h3 className="font-heading text-xl text-textLight">
+                          {experience.title}
+                        </h3>
+                      </div>
+
+                      {/* Description */}
+                      <p className="text-textLight opacity-80 mb-4 leading-relaxed text-sm">
+                        {experience.description}
+                      </p>
+
+                      {/* Features - Show first 3 */}
+                      <div className="mb-4 flex-grow">
+                        <h4 className="text-primary font-semibold mb-3 text-sm">
+                          Users can:
+                        </h4>
+                        <ul className="space-y-2">
+                          {experience.features
+                            .slice(0, 3)
+                            .map((feature, featureIndex) => (
+                              <li
+                                key={featureIndex}
+                                className="flex items-start"
+                              >
+                                <span className="text-primary mr-2 mt-1 text-xs">
+                                  •
+                                </span>
+                                <span className="text-textLight opacity-75 text-xs leading-tight">
+                                  {feature}
+                                </span>
+                              </li>
+                            ))}
+                          {experience.features.length > 3 && (
+                            <li className="text-primary text-xs">
+                              +{experience.features.length - 3} more
+                              features
+                            </li>
+                          )}
+                        </ul>
+                      </div>
+
+                      {/* Perfect For */}
+                      <div className="mb-4">
+                        <h4 className="text-primary font-semibold mb-2 text-sm">
+                          Perfect for:
+                        </h4>
+                        <p className="text-textLight opacity-75 text-xs leading-tight">
+                          {experience.perfectFor.length > 90
+                            ? experience.perfectFor.substring(0, 90) +
+                              '...'
+                            : experience.perfectFor}
+                        </p>
+                      </div>
+
+                      {/* Compatibility */}
+                      <div className="mb-4">
+                        <h4 className="text-primary font-semibold mb-2 text-sm">
+                          Compatible with:
+                        </h4>
+                        <div className="flex flex-wrap gap-2">
+                          {experience.compatibility.map(
+                            (device, deviceIndex) => (
+                              <Chip
+                                key={deviceIndex}
+                                variant="flat"
+                                size="sm"
+                                className="bg-darkCard border border-primary border-opacity-20 text-xs px-3 py-1"
+                              >
+                                <span className="mr-1">
+                                  {device.icon}
+                                </span>
+                                {device.device}
+                              </Chip>
+                            )
+                          )}
+                        </div>
+                      </div>
+                    </CardBody>
+
+                    <CardFooter className="pt-0 pb-6 px-6">
+                      <Button
+                        as={Link}
+                        href="#signup"
+                        size="sm"
+                        className="w-full bg-primary text-textLight font-semibold hover:bg-accent transition-all"
+                      >
+                        Learn More
+                      </Button>
+                    </CardFooter>
+                  </Card>
+                </motion.div>
+              );
+            })}
+          </div>
+
+          {/* Navigation Arrows */}
+          <button
+            onClick={prevSlide}
+            className="absolute left-4 top-1/2 transform -translate-y-1/2 z-10 bg-darkCard/80 hover:bg-darkCard border border-primary border-opacity-30 hover:border-opacity-60 rounded-full p-3 text-primary hover:text-accent transition-all"
+          >
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M15 19l-7-7 7-7"
+              />
+            </svg>
+          </button>
+
+          <button
+            onClick={nextSlide}
+            className="absolute right-4 top-1/2 transform -translate-y-1/2 z-10 bg-darkCard/80 hover:bg-darkCard border border-primary border-opacity-30 hover:border-opacity-60 rounded-full p-3 text-primary hover:text-accent transition-all"
+          >
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M9 5l7 7-7 7"
+              />
+            </svg>
+          </button>
+
+          {/* Pagination Dots */}
+          <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 flex space-x-3">
+            {experiences.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => goToSlide(index)}
+                className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                  index === currentIndex
+                    ? 'bg-primary scale-125'
+                    : 'bg-primary/30 hover:bg-primary/60'
+                }`}
+              />
+            ))}
+          </div>
+        </div>
 
         {/* Call to Action */}
         <motion.div
@@ -279,7 +426,7 @@ export default function ExperiencesSection() {
         >
           <Button
             as={Link}
-            href="#contact"
+            href="#signup"
             className="bg-primary text-textLight font-semibold px-8 py-4 rounded-md hover:bg-accent transition-all hover:scale-105 transform hover:shadow-glow-lg text-lg"
           >
             Start Creating Your Experience →

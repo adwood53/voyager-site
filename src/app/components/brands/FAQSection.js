@@ -235,7 +235,7 @@ export default function FAQSection() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button
                 as={Link}
-                href="#contact"
+                href="#signup"
                 className="bg-primary text-textLight font-semibold px-8 py-3 rounded-md hover:bg-accent transition-all hover:scale-105 transform"
               >
                 Get in Touch

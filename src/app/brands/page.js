@@ -9,6 +9,7 @@ import ProductsSection from '../components/brands/ProductsSection';
 import ExperiencesSection from '../components/brands/ExperiencesSection';
 import WhyVoyagerSection from '../components/brands/WhyVoyagerSection';
 import FAQSection from '../components/brands/FAQSection';
+import ContactSection from '@/src/app/components/ContactSection';
 
 export default function BrandsPage() {
   return (
@@ -22,6 +23,7 @@ export default function BrandsPage() {
         <ExperiencesSection />
         <WhyVoyagerSection />
         <FAQSection />
+        <ContactSection />
         <Footer />
       </div>
     </main>
