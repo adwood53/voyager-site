@@ -1,9 +1,17 @@
 'use client';
 
-import { Card, CardBody, Button, Link, Chip } from '@heroui/react';
+import {
+  Card,
+  CardBody,
+  Button,
+  Link,
+  Chip,
+  image,
+} from '@heroui/react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import FlexGrid from '../FlexGrid';
+import Image from 'next/image';
 
 export default function ProductsSection() {
   const sectionRef = useRef(null);
@@ -23,56 +31,83 @@ export default function ProductsSection() {
     [100, 0, 0, -100]
   );
 
+  // State to track which cards are clicked/flipped
+  const [flippedCards, setFlippedCards] = useState(new Set());
+  // State to track hover states
+  const [hoveredCard, setHoveredCard] = useState(null);
+
   const products = [
-    {
-      name: 'Hoodies',
-      icon: '👕',
-      category: 'Apparel',
-    },
-    {
-      name: 'T-Shirts',
-      icon: '👔',
-      category: 'Apparel',
-    },
     {
       name: 'Mugs',
       icon: '☕',
       category: 'Drinkware',
+      image: '/products/mug.webp',
+    },
+    {
+      name: 'Bottles',
+      icon: '🍼',
+      category: 'Drinkware',
+      image: '/products/bottle.webp',
     },
     {
       name: 'Mousemats',
       icon: '🖱️',
       category: 'Tech',
+      image: '/products/mousemat.webp',
     },
     {
       name: 'Vinyls',
       icon: '🎵',
       category: 'Media',
+      image: '/products/vinyl.webp',
     },
     {
       name: 'V-Cards',
       icon: '💳',
       category: 'Business',
+      image: '/products/vcard.webp',
     },
     {
       name: 'Roller Banners',
       icon: '🖼️',
       category: 'Marketing',
+      image: '/products/roller-banner.webp',
+    },
+    {
+      name: 'Hoodies',
+      icon: '👕',
+      category: 'Apparel',
+      image: '/products/hoodie.webp',
+    },
+    {
+      name: 'T-Shirts',
+      icon: '👔',
+      category: 'Apparel',
+      image: '/products/tshirt.webp',
     },
     {
       name: 'Notebooks',
       icon: '📔',
       category: 'Stationery',
+      image: '/products/notebook.webp',
     },
     {
       name: 'Posters',
       icon: '🎨',
       category: 'Marketing',
+      image: '/products/poster.webp',
     },
     {
       name: 'Fliers',
       icon: '📄',
       category: 'Marketing',
+      image: '/products/flier.webp',
+    },
+    {
+      name: 'Bundles',
+      icon: '📦',
+      category: 'Marketing',
+      image: '/products/bundle.webp',
     },
   ];
 
@@ -84,6 +119,47 @@ export default function ProductsSection() {
     Business: 'danger',
     Marketing: 'default',
     Stationery: 'primary',
+  };
+
+  /**
+   * Handles card click/touch events
+   * Toggles the flipped state for the clicked card
+   */
+  const handleCardClick = (index) => {
+    setFlippedCards((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(index)) {
+        newSet.delete(index);
+      } else {
+        newSet.add(index);
+      }
+      return newSet;
+    });
+  };
+
+  /**
+   * Handles mouse enter events for hover effects
+   * Only applies hover if card is not in clicked/flipped state
+   */
+  const handleMouseEnter = (index) => {
+    if (!flippedCards.has(index)) {
+      setHoveredCard(index);
+    }
+  };
+
+  /**
+   * Handles mouse leave events
+   */
+  const handleMouseLeave = () => {
+    setHoveredCard(null);
+  };
+
+  /**
+   * Determines if a card should show its back side
+   * Prioritizes click state over hover state
+   */
+  const isFlipped = (index) => {
+    return flippedCards.has(index) || hoveredCard === index;
   };
 
   const container = {
@@ -155,53 +231,124 @@ export default function ProductsSection() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
             viewport={{ once: true }}
-            className="text-lg text-textLight opacity-80 max-w-3xl mx-auto"
+            className="text-lg text-textLight opacity-80 max-w-3xl mx-auto mb-4"
           >
             We can embed NFC tech into almost anything. Our current
             product range includes:
           </motion.p>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            viewport={{ once: true }}
+            className="text-sm text-primary max-w-2xl mx-auto"
+          >
+            Hover to preview details • Click to pin the view
+          </motion.p>
         </div>
 
         {/* Products Grid */}
-        <FlexGrid
-          columns={{ sm: 2, md: 3, lg: 5 }}
-          gap="6"
-          animate={true}
-          container={container}
-          item={item}
-          equalHeight={true}
-        >
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
           {products.map((product, index) => (
             <motion.div
               key={index}
-              whileHover={{
-                y: -5,
-                scale: 1.05,
-                transition: { duration: 0.2 },
-              }}
+              whileHover={
+                !flippedCards.has(index) ? { y: -5, scale: 1.02 } : {}
+              }
+              transition={{ duration: 0.2 }}
               className="h-full"
             >
-              <Card className="card-voyager h-full bg-darkCard border border-primary border-opacity-20 hover:border-opacity-50 transition-all duration-300 hover:shadow-glow-sm group cursor-pointer">
-                <CardBody className="h-full flex flex-col items-center text-center p-6">
-                  <div className="text-4xl mb-3 group-hover:scale-110 transition-transform duration-300">
-                    {product.icon}
-                  </div>
-                  <h3 className="font-subheading text-lg text-textLight mb-2">
-                    {product.name}
-                  </h3>
-                  <Chip
-                    size="sm"
-                    variant="flat"
-                    color={categoryColors[product.category]}
-                    className="text-xs"
+              {/* Flip Card Container - Following W3Schools Pattern */}
+              <div
+                className="flip-card w-full aspect-square cursor-pointer"
+                style={{
+                  backgroundColor: 'transparent',
+                  perspective: '1000px',
+                }}
+                onClick={() => handleCardClick(index)}
+                onMouseEnter={() => handleMouseEnter(index)}
+                onMouseLeave={handleMouseLeave}
+                role="button"
+                tabIndex={0}
+                aria-label={`${product.name} product card. ${isFlipped(index) ? 'Showing product image.' : 'Click to see product image.'}`}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    handleCardClick(index);
+                  }
+                }}
+              >
+                <div
+                  className="flip-card-inner w-full h-full text-center"
+                  style={{
+                    position: 'relative',
+                    transformStyle: 'preserve-3d',
+                    transform: isFlipped(index)
+                      ? 'rotateY(180deg)'
+                      : 'rotateY(0deg)',
+                    transition: 'transform 1.2s ease-in-out',
+                  }}
+                >
+                  {/* Front Side */}
+                  <div
+                    className="flip-card-front absolute w-full h-full"
+                    style={{
+                      backfaceVisibility: 'hidden',
+                      WebkitBackfaceVisibility: 'hidden',
+                    }}
                   >
-                    {product.category}
-                  </Chip>
-                </CardBody>
-              </Card>
+                    <Card className="card-voyager w-full h-full bg-darkCard border border-primary border-opacity-20 hover:border-opacity-50 transition-all duration-300 hover:shadow-glow-sm group">
+                      <CardBody className="h-full flex flex-col items-center text-center p-6 justify-center">
+                        <div className="text-4xl mb-3 group-hover:scale-110 transition-transform duration-300">
+                          {product.icon}
+                        </div>
+                        <h3 className="font-subheading text-lg text-textLight mb-2">
+                          {product.name}
+                        </h3>
+                        <Chip
+                          size="sm"
+                          variant="flat"
+                          color={categoryColors[product.category]}
+                          className="text-xs"
+                        >
+                          {product.category}
+                        </Chip>
+                      </CardBody>
+                    </Card>
+                  </div>
+
+                  {/* Back Side */}
+                  <div
+                    className="flip-card-back absolute w-full h-full"
+                    style={{
+                      backfaceVisibility: 'hidden',
+                      WebkitBackfaceVisibility: 'hidden',
+                      transform: 'rotateY(180deg)',
+                    }}
+                  >
+                    <Card className="card-voyager w-full h-full bg-darkCard border border-primary border-opacity-50 shadow-glow-sm overflow-hidden">
+                      <CardBody className="h-full p-0 relative">
+                        <Image
+                          src={`${product.image || '/images/placeholder.jpg'}`}
+                          alt={`${product.name} product image`}
+                          fill
+                          className="object-cover"
+                          sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 20vw"
+                        />
+                        {/* Optional overlay with product name */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex items-end justify-center p-4">
+                          <h4 className="text-textLight font-semibold text-sm">
+                            {product.name}
+                          </h4>
+                        </div>
+                      </CardBody>
+                    </Card>
+                  </div>
+                </div>
+              </div>
             </motion.div>
           ))}
-        </FlexGrid>
+        </div>
 
         {/* Custom Product CTA */}
         <motion.div
