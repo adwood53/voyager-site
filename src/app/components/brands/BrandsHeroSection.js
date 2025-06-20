@@ -27,7 +27,16 @@ export default function BrandsHeroSection() {
     >
       {/* Cinematic video background with parallax effect */}
       <motion.div className="absolute inset-0 z-0" style={{ y: bgY }}>
-        <div className="absolute inset-0 bg-gradient-to-b from-darkBg via-darkBg/60 to-darkBg z-10"></div>
+        <video
+          className="w-full h-full object-cover opacity-20"
+          autoPlay
+          loop
+          muted
+          playsInline
+          webkit-playsinline
+        >
+          <source src="/videos/drift.mp4" type="video/mp4" />
+        </video>
       </motion.div>
 
       {/* Floating particles for depth */}

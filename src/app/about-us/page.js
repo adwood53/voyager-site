@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import Navbar from '@/src/app/components/Navbar';
 import Footer from '@/src/app/components/Footer';
-import TeamSection from '@/src/app/components/TeamSection';
+import TeamSection from '@/src/app/components/for-partner-page/TeamSection';
 import { Button } from '@heroui/react';
 
 export default function AboutUsPage() {
