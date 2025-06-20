@@ -414,3 +414,42 @@ body:not(.partner-dashboard)::-webkit-scrollbar-thumb {
 body:not(.partner-dashboard)::-webkit-scrollbar-thumb:hover {
   background: rgb(231 144 35 / 50%);
 }
+
+/* HIGH SPECIFICITY FIX - Add to globals.css */
+
+/* Target the exact structure shown in your DevTools */
+nav ul li,
+nav ul li.list-none,
+div.flex.items-center.gap-8 li,
+div.flex.items-center.gap-8 li.list-none,
+[data-slot='wrapper'] ul li,
+[data-slot='wrapper'] ul li.list-none {
+  list-style: none !important;
+  list-style-type: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Even more specific targeting for your exact structure */
+.flex.items-center.gap-8 > li.text-medium.whitespace-nowrap,
+.flex.justify-center > .flex.gap-4 > li,
+.flex.gap-8 > li {
+  list-style: none !important;
+  list-style-type: none !important;
+  position: relative;
+}
+
+/* Ultimate nuclear option - override ALL list styling in navigation */
+nav * {
+  list-style: none !important;
+  list-style-type: none !important;
+}
+
+/* Reset pseudo-elements that might be creating bullets */
+nav ul li::before,
+nav ul li::after,
+.flex li::before,
+.flex li::after {
+  content: none !important;
+  display: none !important;
+}

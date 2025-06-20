@@ -73,9 +73,12 @@ const VoyagerTitle = () => {
     return () => clearTimeout(timer);
   }, []);
 
+  // Fixed VoyagerTitle component - replace the return statement in VoyagerTitle
+
   return (
-    <div className="flex items-center justify-center min-h-screen relative z-10">
-      <div className="text-center">
+    // FIXED: Add top padding for mobile navbar and adjust centering
+    <div className="flex items-center justify-center min-h-screen relative z-10 pt-24 lg:pt-0">
+      <div className="text-center px-4">
         <AnimatePresence mode="wait">
           {showText ? (
             // VOYAGER Text
