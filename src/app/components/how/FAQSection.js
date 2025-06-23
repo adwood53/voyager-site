@@ -56,7 +56,7 @@ export default function FAQSection() {
       question: 'Can I use my own designs or branding?',
       answer:
         'Absolutely. You can upload your existing artwork, videos, logos, and brand colours. Need a hand? We also offer optional design and 3D logo services.',
-      category: 'Customization',
+      category: 'Customisation',
     },
     {
       question: 'What kind of products can be NFC-enabled?',
