@@ -21,6 +21,7 @@ export default function VoyagerNavbar() {
   const [loadingStates, setLoadingStates] = useState({
     brands: false,
     partners: false,
+    how: false,
     about: false,
     blog: false,
     partnerLogin: false,
@@ -62,6 +63,7 @@ export default function VoyagerNavbar() {
     setLoadingStates({
       brands: false,
       partners: false,
+      how: false,
       about: false,
       blog: false,
       partnerLogin: false,
@@ -349,16 +351,14 @@ export default function VoyagerNavbar() {
 
   return (
     <>
-      {/* Fixed Navbar */}
       <motion.div
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        transition={{ duration: 0.5, ease: 'easeOut' }}
-        className="fixed top-0 left-0 w-full z-50"
+        initial={{ y: -100, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.8, ease: 'easeOut' }}
+        className="fixed top-0 left-0 right-0 z-50"
       >
         <Navbar
-          isBordered={false}
-          className={`w-full transition-all duration-500 ${
+          className={`transition-all duration-300 ${
             scrolled
               ? 'bg-darkBg bg-opacity-95 backdrop-blur-md shadow-glow-sm border-b border-primary border-opacity-20'
               : 'bg-darkBg bg-opacity-80'
@@ -429,6 +429,17 @@ export default function VoyagerNavbar() {
                 </NavbarItem>
 
                 <NavbarItem>
+                  <NavLink
+                    href="/how"
+                    className="text-base"
+                    isActive={pathname === '/how'}
+                    loadingKey="how"
+                  >
+                    How
+                  </NavLink>
+                </NavbarItem>
+
+                <NavbarItem>
                   <PartnersDropdown isMobile={true} />
                 </NavbarItem>
 
@@ -485,6 +496,17 @@ export default function VoyagerNavbar() {
 
                 <NavbarItem>
                   <BrandsDropdown />
+                </NavbarItem>
+
+                <NavbarItem>
+                  <NavLink
+                    href="/how"
+                    className="text-lg"
+                    isActive={pathname === '/how'}
+                    loadingKey="how"
+                  >
+                    How
+                  </NavLink>
                 </NavbarItem>
 
                 <NavbarItem>
