@@ -76,7 +76,8 @@ export default function WorkingWithUs() {
           >
             We offer more than tech. We offer the tools, talent, and
             strategy to turn ideas into unforgettable experiences.
-            Here's what goes into every brand activation we deliver:
+            Here&apos;s what goes into every brand activation we
+            deliver:
           </motion.p>
         </div>
 
