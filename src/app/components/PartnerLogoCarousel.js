@@ -1,7 +1,11 @@
 'use client';
 
-import React, { useEffect, useState, useRef } from 'react';
-import Image from 'next/image';
+import React, {
+  useEffect,
+  useState,
+  useRef,
+  useCallback,
+} from 'react';
 
 export default function PartnerLogoCarousel({
   partners = [],
@@ -227,7 +231,7 @@ export default function PartnerLogoCarousel({
   };
 
   // Dynamic logo carousel animation with on-demand content addition
-  const animateLogoCarousel = () => {
+  const animateLogoCarousel = useCallback(() => {
     if (!logoContainerRef.current || !partners.length) return;
 
     const container = logoContainerRef.current;
@@ -376,7 +380,7 @@ export default function PartnerLogoCarousel({
     };
 
     animationRef.current = requestAnimationFrame(animate);
-  };
+  }, [partners.length]);
   return (
     <div
       className={`partner-carousel w-full py-12 overflow-hidden relative ${className}`}

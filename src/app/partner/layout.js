@@ -12,7 +12,6 @@ export const metadata = {
     'Manage your immersive technology projects and white-label resources',
   applicationName: 'Voyager Partner Portal',
   manifest: '/manifest.json',
-  themeColor: '#E79023',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',
@@ -24,12 +23,14 @@ export const metadata = {
   formatDetection: {
     telephone: false,
   },
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-    maximumScale: 1,
-    userScalable: 'no',
-  },
+};
+
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: 'no',
+  themeColor: '#E79023',
 };
 
 export default function PartnerLayout({ children }) {
