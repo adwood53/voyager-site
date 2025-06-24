@@ -116,24 +116,24 @@ export default function BrandsHeroSection() {
           >
             <Button
               as={Link}
-              href="#products"
+              href="#signup"
               className="bg-primary text-textLight font-semibold px-8 py-4 rounded-md hover:bg-accent transition-all hover:scale-105 transform hover:shadow-glow-lg text-lg"
             >
-              View Products
+              Get in Touch
             </Button>
             <Button
               as={Link}
-              href="#experiences"
+              href="/how"
               className="bg-transparent border-2 border-primary text-primary font-semibold px-8 py-4 rounded-md hover:bg-primary hover:text-textLight transition-all hover:scale-105 transform text-lg"
             >
-              Explore Experiences
+              How It Works
             </Button>
             <Button
               as={Link}
-              href="#signup"
+              href="/for-partners"
               className="bg-altPrimary text-textLight font-semibold px-8 py-4 rounded-md hover:bg-altAccent transition-all hover:scale-105 transform text-lg"
             >
-              Book a Discovery Call
+              Become a Partner
             </Button>
           </motion.div>
         </motion.div>

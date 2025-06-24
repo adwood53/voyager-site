@@ -25,7 +25,7 @@ export default function WhatWeDoSection() {
   const howItWorks = [
     {
       step: '1',
-      title: 'We embed your content into an NFC chip',
+      title: 'We embed your web content into an NFC chip',
       description:
         'Your immersive experience is programmed into a tiny, invisible chip.',
       icon: '💾',
@@ -98,7 +98,7 @@ export default function WhatWeDoSection() {
             viewport={{ once: true }}
             className="heading-voyager text-4xl md:text-5xl text-textLight mb-6"
           >
-            <span className="text-primary">NFC-Driven</span> Immersive
+            <span className="text-primary">Web-Based</span> Immersive
             Marketing
           </motion.h2>
           <motion.p

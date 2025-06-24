@@ -29,13 +29,6 @@ export default function HeroSection() {
       {/* Cinematic video background with parallax effect */}
       <motion.div className="absolute inset-0 z-0" style={{ y: bgY }}>
         <div className="absolute inset-0 bg-gradient-to-b from-darkBg via-darkBg/60 to-darkBg z-10"></div>
-        <Image
-          src="/placeholder.jpg"
-          alt="Immersive Experience"
-          fill
-          className="object-cover"
-          priority
-        />
       </motion.div>
 
       {/* Floating particles/elements for depth */}
@@ -121,18 +114,101 @@ export default function HeroSection() {
             overhead.
           </motion.p>
 
+          {/* Enhanced navigation buttons */}
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 1.2 }}
+            transition={{ duration: 0.8, delay: 2.5 }}
+            className="flex flex-col md:flex-row gap-3 justify-left items-left max-w-2xl"
           >
-            <Button
-              as={Link}
-              href="/waitlist"
-              className="bg-primary text-textLight text-lg font-medium hover:bg-accent px-8 py-4 rounded-md transition-all hover:scale-105 transform hover:shadow-glow glitch-effect"
+            {/* For Brands Button */}
+            <motion.div
+              whileHover={{
+                scale: 1.05,
+                transition: { duration: 0.2 },
+              }}
+              whileTap={{ scale: 0.95 }}
+              className="relative group w-full md:w-auto"
             >
-              Join For Free →
-            </Button>
+              <motion.div
+                className="absolute inset-0 bg-gradient-to-r from-primary to-accent rounded-lg blur opacity-40"
+                animate={{
+                  opacity: [0.4, 0.6, 0.4],
+                }}
+                transition={{
+                  duration: 3,
+                  repeat: Infinity,
+                }}
+              />
+              <Button
+                as={Link}
+                href="/waitlist"
+                className="relative bg-primary text-textLight font-bold px-12 py-4 rounded-lg text-lg hover:bg-accent transition-all duration-300 w-full md:w-auto border-2 border-transparent hover:border-primary/50 shadow-lg"
+              >
+                <span className="flex items-center gap-3">
+                  <span>🏢</span>
+                  Sign Up
+                  <motion.span className="text-xs opacity-0 group-hover:opacity-100 transition-opacity">
+                    →
+                  </motion.span>
+                </span>
+              </Button>
+            </motion.div>
+
+            {/* Animated connector */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5, delay: 3 }}
+              className="hidden md:block text-2xl text-textLight opacity-40"
+            >
+              <motion.span
+                animate={{
+                  opacity: [0.4, 0.7, 0.4],
+                }}
+                transition={{
+                  duration: 4,
+                  repeat: Infinity,
+                }}
+              >
+                or
+              </motion.span>
+            </motion.div>
+
+            {/* For Partners Button */}
+            <motion.div
+              whileHover={{
+                scale: 1.05,
+                transition: { duration: 0.2 },
+              }}
+              whileTap={{ scale: 0.95 }}
+              className="relative group w-full md:w-auto"
+            >
+              <motion.div
+                className="absolute inset-0 bg-gradient-to-r from-altPrimary to-purple-500 rounded-lg blur opacity-40"
+                animate={{
+                  opacity: [0.4, 0.6, 0.4],
+                }}
+                transition={{
+                  duration: 3,
+                  repeat: Infinity,
+                  delay: 1,
+                }}
+              />
+              <Button
+                as={Link}
+                href="/how"
+                className="relative bg-transparent border-2 border-altPrimary text-altPrimary font-bold px-12 py-4 rounded-lg text-lg hover:bg-altPrimary hover:text-textLight transition-all duration-300 w-full md:w-auto shadow-lg"
+              >
+                <span className="flex items-center gap-3">
+                  <span>🤝</span>
+                  How It Works
+                  <motion.span className="text-xs opacity-0 group-hover:opacity-100 transition-opacity">
+                    →
+                  </motion.span>
+                </span>
+              </Button>
+            </motion.div>
           </motion.div>
         </motion.div>
       </motion.div>

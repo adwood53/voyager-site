@@ -10,6 +10,7 @@ import ExperiencesSection from '../components/brands/ExperiencesSection';
 import WhyVoyagerSection from '../components/brands/WhyVoyagerSection';
 import ContactSection from '@/src/app/components/ContactSection';
 import BrandsStudioSection from '../components/brands/BrandsStudioSection';
+import BrandsServicesSection from '../components/brands/BrandsServicesSection';
 
 export default function ForBrandsPage() {
   return (
@@ -18,6 +19,9 @@ export default function ForBrandsPage() {
       <div className="parallax-container">
         <Navbar />
         <BrandsHeroSection />
+        <div className="isolate" style={{ isolation: 'isolate' }}>
+          <BrandsServicesSection />
+        </div>
         <WhatWeDoSection />
         <ProductsSection />
         <ExperiencesSection />
