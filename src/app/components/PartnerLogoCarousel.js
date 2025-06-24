@@ -380,7 +380,7 @@ export default function PartnerLogoCarousel({
     };
 
     animationRef.current = requestAnimationFrame(animate);
-  }, [partners.length]);
+  }, [partners]);
   return (
     <div
       className={`partner-carousel w-full py-12 overflow-hidden relative ${className}`}
