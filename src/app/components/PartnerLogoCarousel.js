@@ -27,6 +27,158 @@ export default function PartnerLogoCarousel({
   const isHoveredRef = useRef(false);
   const totalScrollDistanceRef = useRef(0);
 
+  // Dynamic logo carousel animation with on-demand content addition
+  const animateLogoCarousel = useCallback(() => {
+    if (!logoContainerRef.current || !partners.length) return;
+
+    const container = logoContainerRef.current;
+    const logoWidth = 250; // Approximate width of a logo item
+    const singleSetWidth = logoWidth * partners.length;
+
+    const animate = (timestamp) => {
+      // Initialize lastTimeRef on first run
+      if (!lastTimeRef.current) {
+        lastTimeRef.current = timestamp;
+      }
+
+      const deltaTime = timestamp - lastTimeRef.current;
+      lastTimeRef.current = timestamp;
+
+      // Handle animation speed based on hover state
+      if (isHoveredRef.current) {
+        // When hovering, quickly but smoothly slow to a stop
+        velocityRef.current *= 0.9; // Exponential deceleration for smoothness
+        if (velocityRef.current < 0.01) velocityRef.current = 0;
+      } else {
+        // When not hovering, smoothly accelerate back to normal speed
+        if (velocityRef.current < 1) {
+          velocityRef.current += 0.003; // Very gradual acceleration
+          if (velocityRef.current > 1) velocityRef.current = 1;
+        }
+      }
+
+      // Calculate movement based on time and velocity
+      const pixelsPerSecond = 50; // Base speed
+      const movement =
+        ((pixelsPerSecond * deltaTime) / 1000) * velocityRef.current;
+
+      // Update position
+      positionRef.current -= movement;
+      totalScrollDistanceRef.current += movement;
+
+      // KEY FIX: Check if we've scrolled far enough that we need to add more items AND reset position
+      // If we've scrolled more than half a set width, we should consider adding more content
+      if (totalScrollDistanceRef.current >= singleSetWidth / 2) {
+        // Check if we need to add more logos
+        const containerWidth = container.scrollWidth;
+        const visibleWidth = window.innerWidth * 3; // We need 3x the viewport width for smooth scrolling
+
+        // Instead of relying on setIndex, check the actual content width
+        if (
+          containerWidth - Math.abs(positionRef.current) <
+          visibleWidth
+        ) {
+          // Add another set of logos
+          partners.forEach((partner, index) => {
+            const item = document.createElement('div');
+            item.className = 'logo-item px-6 inline-block';
+            item.style.overflow = 'visible';
+            item.style.transform = 'translate3d(0,0,0)';
+            item.dataset.index = index % partners.length;
+
+            // Set up the item content same as before
+            item.innerHTML = `
+              <div class="inline-block relative" style="overflow: visible;">
+                <div class="relative h-20 w-56 md:h-24 md:w-64" style="overflow: visible;">
+                  <img 
+                    src="${partner.logo || '/Voyager-Box-Logo.png'}" 
+                    alt="${partner.name || 'Partner logo'}"
+                    class="w-full h-full object-contain transition-all duration-300"
+                    style="filter: grayscale(1); opacity: 0.6; transform-origin: center; transform: scale(1); will-change: transform, filter, opacity;"
+                  />
+                </div>
+              </div>
+            `;
+
+            // Add event handlers as before
+            item.addEventListener('click', () => {
+              if (partner.url) {
+                window.open(
+                  partner.url,
+                  '_blank',
+                  'noopener,noreferrer'
+                );
+              }
+            });
+
+            item.addEventListener('mouseenter', () => {
+              isHoveredRef.current = true;
+              setActiveIndex(index % partners.length);
+
+              const img = item.querySelector('img');
+              if (img) {
+                img.style.filter = 'grayscale(0)';
+                img.style.opacity = '1';
+                img.style.transform = 'scale(1.15)';
+              }
+            });
+
+            item.addEventListener('mouseleave', () => {
+              isHoveredRef.current = false;
+              setActiveIndex(-1);
+
+              const img = item.querySelector('img');
+              if (img) {
+                img.style.filter = 'grayscale(1)';
+                img.style.opacity = '0.6';
+                img.style.transform = 'scale(1)';
+              }
+            });
+
+            item.style.cursor = 'pointer';
+            container.appendChild(item);
+          });
+        }
+
+        // CRITICAL FIX: Reset position if we've scrolled more than a full set width
+        // This prevents the scroll position from getting too large over time
+        if (Math.abs(positionRef.current) > singleSetWidth * 2) {
+          // Calculate how many complete sets we've scrolled past
+          const completeSetsPassed = Math.floor(
+            Math.abs(positionRef.current) / singleSetWidth
+          );
+
+          // Adjust the position to "loop" back while maintaining the visual position
+          if (completeSetsPassed > 0) {
+            // Move position forward by removing complete sets from the negative position
+            positionRef.current +=
+              completeSetsPassed * singleSetWidth;
+
+            // Clean up DOM by removing an equivalent number of elements from the beginning
+            // Only remove sets that are completely off-screen
+            const itemsToRemove =
+              completeSetsPassed * partners.length;
+            for (let i = 0; i < itemsToRemove; i++) {
+              if (container.firstChild) {
+                container.removeChild(container.firstChild);
+              }
+            }
+          }
+
+          // Reset the tracking counter
+          totalScrollDistanceRef.current = 0;
+        }
+      }
+
+      // Apply transform with GPU acceleration
+      container.style.transform = `translate3d(${positionRef.current}px, 0, 0)`;
+
+      animationRef.current = requestAnimationFrame(animate);
+    };
+
+    animationRef.current = requestAnimationFrame(animate);
+  }, [partners]);
+
   // Initialize background cubes
   useEffect(() => {
     if (!backgroundRef.current) return;
@@ -230,157 +382,6 @@ export default function PartnerLogoCarousel({
     bgAnimationRef.current = requestAnimationFrame(animate);
   };
 
-  // Dynamic logo carousel animation with on-demand content addition
-  const animateLogoCarousel = useCallback(() => {
-    if (!logoContainerRef.current || !partners.length) return;
-
-    const container = logoContainerRef.current;
-    const logoWidth = 250; // Approximate width of a logo item
-    const singleSetWidth = logoWidth * partners.length;
-
-    const animate = (timestamp) => {
-      // Initialize lastTimeRef on first run
-      if (!lastTimeRef.current) {
-        lastTimeRef.current = timestamp;
-      }
-
-      const deltaTime = timestamp - lastTimeRef.current;
-      lastTimeRef.current = timestamp;
-
-      // Handle animation speed based on hover state
-      if (isHoveredRef.current) {
-        // When hovering, quickly but smoothly slow to a stop
-        velocityRef.current *= 0.9; // Exponential deceleration for smoothness
-        if (velocityRef.current < 0.01) velocityRef.current = 0;
-      } else {
-        // When not hovering, smoothly accelerate back to normal speed
-        if (velocityRef.current < 1) {
-          velocityRef.current += 0.003; // Very gradual acceleration
-          if (velocityRef.current > 1) velocityRef.current = 1;
-        }
-      }
-
-      // Calculate movement based on time and velocity
-      const pixelsPerSecond = 50; // Base speed
-      const movement =
-        ((pixelsPerSecond * deltaTime) / 1000) * velocityRef.current;
-
-      // Update position
-      positionRef.current -= movement;
-      totalScrollDistanceRef.current += movement;
-
-      // KEY FIX: Check if we've scrolled far enough that we need to add more items AND reset position
-      // If we've scrolled more than half a set width, we should consider adding more content
-      if (totalScrollDistanceRef.current >= singleSetWidth / 2) {
-        // Check if we need to add more logos
-        const containerWidth = container.scrollWidth;
-        const visibleWidth = window.innerWidth * 3; // We need 3x the viewport width for smooth scrolling
-
-        // Instead of relying on setIndex, check the actual content width
-        if (
-          containerWidth - Math.abs(positionRef.current) <
-          visibleWidth
-        ) {
-          // Add another set of logos
-          partners.forEach((partner, index) => {
-            const item = document.createElement('div');
-            item.className = 'logo-item px-6 inline-block';
-            item.style.overflow = 'visible';
-            item.style.transform = 'translate3d(0,0,0)';
-            item.dataset.index = index % partners.length;
-
-            // Set up the item content same as before
-            item.innerHTML = `
-              <div class="inline-block relative" style="overflow: visible;">
-                <div class="relative h-20 w-56 md:h-24 md:w-64" style="overflow: visible;">
-                  <img 
-                    src="${partner.logo || '/Voyager-Box-Logo.png'}" 
-                    alt="${partner.name || 'Partner logo'}"
-                    class="w-full h-full object-contain transition-all duration-300"
-                    style="filter: grayscale(1); opacity: 0.6; transform-origin: center; transform: scale(1); will-change: transform, filter, opacity;"
-                  />
-                </div>
-              </div>
-            `;
-
-            // Add event handlers as before
-            item.addEventListener('click', () => {
-              if (partner.url) {
-                window.open(
-                  partner.url,
-                  '_blank',
-                  'noopener,noreferrer'
-                );
-              }
-            });
-
-            item.addEventListener('mouseenter', () => {
-              isHoveredRef.current = true;
-              setActiveIndex(index % partners.length);
-
-              const img = item.querySelector('img');
-              if (img) {
-                img.style.filter = 'grayscale(0)';
-                img.style.opacity = '1';
-                img.style.transform = 'scale(1.15)';
-              }
-            });
-
-            item.addEventListener('mouseleave', () => {
-              isHoveredRef.current = false;
-              setActiveIndex(-1);
-
-              const img = item.querySelector('img');
-              if (img) {
-                img.style.filter = 'grayscale(1)';
-                img.style.opacity = '0.6';
-                img.style.transform = 'scale(1)';
-              }
-            });
-
-            item.style.cursor = 'pointer';
-            container.appendChild(item);
-          });
-        }
-
-        // CRITICAL FIX: Reset position if we've scrolled more than a full set width
-        // This prevents the scroll position from getting too large over time
-        if (Math.abs(positionRef.current) > singleSetWidth * 2) {
-          // Calculate how many complete sets we've scrolled past
-          const completeSetsPassed = Math.floor(
-            Math.abs(positionRef.current) / singleSetWidth
-          );
-
-          // Adjust the position to "loop" back while maintaining the visual position
-          if (completeSetsPassed > 0) {
-            // Move position forward by removing complete sets from the negative position
-            positionRef.current +=
-              completeSetsPassed * singleSetWidth;
-
-            // Clean up DOM by removing an equivalent number of elements from the beginning
-            // Only remove sets that are completely off-screen
-            const itemsToRemove =
-              completeSetsPassed * partners.length;
-            for (let i = 0; i < itemsToRemove; i++) {
-              if (container.firstChild) {
-                container.removeChild(container.firstChild);
-              }
-            }
-          }
-
-          // Reset the tracking counter
-          totalScrollDistanceRef.current = 0;
-        }
-      }
-
-      // Apply transform with GPU acceleration
-      container.style.transform = `translate3d(${positionRef.current}px, 0, 0)`;
-
-      animationRef.current = requestAnimationFrame(animate);
-    };
-
-    animationRef.current = requestAnimationFrame(animate);
-  }, [partners]);
   return (
     <div
       className={`partner-carousel w-full py-12 overflow-hidden relative ${className}`}
