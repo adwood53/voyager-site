@@ -16,6 +16,68 @@ import {
 } from 'framer-motion';
 import { useRef, useState, useEffect } from 'react';
 
+const experiences = [
+  {
+    title: '360° Experiences',
+    icon: '🌐',
+    description:
+      'Put your audience inside the moment with an immersive story, sound, and visuals.',
+    features: [
+      'Look around in all directions',
+      'Tap to switch scenes or settings',
+      'Watch embedded videos or story clips',
+      'Click hotspots for info, links, or games',
+    ],
+    perfectFor:
+      'Immersive storytelling, venue tours, artist campaigns, brand showcases',
+    compatibility: [
+      { device: 'Phone', icon: '📱' },
+      { device: 'Desktop', icon: '💻' },
+      { device: 'VR Headset', icon: '🥽' },
+    ],
+    color: 'from-primary/20 to-primary/5',
+    borderColor: 'border-primary',
+  },
+  {
+    title: 'Augmented Reality (AR)',
+    icon: '📲',
+    description:
+      "Make posters, packaging, or products come to life through your customer's phone.",
+    features: [
+      'Scan real-world items to trigger digital content',
+      'See characters, visuals, or products in their space',
+      'Tap objects for info, animations, or offers',
+      'Trigger sound, music, or voiceovers',
+      'Capture photos or videos with AR effects',
+      'Access links, discounts, or next steps',
+    ],
+    perfectFor:
+      'Retail packaging, street marketing, flyer campaigns, experiential product launches',
+    compatibility: [{ device: 'Phones', icon: '📱' }],
+    color: 'from-altPrimary/20 to-altPrimary/5',
+    borderColor: 'border-altPrimary',
+  },
+  {
+    title: 'Virtual Reality (VR)',
+    icon: '🥽',
+    description:
+      'Transport your audience into a fully digital world built around your story.',
+    features: [
+      'Step inside a 3D experience with a headset',
+      'Look around freely and explore environments',
+      'Use hand tracking or controllers to interact',
+      'Trigger animations, sounds, or quests',
+      'Navigate guided stories or free-roam spaces',
+      'Participate in multiplayer or social environments (if enabled)',
+    ],
+    perfectFor:
+      'Premium events, brand launches, product training, museum or educational exhibits',
+    compatibility: [{ device: 'VR Headsets', icon: '🥽' }],
+    color: 'from-accent/20 to-accent/5',
+    borderColor: 'border-accent',
+  },
+];
+
 export default function ExperiencesSection() {
   const sectionRef = useRef(null);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -64,68 +126,6 @@ export default function ExperiencesSection() {
   const goToSlide = (index) => {
     setCurrentIndex(index);
   };
-
-  const experiences = [
-    {
-      title: '360° Experiences',
-      icon: '🌐',
-      description:
-        'Put your audience inside the moment with an immersive story, sound, and visuals.',
-      features: [
-        'Look around in all directions',
-        'Tap to switch scenes or settings',
-        'Watch embedded videos or story clips',
-        'Click hotspots for info, links, or games',
-      ],
-      perfectFor:
-        'Immersive storytelling, venue tours, artist campaigns, brand showcases',
-      compatibility: [
-        { device: 'Phone', icon: '📱' },
-        { device: 'Desktop', icon: '💻' },
-        { device: 'VR Headset', icon: '🥽' },
-      ],
-      color: 'from-primary/20 to-primary/5',
-      borderColor: 'border-primary',
-    },
-    {
-      title: 'Augmented Reality (AR)',
-      icon: '📲',
-      description:
-        "Make posters, packaging, or products come to life through your customer's phone.",
-      features: [
-        'Scan real-world items to trigger digital content',
-        'See characters, visuals, or products in their space',
-        'Tap objects for info, animations, or offers',
-        'Trigger sound, music, or voiceovers',
-        'Capture photos or videos with AR effects',
-        'Access links, discounts, or next steps',
-      ],
-      perfectFor:
-        'Retail packaging, street marketing, flyer campaigns, experiential product launches',
-      compatibility: [{ device: 'Phones', icon: '📱' }],
-      color: 'from-altPrimary/20 to-altPrimary/5',
-      borderColor: 'border-altPrimary',
-    },
-    {
-      title: 'Virtual Reality (VR)',
-      icon: '🥽',
-      description:
-        'Transport your audience into a fully digital world built around your story.',
-      features: [
-        'Step inside a 3D experience with a headset',
-        'Look around freely and explore environments',
-        'Use hand tracking or controllers to interact',
-        'Trigger animations, sounds, or quests',
-        'Navigate guided stories or free-roam spaces',
-        'Participate in multiplayer or social environments (if enabled)',
-      ],
-      perfectFor:
-        'Premium events, brand launches, product training, museum or educational exhibits',
-      compatibility: [{ device: 'VR Headsets', icon: '🥽' }],
-      color: 'from-accent/20 to-accent/5',
-      borderColor: 'border-accent',
-    },
-  ];
 
   const container = {
     hidden: { opacity: 0 },

@@ -197,7 +197,7 @@ export default function PartnerLogoCarousel({
         cancelAnimationFrame(animationRef.current);
       }
     };
-  }, [partners]);
+  }, [partners, animateLogoCarousel]);
 
   // Background animation function
   const animateBackgroundCubes = () => {

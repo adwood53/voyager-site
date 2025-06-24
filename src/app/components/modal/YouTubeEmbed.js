@@ -1,6 +1,7 @@
 // components/modal/YouTubeEmbed.js
 import { useState } from 'react';
 import { Spinner, Button } from '@heroui/react';
+import { Image } from 'next/image';
 
 // Inline SVG Play Icon to match your existing pattern
 const PlayIcon = ({ size = 32 }) => (
@@ -96,7 +97,7 @@ export function YouTubeEmbed({
           onClick={handleLoadVideo}
         >
           {/* Thumbnail */}
-          <img
+          <Image
             src={`https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`}
             alt={title}
             className="w-full h-full object-cover"

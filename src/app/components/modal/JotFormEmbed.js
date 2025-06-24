@@ -1,5 +1,11 @@
 // components/modal/JotFormEmbed.js
-import { useState, useRef, useEffect } from 'react';
+import {
+  useState,
+  useRef,
+  useEffect,
+  useMemo,
+  useCallback,
+} from 'react';
 import { Spinner } from '@heroui/react';
 import Script from 'next/script';
 
@@ -25,36 +31,28 @@ export function JotFormEmbed({
   formParams = {},
   ...rest
 }) {
+  // ALL HOOKS MUST BE DECLARED BEFORE ANY CONDITIONAL LOGIC
   const [isLoading, setIsLoading] = useState(true);
   const [scriptLoaded, setScriptLoaded] = useState(false);
   const [error, setError] = useState(null);
   const iframeRef = useRef(null);
 
-  // Validate required props
-  if (!formId) {
-    console.error('JotFormEmbed: formId prop is required');
-    return (
-      <div className="p-4 text-red-600">
-        Error: Form ID is required
-      </div>
-    );
-  }
-
-  // Build form URL with parameters
-  const buildFormUrl = () => {
+  // Build form URL with parameters - moved to useMemo for performance
+  const formUrl = useMemo(() => {
+    if (!formId) return '';
     const baseUrl = `https://form.jotform.com/${formId}`;
     const params = new URLSearchParams(formParams);
     return params.toString()
       ? `${baseUrl}?${params.toString()}`
       : baseUrl;
-  };
+  }, [formId, formParams]);
 
   // Handle script loading
-  const handleScriptLoad = () => {
+  const handleScriptLoad = useCallback(() => {
     setScriptLoaded(true);
 
     // Initialize JotForm embed handler if available
-    if (window.jotformEmbedHandler && iframeRef.current) {
+    if (window.jotformEmbedHandler && iframeRef.current && formId) {
       try {
         window.jotformEmbedHandler(
           `iframe[id='JotFormIFrame-${formId}']`,
@@ -64,23 +62,25 @@ export function JotFormEmbed({
         console.warn('JotForm embed handler failed:', err);
       }
     }
-  };
+  }, [formId]);
 
   // Handle iframe load
-  const handleIframeLoad = () => {
+  const handleIframeLoad = useCallback(() => {
     setIsLoading(false);
     setError(null);
     if (onLoad) onLoad();
-  };
+  }, [onLoad]);
 
   // Handle iframe error
-  const handleIframeError = () => {
+  const handleIframeError = useCallback(() => {
     setIsLoading(false);
     setError('Failed to load form. Please try again.');
-  };
+  }, []);
 
   // Listen for form submission messages
   useEffect(() => {
+    if (!formId) return;
+
     const handleMessage = (event) => {
       if (event.origin !== 'https://form.jotform.com') return;
 
@@ -96,7 +96,17 @@ export function JotFormEmbed({
 
     window.addEventListener('message', handleMessage);
     return () => window.removeEventListener('message', handleMessage);
-  }, [formId, onSubmit]);
+  }, [formId, onSubmit]); // Fixed: included all dependencies
+
+  // Validate required props AFTER hooks are declared
+  if (!formId) {
+    console.error('JotFormEmbed: formId prop is required');
+    return (
+      <div className="p-4 text-red-600">
+        Error: Form ID is required
+      </div>
+    );
+  }
 
   return (
     <div className="jotform-embed-container" {...rest}>
@@ -136,7 +146,7 @@ export function JotFormEmbed({
                 setError(null);
                 setIsLoading(true);
                 if (iframeRef.current) {
-                  iframeRef.current.src = buildFormUrl();
+                  iframeRef.current.src = formUrl;
                 }
               }}
               className="mt-4 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
@@ -153,7 +163,7 @@ export function JotFormEmbed({
           ref={iframeRef}
           id={`JotFormIFrame-${formId}`}
           title={formTitle}
-          src={buildFormUrl()}
+          src={formUrl}
           onLoad={handleIframeLoad}
           onError={handleIframeError}
           frameBorder="0"

@@ -5,179 +5,110 @@ import { useState, useMemo } from 'react';
 import { Button } from '@heroui/react';
 
 import { SearchableGrid } from '../ui/SearchableGrid';
-import Modal from './Modal';
-import { useModalState } from './useModalState';
+import {
+  Modal,
+  useModalState,
+  JotFormEmbed,
+  YouTubeEmbed,
+  JotFormModal,
+  YouTubeModal,
+} from './index';
 
 import { motion } from 'framer-motion';
+
+const sizes = [
+  'sm',
+  'md',
+  'lg',
+  'xl',
+  '2xl',
+  '3xl',
+  '4xl',
+  '5xl',
+  'full',
+];
+const positions = [
+  'center',
+  'top',
+  'bottom',
+  'top-center',
+  'bottom-center',
+];
+const colorSchemes = [
+  { name: 'Purple', primary: '#7466e2', secondary: '#6055b5' },
+  { name: 'Blue', primary: '#3b82f6', secondary: '#2563eb' },
+  { name: 'Green', primary: '#10b981', secondary: '#059669' },
+  { name: 'Red', primary: '#ef4444', secondary: '#dc2626' },
+  { name: 'Orange', primary: '#f97316', secondary: '#ea580c' },
+];
+const backdropBlurs = ['none', 'sm', 'md', 'lg', 'xl'];
+const closePositions = ['inside', 'outside', 'floating'];
+const formIds = [
+  'demo-form-1',
+  'demo-form-2',
+  'demo-form-3',
+  'demo-form-4',
+];
+const videoIds = [
+  'dQw4w9WgXcQ',
+  'jNQXAC9IVRw',
+  'L_jWHffIx5E',
+  'fJ9rUzIMcZQ',
+];
 
 export default function ModalShowcase() {
   // Modal states
   const [activeModal, setActiveModal] = useState(null);
   const modalState = useModalState();
 
-  // Configuration arrays
-  const sizes = [
-    'xs',
-    'sm',
-    'md',
-    'lg',
-    'xl',
-    '2xl',
-    '3xl',
-    '4xl',
-    '5xl',
-    'full',
-  ];
-  const positions = ['center', 'top', 'bottom'];
-  const closePositions = ['header', 'floating', 'footer'];
-  const backdropBlurs = ['none', 'sm', 'md', 'lg'];
-
-  // Color schemes using your brand palette
-  const colorSchemes = [
-    {
-      name: 'Primary',
-      header:
-        'bg-gradient-to-r from-[#e79023] to-[#a6620c] text-white',
-      accent: 'text-[#e79023]',
-      bg: 'bg-gradient-to-br from-orange-50 to-orange-100',
-      chip: 'bg-[#e79023] text-white',
-      border: 'border-[#e79023]',
-    },
-    {
-      name: 'Alt',
-      header:
-        'bg-gradient-to-r from-[#7466e2] to-[#6055b5] text-white',
-      accent: 'text-[#7466e2]',
-      bg: 'bg-gradient-to-br from-purple-50 to-purple-100',
-      chip: 'bg-[#7466e2] text-white',
-      border: 'border-[#7466e2]',
-    },
-    {
-      name: 'Success',
-      header:
-        'bg-gradient-to-r from-emerald-600 to-emerald-700 text-white',
-      accent: 'text-emerald-600',
-      bg: 'bg-gradient-to-br from-emerald-50 to-emerald-100',
-      chip: 'bg-emerald-600 text-white',
-      border: 'border-emerald-600',
-    },
-    {
-      name: 'Warning',
-      header:
-        'bg-gradient-to-r from-amber-600 to-amber-700 text-white',
-      accent: 'text-amber-600',
-      bg: 'bg-gradient-to-br from-amber-50 to-amber-100',
-      chip: 'bg-amber-600 text-white',
-      border: 'border-amber-600',
-    },
-    {
-      name: 'Danger',
-      header: 'bg-gradient-to-r from-red-600 to-red-700 text-white',
-      accent: 'text-red-600',
-      bg: 'bg-gradient-to-br from-red-50 to-red-100',
-      chip: 'bg-red-600 text-white',
-      border: 'border-red-600',
-    },
-    {
-      name: 'Dark',
-      header: 'bg-gradient-to-r from-gray-800 to-gray-900 text-white',
-      accent: 'text-gray-700',
-      bg: 'bg-gradient-to-br from-gray-50 to-gray-100',
-      chip: 'bg-gray-700 text-white',
-      border: 'border-gray-700',
-    },
-  ];
-
-  // Video IDs and Form IDs for demos
-  const videoIds = [
-    'dQw4w9WgXcQ',
-    'M7lc1UVf-VE',
-    'oHg5SJYRHA0',
-    'iik25wqIuFo',
-    'xvFZjo5PgG0',
-  ];
-  const formIds = [
-    'demo-form-1',
-    'demo-form-2',
-    'demo-contact-1',
-    'demo-survey-1',
-    'demo-feedback-1',
-  ];
-
   // Generate modal configurations for SearchableGrid
   const modalConfigurations = useMemo(() => {
     const configs = [];
-    let id = 0;
+    let id = 1;
 
-    // Basic Modals (150 variations)
+    // Basic Modals (50 variations)
     sizes.forEach((size) => {
       positions.forEach((position) => {
-        closePositions.forEach((closePos) => {
-          backdropBlurs.forEach((blur) => {
-            const colorScheme =
-              colorSchemes[id % colorSchemes.length];
-            configs.push({
-              id: id++,
-              title: `${size.toUpperCase()} Modal`,
-              subtitle: `${position} • ${closePos} • ${blur}`,
-              description: `${colorScheme.name} themed modal with ${size} size and ${position} positioning`,
-              category: 'Basic',
-              size,
-              position,
-              closeButtonPosition: closePos,
-              backdropBlur: blur,
-              colorScheme,
-              type: 'basic',
-              badge: 'Basic',
-              badgeClass: colorScheme.chip,
-              tags: [size, position, closePos],
-              searchFields: [
-                `${size} modal`,
-                `${position} position`,
-                `${closePos} close`,
-                `${blur} blur`,
-                colorScheme.name,
-              ],
-              isStatic: Math.random() > 0.85,
-              allowBackdropClick: Math.random() > 0.3,
-              status: Math.random() > 0.85 ? 'Static' : 'Interactive',
-              statusColor:
-                Math.random() > 0.85
-                  ? 'bg-yellow-500'
-                  : 'bg-green-500',
+        colorSchemes.forEach((colorScheme) => {
+          backdropBlurs.forEach((backdropBlur) => {
+            closePositions.forEach((closePosition) => {
+              configs.push({
+                id: id++,
+                title: `Modal ${id}`,
+                subtitle: `${size} • ${position}`,
+                description: `${colorScheme.name} themed modal with ${backdropBlur} backdrop blur and ${closePosition} close button`,
+                category: 'Basic',
+                size,
+                position,
+                colorScheme,
+                backdropBlur,
+                closePosition,
+                type: 'basic',
+                badge: 'Basic',
+                badgeClass: 'bg-gray-600 text-white',
+                tags: [
+                  size,
+                  position,
+                  colorScheme.name.toLowerCase(),
+                ],
+                searchFields: [
+                  `modal ${id}`,
+                  'basic',
+                  size,
+                  position,
+                  colorScheme.name.toLowerCase(),
+                ],
+                status: Math.random() > 0.9 ? 'Beta' : 'Stable',
+                statusColor:
+                  Math.random() > 0.9
+                    ? 'bg-yellow-500'
+                    : 'bg-green-500',
+              });
             });
           });
         });
       });
     });
-
-    // JotForm Modals (40 variations)
-    for (let i = 0; i < 40; i++) {
-      const size = sizes[i % sizes.length];
-      const position = positions[i % positions.length];
-      const formId = formIds[i % formIds.length];
-      const colorScheme = colorSchemes[i % colorSchemes.length];
-
-      configs.push({
-        id: id++,
-        title: `Form Modal ${i + 1}`,
-        subtitle: `${size} • JotForm`,
-        description: `${colorScheme.name} JotForm embed with optimized settings and auto-sizing`,
-        category: 'JotForm',
-        size,
-        position,
-        formId,
-        colorScheme,
-        formTitle: `Demo Form ${i + 1}`,
-        type: 'jotform',
-        badge: 'JotForm',
-        badgeClass: 'bg-green-600 text-white',
-        tags: [size, 'form', 'embed'],
-        searchFields: [`form ${i + 1}`, 'jotform', 'embed', size],
-        status: 'Ready',
-        statusColor: 'bg-green-500',
-      });
-    }
 
     // YouTube Modals (30 variations)
     for (let i = 0; i < 30; i++) {
@@ -211,6 +142,34 @@ export default function ModalShowcase() {
         ],
         status: 'Available',
         statusColor: 'bg-blue-500',
+      });
+    }
+
+    // JotForm Modals (40 variations)
+    for (let i = 0; i < 40; i++) {
+      const size = sizes[i % sizes.length];
+      const position = positions[i % positions.length];
+      const formId = formIds[i % formIds.length];
+      const colorScheme = colorSchemes[i % colorSchemes.length];
+
+      configs.push({
+        id: id++,
+        title: `Form Modal ${i + 1}`,
+        subtitle: `${size} • JotForm`,
+        description: `${colorScheme.name} JotForm embed with optimized settings and auto-sizing`,
+        category: 'JotForm',
+        size,
+        position,
+        formId,
+        colorScheme,
+        formTitle: `Demo Form ${i + 1}`,
+        type: 'jotform',
+        badge: 'JotForm',
+        badgeClass: 'bg-green-600 text-white',
+        tags: [size, 'form', 'embed'],
+        searchFields: [`form ${i + 1}`, 'jotform', 'embed', size],
+        status: 'Ready',
+        statusColor: 'bg-green-500',
       });
     }
 
@@ -248,7 +207,7 @@ export default function ModalShowcase() {
       title: 'YouTube Modal',
       subtitle: 'Video Player',
       description:
-        'Optimized YouTube player with lazy loading, autoplay controls, and responsive design.',
+        'Optimised YouTube player with lazy loading, autoplay controls, and responsive design.',
       icon: (
         <svg
           className="w-6 h-6 text-white"
@@ -443,8 +402,8 @@ export default function ModalShowcase() {
                   This modal demonstrates the{' '}
                   {colorScheme.name.toLowerCase()} color scheme with a{' '}
                   {activeModal.size} size and {activeModal.position}{' '}
-                  positioning. The backdrop blur is set to "
-                  {activeModal.backdropBlur}".
+                  positioning. The backdrop blur is set to &quot;
+                  {activeModal.backdropBlur}&quot;.
                 </p>
               </div>
             </div>
