@@ -1,4 +1,4 @@
-// components/ui/SearchableGrid/SearchFilters.js
+// components/ui/SearchableGrid/SearchFilters.js - Fixed Icon Positioning
 import { Input, Select, SelectItem, Button } from '@heroui/react';
 
 export function SearchFilters({
@@ -18,7 +18,7 @@ export function SearchFilters({
           gridTemplateColumns: `1fr repeat(${filterConfigs.length}, 1fr) auto`,
         }}
       >
-        {/* Search Input */}
+        {/* Search Input - Fixed Icon Positioning */}
         <div>
           <label className="block text-sm font-medium text-gray-300 mb-2">
             Search
@@ -41,7 +41,10 @@ export function SearchFilters({
                 'hover:border-[#e79023]/40',
                 'focus-within:!border-[#e79023]',
                 '!cursor-text',
+                'group-data-[focus=true]:bg-[#1e1e1e]',
               ],
+              // Fix inner wrapper positioning
+              innerWrapper: 'bg-transparent',
             }}
             startContent={
               <svg
@@ -49,6 +52,7 @@ export function SearchFilters({
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
               >
                 <path
                   strokeLinecap="round"
@@ -61,7 +65,7 @@ export function SearchFilters({
           />
         </div>
 
-        {/* Dynamic Filters */}
+        {/* Dynamic Filters - Fixed Dropdown Icon Positioning */}
         {filterConfigs.map((config) => (
           <div key={config.key}>
             <label className="block text-sm font-medium text-gray-300 mb-2">
@@ -91,16 +95,57 @@ export function SearchFilters({
                   'data-[selectable=true]:focus:bg-[#1e1e1e]',
                   'data-[pressed=true]:bg-[#1e1e1e]',
                   'data-[focus-visible=true]:bg-[#1e1e1e]',
+                  // Ensure proper layout structure
+                  'min-h-[40px]',
                 ],
-                value:
-                  'text-white group-data-[has-value=true]:text-white',
-                selectorIcon: 'text-gray-400',
+                // Critical: Control the inner wrapper layout
+                innerWrapper: [
+                  'bg-transparent',
+                  'group-data-[has-value=true]:items-center',
+                ],
+                value: [
+                  'text-white',
+                  'group-data-[has-value=true]:text-white',
+                  'text-left',
+                  'flex-1',
+                ],
+                // Fix selector icon positioning specifically
+                selectorIcon: [
+                  'text-gray-400',
+                  'right-3',
+                  'text-medium',
+                  'absolute',
+                  'top-1/2',
+                  'transform',
+                  '-translate-y-1/2',
+                  'transition-transform',
+                  'group-data-[open=true]:rotate-180',
+                ],
                 popoverContent: [
                   'bg-[#1e1e1e]',
                   'border-[#e79023]/20',
                 ],
                 listbox: 'bg-[#1e1e1e]',
               }}
+              // Use custom selector icon with proper sizing
+              selectorIcon={
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
+              }
+              // Disable default rotation since we're handling it in CSS
+              disableSelectorIconRotation={false}
             >
               <SelectItem
                 key="all"
