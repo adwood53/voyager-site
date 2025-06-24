@@ -1,448 +1,546 @@
-// components/modal/page.js - Refactored using SearchableGrid
+// pages/modal-showcase/page.js - Complete Voyager Modal System Showcase
 'use client';
 
-import { useState, useMemo } from 'react';
-import { Button } from '@heroui/react';
-
-import { SearchableGrid } from '../ui/SearchableGrid';
-import {
-  Modal,
-  useModalState,
-  JotFormEmbed,
-  YouTubeEmbed,
-  JotFormModal,
-  YouTubeModal,
-} from './index';
-
+import React, { useState, useCallback, useMemo } from 'react';
 import { motion } from 'framer-motion';
+import { ModalProvider, useModal } from './core/ModalEngine';
+import VoyagerModal from './VoyagerModal';
+import {
+  ConfirmationModal,
+  YouTubeModal,
+  JotFormModal,
+  ImageGalleryModal,
+  NotificationModal,
+  LoadingModal,
+} from './types/ModalTypes';
+import { SearchableGrid } from '../ui/SearchableGrid';
 
-const sizes = [
-  'sm',
-  'md',
-  'lg',
-  'xl',
-  '2xl',
-  '3xl',
-  '4xl',
-  '5xl',
-  'full',
-];
-const positions = [
-  'center',
-  'top',
-  'bottom',
-  'top-center',
-  'bottom-center',
-];
-const colorSchemes = [
-  { name: 'Purple', primary: '#7466e2', secondary: '#6055b5' },
-  { name: 'Blue', primary: '#3b82f6', secondary: '#2563eb' },
-  { name: 'Green', primary: '#10b981', secondary: '#059669' },
-  { name: 'Red', primary: '#ef4444', secondary: '#dc2626' },
-  { name: 'Orange', primary: '#f97316', secondary: '#ea580c' },
-];
-const backdropBlurs = ['none', 'sm', 'md', 'lg', 'xl'];
-const closePositions = ['inside', 'outside', 'floating'];
-const formIds = [
-  'demo-form-1',
-  'demo-form-2',
-  'demo-form-3',
-  'demo-form-4',
-];
-const videoIds = [
-  'dQw4w9WgXcQ',
-  'jNQXAC9IVRw',
-  'L_jWHffIx5E',
-  'fJ9rUzIMcZQ',
+/**
+ * VOYAGER MODAL SYSTEM SHOWCASE
+ *
+ * Complete demonstration using SearchableGrid with comprehensive modal variations
+ */
+
+// ============================================================================
+// SAMPLE DATA
+// ============================================================================
+
+const sampleImages = [
+  {
+    url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&h=800&fit=crop',
+    thumbnail:
+      'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=150&h=150&fit=crop',
+    title: 'Mountain Landscape',
+    description: 'Beautiful mountain scenery with lake reflection',
+  },
+  {
+    url: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=1200&h=800&fit=crop',
+    thumbnail:
+      'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=150&h=150&fit=crop',
+    title: 'Forest Path',
+    description: 'Mystical forest path leading into the distance',
+  },
+  {
+    url: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1200&h=800&fit=crop',
+    thumbnail:
+      'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=150&h=150&fit=crop',
+    title: 'Ocean View',
+    description: 'Peaceful ocean waves meeting the shore',
+  },
 ];
 
-export default function ModalShowcase() {
-  // Modal states
+const modalThemes = {
+  voyager: {
+    name: 'Voyager Default',
+    colors: {
+      primary: '#e79023',
+      primaryDark: '#a6620c',
+      altPrimary: '#7466e2',
+      background: '#0a0a0a',
+      surface: '#1a1a1a',
+      text: '#ffffff',
+    },
+  },
+  ocean: {
+    name: 'Ocean Blue',
+    colors: {
+      primary: '#0ea5e9',
+      primaryDark: '#0284c7',
+      altPrimary: '#06b6d4',
+      background: '#0c1929',
+      surface: '#1e293b',
+      text: '#f1f5f9',
+    },
+  },
+  forest: {
+    name: 'Forest Green',
+    colors: {
+      primary: '#10b981',
+      primaryDark: '#059669',
+      altPrimary: '#34d399',
+      background: '#064e3b',
+      surface: '#065f46',
+      text: '#ecfdf5',
+    },
+  },
+  sunset: {
+    name: 'Sunset',
+    colors: {
+      primary: '#f59e0b',
+      primaryDark: '#d97706',
+      altPrimary: '#ef4444',
+      background: '#451a03',
+      surface: '#78350f',
+      text: '#fef3c7',
+    },
+  },
+  neon: {
+    name: 'Neon',
+    colors: {
+      primary: '#a855f7',
+      primaryDark: '#9333ea',
+      altPrimary: '#ec4899',
+      background: '#1e1b4b',
+      surface: '#312e81',
+      text: '#f3e8ff',
+    },
+  },
+};
+
+// ============================================================================
+// CUSTOM MODAL EXAMPLES
+// ============================================================================
+
+const ThemedModal = ({ isOpen, onClose, theme, title, content }) => (
+  <VoyagerModal
+    isOpen={isOpen}
+    onClose={onClose}
+    size="md"
+    animation="scale"
+    customTheme={theme}
+  >
+    <VoyagerModal.Header onClose={onClose}>
+      <h3
+        className="text-lg font-semibold"
+        style={{ color: theme.colors.text }}
+      >
+        {title}
+      </h3>
+    </VoyagerModal.Header>
+    <VoyagerModal.Body>
+      <div style={{ color: theme.colors.text }}>
+        {content}
+        <div
+          className="mt-4 p-3 rounded"
+          style={{ backgroundColor: theme.colors.surface }}
+        >
+          <p className="text-sm opacity-80">
+            This modal uses the {theme.name} theme with custom colors
+            and styling.
+          </p>
+        </div>
+      </div>
+    </VoyagerModal.Body>
+    <VoyagerModal.Footer>
+      <button
+        onClick={onClose}
+        className="px-4 py-2 rounded-lg text-white transition-colors"
+        style={{ backgroundColor: theme.colors.primary }}
+      >
+        Close
+      </button>
+    </VoyagerModal.Footer>
+  </VoyagerModal>
+);
+
+// ============================================================================
+// MAIN SHOWCASE COMPONENT
+// ============================================================================
+
+const ModalShowcaseContent = () => {
+  const { state } = useModal();
+
+  // State for active modals
   const [activeModal, setActiveModal] = useState(null);
-  const modalState = useModalState();
+  const [notifications, setNotifications] = useState([]);
+  const [loadingProgress, setLoadingProgress] = useState(0);
 
-  // Generate modal configurations for SearchableGrid
-  const modalConfigurations = useMemo(() => {
-    const configs = [];
+  // Generate comprehensive modal examples for SearchableGrid
+  const modalExamples = useMemo(() => {
+    const examples = [];
     let id = 1;
 
-    // Basic Modals (50 variations)
-    sizes.forEach((size) => {
-      positions.forEach((position) => {
-        colorSchemes.forEach((colorScheme) => {
-          backdropBlurs.forEach((backdropBlur) => {
-            closePositions.forEach((closePosition) => {
-              configs.push({
-                id: id++,
-                title: `Modal ${id}`,
-                subtitle: `${size} • ${position}`,
-                description: `${colorScheme.name} themed modal with ${backdropBlur} backdrop blur and ${closePosition} close button`,
-                category: 'Basic',
-                size,
-                position,
-                colorScheme,
-                backdropBlur,
-                closePosition,
-                type: 'basic',
-                badge: 'Basic',
-                badgeClass: 'bg-gray-600 text-white',
-                tags: [
-                  size,
-                  position,
-                  colorScheme.name.toLowerCase(),
-                ],
-                searchFields: [
-                  `modal ${id}`,
-                  'basic',
-                  size,
-                  position,
-                  colorScheme.name.toLowerCase(),
-                ],
-                status: Math.random() > 0.9 ? 'Beta' : 'Stable',
-                statusColor:
-                  Math.random() > 0.9
-                    ? 'bg-yellow-500'
-                    : 'bg-green-500',
-              });
-            });
-          });
-        });
+    // Theme variations
+    Object.entries(modalThemes).forEach(([key, theme]) => {
+      examples.push({
+        id: id++,
+        title: `${theme.name} Modal`,
+        subtitle: 'Themed Modal',
+        description: `Modal with ${theme.name} theme styling and custom colors`,
+        category: 'Themed',
+        badge: 'Themed',
+        badgeClass: 'bg-purple-600 text-white',
+        type: 'themed',
+        theme,
+        tags: ['themed', theme.name.toLowerCase().replace(' ', '-')],
+        searchFields: [
+          `${theme.name} modal`,
+          'themed',
+          'custom styling',
+        ],
       });
     });
 
-    // YouTube Modals (30 variations)
-    for (let i = 0; i < 30; i++) {
-      const size = sizes[i % sizes.length];
-      const position = positions[i % positions.length];
-      const videoId = videoIds[i % videoIds.length];
-      const colorScheme = colorSchemes[i % colorSchemes.length];
-      const autoplay = i % 2 === 0;
-
-      configs.push({
+    // Specialized modals
+    examples.push(
+      {
         id: id++,
-        title: `Video Modal ${i + 1}`,
-        subtitle: `${size} • ${autoplay ? 'Auto' : 'Manual'}`,
-        description: `${colorScheme.name} YouTube player with lazy loading and responsive design`,
-        category: 'YouTube',
-        size,
-        position,
-        videoId,
-        colorScheme,
-        autoplay,
-        videoTitle: `Demo Video ${i + 1}`,
-        type: 'youtube',
-        badge: 'YouTube',
+        title: 'Confirmation Modal',
+        subtitle: 'User Confirmation',
+        description:
+          'Customizable confirmation dialog with danger variant',
+        category: 'Interactive',
+        badge: 'Confirm',
         badgeClass: 'bg-red-600 text-white',
-        tags: [size, 'video', autoplay ? 'autoplay' : 'manual'],
-        searchFields: [
-          `video ${i + 1}`,
-          'youtube',
-          size,
-          autoplay ? 'autoplay' : 'manual',
-        ],
-        status: 'Available',
-        statusColor: 'bg-blue-500',
-      });
-    }
-
-    // JotForm Modals (40 variations)
-    for (let i = 0; i < 40; i++) {
-      const size = sizes[i % sizes.length];
-      const position = positions[i % positions.length];
-      const formId = formIds[i % formIds.length];
-      const colorScheme = colorSchemes[i % colorSchemes.length];
-
-      configs.push({
+        type: 'confirmation',
+        tags: ['confirmation', 'dialog', 'action'],
+        searchFields: ['confirmation', 'delete', 'action', 'dialog'],
+      },
+      {
         id: id++,
-        title: `Form Modal ${i + 1}`,
-        subtitle: `${size} • JotForm`,
-        description: `${colorScheme.name} JotForm embed with optimized settings and auto-sizing`,
-        category: 'JotForm',
-        size,
-        position,
-        formId,
-        colorScheme,
-        formTitle: `Demo Form ${i + 1}`,
-        type: 'jotform',
-        badge: 'JotForm',
+        title: 'YouTube Player',
+        subtitle: 'Video Content',
+        description:
+          'Responsive video player with proper aspect ratio and controls',
+        category: 'Media',
+        badge: 'Video',
+        badgeClass: 'bg-red-600 text-white',
+        type: 'youtube',
+        tags: ['video', 'youtube', 'media'],
+        searchFields: ['youtube', 'video', 'media', 'player'],
+      },
+      {
+        id: id++,
+        title: 'JotForm Embed',
+        subtitle: 'Form Integration',
+        description:
+          'Embedded form with auto-sizing and submission handling',
+        category: 'Forms',
+        badge: 'Form',
         badgeClass: 'bg-green-600 text-white',
-        tags: [size, 'form', 'embed'],
-        searchFields: [`form ${i + 1}`, 'jotform', 'embed', size],
-        status: 'Ready',
-        statusColor: 'bg-green-500',
-      });
-    }
+        type: 'jotform',
+        tags: ['form', 'jotform', 'embed'],
+        searchFields: ['jotform', 'form', 'embed', 'submission'],
+      },
+      {
+        id: id++,
+        title: 'Image Gallery',
+        subtitle: 'Photo Viewer',
+        description:
+          'Full-featured gallery with zoom, navigation, and thumbnails',
+        category: 'Media',
+        badge: 'Gallery',
+        badgeClass: 'bg-purple-600 text-white',
+        type: 'gallery',
+        tags: ['gallery', 'images', 'photos'],
+        searchFields: ['gallery', 'images', 'photos', 'viewer'],
+      },
+      {
+        id: id++,
+        title: 'Smart Notification',
+        subtitle: 'Alert System',
+        description:
+          'Auto-closing notification with progress indication',
+        category: 'Feedback',
+        badge: 'Alert',
+        badgeClass: 'bg-blue-600 text-white',
+        type: 'notification',
+        tags: ['notification', 'alert', 'feedback'],
+        searchFields: ['notification', 'alert', 'toast', 'feedback'],
+      },
+      {
+        id: id++,
+        title: 'Loading Progress',
+        subtitle: 'Async Operations',
+        description:
+          'Loading modal with progress indication and cancellation',
+        category: 'Feedback',
+        badge: 'Loading',
+        badgeClass: 'bg-yellow-600 text-white',
+        type: 'loading',
+        tags: ['loading', 'progress', 'async'],
+        searchFields: ['loading', 'progress', 'spinner', 'async'],
+      }
+    );
 
-    return configs;
+    return examples;
   }, []);
 
-  // Featured items for the showcase
-  const featuredItems = [
-    {
-      id: 'featured-1',
-      title: 'JotForm Modal',
-      subtitle: 'Pre-configured',
-      description:
-        'Ready-to-use JotForm modal with optimal settings, auto-sizing, and form validation.',
-      icon: (
-        <svg
-          className="w-6 h-6 text-white"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-          />
-        </svg>
-      ),
-      iconBg: 'bg-gradient-to-br from-green-500 to-green-600',
-      type: 'jotform-preset',
-    },
-    {
-      id: 'featured-2',
-      title: 'YouTube Modal',
-      subtitle: 'Video Player',
-      description:
-        'Optimised YouTube player with lazy loading, autoplay controls, and responsive design.',
-      icon: (
-        <svg
-          className="w-6 h-6 text-white"
-          fill="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
-        </svg>
-      ),
-      iconBg: 'bg-gradient-to-br from-red-500 to-red-600',
-      type: 'youtube-preset',
-    },
-    {
-      id: 'featured-3',
-      title: 'Custom Components',
-      subtitle: 'Advanced Demo',
-      description:
-        'Individual embed components combined in custom modal layouts for advanced use cases.',
-      icon: (
-        <svg
-          className="w-6 h-6 text-white"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"
-          />
-        </svg>
-      ),
-      iconBg: 'bg-gradient-to-br from-[#7466e2] to-[#6055b5]',
-      type: 'embed-demo',
-    },
-  ];
-
-  // Filter configurations
+  // Filter configurations for SearchableGrid
   const filterConfigs = [
     {
       key: 'category',
       label: 'Category',
       placeholder: 'All Categories',
       options: [
-        { value: 'Basic', label: 'Basic' },
-        { value: 'JotForm', label: 'JotForm' },
-        { value: 'YouTube', label: 'YouTube' },
+        { value: 'Themed', label: 'Themed' },
+        { value: 'Interactive', label: 'Interactive' },
+        { value: 'Media', label: 'Media' },
+        { value: 'Forms', label: 'Forms' },
+        { value: 'Feedback', label: 'Feedback' },
       ],
     },
     {
-      key: 'size',
-      label: 'Size',
-      placeholder: 'All Sizes',
-      options: sizes.map((size) => ({
-        value: size,
-        label: size.toUpperCase(),
-      })),
-    },
-    {
-      key: 'position',
-      label: 'Position',
-      placeholder: 'All Positions',
-      options: positions.map((pos) => ({
-        value: pos,
-        label: pos.charAt(0).toUpperCase() + pos.slice(1),
-      })),
+      key: 'type',
+      label: 'Type',
+      placeholder: 'All Types',
+      options: [
+        { value: 'themed', label: 'Themed Modal' },
+        { value: 'confirmation', label: 'Confirmation' },
+        { value: 'youtube', label: 'YouTube' },
+        { value: 'jotform', label: 'JotForm' },
+        { value: 'gallery', label: 'Gallery' },
+        { value: 'notification', label: 'Notification' },
+        { value: 'loading', label: 'Loading' },
+      ],
     },
   ];
 
-  // Handle modal opening
-  const handleModalClick = (config) => {
-    setActiveModal(config);
-    modalState.onOpen();
-  };
+  // Featured items for showcase
+  const featuredItems = [
+    {
+      id: 'featured-1',
+      title: 'Themed Modals',
+      subtitle: 'Custom Styling',
+      description:
+        'Beautiful themed modals with custom color schemes and styling variations.',
+      icon: (
+        <svg
+          className="w-6 h-6 text-white"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zM21 5a2 2 0 00-2-2h-4a2 2 0 00-2 2v6a2 2 0 002 2h4a2 2 0 002-2V5z"
+          />
+        </svg>
+      ),
+      iconBg: 'bg-gradient-to-br from-purple-500 to-pink-500',
+      type: 'themed-showcase',
+    },
+    {
+      id: 'featured-2',
+      title: 'Media Integration',
+      subtitle: 'Video & Images',
+      description:
+        'Responsive media modals with proper sizing and interactive controls.',
+      icon: (
+        <svg
+          className="w-6 h-6 text-white"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
+          />
+        </svg>
+      ),
+      iconBg: 'bg-gradient-to-br from-red-500 to-orange-500',
+      type: 'media-showcase',
+    },
+  ];
+
+  // Notification management
+  const addNotification = useCallback((type, title, message) => {
+    const id = Date.now();
+    const notification = { id, type, title, message };
+    setNotifications((prev) => [...prev, notification]);
+  }, []);
+
+  const removeNotification = useCallback((id) => {
+    setNotifications((prev) => prev.filter((n) => n.id !== id));
+  }, []);
+
+  // Loading simulation
+  const simulateLoading = useCallback(() => {
+    setActiveModal({ type: 'loading' });
+    setLoadingProgress(0);
+
+    const interval = setInterval(() => {
+      setLoadingProgress((prev) => {
+        if (prev >= 100) {
+          clearInterval(interval);
+          setActiveModal(null);
+          addNotification(
+            'success',
+            'Operation Complete!',
+            'The loading process finished successfully.'
+          );
+          return 100;
+        }
+        return prev + Math.random() * 15;
+      });
+    }, 200);
+  }, [addNotification]);
+
+  // Handle modal selection from grid
+  const handleModalClick = useCallback((modalConfig) => {
+    setActiveModal(modalConfig);
+  }, []);
 
   // Handle featured item clicks
-  const handleFeaturedClick = (featured) => {
-    const presetConfig = {
-      type: featured.type,
-      formId:
-        featured.type === 'jotform-preset'
-          ? 'demo-form-preset'
-          : undefined,
-      formTitle:
-        featured.type === 'jotform-preset'
-          ? 'Preset JotForm Modal'
-          : undefined,
-      videoId:
-        featured.type === 'youtube-preset'
-          ? 'dQw4w9WgXcQ'
-          : undefined,
-      videoTitle:
-        featured.type === 'youtube-preset'
-          ? 'Preset YouTube Modal'
-          : undefined,
-    };
-    setActiveModal(presetConfig);
-    modalState.onOpen();
-  };
+  const handleFeaturedClick = useCallback((featured) => {
+    if (featured.type === 'themed-showcase') {
+      setActiveModal({ type: 'themed', theme: modalThemes.neon });
+    } else if (featured.type === 'media-showcase') {
+      setActiveModal({ type: 'gallery' });
+    }
+  }, []);
 
-  // Render modal content based on type
-  const renderModalContent = () => {
+  // Render active modal
+  const renderActiveModal = () => {
     if (!activeModal) return null;
 
-    const { type, colorScheme } = activeModal;
+    const commonProps = {
+      isOpen: true,
+      onClose: () => setActiveModal(null),
+    };
 
-    if (type === 'basic') {
-      return (
-        <>
-          <Modal.Header
-            showCloseButton
-            onClose={modalState.onClose}
-            className={colorScheme.header}
-          >
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
-                <span className="text-sm font-bold">
-                  {activeModal.id}
-                </span>
-              </div>
+    switch (activeModal.type) {
+      case 'themed':
+        return (
+          <ThemedModal
+            {...commonProps}
+            theme={activeModal.theme}
+            title={`${activeModal.theme.name} Modal`}
+            content={
               <div>
-                <h3 className="text-lg font-semibold">
-                  {activeModal.title}
-                </h3>
-                <p className="text-sm opacity-90">
-                  {activeModal.subtitle}
+                <p>
+                  This is a themed modal showcasing custom styling
+                  capabilities.
+                </p>
+                <p className="mt-2">
+                  Each theme provides a complete color scheme and
+                  visual identity.
                 </p>
               </div>
-            </div>
-          </Modal.Header>
-          <Modal.Body className={colorScheme.bg}>
-            <div className="space-y-6">
-              <div className="text-center">
-                <p className="text-lg mb-4">
-                  {activeModal.description}
-                </p>
-              </div>
+            }
+          />
+        );
 
-              <div className="grid grid-cols-2 gap-4 p-4 bg-white/50 rounded-lg backdrop-blur-sm">
-                <div className="space-y-2">
-                  <h4 className="font-semibold text-sm uppercase tracking-wide opacity-70">
-                    Configuration
-                  </h4>
-                  <div className="space-y-1 text-sm">
-                    <p>
-                      <span className="font-medium">Size:</span>{' '}
-                      {activeModal.size}
-                    </p>
-                    <p>
-                      <span className="font-medium">Position:</span>{' '}
-                      {activeModal.position}
-                    </p>
-                    <p>
-                      <span className="font-medium">Close:</span>{' '}
-                      {activeModal.closeButtonPosition}
-                    </p>
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <h4 className="font-semibold text-sm uppercase tracking-wide opacity-70">
-                    Features
-                  </h4>
-                  <div className="space-y-1 text-sm">
-                    <p>
-                      <span className="font-medium">Blur:</span>{' '}
-                      {activeModal.backdropBlur}
-                    </p>
-                    <p>
-                      <span className="font-medium">Static:</span>{' '}
-                      {activeModal.isStatic ? 'Yes' : 'No'}
-                    </p>
-                    <p>
-                      <span className="font-medium">Backdrop:</span>{' '}
-                      {activeModal.allowBackdropClick
-                        ? 'Clickable'
-                        : 'Disabled'}
-                    </p>
-                  </div>
-                </div>
-              </div>
+      case 'confirmation':
+        return (
+          <ConfirmationModal
+            {...commonProps}
+            onConfirm={() => {
+              addNotification(
+                'success',
+                'Confirmed!',
+                'Action was successfully confirmed.'
+              );
+              setActiveModal(null);
+            }}
+            title="Delete Item"
+            message="Are you sure you want to delete this item? This action cannot be undone."
+            variant="danger"
+          />
+        );
 
-              <div
-                className={`p-4 rounded-lg ${colorScheme.bg} ${colorScheme.border} border-2 border-dashed`}
-              >
-                <h4
-                  className={`font-semibold mb-2 ${colorScheme.accent}`}
-                >
-                  Modal #{activeModal.id}
-                </h4>
-                <p className="text-sm opacity-80">
-                  This modal demonstrates the{' '}
-                  {colorScheme.name.toLowerCase()} color scheme with a{' '}
-                  {activeModal.size} size and {activeModal.position}{' '}
-                  positioning. The backdrop blur is set to &quot;
-                  {activeModal.backdropBlur}&quot;.
-                </p>
-              </div>
-            </div>
-          </Modal.Body>
-          <Modal.Footer className="bg-white/50">
-            <div className="flex gap-3 justify-end w-full">
-              <Button
-                variant="bordered"
-                onPress={modalState.onClose}
-                className={`${colorScheme.accent} ${colorScheme.border}`}
-              >
-                Close
-              </Button>
-              <Button
-                className={colorScheme.chip}
-                onPress={modalState.onClose}
-              >
-                Confirm
-              </Button>
-            </div>
-          </Modal.Footer>
-        </>
-      );
+      case 'youtube':
+        return (
+          <YouTubeModal
+            {...commonProps}
+            videoId="dQw4w9WgXcQ"
+            title="Never Gonna Give You Up"
+            responsive={true}
+          />
+        );
+
+      case 'jotform':
+        return (
+          <JotFormModal
+            {...commonProps}
+            formId="sample-form"
+            title="Contact Form"
+            onSubmit={(data) => {
+              addNotification(
+                'success',
+                'Form Submitted!',
+                'Your form was successfully submitted.'
+              );
+            }}
+          />
+        );
+
+      case 'gallery':
+        return (
+          <ImageGalleryModal
+            {...commonProps}
+            images={sampleImages}
+            showThumbnails={true}
+            allowZoom={true}
+            showInfo={true}
+          />
+        );
+
+      case 'notification':
+        addNotification(
+          'info',
+          'Test Notification',
+          'This is a test notification with auto-close functionality.'
+        );
+        setActiveModal(null);
+        return null;
+
+      case 'loading':
+        return (
+          <LoadingModal
+            {...commonProps}
+            title="Processing Request"
+            message="Please wait while we process your request..."
+            progress={loadingProgress}
+            showProgress={true}
+            cancelable={true}
+            onCancel={() => setActiveModal(null)}
+          />
+        );
+
+      default:
+        return null;
     }
-
-    return null;
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: 0.1 }}
-      className="min-h-screen bg-darkBg text-textLight p-0"
-    >
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 text-white">
+      {/* Notifications */}
+      {notifications.map((notification) => (
+        <NotificationModal
+          key={notification.id}
+          isOpen={true}
+          onClose={() => removeNotification(notification.id)}
+          type={notification.type}
+          title={notification.title}
+          message={notification.message}
+          autoClose={true}
+          autoCloseDelay={4000}
+          showProgress={true}
+          position="top-right"
+        />
+      ))}
+
+      {/* Main content with SearchableGrid */}
       <SearchableGrid
-        title="Modal System Showcase"
-        subtitle="Comprehensive demonstration of the Voyager modal system with hundreds of variations"
-        items={modalConfigurations}
+        title="Voyager Modal System"
+        subtitle="The most comprehensively engineered modal system ever built"
+        items={modalExamples}
         featuredItems={featuredItems}
         filterConfigs={filterConfigs}
         onItemClick={handleModalClick}
@@ -451,149 +549,91 @@ export default function ModalShowcase() {
         gridProps={{
           columns:
             'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4',
-          gap: 'gap-4',
+          gap: 'gap-6',
         }}
       >
-        {/* Custom content between filters and grid */}
-        <div className="bg-gradient-to-r from-[#e79023]/10 to-[#a6620c]/10 rounded-lg p-6 border border-[#e79023]/20">
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-[#e79023] to-[#a6620c] rounded-lg flex items-center justify-center">
-              <svg
-                className="w-6 h-6 text-white"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M13 10V3L4 14h7v7l9-11h-7z"
-                />
-              </svg>
+        {/* Stats section */}
+        <div className="mb-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
+            <div className="text-center">
+              <div className="text-3xl font-bold text-yellow-400">
+                {state.stack.length}
+              </div>
+              <div className="text-sm text-gray-400">
+                Active Modals
+              </div>
             </div>
-            <div>
-              <h3 className="text-lg font-semibold text-[#e79023] mb-1">
-                Composition over Inheritance
-              </h3>
-              <p className="text-gray-300 text-sm">
-                This modal system uses React composition patterns
-                instead of traditional inheritance, providing maximum
-                flexibility while maintaining consistency across your
-                application.
-              </p>
+            <div className="text-center">
+              <div className="text-3xl font-bold text-green-400">
+                {modalExamples.length}
+              </div>
+              <div className="text-sm text-gray-400">Modal Types</div>
+            </div>
+            <div className="text-center">
+              <div className="text-3xl font-bold text-blue-400">
+                {Object.keys(modalThemes).length}
+              </div>
+              <div className="text-sm text-gray-400">Themes</div>
+            </div>
+            <div className="text-center">
+              <div className="text-3xl font-bold text-purple-400">
+                ∞
+              </div>
+              <div className="text-sm text-gray-400">
+                Possibilities
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Active Modal Rendering */}
-        {activeModal && (
-          <>
-            {/* Preset Modals */}
-            {activeModal.type === 'jotform-preset' && (
-              <JotFormModal
-                isOpen={modalState.isOpen}
-                onClose={modalState.onClose}
-                formId={activeModal.formId}
-                formTitle={activeModal.formTitle}
-                size="xl"
-              />
-            )}
-
-            {activeModal.type === 'youtube-preset' && (
-              <YouTubeModal
-                isOpen={modalState.isOpen}
-                onClose={modalState.onClose}
-                videoId={activeModal.videoId}
-                videoTitle={activeModal.videoTitle}
-                size="lg"
-                autoplay={true}
-              />
-            )}
-
-            {activeModal.type === 'embed-demo' && (
-              <Modal
-                isOpen={modalState.isOpen}
-                onClose={modalState.onClose}
-                size="xl"
-                closeButtonPosition="floating"
-              >
-                <Modal.Header className="bg-gradient-to-r from-[#7466e2] to-[#6055b5] text-white">
-                  <h3 className="text-lg font-semibold">
-                    Embed Components Demo
-                  </h3>
-                </Modal.Header>
-                <Modal.Body className="space-y-6 bg-gradient-to-br from-purple-50 to-indigo-50">
-                  <div>
-                    <h4 className="font-medium mb-3 text-[#7466e2]">
-                      YouTube Embed Component
-                    </h4>
-                    <YouTubeEmbed
-                      videoId="dQw4w9WgXcQ"
-                      title="Demo YouTube Video"
-                      lazyLoad={true}
-                      autoplay={false}
-                    />
-                  </div>
-                  <div>
-                    <h4 className="font-medium mb-3 text-[#7466e2]">
-                      JotForm Embed Component
-                    </h4>
-                    <JotFormEmbed
-                      formId="demo-embed-form"
-                      formTitle="Demo Embedded Form"
-                      height={300}
-                    />
-                  </div>
-                </Modal.Body>
-                <Modal.Footer
-                  showCloseButton
-                  onClose={modalState.onClose}
-                />
-              </Modal>
-            )}
-
-            {/* JotForm Type */}
-            {activeModal.type === 'jotform' && (
-              <JotFormModal
-                isOpen={modalState.isOpen}
-                onClose={modalState.onClose}
-                formId={activeModal.formId}
-                formTitle={activeModal.formTitle}
-                size={activeModal.size}
-              />
-            )}
-
-            {/* YouTube Type */}
-            {activeModal.type === 'youtube' && (
-              <YouTubeModal
-                isOpen={modalState.isOpen}
-                onClose={modalState.onClose}
-                videoId={activeModal.videoId}
-                videoTitle={activeModal.videoTitle}
-                size={activeModal.size}
-                autoplay={activeModal.autoplay}
-              />
-            )}
-
-            {/* Basic Type */}
-            {activeModal.type === 'basic' && (
-              <Modal
-                isOpen={modalState.isOpen}
-                onClose={modalState.onClose}
-                size={activeModal.size}
-                position={activeModal.position}
-                closeButtonPosition={activeModal.closeButtonPosition}
-                backdropBlur={activeModal.backdropBlur}
-                isStatic={activeModal.isStatic}
-                allowBackdropClick={activeModal.allowBackdropClick}
-              >
-                {renderModalContent()}
-              </Modal>
-            )}
-          </>
-        )}
+        {/* System Controls */}
+        <div className="bg-gray-800/50 rounded-xl p-6 mb-8 backdrop-blur-sm border border-gray-700">
+          <h3 className="text-lg font-semibold mb-4">
+            System Controls
+          </h3>
+          <div className="flex flex-wrap gap-3">
+            <button
+              onClick={() => setNotifications([])}
+              className="px-4 py-2 bg-red-600 hover:bg-red-700 rounded-lg transition-colors"
+            >
+              Clear Notifications ({notifications.length})
+            </button>
+            <button
+              onClick={simulateLoading}
+              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors"
+            >
+              Test Loading
+            </button>
+            <button
+              onClick={() =>
+                addNotification(
+                  'warning',
+                  'System Alert',
+                  'This is a warning notification.'
+                )
+              }
+              className="px-4 py-2 bg-yellow-600 hover:bg-yellow-700 rounded-lg transition-colors"
+            >
+              Test Notification
+            </button>
+          </div>
+        </div>
       </SearchableGrid>
-    </motion.div>
+
+      {/* Render active modal */}
+      {renderActiveModal()}
+    </div>
+  );
+};
+
+// ============================================================================
+// MAIN EXPORT WITH PROVIDER
+// ============================================================================
+
+export default function VoyagerModalShowcase() {
+  return (
+    <ModalProvider config={{ baseZIndex: 1000 }}>
+      <ModalShowcaseContent />
+    </ModalProvider>
   );
 }
