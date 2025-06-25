@@ -880,11 +880,3 @@ export class ModalPerformanceProfiler {
 // ============================================================================
 // EXPORTS
 // ============================================================================
-
-export {
-  ModalTestProvider,
-  useModalTest,
-  ModalComposer,
-  ModalDebugTools,
-  ModalPerformanceProfiler,
-};

@@ -937,16 +937,3 @@ export const useModalGestures = (config = {}) => {
     },
   };
 };
-
-// ============================================================================
-// EXPORTS
-// ============================================================================
-
-export {
-  useModalQueue,
-  useModalStack,
-  useModalAnalytics,
-  useModalShortcuts,
-  useModalPersistence,
-  useModalGestures,
-};
