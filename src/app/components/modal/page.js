@@ -360,7 +360,7 @@ const ModalShowcaseContent = () => {
 
   // Notification management
   const addNotification = useCallback((type, title, message) => {
-    const id = Date.now();
+    const id = `notif-${Date.now()}-${Math.random()}`;
     const notification = { id, type, title, message };
     setNotifications((prev) => [...prev, notification]);
   }, []);
@@ -369,14 +369,15 @@ const ModalShowcaseContent = () => {
     setNotifications((prev) => prev.filter((n) => n.id !== id));
   }, []);
 
-  // Loading simulation
+  //Loading Sim
   const simulateLoading = useCallback(() => {
     setActiveModal({ type: 'loading' });
     setLoadingProgress(0);
 
     const interval = setInterval(() => {
       setLoadingProgress((prev) => {
-        if (prev >= 100) {
+        const newProgress = prev + Math.random() * 15;
+        if (newProgress >= 100) {
           clearInterval(interval);
           setActiveModal(null);
           addNotification(
@@ -386,7 +387,7 @@ const ModalShowcaseContent = () => {
           );
           return 100;
         }
-        return prev + Math.random() * 15;
+        return newProgress;
       });
     }, 200);
   }, [addNotification]);
@@ -468,7 +469,7 @@ const ModalShowcaseContent = () => {
         return (
           <JotFormModal
             {...commonProps}
-            formId="sample-form"
+            formId="250963921804056"
             title="Contact Form"
             onSubmit={(data) => {
               addNotification(

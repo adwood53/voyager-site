@@ -1,3 +1,13 @@
+/**
+ * File: src/app/components/modal/types/ModalTypes.js
+ *
+ * Complete fixed file with:
+ * - Smooth notification auto-close with transition
+ * - Dynamic screen-responsive modals
+ * - Wider JotForm embeds
+ * - Fixed gallery sizing
+ */
+
 // components/modal/types/ModalTypes.js - Specialized Modal Components
 'use client';
 
@@ -10,6 +20,7 @@ import React, {
 import { motion, AnimatePresence } from 'framer-motion';
 import VoyagerModal from '../VoyagerModal';
 import { useModal } from '../core/ModalEngine';
+import { createPortal } from 'react-dom';
 
 /**
  * SPECIALIZED MODAL TYPES
@@ -21,7 +32,6 @@ import { useModal } from '../core/ModalEngine';
  * - ImageGalleryModal: For image viewing with zoom and navigation
  * - NotificationModal: For alerts and notifications
  * - LoadingModal: For async operations with progress indication
- * - FullscreenModal: For immersive content experiences
  */
 
 // ============================================================================
@@ -82,71 +92,58 @@ export const ConfirmationModal = ({
       isOpen={isOpen}
       onClose={onClose}
       size="sm"
-      animation="bounce"
-      dismissible={!isLoading}
+      animation="scale"
       {...props}
     >
-      <VoyagerModal.Header showClose={!isLoading} onClose={onClose}>
-        <div className="flex items-center gap-3">
-          {icon || (
-            <div
-              className={`w-8 h-8 rounded-full flex items-center justify-center ${config.iconColor}`}
-            >
+      <VoyagerModal.Body>
+        <div className="text-center py-6">
+          {/* Icon */}
+          <div
+            className={`w-16 h-16 mx-auto mb-4 rounded-full bg-gray-100 flex items-center justify-center ${config.iconColor}`}
+          >
+            {icon || (
               <svg
-                width="20"
-                height="20"
+                width="32"
+                height="32"
                 viewBox="0 0 24 24"
-                fill="currentColor"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
               >
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+                <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.5 0L4.314 16.5c-.77.833.192 2.5 1.732 2.5z" />
               </svg>
-            </div>
-          )}
-          <h3 className="text-lg font-semibold text-[var(--modal-text)]">
+            )}
+          </div>
+
+          {/* Content */}
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">
             {title}
           </h3>
-        </div>
-      </VoyagerModal.Header>
+          {message && <p className="text-gray-600 mb-6">{message}</p>}
 
-      <VoyagerModal.Body>
-        <div className="text-[var(--modal-text)] text-opacity-80">
-          {message}
+          {/* Actions */}
+          <div className="flex gap-3 justify-center">
+            {customActions || (
+              <>
+                <button
+                  onClick={onClose}
+                  className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+                  disabled={isLoading}
+                >
+                  {cancelText}
+                </button>
+                <button
+                  onClick={handleConfirm}
+                  className={`px-4 py-2 ${config.confirmColor} text-white rounded-lg transition-colors shadow-lg ${config.glowColor} disabled:opacity-50`}
+                  disabled={isLoading}
+                >
+                  {isLoading ? 'Processing...' : confirmText}
+                </button>
+              </>
+            )}
+          </div>
         </div>
       </VoyagerModal.Body>
-
-      <VoyagerModal.Footer>
-        {customActions ? (
-          customActions({
-            isLoading,
-            onClose,
-            onConfirm: handleConfirm,
-          })
-        ) : (
-          <>
-            <button
-              onClick={onClose}
-              disabled={isLoading}
-              className="px-4 py-2 border border-[var(--modal-border)] rounded-lg text-[var(--modal-text)] hover:bg-[var(--modal-surface)] transition-colors disabled:opacity-50"
-            >
-              {cancelText}
-            </button>
-            <button
-              onClick={handleConfirm}
-              disabled={isLoading}
-              className={`px-4 py-2 rounded-lg text-white transition-all disabled:opacity-50 ${config.confirmColor} ${config.glowColor} shadow-lg`}
-            >
-              {isLoading ? (
-                <div className="flex items-center gap-2">
-                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                  Processing...
-                </div>
-              ) : (
-                confirmText
-              )}
-            </button>
-          </>
-        )}
-      </VoyagerModal.Footer>
     </VoyagerModal>
   );
 };
@@ -175,40 +172,30 @@ export const YouTubeModal = ({
 
   // Calculate optimal size for video with proper aspect ratio
   const getVideoSize = () => {
+    // Always use dynamic screen sizing
+    const aspectRatio = 16 / 9;
+
     if (viewport.isMobile) {
+      const width = viewport.width * 0.95;
+      const height = Math.min(
+        (width * 9) / 16 + 100, // 16:9 ratio + header space
+        viewport.height * 0.8
+      );
       return {
-        size: 'full',
-        width: viewport.width - 16,
-        height: viewport.height - 32,
-        minHeight: '300px',
+        width: Math.round(width),
+        height: Math.round(height),
       };
     }
 
-    // Calculate based on 16:9 aspect ratio with adequate space
-    const maxWidth = Math.min(viewport.width * 0.85, 1000);
-    const maxHeight = viewport.height * 0.8;
-    const aspectRatio = 16 / 9;
-
-    let width = maxWidth;
-    let height = width / aspectRatio + (title ? 80 : 40); // Add space for header if title exists
-
-    // Ensure minimum height for proper video viewing
-    const minVideoHeight = 300;
-    if (height - (title ? 80 : 40) < minVideoHeight) {
-      height = minVideoHeight + (title ? 80 : 40);
-      width = (height - (title ? 80 : 40)) * aspectRatio;
-    }
-
-    if (height > maxHeight) {
-      height = maxHeight;
-      width = (height - (title ? 80 : 40)) * aspectRatio;
-    }
+    const width = Math.min(viewport.width * 0.8, 1000);
+    const height = Math.min(
+      (width * 9) / 16 + 120, // 16:9 ratio + header space
+      viewport.height * 0.8
+    );
 
     return {
-      size: 'auto',
       width: Math.round(width),
       height: Math.round(height),
-      minHeight: `${minVideoHeight + (title ? 80 : 40)}px`,
     };
   };
 
@@ -261,7 +248,6 @@ export const YouTubeModal = ({
       style={{
         width: videoSize.width,
         height: videoSize.height,
-        minHeight: videoSize.minHeight,
       }}
       {...props}
     >
@@ -348,7 +334,7 @@ export const JotFormModal = ({
   ...props
 }) => {
   const [isLoading, setIsLoading] = useState(true);
-  const [formHeight, setFormHeight] = useState(Math.max(height, 500)); // Minimum height of 500px
+  const [formHeight, setFormHeight] = useState(Math.max(height, 500));
   const [error, setError] = useState(null);
   const iframeRef = useRef(null);
   const { viewport } = useModal();
@@ -358,7 +344,7 @@ export const JotFormModal = ({
     return `https://${domain}/${formId}`;
   };
 
-  // Calculate optimal modal size for forms
+  // Calculate optimal modal size for forms - WIDER SIZING
   const getFormModalSize = () => {
     const minHeight = 500;
     const maxHeight = viewport.height * 0.9;
@@ -369,16 +355,16 @@ export const JotFormModal = ({
 
     if (viewport.isMobile) {
       return {
-        width: viewport.width - 16,
-        height: calculatedHeight + 60, // Add space for header
-        maxHeight: viewport.height - 32,
+        width: viewport.width * 0.95, // 95% on mobile
+        height: calculatedHeight + 60,
+        maxHeight: viewport.height * 0.9,
       };
     }
 
     return {
-      width: Math.min(viewport.width * 0.8, 700),
-      height: calculatedHeight + 80, // Add space for header
-      maxHeight: viewport.height * 0.95,
+      width: Math.min(viewport.width * 0.85, 1000), // WIDER: 85% instead of 80%, up to 1000px
+      height: calculatedHeight + 80,
+      maxHeight: viewport.height * 0.9,
     };
   };
 
@@ -420,7 +406,6 @@ export const JotFormModal = ({
             if (onSubmit) {
               onSubmit(data.formData);
             }
-            // Auto-close after successful submission
             setTimeout(() => onClose(), 1500);
             break;
           case 'form_ready':
@@ -453,7 +438,6 @@ export const JotFormModal = ({
   }, [isOpen, formId, height]);
 
   const handleIframeLoad = () => {
-    // Fallback if no message is received
     setTimeout(() => {
       if (isLoading) {
         setIsLoading(false);
@@ -549,7 +533,7 @@ export const JotFormModal = ({
 };
 
 // ============================================================================
-// IMAGE GALLERY MODAL
+// IMAGE GALLERY MODAL - DYNAMIC SIZING
 // ============================================================================
 
 export const ImageGalleryModal = ({
@@ -570,7 +554,6 @@ export const ImageGalleryModal = ({
 
   const currentImage = images[currentIndex];
 
-  // Reset state when modal opens/closes or images change
   useEffect(() => {
     if (isOpen) {
       setCurrentIndex(initialIndex);
@@ -632,22 +615,13 @@ export const ImageGalleryModal = ({
       document.removeEventListener('keydown', handleKeyDown);
   }, [handleKeyDown]);
 
-  // Calculate optimal gallery size
+  // DYNAMIC GALLERY SIZE - Always responsive to screen
   const getGallerySize = () => {
-    if (viewport.isMobile) {
-      return {
-        width: viewport.width - 16,
-        height: viewport.height - 32,
-        maxWidth: '100vw',
-        maxHeight: '100vh',
-      };
-    }
-
     return {
-      width: Math.min(viewport.width * 0.9, 1200),
-      height: Math.min(viewport.height * 0.9, 800),
+      width: viewport.width * 0.95, // Always 95% of screen width
+      height: viewport.height * 0.85, // Always 85% of screen height
       maxWidth: '95vw',
-      maxHeight: '95vh',
+      maxHeight: '85vh',
     };
   };
 
@@ -677,123 +651,114 @@ export const ImageGalleryModal = ({
       }}
       {...props}
     >
-      <div className="flex flex-col h-full bg-black rounded-lg overflow-hidden">
-        {/* Header with image info */}
-        {showInfo && (
-          <VoyagerModal.Header
-            onClose={onClose}
-            className="bg-black text-white border-b border-gray-700"
+      <div className="flex flex-col h-full bg-black">
+        {/* Close button */}
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 z-10 p-2 text-white bg-black bg-opacity-50 rounded-full hover:bg-opacity-70 transition-colors"
+        >
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
           >
-            <div className="flex-1">
-              <h3 className="text-lg font-semibold text-white">
-                {currentImage.title ||
-                  `Image ${currentIndex + 1} of ${images.length}`}
-              </h3>
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+
+        {/* Navigation buttons */}
+        {images.length > 1 && (
+          <>
+            <button
+              onClick={prevImage}
+              className="absolute left-4 top-1/2 -translate-y-1/2 z-10 p-3 text-white bg-black bg-opacity-50 rounded-full hover:bg-opacity-70 transition-colors"
+            >
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <polyline points="15,18 9,12 15,6"></polyline>
+              </svg>
+            </button>
+            <button
+              onClick={nextImage}
+              className="absolute right-4 top-1/2 -translate-y-1/2 z-10 p-3 text-white bg-black bg-opacity-50 rounded-full hover:bg-opacity-70 transition-colors"
+            >
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <polyline points="9,18 15,12 9,6"></polyline>
+              </svg>
+            </button>
+          </>
+        )}
+
+        {/* Main image */}
+        <div className="flex-1 flex items-center justify-center p-8 overflow-hidden">
+          <motion.img
+            key={currentIndex}
+            src={currentImage.url || currentImage.src}
+            alt={currentImage.title || `Image ${currentIndex + 1}`}
+            className={`cursor-${allowZoom ? 'zoom-in' : 'default'} ${
+              isZoomed ? 'cursor-zoom-out' : ''
+            }`}
+            style={{
+              maxWidth: '100%',
+              maxHeight: '100%',
+              width: 'auto',
+              height: 'auto',
+              objectFit: 'contain',
+              transform: isZoomed ? 'scale(1.5)' : 'scale(1)',
+            }}
+            onClick={handleImageClick}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.3 }}
+          />
+        </div>
+
+        {/* Info overlay */}
+        {showInfo &&
+          (currentImage.title || currentImage.description) && (
+            <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black to-transparent text-white">
+              {currentImage.title && (
+                <h3 className="text-xl font-bold mb-2">
+                  {currentImage.title}
+                </h3>
+              )}
               {currentImage.description && (
-                <p className="text-sm text-gray-300 mt-1">
+                <p className="text-gray-300">
                   {currentImage.description}
                 </p>
               )}
             </div>
-          </VoyagerModal.Header>
-        )}
+          )}
 
-        {/* Main image area */}
-        <VoyagerModal.Body
-          scrollable={false}
-          className="flex-1 p-0 relative bg-black"
-        >
-          <div className="relative w-full h-full flex items-center justify-center">
-            <motion.img
-              ref={imageRef}
-              key={`${currentIndex}-${currentImage.url || currentImage.src}`}
-              src={currentImage.url || currentImage.src}
-              alt={
-                currentImage.alt ||
-                currentImage.title ||
-                'Gallery image'
-              }
-              className="max-w-full max-h-full object-contain cursor-pointer select-none"
-              style={{
-                scale: imageScale,
-                transformOrigin: 'center',
-              }}
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: imageScale }}
-              transition={{ duration: 0.3 }}
-              onClick={handleImageClick}
-              drag={isZoomed}
-              dragConstraints={{
-                left: -100,
-                right: 100,
-                top: -100,
-                bottom: 100,
-              }}
-              dragElastic={0.1}
-            />
-
-            {/* Navigation arrows */}
-            {images.length > 1 && (
-              <>
-                <button
-                  onClick={prevImage}
-                  className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-60 hover:bg-opacity-80 text-white p-3 rounded-full transition-all z-10"
-                  aria-label="Previous image"
-                >
-                  <svg
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                  >
-                    <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
-                  </svg>
-                </button>
-
-                <button
-                  onClick={nextImage}
-                  className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-60 hover:bg-opacity-80 text-white p-3 rounded-full transition-all z-10"
-                  aria-label="Next image"
-                >
-                  <svg
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                  >
-                    <path d="M8.59 16.59L10 18l6-6-6-6-1.41 1.41L13.17 12z" />
-                  </svg>
-                </button>
-              </>
-            )}
-
-            {/* Image counter */}
-            <div className="absolute top-4 left-4 bg-black bg-opacity-60 text-white px-3 py-1 rounded text-sm">
-              {currentIndex + 1} / {images.length}
-            </div>
-
-            {/* Zoom indicator */}
-            {allowZoom && (
-              <div className="absolute top-4 right-4 bg-black bg-opacity-60 text-white px-3 py-1 rounded text-sm">
-                {isZoomed ? 'Click to zoom out' : 'Click to zoom in'}
-              </div>
-            )}
-          </div>
-        </VoyagerModal.Body>
-
-        {/* Thumbnail strip */}
+        {/* Thumbnails */}
         {showThumbnails && images.length > 1 && (
-          <div className="p-4 border-t border-gray-700 bg-gray-900">
-            <div className="flex gap-2 overflow-x-auto">
+          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10">
+            <div className="flex gap-2 p-2 bg-black bg-opacity-50 rounded-lg">
               {images.map((image, index) => (
                 <button
                   key={index}
                   onClick={() => {
                     setCurrentIndex(index);
                     setIsZoomed(false);
-                    setImageScale(1);
                   }}
-                  className={`flex-shrink-0 w-16 h-16 rounded overflow-hidden border-2 transition-colors ${
+                  className={`w-16 h-16 rounded overflow-hidden border-2 transition-colors ${
                     index === currentIndex
                       ? 'border-white'
                       : 'border-transparent hover:border-gray-400'
@@ -815,25 +780,22 @@ export const ImageGalleryModal = ({
 };
 
 // ============================================================================
-// NOTIFICATION MODAL
+// NOTIFICATION MODAL - SMOOTH AUTO-CLOSE
 // ============================================================================
 
 export const NotificationModal = ({
   isOpen,
   onClose,
-  type = 'info', // 'success', 'error', 'warning', 'info'
+  type = 'info',
   title,
   message,
-  actions,
-  autoClose = false,
-  autoCloseDelay = 5000,
+  autoClose = true,
+  autoCloseDelay = 2000,
   showProgress = false,
-  position = 'top-right', // 'top-right', 'top-left', 'bottom-right', 'bottom-left', 'center'
   ...props
 }) => {
   const [progress, setProgress] = useState(100);
-  const [hasStartedAutoClose, setHasStartedAutoClose] =
-    useState(false);
+  const [isClosing, setIsClosing] = useState(false);
 
   const typeConfig = {
     success: {
@@ -864,79 +826,50 @@ export const NotificationModal = ({
 
   const config = typeConfig[type];
 
-  // Position calculation for notifications
-  const getNotificationPosition = () => {
-    const positions = {
-      'top-right': { top: '20px', right: '20px' },
-      'top-left': { top: '20px', left: '20px' },
-      'bottom-right': { bottom: '20px', right: '20px' },
-      'bottom-left': { bottom: '20px', left: '20px' },
-      center: {
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-      },
-    };
-    return positions[position] || positions['top-right'];
-  };
-
-  // Auto-close logic - properly managed to prevent multiple executions
+  // Auto-close with progress
   useEffect(() => {
-    if (autoClose && isOpen && !hasStartedAutoClose) {
-      setHasStartedAutoClose(true);
-      setProgress(100);
-
+    if (autoClose && isOpen && !isClosing) {
       let currentProgress = 100;
       const decrement = 100 / (autoCloseDelay / 100);
 
-      const interval = setInterval(() => {
+      const progressInterval = setInterval(() => {
         currentProgress -= decrement;
-        setProgress(currentProgress);
+        setProgress(Math.max(0, currentProgress));
 
         if (currentProgress <= 0) {
-          clearInterval(interval);
-          // Use requestAnimationFrame to avoid setState during render
-          requestAnimationFrame(() => {
-            onClose();
-          });
+          clearInterval(progressInterval);
+          setIsClosing(true);
+          setTimeout(() => onClose(), 300);
         }
       }, 100);
 
-      return () => {
-        clearInterval(interval);
-      };
+      return () => clearInterval(progressInterval);
     }
-  }, [
-    autoClose,
-    isOpen,
-    autoCloseDelay,
-    onClose,
-    hasStartedAutoClose,
-  ]);
+  }, [autoClose, isOpen, autoCloseDelay, onClose, isClosing]);
 
-  // Reset auto-close state when modal opens/closes
   useEffect(() => {
-    if (!isOpen && hasStartedAutoClose) {
-      setHasStartedAutoClose(false);
+    if (isOpen) {
       setProgress(100);
+      setIsClosing(false);
     }
-  }, [isOpen, hasStartedAutoClose]);
+  }, [isOpen]);
 
-  return (
-    <VoyagerModal
-      isOpen={isOpen}
-      onClose={onClose}
-      size="sm"
-      position="custom"
-      animation="slideDown"
-      dismissible={!autoClose}
+  if (!isOpen) return null;
+
+  return createPortal(
+    <div
       style={{
-        ...getNotificationPosition(),
+        position: 'fixed',
+        top: '-40%',
+        left: '0%',
+        transform: 'translateX(-50%)',
+        zIndex: 9999,
+        pointerEvents: 'none', // This makes clicks pass through completely
         width: '400px',
         maxWidth: 'calc(100vw - 40px)',
-        height: 'auto',
+        opacity: isClosing ? 0 : 1,
+        transition: 'opacity 0.3s ease-out',
       }}
-      {...props}
     >
       <div
         className={`${config.bgColor} ${config.textColor} rounded-xl overflow-hidden shadow-2xl`}
@@ -948,7 +881,6 @@ export const NotificationModal = ({
             >
               {config.icon}
             </div>
-
             <div className="flex-1 min-w-0">
               {title && (
                 <h3 className="font-semibold text-lg mb-2 break-words">
@@ -959,54 +891,20 @@ export const NotificationModal = ({
                 <p className="opacity-90 break-words">{message}</p>
               )}
             </div>
-
-            {!autoClose && (
-              <button
-                onClick={onClose}
-                className="text-current opacity-70 hover:opacity-100 transition-opacity flex-shrink-0 ml-2"
-                aria-label="Close notification"
-              >
-                <svg
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <line x1="18" y1="6" x2="6" y2="18"></line>
-                  <line x1="6" y1="6" x2="18" y2="18"></line>
-                </svg>
-              </button>
-            )}
           </div>
-
-          {actions && (
-            <div className="flex gap-2 mt-4">
-              {actions.map((action, index) => (
-                <button
-                  key={index}
-                  onClick={action.onClick}
-                  className={`px-4 py-2 rounded border-2 ${config.borderColor} bg-white bg-opacity-20 hover:bg-opacity-30 transition-colors text-sm font-medium`}
-                >
-                  {action.label}
-                </button>
-              ))}
-            </div>
-          )}
         </div>
 
-        {showProgress && autoClose && hasStartedAutoClose && (
+        {showProgress && autoClose && (
           <div className="h-1 bg-black bg-opacity-20">
-            <motion.div
-              className="h-full bg-white bg-opacity-50"
+            <div
+              className="h-full bg-white bg-opacity-50 transition-all duration-100 ease-linear"
               style={{ width: `${progress}%` }}
-              transition={{ duration: 0.1 }}
             />
           </div>
         )}
       </div>
-    </VoyagerModal>
+    </div>,
+    document.body
   );
 };
 
@@ -1035,7 +933,6 @@ export const LoadingModal = ({
     >
       <VoyagerModal.Body>
         <div className="text-center py-8">
-          {/* Animated loading spinner */}
           <motion.div
             className="w-16 h-16 border-4 border-[var(--modal-primary)] border-t-transparent rounded-full mx-auto mb-6"
             animate={{ rotate: 360 }}
