@@ -34,6 +34,7 @@ import {
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useRef, useState, useEffect } from 'react';
 import { useModal } from '../modal/core/ModalEngine';
+import { JotFormModal } from '../modal/types/ModalTypes';
 
 const experiences = [
   {
@@ -101,7 +102,7 @@ export default function ExperiencesSection() {
   const sectionRef = useRef(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
-  const modal = useModal();
+  const { openModal } = useModal();
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -363,11 +364,13 @@ export default function ExperiencesSection() {
         >
           <Button
             onPress={() =>
-              modal?.show?.({
-                type: 'jotform',
+              openModal(JotFormModal, {
+                isOpen: true,
                 formId: '250963921804056',
-                title: 'Contact Form',
-                onSubmit: () => {},
+                title: 'Start Creating Your Experience',
+                onSubmit: (data) => {
+                  console.log('Form submitted:', data);
+                },
               })
             }
             className="bg-primary text-textLight font-semibold px-8 py-4 rounded-md hover:bg-accent transition-all hover:scale-105 transform hover:shadow-glow-lg text-lg"

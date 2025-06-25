@@ -1,3 +1,25 @@
+/**
+ * @fileoverview ProductsSection component for the Voyager brands page
+ *
+ * This component displays an interactive grid of products that can be made immersive
+ * using AR, QR codes, or NFC technology. It features flip animations on product cards
+ * and includes an integrated JotForm modal for custom product quote requests.
+ *
+ * Features:
+ * - Interactive product grid with 3D flip animations on click/hover
+ * - Responsive FlexGrid layout adapting to different screen sizes
+ * - Product categorization with visual chips and icons
+ * - Scroll-based parallax animations using Framer Motion
+ * - Custom product inquiry section with modal integration
+ * - Image optimization with Next.js Image component
+ * - Hover effects and smooth card transitions
+ * - Modal system integration for quote requests
+ *
+ * @author Voyager Development Team
+ * @version 1.2.1 - Fixed modal integration for quote requests
+ * @since 2024
+ */
+
 'use client';
 
 import {
@@ -12,9 +34,12 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import { useRef, useState } from 'react';
 import FlexGrid from '../FlexGrid';
 import Image from 'next/image';
+import { useModal } from '../modal/core/ModalEngine';
+import { JotFormModal } from '../modal/types/ModalTypes';
 
 export default function ProductsSection() {
   const sectionRef = useRef(null);
+  const { openModal } = useModal();
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ['start end', 'end start'],
@@ -367,8 +392,19 @@ export default function ProductsSection() {
                 Let us know - we can probably make it immersive.
               </p>
               <Button
-                as={Link}
-                href="#signup"
+                onPress={() =>
+                  openModal(JotFormModal, {
+                    isOpen: true,
+                    formId: '250963921804056',
+                    title: 'Get Custom Quote',
+                    onSubmit: (data) => {
+                      console.log(
+                        'Custom product form submitted:',
+                        data
+                      );
+                    },
+                  })
+                }
                 className="bg-primary text-textLight font-semibold px-8 py-3 rounded-md hover:bg-accent transition-all hover:scale-105 transform"
               >
                 Get Custom Quote
