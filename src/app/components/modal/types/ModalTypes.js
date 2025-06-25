@@ -790,61 +790,86 @@ export const NotificationModal = ({
   title,
   message,
   autoClose = true,
-  autoCloseDelay = 2000,
-  showProgress = false,
+  autoCloseDelay = 4000,
+  showProgress = true,
+  position = 'top-right',
   ...props
 }) => {
   const [progress, setProgress] = useState(100);
   const [isClosing, setIsClosing] = useState(false);
 
+  // Use the SAME portal container as your main modal system
+  const getPortalContainer = () => {
+    // This mirrors the exact logic from your ModalEngine.js
+    let portal = document.getElementById('modal-portal');
+    if (!portal) {
+      portal = document.createElement('div');
+      portal.id = 'modal-portal';
+      portal.setAttribute('data-modal-portal', 'true');
+      document.body.appendChild(portal);
+    }
+    return portal;
+  };
+
   const typeConfig = {
     success: {
       icon: '✓',
-      bgColor: 'bg-green-500',
-      textColor: 'text-green-50',
-      borderColor: 'border-green-400',
+      bgColor: 'bg-green-600',
+      textColor: 'text-white',
+      borderColor: 'border-green-500',
     },
     error: {
       icon: '✕',
-      bgColor: 'bg-red-500',
-      textColor: 'text-red-50',
-      borderColor: 'border-red-400',
+      bgColor: 'bg-red-600',
+      textColor: 'text-white',
+      borderColor: 'border-red-500',
     },
     warning: {
       icon: '⚠',
-      bgColor: 'bg-yellow-500',
-      textColor: 'text-yellow-50',
-      borderColor: 'border-yellow-400',
+      bgColor: 'bg-amber-600',
+      textColor: 'text-white',
+      borderColor: 'border-amber-500',
     },
     info: {
       icon: 'ℹ',
-      bgColor: 'bg-blue-500',
-      textColor: 'text-blue-50',
-      borderColor: 'border-blue-400',
+      bgColor: 'bg-blue-600',
+      textColor: 'text-white',
+      borderColor: 'border-blue-500',
     },
   };
 
+  const positionConfig = {
+    'top-right': 'top-4 right-4',
+    'top-left': 'top-4 left-4',
+    'bottom-right': 'bottom-4 right-4',
+    'bottom-left': 'bottom-4 left-4',
+    'top-center': 'top-4 left-1/2 -translate-x-1/2',
+    'bottom-center': 'bottom-4 left-1/2 -translate-x-1/2',
+  };
+
   const config = typeConfig[type];
+  const positionClasses =
+    positionConfig[position] || positionConfig['top-right'];
 
-  // Auto-close with progress
+  // Auto-close functionality
   useEffect(() => {
-    if (autoClose && isOpen && !isClosing) {
-      let currentProgress = 100;
-      const decrement = 100 / (autoCloseDelay / 100);
+    if (!autoClose || !isOpen || isClosing) return;
 
-      const progressInterval = setInterval(() => {
-        currentProgress -= decrement;
-        setProgress(Math.max(0, currentProgress));
+    let currentProgress = 100;
+    const decrement = 100 / (autoCloseDelay / 50);
 
-        if (currentProgress <= 0) {
-          clearInterval(progressInterval);
-          setIsClosing(true);
-          setTimeout(() => onClose(), 300);
-        }
-      }, 100);
+    const progressInterval = setInterval(() => {
+      currentProgress -= decrement;
+      setProgress(Math.max(0, currentProgress));
 
-      return () => clearInterval(progressInterval);
-    }
+      if (currentProgress <= 0) {
+        clearInterval(progressInterval);
+        setIsClosing(true);
+        setTimeout(() => onClose(), 300);
+      }
+    }, 50);
+
+    return () => clearInterval(progressInterval);
   }, [autoClose, isOpen, autoCloseDelay, onClose, isClosing]);
 
   useEffect(() => {
@@ -856,55 +881,90 @@ export const NotificationModal = ({
 
   if (!isOpen) return null;
 
+  const portalContainer = getPortalContainer();
+  if (!portalContainer) return null;
+
   return createPortal(
     <div
+      className={`
+        fixed ${positionClasses}
+        w-80 max-w-[calc(100vw-2rem)]
+        transition-all duration-300 ease-out
+        ${isClosing ? 'opacity-0 scale-95' : 'opacity-100 scale-100'}
+      `}
       style={{
+        // Use z-index HIGHER than your main modals (which use 1000-1001)
+        zIndex: 10000,
+        // Ensure this renders above everything in the modal portal
         position: 'fixed',
-        top: '-40%',
-        left: '0%',
-        transform: 'translateX(-50%)',
-        zIndex: 9999,
-        pointerEvents: 'none', // This makes clicks pass through completely
-        width: '400px',
-        maxWidth: 'calc(100vw - 40px)',
-        opacity: isClosing ? 0 : 1,
-        transition: 'opacity 0.3s ease-out',
+        pointerEvents: 'auto',
       }}
+      role="alert"
+      aria-live="polite"
+      aria-atomic="true"
     >
       <div
-        className={`${config.bgColor} ${config.textColor} rounded-xl overflow-hidden shadow-2xl`}
+        className={`
+          ${config.bgColor} ${config.textColor} ${config.borderColor}
+          border rounded-lg shadow-2xl overflow-hidden
+          backdrop-blur-sm bg-opacity-95
+        `}
       >
-        <div className="p-6">
-          <div className="flex items-start gap-4">
-            <div
-              className={`w-8 h-8 rounded-full border-2 ${config.borderColor} flex items-center justify-center font-bold text-lg flex-shrink-0`}
-            >
+        {/* Main content */}
+        <div className="p-4">
+          <div className="flex items-start gap-3">
+            {/* Icon */}
+            <div className="bg-black bg-opacity-20 rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 text-sm font-bold">
               {config.icon}
             </div>
+
+            {/* Content */}
             <div className="flex-1 min-w-0">
               {title && (
-                <h3 className="font-semibold text-lg mb-2 break-words">
+                <h4 className="font-semibold text-sm mb-1 truncate">
                   {title}
-                </h3>
+                </h4>
               )}
               {message && (
-                <p className="opacity-90 break-words">{message}</p>
+                <p className="text-sm opacity-90 leading-relaxed">
+                  {message}
+                </p>
               )}
             </div>
+
+            {/* Close button */}
+            <button
+              onClick={onClose}
+              className="flex-shrink-0 p-1 rounded hover:bg-black hover:bg-opacity-20 transition-colors"
+              aria-label="Close notification"
+            >
+              <svg
+                className="w-4 h-4"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </button>
           </div>
         </div>
 
+        {/* Progress bar */}
         {showProgress && autoClose && (
           <div className="h-1 bg-black bg-opacity-20">
             <div
-              className="h-full bg-white bg-opacity-50 transition-all duration-100 ease-linear"
+              className="h-full bg-white bg-opacity-40 transition-all duration-100 ease-linear"
               style={{ width: `${progress}%` }}
             />
           </div>
         )}
       </div>
     </div>,
-    document.body
+    portalContainer // KEY CHANGE: Use the modal portal instead of document.body
   );
 };
 

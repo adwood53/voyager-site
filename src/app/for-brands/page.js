@@ -11,25 +11,28 @@ import WhyVoyagerSection from '../components/brands/WhyVoyagerSection';
 import ContactSection from '@/src/app/components/ContactSection';
 import BrandsStudioSection from '../components/brands/BrandsStudioSection';
 import BrandsServicesSection from '../components/brands/BrandsServicesSection';
+import { ModalProvider } from '../components/modal/core/ModalEngine';
 
 export default function ForBrandsPage() {
   return (
     <main className="min-h-screen bg-darkBg text-textLight overflow-hidden">
-      <ChatbotComponent />
-      <div className="parallax-container">
-        <Navbar />
-        <BrandsHeroSection />
-        <div className="isolate" style={{ isolation: 'isolate' }}>
-          <BrandsServicesSection />
+      <ModalProvider config={{ baseZIndex: 1000 }}>
+        <ChatbotComponent />
+        <div className="parallax-container">
+          <Navbar />
+          <BrandsHeroSection />
+          <div className="isolate" style={{ isolation: 'isolate' }}>
+            <BrandsServicesSection />
+          </div>
+          <WhatWeDoSection />
+          <ProductsSection />
+          <ExperiencesSection />
+          <BrandsStudioSection />
+          <WhyVoyagerSection />
+          <ContactSection />
+          <Footer />
         </div>
-        <WhatWeDoSection />
-        <ProductsSection />
-        <ExperiencesSection />
-        <BrandsStudioSection />
-        <WhyVoyagerSection />
-        <ContactSection />
-        <Footer />
-      </div>
+      </ModalProvider>
     </main>
   );
 }

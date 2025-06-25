@@ -33,7 +33,7 @@ export default function BrandsHeroSection() {
           loop
           muted
           playsInline
-          webkit-playsinline
+          webkitPlaysinline="true"
         >
           <source src="/videos/drift.mp4" type="video/mp4" />
         </video>
