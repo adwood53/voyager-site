@@ -1042,12 +1042,3 @@ export const LoadingModal = ({
 // ============================================================================
 // EXPORTS
 // ============================================================================
-
-export {
-  ConfirmationModal,
-  YouTubeModal,
-  JotFormModal,
-  ImageGalleryModal,
-  NotificationModal,
-  LoadingModal,
-};
