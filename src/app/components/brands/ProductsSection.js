@@ -396,7 +396,7 @@ export default function ProductsSection() {
                   openModal(JotFormModal, {
                     isOpen: true,
                     formId: '251762903523052',
-                    title: 'Get Custom Quote',
+                    title: 'Build your Custom Experience!',
                     onSubmit: (data) => {
                       console.log(
                         'Custom product form submitted:',
