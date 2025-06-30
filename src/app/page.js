@@ -283,21 +283,22 @@ const NavigationButtons = () => {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Navigation buttons - visible from start, 2x bigger on desktop */}
       <motion.div
-        initial={{ opacity: 0, y: 50 }}
+        initial={{ opacity: 1, y: 0 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 5, duration: 0.8 }}
         className="fixed bottom-8 left-0 right-0 z-20 flex justify-center px-4"
       >
-        <div className="w-full max-w-lg">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full">
+        <div className="w-full max-w-lg lg:max-w-4xl">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 lg:gap-6 w-full">
             {buttons.map((button, index) => (
               <motion.button
                 key={button.label}
-                onClick={() => router.push(button.href)}
+                onClick={() => handleButtonClick(button, index)}
                 className={`
-                px-4 py-3 rounded-lg font-medium transition-all duration-300
-                text-sm font-heading w-full text-center
+                px-4 py-3 lg:px-8 lg:py-6 rounded-lg font-medium transition-all duration-300
+                text-sm lg:text-lg font-heading w-full text-center
                 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-opacity-50
                 ${
                   button.variant === 'primary'
@@ -306,25 +307,27 @@ const NavigationButtons = () => {
                       ? 'bg-altPrimary text-textLight hover:bg-altAccent focus:ring-altPrimary'
                       : 'border-2 border-primary text-primary hover:bg-primary hover:text-textLight focus:ring-primary'
                 }
+                ${loadingButton === index ? 'opacity-70 cursor-not-allowed' : ''}
               `}
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{
-                  opacity: 1,
-                  scale: 1,
-                }}
-                transition={{
-                  delay: 5.2 + index * 0.1,
-                  duration: 0.5,
-                  type: 'spring',
-                  stiffness: 120,
-                }}
+                initial={{ opacity: 1, scale: 1 }}
+                animate={{ opacity: 1, scale: 1 }}
                 whileHover={{
                   scale: 1.05,
                   y: -2,
                 }}
                 whileTap={{ scale: 0.95 }}
+                disabled={loadingButton === index}
               >
-                {button.label}
+                {loadingButton === index ? (
+                  <div className="flex items-center justify-center gap-2">
+                    <div className="w-4 h-4 lg:w-5 lg:h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    <span className="hidden sm:inline">
+                      Loading...
+                    </span>
+                  </div>
+                ) : (
+                  button.label
+                )}
               </motion.button>
             ))}
           </div>
