@@ -36,6 +36,7 @@ import {
   SelectItem,
 } from '@heroui/react';
 import { motion, AnimatePresence } from 'framer-motion';
+import Navbar from '@/src/app/components/Navbar';
 import Image from 'next/image';
 
 /**
@@ -415,6 +416,7 @@ export default function PlayPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+      <Navbar />
       {/* Animated Background Elements */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <motion.div
