@@ -235,9 +235,9 @@ const NavigationButtons = () => {
     },
     {
       label: 'Play',
-      href: 'https://immerse.voyagervrlab.co.uk/VOY/Voyager/SugarSkullFrenzy',
+      href: '/play',
       variant: 'tertiary',
-      type: 'external',
+      type: 'internal',
     },
   ];
 
