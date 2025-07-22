@@ -184,6 +184,43 @@ export default function PlayPage() {
    */
   const allExperiences = [
     {
+      id: 'thor-to-the-rescue',
+      name: 'Thor to The Rescue',
+      description:
+        "You're Thor, a motorbike-riding Rottweiler on a high-stakes mission to break into a shady vet clinic and rescue caged pups. Use your bark to blast guards, duck under danger, and jump your way through this bite-sized action platformer.",
+      type: 'game', // Using 'game' instead of 'unity'
+      category: 'games',
+      platforms: ['desktop', 'mobile'],
+      thumbnail: '/games/thor/Screenshots/cover.png', // Using your cover image
+      url: '/play/thor-to-the-rescue', // Internal route, not external URL
+      trackingImage: null,
+      featured: true,
+      colour: 'from-amber-500 to-red-600',
+      tags: [
+        'action',
+        'platformer',
+        'dogs',
+        'rescue',
+        'comedy',
+        'vibe-jam',
+      ],
+    },
+    {
+      id: 'dropout',
+      name: 'Dropout',
+      description:
+        'Sneak your drone out of school to collect the contraband! A stealth game where you control a drone to fly through a small town, avoiding detection by teachers, police and locals.',
+      type: 'game',
+      category: 'games',
+      platforms: ['desktop', 'mobile'],
+      thumbnail: '/games/dropout/Screenshots/cover.png', // Using your cover image
+      url: '/play/dropout',
+      trackingImage: null,
+      featured: true,
+      colour: 'from-green-500 to-blue-600',
+      tags: ['action', 'stealth', 'unity', 'vibe-jam', '2d', 'short'],
+    },
+    {
       id: 'vr-property-tour',
       name: 'Virtual Property Tour',
       description:
@@ -295,43 +332,6 @@ export default function PlayPage() {
       featured: false,
       colour: 'from-yellow-500 to-orange-600',
       tags: ['business', 'marketing'],
-    },
-    {
-      id: 'thor-to-the-rescue',
-      name: 'Thor to The Rescue',
-      description:
-        "You're Thor, a motorbike-riding Rottweiler on a high-stakes mission to break into a shady vet clinic and rescue caged pups. Use your bark to blast guards, duck under danger, and jump your way through this bite-sized action platformer.",
-      type: 'game', // Using 'game' instead of 'unity'
-      category: 'games',
-      platforms: ['desktop', 'mobile'],
-      thumbnail: '/games/thor/Screenshots/cover.png', // Using your cover image
-      url: '/play/thor-to-the-rescue', // Internal route, not external URL
-      trackingImage: null,
-      featured: true,
-      colour: 'from-amber-500 to-red-600',
-      tags: [
-        'action',
-        'platformer',
-        'dogs',
-        'rescue',
-        'comedy',
-        'vibe-jam',
-      ],
-    },
-    {
-      id: 'dropout',
-      name: 'Dropout',
-      description:
-        'Sneak your drone out of school to collect the contraband! A stealth game where you control a drone to fly through a small town, avoiding detection by teachers, police and locals.',
-      type: 'game',
-      category: 'games',
-      platforms: ['desktop', 'mobile'],
-      thumbnail: '/games/dropout/Screenshots/cover.png', // Using your cover image
-      url: '/play/dropout',
-      trackingImage: null,
-      featured: true,
-      colour: 'from-green-500 to-blue-600',
-      tags: ['action', 'stealth', 'unity', 'vibe-jam', '2d', 'short'],
     },
   ];
 
