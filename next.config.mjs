@@ -37,6 +37,90 @@ const nextConfig = {
     return config;
   },
 
+  async headers() {
+    return [
+      // Unity WebGL Brotli-compressed files
+      {
+        source: '/games/:path*/:file.data.br',
+        headers: [
+          {
+            key: 'Content-Type',
+            value: 'application/octet-stream',
+          },
+          {
+            key: 'Content-Encoding',
+            value: 'br',
+          },
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        source: '/games/:path*/:file.wasm.br',
+        headers: [
+          {
+            key: 'Content-Type',
+            value: 'application/wasm',
+          },
+          {
+            key: 'Content-Encoding',
+            value: 'br',
+          },
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        source: '/games/:path*/:file.framework.js.br',
+        headers: [
+          {
+            key: 'Content-Type',
+            value: 'application/javascript',
+          },
+          {
+            key: 'Content-Encoding',
+            value: 'br',
+          },
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        source: '/games/:path*/:file.loader.js',
+        headers: [
+          {
+            key: 'Content-Type',
+            value: 'application/javascript',
+          },
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      // Unity general files
+      {
+        source: '/games/:path*',
+        headers: [
+          {
+            key: 'Cross-Origin-Embedder-Policy',
+            value: 'require-corp',
+          },
+          {
+            key: 'Cross-Origin-Opener-Policy',
+            value: 'same-origin',
+          },
+        ],
+      },
+    ];
+  },
+
   // Handle redirects for common paths
   async redirects() {
     return [

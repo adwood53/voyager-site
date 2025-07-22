@@ -73,18 +73,19 @@ export default function PlayPage() {
   // ============================================================================
 
   /**
-   * Generates a QR code URL for mobile experiences using qrserver.com API
-   *
-   * @function
-   * @param {string} url - The URL to encode in the QR code
-   * @returns {string} Complete QR code image URL
-   *
-   * @example
-   * const qrUrl = generateQRCode('https://example.com/experience');
-   * // Returns: 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=...'
+   * Generates QR code URL for mobile experiences - UPDATED to handle internal game routes
+   * @param {string} url - URL to encode
+   * @param {string} type - Experience type ('game' or other)
+   * @returns {string} QR code image URL
    */
-  const generateQRCode = (url) => {
-    return `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(url)}`;
+  const generateQRCode = (url, type) => {
+    const fullUrl =
+      type === 'game' ? `${window.location.origin}${url}` : url;
+
+    const encodedUrl = encodeURIComponent(fullUrl);
+
+    // Voyager branded QR codes
+    return `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodedUrl}&bgcolor=1a1a1a&color=e79023&format=png&margin=15&ecc=M`;
   };
 
   /**
@@ -133,14 +134,21 @@ export default function PlayPage() {
   };
 
   /**
-   * Handles clicking on an experience card to open in new tab
+   * Handles clicking on an experience card - routes to game pages for 'game' type
    *
    * @function
    * @param {Object} experience - The experience object containing URL
    * @param {string} experience.url - URL of the experience to open
+   * @param {string} experience.type - Type of experience
    */
   const handleExperienceClick = (experience) => {
-    window.open(experience.url, '_blank', 'noopener,noreferrer');
+    if (experience.type === 'game') {
+      // Navigate to game page for 'game' type experiences
+      window.location.href = experience.url;
+    } else {
+      // Keep existing behavior for other types
+      window.open(experience.url, '_blank', 'noopener,noreferrer');
+    }
   };
 
   /**
@@ -287,6 +295,43 @@ export default function PlayPage() {
       featured: false,
       colour: 'from-yellow-500 to-orange-600',
       tags: ['business', 'marketing'],
+    },
+    {
+      id: 'thor-to-the-rescue',
+      name: 'Thor to The Rescue',
+      description:
+        "You're Thor, a motorbike-riding Rottweiler on a high-stakes mission to break into a shady vet clinic and rescue caged pups. Use your bark to blast guards, duck under danger, and jump your way through this bite-sized action platformer.",
+      type: 'game', // Using 'game' instead of 'unity'
+      category: 'games',
+      platforms: ['desktop', 'mobile'],
+      thumbnail: '/games/thor/screenshots/cover.png', // Using your cover image
+      url: '/play/thor-to-the-rescue', // Internal route, not external URL
+      trackingImage: null,
+      featured: true,
+      colour: 'from-amber-500 to-red-600',
+      tags: [
+        'action',
+        'platformer',
+        'dogs',
+        'rescue',
+        'comedy',
+        'vibe-jam',
+      ],
+    },
+    {
+      id: 'dropout',
+      name: 'Dropout',
+      description:
+        'Sneak your drone out of school to collect the contraband! A stealth game where you control a drone to fly through a small town, avoiding detection by teachers, police and locals.',
+      type: 'game',
+      category: 'games',
+      platforms: ['desktop', 'mobile'],
+      thumbnail: '/games/dropout/screenshots/cover.png', // Using your cover image
+      url: '/play/dropout',
+      trackingImage: null,
+      featured: true,
+      colour: 'from-green-500 to-blue-600',
+      tags: ['action', 'stealth', 'unity', 'vibe-jam', '2d', 'short'],
     },
   ];
 
@@ -914,6 +959,9 @@ export default function PlayPage() {
                 >
                   📲 Augmented Reality
                 </SelectItem>
+                <SelectItem key="game" value="game">
+                  🎮 Games
+                </SelectItem>
               </Select>
             </motion.div>
 
@@ -1491,7 +1539,10 @@ export default function PlayPage() {
                                 className="w-full border-2 border-orange-400/50 hover:border-orange-400 hover:bg-orange-400/20 text-orange-300 hover:text-orange-200 transition-all duration-300"
                                 onPress={() =>
                                   window.open(
-                                    generateQRCode(experience.url),
+                                    generateQRCode(
+                                      experience.url,
+                                      experience.type
+                                    ),
                                     '_blank'
                                   )
                                 }
