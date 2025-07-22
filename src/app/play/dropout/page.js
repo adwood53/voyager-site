@@ -203,7 +203,22 @@ Built in just 3 hours during Voyager Vibe Jam under high-pressure! Explore the w
                     ))}
                   </div>
                 </div>
-
+                {/* Vote Now Button */}
+                <div className="mb-4">
+                  <Button
+                    onClick={() =>
+                      window.open(
+                        'https://form.jotform.com/252023824516047',
+                        '_blank',
+                        'noopener,noreferrer'
+                      )
+                    }
+                    className="w-full bg-accent hover:bg-primary text-white font-semibold"
+                    startContent={<span>🗳️</span>}
+                  >
+                    Vote Now
+                  </Button>
+                </div>
                 {/* Back Button */}
                 <Button
                   as={Link}
