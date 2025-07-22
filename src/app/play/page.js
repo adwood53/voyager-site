@@ -1173,7 +1173,11 @@ export default function PlayPage() {
                           >
                             {experience.type === '360'
                               ? '🌐 360°'
-                              : '📲 AR'}
+                              : experience.type === 'ar'
+                                ? '📲 AR'
+                                : experience.type === 'game'
+                                  ? '🎮 Game'
+                                  : '🔗 Experience'}
                           </Chip>
                         </div>
 
