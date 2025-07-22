@@ -45,10 +45,10 @@ Built in just 3 hours during Voyager Vibe Jam, Thor to The Rescue is a chaotic, 
       },
     ],
     screenshots: [
-      '/games/thor/screenshots/1.png',
-      '/games/thor/screenshots/2.png',
-      '/games/thor/screenshots/3.png',
-      '/games/thor/screenshots/4.png',
+      '/games/thor/Screenshots/1.png',
+      '/games/thor/Screenshots/2.png',
+      '/games/thor/Screenshots/3.png',
+      '/games/thor/Screenshots/4.png',
     ],
   };
 

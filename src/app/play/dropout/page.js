@@ -33,10 +33,10 @@ Built in just 3 hours during Voyager Vibe Jam under high-pressure! Explore the w
       { action: 'Rage Quit', keys: 'Ctrl + W' },
     ],
     screenshots: [
-      '/games/dropout/screenshots/1.png?',
-      '/games/dropout/screenshots/2.png?',
-      '/games/dropout/screenshots/3.png?',
-      '/games/dropout/screenshots/4.png?',
+      '/games/dropout/Screenshots/1.png?',
+      '/games/dropout/Screenshots/2.png?',
+      '/games/dropout/Screenshots/3.png?',
+      '/games/dropout/Screenshots/4.png?',
     ],
   };
 

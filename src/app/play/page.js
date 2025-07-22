@@ -304,7 +304,7 @@ export default function PlayPage() {
       type: 'game', // Using 'game' instead of 'unity'
       category: 'games',
       platforms: ['desktop', 'mobile'],
-      thumbnail: '/games/thor/screenshots/cover.png', // Using your cover image
+      thumbnail: '/games/thor/Screenshots/cover.png', // Using your cover image
       url: '/play/thor-to-the-rescue', // Internal route, not external URL
       trackingImage: null,
       featured: true,
@@ -326,7 +326,7 @@ export default function PlayPage() {
       type: 'game',
       category: 'games',
       platforms: ['desktop', 'mobile'],
-      thumbnail: '/games/dropout/screenshots/cover.png', // Using your cover image
+      thumbnail: '/games/dropout/Screenshots/cover.png', // Using your cover image
       url: '/play/dropout',
       trackingImage: null,
       featured: true,
