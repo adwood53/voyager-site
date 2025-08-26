@@ -21,13 +21,8 @@ export default function ForBrandsPage() {
         <div className="parallax-container">
           <Navbar />
           <BrandsHeroSection />
-          <div className="isolate" style={{ isolation: 'isolate' }}>
-            <BrandsServicesSection />
-          </div>
           <WhatWeDoSection />
-          <ProductsSection />
           <ExperiencesSection />
-          <BrandsStudioSection />
           <WhyVoyagerSection />
           <ContactSection />
           <Footer />

@@ -67,29 +67,37 @@ export default function AboutUsPage() {
               About <span className="text-primary">Us</span>
             </h1>
             <div className="text-1xl md:text-2xl font-body text-center mb-6">
-              Immersive technology is no longer just an idea;
-              it&apos;s a powerful tool to captivate audiences,
-              inspire creativity, and create connections in ways once
-              unimaginable.
+              Our team is a mix of creative technologists, developers,
+              strategists, and content creators who thrive on bold
+              ideas and flawless execution. It is where creativity
+              meets commerce and your project won&apos;t just look
+              spectacular, it will also be commercially sharp.
               <br /> <br />
-              We are here to make the next level of technology
-              accessible and affordable. Bold ideas are just the
-              beginning. What follows is a clear, actionable plan to
-              bring those ideas to life.
+              <h3 className="text-2xl md:text-3xl font-heading text-center mb-6">
+                Our Approach
+              </h3>
+              From concept to launch, we make the process simple,
+              seamless, and (dare we say) fun. You bring the vision,
+              we bring:
               <br /> <br />
-              Collaboration lies at the heart of every project,
-              ensuring your vision is not only understood but
-              elevated.
-              <br /> <br />
-              Behind Voyager is a team like no other. Visionary
-              thinkers, technical experts, and creative innovators
-              come together, each bringing unique strengths to the
-              table.
-              <br /> <br />
-              This blend of talent ensures every challenge is met from
-              every angle, resulting in projects that stand out and
-              leave people talking about it long after the experience
-              has ended.
+              <ul>
+                <li>
+                  Strategy - A clear journey mapped from start to
+                  finish.
+                </li>
+                <li>
+                  Creativity - No templates, no safe ideas, no
+                  recycled concepts.
+                </li>
+                <li>
+                  Technology - Proprietary technology and a global
+                  partner network for easy delivery.
+                </li>
+                <li>
+                  Commercial Thinking - Measurable results baked in
+                  from day one.
+                </li>
+              </ul>
               <div />
               <motion.div
                 whileHover={{ scale: 1.05 }}
@@ -98,7 +106,7 @@ export default function AboutUsPage() {
               >
                 <Button
                   as={Link}
-                  href="https://www.voyagervrlab.co.uk/our-code"
+                  href="/our-code"
                   target="_blank"
                   className="bg-primary text-textLight font-medium hover:bg-accent px-6 py-6 mt-12 mb-0  rounded-md transition-all hover:shadow-glow glitch-effect"
                 >

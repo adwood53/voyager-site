@@ -1,7 +1,12 @@
 'use client';
 
 import { Button, Link } from '@heroui/react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import {
+  motion,
+  useScroll,
+  useTransform,
+  AnimatePresence,
+} from 'framer-motion';
 import { useRef } from 'react';
 
 export default function BrandsHeroSection() {
@@ -39,35 +44,6 @@ export default function BrandsHeroSection() {
         </video>
       </motion.div>
 
-      {/* Floating particles for depth */}
-      {[...Array(12)].map((_, i) => (
-        <motion.div
-          key={i}
-          className="absolute rounded-full z-10"
-          style={{
-            backgroundColor:
-              i % 2 === 0
-                ? 'rgba(231, 144, 35, 0.1)'
-                : 'rgba(116, 102, 226, 0.08)',
-            width: `${Math.random() * 6 + 4}px`,
-            height: `${Math.random() * 6 + 4}px`,
-            left: `${Math.random() * 100}%`,
-            top: `${Math.random() * 100}%`,
-          }}
-          animate={{
-            y: [0, -30, 0],
-            opacity: [0.3, 0.8, 0.3],
-            scale: [1, 1.2, 1],
-          }}
-          transition={{
-            duration: 3 + Math.random() * 4,
-            repeat: Infinity,
-            delay: Math.random() * 2,
-            ease: 'easeInOut',
-          }}
-        />
-      ))}
-
       {/* Main content */}
       <motion.div
         className="container-voyager relative z-20 text-center py-20"
@@ -79,7 +55,7 @@ export default function BrandsHeroSection() {
           transition={{ duration: 1, delay: 0.2, ease: 'easeOut' }}
         >
           {/* Header */}
-          <h1 className="heading-voyager text-4xl md:text-6xl lg:text-7xl text-textLight mb-8">
+          <h1 className="heading-voyager text-2xl md:text-6xl lg:text-7xl text-textLight mb-4 md:mb-8">
             Creating <span className="text-primary">Next-Level</span>{' '}
             Campaigns
             <br />
@@ -97,13 +73,44 @@ export default function BrandsHeroSection() {
             transition={{ duration: 0.8, delay: 0.6 }}
             className="text-lg md:text-xl lg:text-2xl text-textLight opacity-90 max-w-4xl mx-auto mb-12 leading-relaxed"
           >
-            We help bold brands create campaigns that don&apos;t just
-            get seen - they get felt.
+            In today&apos;s world,{' '}
+            <strong>
+              <span className="text-primary">Attention</span>
+            </strong>{' '}
+            is{' '}
+            <strong>
+              <span className="text-altPrimary">Currency</span>
+            </strong>
+            .{' '}
+            <strong>
+              <span className="text-primary">Data</span>
+            </strong>{' '}
+            is{' '}
+            <strong>
+              <span className="text-altPrimary">King</span>
+            </strong>
+            .{' '}
+            <strong>
+              <span className="text-primary">Content</span>
+            </strong>{' '}
+            is{' '}
+            <strong>
+              <span className="text-altPrimary">Queen</span>
+            </strong>
+            .
             <br />
-            <span className="text-primary font-medium">
-              Because when people can explore, touch, and play - they
-              don&apos;t just watch your brand, they experience it.
-              They remember it.
+            <span className="text-white font-medium">
+              But most brands are still pushing the same tired
+              playbook - cookie-cutter campaigns that disappear in the
+              scroll. <br /> <br className="hidden md:inline" />{' '}
+              <strong className="text-white hidden md:inline">
+                We don&apos;t do that.
+              </strong>{' '}
+              <br /> <br className="hidden md:inline" />
+              Voyager is on a mission to help bold brands create
+              campaigns that don&apos;t just get seen - they get felt.
+              Campaigns that grab attention, collect real insights,
+              and turn audiences into participants.
             </span>
           </motion.p>
 
@@ -112,31 +119,57 @@ export default function BrandsHeroSection() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.8 }}
-            className="flex flex-col sm:flex-row gap-4 justify-center items-center"
+            className="flex flex-row gap-4 justify-center items-center"
           >
             <Button
               as={Link}
+              href="/play"
+              className="bg-transparent border-2 border-primary text-primary font-semibold px-8 py-4 rounded-md hover:bg-primary hover:text-textLight transition-all hover:scale-105 transform !text-xs !md:text-lg"
+            >
+              Explore Experiences
+            </Button>
+            <Button
+              as={Link}
               href="#signup"
-              className="bg-primary text-textLight font-semibold px-8 py-4 rounded-md hover:bg-accent transition-all hover:scale-105 transform hover:shadow-glow-lg text-lg"
+              className="bg-altPrimary text-textLight font-semibold px-8 py-4 rounded-md hover:bg-altAccent transition-all hover:scale-105 transform !text-xs !md:text-lg"
             >
-              Get in Touch
-            </Button>
-            <Button
-              as={Link}
-              href="/how"
-              className="bg-transparent border-2 border-primary text-primary font-semibold px-8 py-4 rounded-md hover:bg-primary hover:text-textLight transition-all hover:scale-105 transform text-lg"
-            >
-              How It Works
-            </Button>
-            <Button
-              as={Link}
-              href="/for-partners"
-              className="bg-altPrimary text-textLight font-semibold px-8 py-4 rounded-md hover:bg-altAccent transition-all hover:scale-105 transform text-lg"
-            >
-              Become a Partner
+              Book a Discovery Call
             </Button>
           </motion.div>
         </motion.div>
+        {/* Scroll Indicator */}
+        <AnimatePresence>
+          <motion.div
+            className="absolute bottom-[-80] left-1/2 transform -translate-x-1/2 z-10"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.8, delay: 1.5 }}
+          >
+            <motion.div
+              className="flex flex-col items-center text-primary"
+              animate={{ y: [0, 10, 0] }}
+              transition={{ duration: 2, repeat: Infinity }}
+            >
+              <span className="text-sm font-medium mb-2">
+                Discover More
+              </span>
+              <svg
+                className="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M19 14l-7 7m0 0l-7-7m7 7V3"
+                />
+              </svg>
+            </motion.div>
+          </motion.div>
+        </AnimatePresence>
       </motion.div>
     </section>
   );

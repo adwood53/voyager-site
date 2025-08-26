@@ -39,6 +39,53 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Navbar from '@/src/app/components/Navbar';
 import Image from 'next/image';
 
+// Simple JotForm Modal Component
+const SimpleJotFormModal = ({ isOpen, onClose }) => {
+  if (!isOpen) return null;
+
+  return (
+    <div
+      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+      onClick={onClose}
+    >
+      <div
+        className="bg-white rounded-lg w-full max-w-2xl h-[80vh] relative mx-4"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 text-gray-600 hover:text-gray-800 z-10 bg-white rounded-full p-2 shadow-lg"
+        >
+          <svg
+            className="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+
+        <iframe
+          id="JotFormIFrame-252092101558047"
+          title="Voyager Game Request"
+          allowtransparency="true"
+          allow="geolocation; microphone; camera; fullscreen; payment"
+          src="https://form.jotform.com/252092101558047"
+          frameBorder="0"
+          className="w-full h-full rounded-lg"
+          scrolling="no"
+        />
+      </div>
+    </div>
+  );
+};
+
 /**
  * Main component rendering the searchable experiences grid page
  *
@@ -67,6 +114,9 @@ export default function PlayPage() {
 
   /** @type {[string|null, function]} Currently hovered card ID for animations */
   const [hoveredCard, setHoveredCard] = useState(null);
+
+  /** @type {[boolean, function]} JotForm modal visibility */
+  const [showJotForm, setShowJotForm] = useState(false);
 
   // ============================================================================
   // UTILITY FUNCTIONS
@@ -527,6 +577,17 @@ export default function PlayPage() {
             see the future of immersive technology.
           </motion.p>
         </motion.div>
+
+        {/* Get Yours Now Button */}
+        <div className="my-8 text-center">
+          <Button
+            size="lg"
+            className="bg-gradient-to-r from-orange-500 to-red-600 text-white font-bold px-12 py-4 text-xl shadow-2xl hover:shadow-orange-500/25 transition-all duration-300 border-0"
+            onPress={() => setShowJotForm(true)}
+          >
+            Get Yours Now
+          </Button>
+        </div>
 
         {/* Expandable Help Section */}
         <motion.div
@@ -1634,6 +1695,11 @@ export default function PlayPage() {
           )}
         </AnimatePresence>
       </div>
+      {/* JotForm Modal */}
+      <SimpleJotFormModal
+        isOpen={showJotForm}
+        onClose={() => setShowJotForm(false)}
+      />
     </div>
   );
 }
