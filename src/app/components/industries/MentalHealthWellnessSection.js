@@ -138,7 +138,7 @@ export default function MentalHealthWellnessSection({ onClose }) {
             size="lg"
             className="bg-primary text-darkBg hover:bg-accent"
           >
-            Start Your Mental Health & Wellness Project
+            Start Your Wellness Project
           </Button>
         </Link>
         <Link href="/industries/case-studies">

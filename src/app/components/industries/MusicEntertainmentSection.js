@@ -159,7 +159,7 @@ export default function MusicEntertainmentSection({ onClose }) {
             size="lg"
             className="bg-primary text-darkBg hover:bg-accent"
           >
-            Start Your Music & Entertainment Project
+            Start Your Music Project
           </Button>
         </Link>
         <Link href="/industries/case-studies">

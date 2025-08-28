@@ -1,0 +1,28 @@
+{
+  "reviews": [
+    {
+      "name": "Tyler Clarke",
+      "rating": 5,
+      "description": "Absolute amazing people with amazing creative minds! They bring out the best in you and I was glad to have met them! Did a project with them and will be looking to collab on more in the future",
+      "date": "2025-05-29",
+      "image": "/reviews/reviewimage-tyler-clarke.jpg",
+      "title": null
+    },
+    {
+      "name": "Othiniel Rhatisai",
+      "rating": 5,
+      "description": "👍🏻",
+      "date": "2025-05-29",
+      "image": null,
+      "title": null
+    },
+    {
+      "name": "Lee Jeffries",
+      "rating": 5,
+      "description": "Amazing work, Drinks with NFC videos",
+      "date": "2025-05-01",
+      "image": "/reviews/reviewimage-lee-jeffries.jpg",
+      "title": null
+    }
+  ]
+}

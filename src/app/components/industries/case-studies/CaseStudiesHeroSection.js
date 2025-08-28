@@ -9,6 +9,7 @@
 
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useRef } from 'react';
+import { Button } from '@heroui/react';
 
 export default function CaseStudiesHeroSection() {
   const sectionRef = useRef(null);
@@ -86,6 +87,24 @@ export default function CaseStudiesHeroSection() {
               flexibly, creatively, and without licensing constraints.
             </p>
           </div>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.6 }}
+        >
+          <Button
+            size="lg"
+            className="bg-primary text-darkBg my-6 hover:bg-accent"
+            onPress={() =>
+              window.open(
+                'https://immerse.voyagerstudio.co.uk/VOY/Voyager/Case-Study'
+              )
+            }
+          >
+            View our Case Studies in Immersive
+          </Button>
         </motion.div>
       </motion.div>
     </section>

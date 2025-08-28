@@ -7,6 +7,7 @@ import HowHeroSection from '../components/how/HowHeroSection';
 import WorkingWithUs from '../components/how/WorkingWithUs';
 import FAQSection from '../components/how/FAQSection';
 import ContactSection from '@/src/app/components/ContactSection';
+import ReviewPopup from '@/src/app/components/ReviewPopup';
 
 export default function ForBrandsPage() {
   return (
@@ -14,6 +15,7 @@ export default function ForBrandsPage() {
       <ChatbotComponent />
       <div className="parallax-container">
         <Navbar />
+        <ReviewPopup />
         <HowHeroSection />
         <WorkingWithUs />
         <FAQSection />

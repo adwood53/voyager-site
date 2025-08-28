@@ -159,7 +159,7 @@ export default function FoodBeverageSection({ onClose }) {
             size="lg"
             className="bg-primary text-darkBg hover:bg-accent"
           >
-            Start Your Food & Beverage Project
+            Start Your Food Project
           </Button>
         </Link>
         <Link href="/industries/case-studies">

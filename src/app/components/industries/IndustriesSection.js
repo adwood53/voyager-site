@@ -57,15 +57,15 @@ export default function IndustriesSection() {
     {
       id: 'music-entertainment',
       name: 'Music & Entertainment',
-      icon: '🎵',
+      icon: '',
       description:
         'Transform live events and digital content with immersive experiences that create deeper fan connections and community moments.',
-      image: '/industries/Music/tom-album.jpg',
+      image: '/industries/Music/thumb.jpg',
     },
     {
       id: 'sport-fitness',
       name: 'Sport & Fitness',
-      icon: '⚽',
+      icon: '',
       description:
         'Track performance, boost loyalty, and give sponsors measurable proof through interactive bibs, wristbands, and gamified experiences.',
       image: '/industries/Sports/bottles-4.webp',
@@ -73,82 +73,82 @@ export default function IndustriesSection() {
     {
       id: 'beauty-aesthetics',
       name: 'Beauty & Aesthetics',
-      icon: '💄',
+      icon: '',
       description:
         'Build trust and personalisation with interactive tutorials, aftercare guides, and authenticity checks delivered through packaging.',
-      image: '/industries/beauty-aesthetics.webp',
+      image: '/industries/Beauty/thumb.png',
     },
     {
       id: 'events-hospitality',
       name: 'Events & Hospitality',
-      icon: '🎪',
+      icon: '',
       description:
         'Guide, delight, and capture guest data seamlessly with interactive lanyards, menus, and digital experiences.',
-      image: '/industries/events-hospitality.webp',
+      image: '/industries/Events/thumb.png',
     },
     {
       id: 'education-training',
       name: 'Education & Training',
-      icon: '📚',
+      icon: '',
       description:
         'Turn learning into an immersive journey with interactive textbooks, training kits, and progress tracking systems.',
-      image: '/industries/education-training.webp',
+      image: '/industries/Education/thumb.png',
     },
     {
       id: 'content-creators-influencers',
       name: 'Content Creators & Influencers',
-      icon: '📱',
+      icon: '',
       description:
         'Build lasting communities and capture audience data with interactive merch, limited drops, and unlockable content.',
-      image: '/industries/content-creators.webp',
+      image: '/industries/Creators/thumb.png',
     },
     {
       id: 'property-construction',
       name: 'Property & Construction',
-      icon: '🏗️',
+      icon: '',
       description:
         'Show properties with instant 360° tours, floorplans, and booking systems accessible through brochures and signage.',
-      image: '/industries/property-construction.webp',
+      image: '/industries/Property/thumb.png',
     },
     {
       id: 'food-beverage',
       name: 'Food & Beverage',
-      icon: '🍽️',
+      icon: '',
       description:
         'Share recipes, stories, and build loyalty through interactive packaging and menus that connect customers to your brand.',
-      image: '/industries/food-beverage.webp',
+      image: '/industries/Food/thumb.png',
     },
     {
       id: 'marketing-publications',
       name: 'Marketing & Publications',
-      icon: '📰',
+      icon: '',
       description:
         'Bring print to life with videos, AR, and live updates that prove ROI and create memorable campaign experiences.',
-      image: '/industries/marketing-publications.webp',
+      image: '/industries/Marketing/thumb.jpg',
     },
     {
       id: 'fashion-apparel',
       name: 'Fashion & Apparel',
-      icon: '👗',
+      icon: '',
       description:
         'Turn style into story with interactive garments, packaging, and displays that build authenticity and community.',
-      image: '/industries/fashion-apparel.webp',
+      image: '/industries/Fashion/thumb.png',
     },
     {
       id: 'mental-health-wellness',
       name: 'Mental Health & Wellness',
-      icon: '🧘',
+      icon: '',
       description:
         'Support wellness initiatives with therapeutic and mindful immersive experiences that promote mental health.',
-      image: '/industries/mental-health-wellness.webp',
+      image: '/industries/Wellness/thumb.png',
     },
     {
       id: 'competitions-gaming',
       name: 'Competitions & Gaming',
-      icon: '🎮',
+      icon: '',
       description:
         'Create engaging competitive experiences and gaming platforms that connect players in innovative ways.',
-      image: '/industries/competitions-gaming.webp',
+      image: '/industries/Gaming/thumb.png',
     },
   ];
 

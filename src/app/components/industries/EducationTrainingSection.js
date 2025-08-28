@@ -150,7 +150,7 @@ export default function EducationTrainingSection({ onClose }) {
             size="lg"
             className="bg-primary text-darkBg hover:bg-accent"
           >
-            Start Your Education & Training Project
+            Start Your Education Project
           </Button>
         </Link>
         <Link href="/industries/case-studies">

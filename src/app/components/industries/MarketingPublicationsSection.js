@@ -142,7 +142,7 @@ export default function MarketingPublicationsSection({ onClose }) {
             size="lg"
             className="bg-primary text-darkBg hover:bg-accent"
           >
-            Start Your Marketing & Publications Project
+            Start Your Marketing Project
           </Button>
         </Link>
         <Link href="/industries/case-studies">

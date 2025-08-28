@@ -139,6 +139,24 @@ export default function SharedStudyHero({
               </Button>
             </Link>
           </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.6 }}
+          >
+            <Button
+              size="lg"
+              className="bg-altPrimary text-darkBg my-6 hover:bg-altAccent transition-colors"
+              onPress={() =>
+                window.open(
+                  'https://immerse.voyagerstudio.co.uk/VOY/Voyager/Case-Study'
+                )
+              }
+            >
+              View our Case Studies in Immersive
+            </Button>
+          </motion.div>
         </motion.div>
       </div>
     </section>

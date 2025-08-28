@@ -142,7 +142,7 @@ export default function EventsHospitalitySection({ onClose }) {
             size="lg"
             className="bg-primary text-darkBg hover:bg-accent"
           >
-            Start Your Events & Hospitality Project
+            Start Your Event Project
           </Button>
         </Link>
         <Link href="/industries/case-studies">

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
@@ -73,11 +73,8 @@ const VoyagerTitle = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  // Fixed VoyagerTitle component - replace the return statement in VoyagerTitle
-
   return (
-    // FIXED: Add top padding for mobile navbar and adjust centering
-    <div className="flex items-center justify-center min-h-screen relative z-10 pb-24 lg:pt-0">
+    <div className="absolute top-8 left-0 right-0 lg:flex lg:items-center lg:justify-center lg:min-h-screen lg:relative z-10 lg:pb-40">
       <div className="text-center px-4">
         <AnimatePresence mode="wait">
           {showText ? (
@@ -214,6 +211,65 @@ const VoyagerTitle = () => {
   );
 };
 
+const ScrollingText = ({ children }) => {
+  const textRef = useRef(null);
+  const [textWidth, setTextWidth] = useState(0);
+
+  useEffect(() => {
+    if (textRef.current) {
+      setTextWidth(textRef.current.offsetWidth);
+    }
+  }, [children]);
+
+  // Calculate duration based on text width for consistent speed
+  const duration = Math.max(12, textWidth / 30); // 30px per second base speed
+
+  return (
+    <div className="overflow-hidden whitespace-nowrap w-full relative">
+      {/* Invisible text to measure width */}
+      <div
+        ref={textRef}
+        className="invisible absolute text-xs opacity-75"
+      >
+        {children}
+      </div>
+
+      {/* Scrolling container with 3 copies */}
+      <motion.div
+        className="flex"
+        animate={{
+          x: [0, -(textWidth + 20)],
+        }}
+        transition={{
+          duration: duration,
+          ease: 'linear',
+          repeat: Infinity,
+          repeatType: 'loop',
+        }}
+      >
+        <div
+          className="flex-shrink-0 text-xs opacity-75"
+          style={{ paddingRight: '40px' }}
+        >
+          {children}
+        </div>
+        <div
+          className="flex-shrink-0 text-xs opacity-75"
+          style={{ paddingRight: '40px' }}
+        >
+          {children}
+        </div>
+        <div
+          className="flex-shrink-0 text-xs opacity-75"
+          style={{ paddingRight: '40px' }}
+        >
+          {children}
+        </div>
+      </motion.div>
+    </div>
+  );
+};
+
 // Clean, responsive navigation buttons with loading states
 const NavigationButtons = () => {
   const router = useRouter();
@@ -226,18 +282,24 @@ const NavigationButtons = () => {
       href: '/for-brands',
       variant: 'primary',
       type: 'internal',
+      description:
+        'Transform your brand with immersive experiences that captivate customers through AR, VR, and 360° content',
     },
     {
       label: 'For Partners',
       href: '/for-partners',
       variant: 'secondary',
       type: 'internal',
+      description:
+        'Join our network of creative professionals and access white-label solutions that add new layers of value and income to grow your business',
     },
     {
       label: 'Play',
       href: '/play',
       variant: 'tertiary',
       type: 'internal',
+      description:
+        'Explore our gallery of interactive AR, VR, and interactive experiences - try them directly from your device and see the future of immersive technology',
     },
   ];
 
@@ -284,7 +346,7 @@ const NavigationButtons = () => {
         )}
       </AnimatePresence>
 
-      {/* Navigation buttons - visible from start, 2x bigger on desktop */}
+      {/* Navigation buttons */}
       <motion.div
         initial={{ opacity: 1, y: 0 }}
         animate={{ opacity: 1, y: 0 }}
@@ -293,22 +355,22 @@ const NavigationButtons = () => {
         <div className="w-full max-w-lg lg:max-w-4xl">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 lg:gap-6 w-full">
             {buttons.map((button, index) => (
-              <motion.button
+              <motion.div
                 key={button.label}
                 onClick={() => handleButtonClick(button, index)}
                 className={`
-                px-4 py-3 lg:px-8 lg:py-6 rounded-lg font-medium transition-all duration-300
-                text-sm lg:text-lg font-heading w-full text-center
-                hover:scale-105 focus:outline-none focus:ring-4 focus:ring-opacity-50
-                ${
-                  button.variant === 'primary'
-                    ? 'bg-primary text-textLight hover:bg-accent focus:ring-primary shadow-glow-sm hover:shadow-glow'
-                    : button.variant === 'secondary'
-                      ? 'bg-altPrimary text-textLight hover:bg-altAccent focus:ring-altPrimary'
-                      : 'border-2 border-primary text-primary hover:bg-primary hover:text-textLight focus:ring-primary'
-                }
-                ${loadingButton === index ? 'opacity-70 cursor-not-allowed' : ''}
-              `}
+                  px-4 py-2 rounded-lg font-medium transition-all duration-300
+                  text-sm font-heading w-full cursor-pointer min-h-12 flex flex-col justify-center
+                  hover:scale-105 focus:outline-none focus:ring-4 focus:ring-opacity-50
+                  ${
+                    button.variant === 'primary'
+                      ? 'bg-primary text-textLight hover:bg-accent focus:ring-primary shadow-glow-sm hover:shadow-glow'
+                      : button.variant === 'secondary'
+                        ? 'bg-altPrimary text-textLight hover:bg-altAccent focus:ring-altPrimary'
+                        : 'border-2 border-primary text-primary hover:bg-primary hover:text-textLight focus:ring-primary'
+                  }
+                  ${loadingButton === index ? 'opacity-70 cursor-not-allowed' : ''}
+                `}
                 initial={{ opacity: 1, scale: 1 }}
                 animate={{ opacity: 1, scale: 1 }}
                 whileHover={{
@@ -318,17 +380,17 @@ const NavigationButtons = () => {
                 whileTap={{ scale: 0.95 }}
                 disabled={loadingButton === index}
               >
-                {loadingButton === index ? (
-                  <div className="flex items-center justify-center gap-2">
-                    <div className="w-4 h-4 lg:w-5 lg:h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                    <span className="hidden sm:inline">
-                      Loading...
-                    </span>
+                <div className="text-center mb-2 text-md">
+                  {loadingButton === index
+                    ? 'Loading...'
+                    : button.label}
+                </div>
+                <ScrollingText>
+                  <div className="text-lg opacity-75">
+                    {button.description}
                   </div>
-                ) : (
-                  button.label
-                )}
-              </motion.button>
+                </ScrollingText>
+              </motion.div>
             ))}
           </div>
         </div>

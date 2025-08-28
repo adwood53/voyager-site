@@ -14,6 +14,7 @@ import IndustriesHeroSection from '../components/industries/IndustriesHeroSectio
 import IndustriesSection from '../components/industries/IndustriesSection';
 import CaseStudiesCTA from '../components/industries/CaseStudiesCTA';
 import ContactSection from '@/src/app/components/ContactSection';
+import ReviewPopup from '@/src/app/components/ReviewPopup';
 
 export default function IndustriesPage() {
   return (
@@ -21,6 +22,7 @@ export default function IndustriesPage() {
       <ChatbotComponent />
       <div className="parallax-container">
         <Navbar />
+        <ReviewPopup />
         <IndustriesHeroSection />
         <div className="isolate" style={{ isolation: 'isolate' }}>
           <IndustriesSection />

@@ -140,7 +140,7 @@ export default function FashionApparelSection({ onClose }) {
             size="lg"
             className="bg-primary text-darkBg hover:bg-accent"
           >
-            Start Your Fashion & Apparel Project
+            Start Your Fashion Project
           </Button>
         </Link>
         <Link href="/industries/case-studies">

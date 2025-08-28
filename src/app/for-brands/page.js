@@ -9,6 +9,7 @@ import ProductsSection from '../components/brands/ProductsSection';
 import ExperiencesSection from '../components/brands/ExperiencesSection';
 import WhyVoyagerSection from '../components/brands/WhyVoyagerSection';
 import ContactSection from '@/src/app/components/ContactSection';
+import ReviewPopup from '@/src/app/components/ReviewPopup';
 import BrandsStudioSection from '../components/brands/BrandsStudioSection';
 import BrandsServicesSection from '../components/brands/BrandsServicesSection';
 import { ModalProvider } from '../components/modal/core/ModalEngine';
@@ -20,6 +21,7 @@ export default function ForBrandsPage() {
         <ChatbotComponent />
         <div className="parallax-container">
           <Navbar />
+          <ReviewPopup />
           <BrandsHeroSection />
           <WhatWeDoSection />
           <ExperiencesSection />

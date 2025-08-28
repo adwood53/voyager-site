@@ -141,7 +141,7 @@ export default function PropertyConstructionSection({ onClose }) {
             size="lg"
             className="bg-primary text-darkBg hover:bg-accent"
           >
-            Start Your Property & Construction Project
+            Start Your Property Project
           </Button>
         </Link>
         <Link href="/industries/case-studies">

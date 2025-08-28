@@ -151,7 +151,7 @@ export default function BeautyAestheticsSection({ onClose }) {
             size="lg"
             className="bg-primary text-darkBg hover:bg-accent"
           >
-            Start Your Beauty & Aesthetics Project
+            Start Your Beauty Project
           </Button>
         </Link>
         <Link href="/industries/case-studies">

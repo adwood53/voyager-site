@@ -12,26 +12,30 @@ import {
   DropdownMenu,
   DropdownItem,
 } from '@heroui/react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 
 export default function VoyagerNavbar() {
   const [scrolled, setScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [loadingStates, setLoadingStates] = useState({
     brands: false,
     partners: false,
+    industries: false,
     how: false,
     about: false,
     blog: false,
     partnerLogin: false,
     waitlist: false,
   });
+
   const pathname = usePathname();
   const router = useRouter();
   const isHomePage = pathname === '/';
   const isBrandsPage = pathname.startsWith('/for-brands');
   const isForPartnersPage = pathname.startsWith('/for-partners');
+  const isIndustriesPage = pathname.startsWith('/industries');
 
   useEffect(() => {
     const handleScroll = () => {
@@ -52,10 +56,9 @@ export default function VoyagerNavbar() {
   // Helper function for navigation with loading state
   const navigateWithLoading = async (key, path) => {
     setLoading(key, true);
-    // Small delay to show loading state
+    setMobileMenuOpen(false); // Close mobile menu on navigation
     await new Promise((resolve) => setTimeout(resolve, 100));
     router.push(path);
-    // Loading state will be cleared when component unmounts or route changes
   };
 
   // Reset loading states when pathname changes
@@ -63,6 +66,7 @@ export default function VoyagerNavbar() {
     setLoadingStates({
       brands: false,
       partners: false,
+      industries: false,
       how: false,
       about: false,
       blog: false,
@@ -71,22 +75,20 @@ export default function VoyagerNavbar() {
     });
   }, [pathname]);
 
-  // Handle navigation to for-partners sections
+  // Handle navigation functions
   const handlePartnerNavigation = (sectionId) => {
-    // Navigate to for-partners page with hash fragment
+    setMobileMenuOpen(false);
     router.push(`/for-partners#${sectionId}`);
   };
 
-  // Handle navigation to for-brands page sections
   const handleBrandsNavigation = (sectionId) => {
+    setMobileMenuOpen(false);
     if (isBrandsPage) {
-      // If we're on for-brands page, just scroll to the section
       const section = document.getElementById(sectionId);
       if (section) {
         section.scrollIntoView({ behavior: 'smooth' });
       }
     } else {
-      // Navigate to for-brands page with hash fragment
       router.push(`/for-brands#${sectionId}`);
     }
   };
@@ -104,7 +106,7 @@ export default function VoyagerNavbar() {
     />
   );
 
-  // Partners dropdown items configuration
+  // Configuration arrays for dropdowns
   const partnersItems = [
     {
       key: 'benefits',
@@ -132,7 +134,6 @@ export default function VoyagerNavbar() {
     },
   ];
 
-  // Brands dropdown items configuration
   const brandsItems = [
     {
       key: 'what-we-do',
@@ -172,7 +173,34 @@ export default function VoyagerNavbar() {
     },
   ];
 
-  // DRY principle: Create reusable navigation components
+  const industriesItems = [
+    {
+      key: 'hyrox-corby',
+      label: 'Hyrox Corby',
+      href: '/industries/case-studies/hyrox-corby',
+      description: 'NFC enabled event engagement',
+    },
+    {
+      key: 'tom-meighan',
+      label: 'Tom Meighan',
+      href: '/industries/case-studies/tom-meighan',
+      description: 'Interactive vinyl & VCard campaign',
+    },
+    {
+      key: 'oloye-aesthetics',
+      label: 'Oloye Aesthetics',
+      href: '/industries/case-studies/oloye-aesthetics',
+      description: 'Complete digital transformation',
+    },
+    {
+      key: 'all-cases',
+      label: 'View All Case Studies',
+      href: '/industries/case-studies',
+      description: 'See our complete portfolio',
+    },
+  ];
+
+  // Navigation link component
   const NavLink = ({
     href,
     children,
@@ -182,7 +210,6 @@ export default function VoyagerNavbar() {
     loadingKey,
   }) => {
     const isLoading = loadingStates[loadingKey];
-
     return (
       <Button
         as={Link}
@@ -207,10 +234,9 @@ export default function VoyagerNavbar() {
     );
   };
 
+  // Brands dropdown component
   const BrandsDropdown = ({ isMobile = false }) => {
     const isLoading = loadingStates.brands;
-
-    // If not on for-brands page, show simple navigation button
     if (!isBrandsPage) {
       return (
         <Button
@@ -226,8 +252,6 @@ export default function VoyagerNavbar() {
         </Button>
       );
     }
-
-    // If on for-brands page, show dropdown with sections
     return (
       <Dropdown>
         <DropdownTrigger>
@@ -255,9 +279,9 @@ export default function VoyagerNavbar() {
         </DropdownTrigger>
         <DropdownMenu
           aria-label="Brands menu"
-          className="w-80"
+          className="w-80 bg-darkBg border border-primary/20 shadow-xl"
           itemClasses={{
-            base: 'gap-4',
+            base: 'gap-4 data-[hover=true]:bg-primary/10',
             title: 'text-textLight',
             description: 'text-textLight opacity-60',
           }}
@@ -266,7 +290,7 @@ export default function VoyagerNavbar() {
             <DropdownItem
               key={item.key}
               description={item.description}
-              className="text-textLight hover:bg-primary hover:bg-opacity-20"
+              className="text-textLight data-[hover=true]:bg-primary/10"
               onPress={() => handleBrandsNavigation(item.key)}
             >
               {item.label}
@@ -277,10 +301,9 @@ export default function VoyagerNavbar() {
     );
   };
 
+  // Partners dropdown component
   const PartnersDropdown = ({ isMobile = false }) => {
     const isLoading = loadingStates.partners;
-
-    // If not on for-partners page, show simple navigation button
     if (!isForPartnersPage) {
       return (
         <Button
@@ -298,8 +321,6 @@ export default function VoyagerNavbar() {
         </Button>
       );
     }
-
-    // If on for-partners page, show dropdown with sections and highlight current page
     return (
       <Dropdown>
         <DropdownTrigger>
@@ -327,9 +348,9 @@ export default function VoyagerNavbar() {
         </DropdownTrigger>
         <DropdownMenu
           aria-label="Partners menu"
-          className="w-80"
+          className="w-80 bg-darkBg border border-primary/20 shadow-xl"
           itemClasses={{
-            base: 'gap-4',
+            base: 'gap-4 data-[hover=true]:bg-primary/10',
             title: 'text-textLight',
             description: 'text-textLight opacity-60',
           }}
@@ -338,8 +359,80 @@ export default function VoyagerNavbar() {
             <DropdownItem
               key={item.key}
               description={item.description}
-              className="text-textLight hover:bg-primary hover:bg-opacity-20"
+              className="text-textLight data-[hover=true]:bg-primary/10"
               onPress={() => handlePartnerNavigation(item.key)}
+            >
+              {item.label}
+            </DropdownItem>
+          ))}
+        </DropdownMenu>
+      </Dropdown>
+    );
+  };
+
+  // Industries dropdown component
+  const IndustriesDropdown = ({ isMobile = false }) => {
+    const isLoading = loadingStates.industries;
+    if (!isIndustriesPage) {
+      return (
+        <Button
+          variant="light"
+          className={`text-textLight hover:text-primary transition-colors font-medium p-0 min-w-0 h-auto bg-transparent ${isMobile ? 'text-base' : 'text-lg'}`}
+          onPress={() =>
+            navigateWithLoading('industries', '/industries')
+          }
+          isDisabled={isLoading}
+          startContent={
+            isLoading ? <LoadingSpinner size={14} /> : null
+          }
+        >
+          Industries
+        </Button>
+      );
+    }
+    return (
+      <Dropdown>
+        <DropdownTrigger>
+          <Button
+            variant="light"
+            className={`text-primary hover:text-accent transition-colors font-medium p-0 min-w-0 h-auto bg-transparent ${isMobile ? 'text-base' : 'text-lg'}`}
+            endContent={
+              <svg
+                className="w-4 h-4 ml-1"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M19 9l-7 7-7-7"
+                />
+              </svg>
+            }
+          >
+            Industries
+          </Button>
+        </DropdownTrigger>
+        <DropdownMenu
+          aria-label="Industries menu"
+          className="w-80 bg-darkBg border border-primary/20 shadow-xl"
+          itemClasses={{
+            base: 'gap-4 data-[hover=true]:bg-primary/10',
+            title: 'text-textLight',
+            description: 'text-textLight opacity-60',
+          }}
+        >
+          {industriesItems.map((item) => (
+            <DropdownItem
+              key={item.key}
+              description={item.description}
+              className="text-textLight data-[hover=true]:bg-primary/10"
+              onPress={() => {
+                setMobileMenuOpen(false);
+                navigateWithLoading('industries', item.href);
+              }}
             >
               {item.label}
             </DropdownItem>
@@ -360,101 +453,61 @@ export default function VoyagerNavbar() {
         <Navbar
           className={`transition-all duration-300 ${
             scrolled
-              ? 'bg-darkBg bg-opacity-95 backdrop-blur-md shadow-glow-sm border-b border-primary border-opacity-20'
-              : 'bg-darkBg bg-opacity-80'
+              ? 'bg-darkBg shadow-lg border-b border-primary/20'
+              : 'bg-transparent'
           }`}
           maxWidth="full"
         >
-          {/* MOBILE LAYOUT (<1024px) */}
-          <div className="lg:hidden w-full">
-            {/* Top Row: Logo and Hamburger */}
-            <div className="flex justify-between items-center w-full px-4 py-2">
-              <NavbarBrand>
-                <Link
-                  href="/"
-                  className="flex items-center gap-2 hover:opacity-90 transition-opacity"
-                >
-                  <Image
-                    src="/Voyager-Box-Logo.png"
-                    alt="Voyager Logo"
-                    width={32}
-                    height={32}
-                    className="rounded-md"
+          {/* MOBILE HAMBURGER LAYOUT (<1024px) */}
+          <div className="lg:hidden flex items-center justify-between w-full px-4 py-2">
+            {/* Logo */}
+            <NavbarBrand>
+              <Link
+                href="/"
+                className="flex items-center gap-2 hover:opacity-90 transition-opacity"
+              >
+                <Image
+                  src="/Voyager-Box-Logo.png"
+                  alt="Voyager Logo"
+                  width={36}
+                  height={36}
+                  className="rounded-md"
+                />
+                <div className="font-heading text-xl font-bold">
+                  <span className="text-primary">VOYAGER</span>
+                </div>
+              </Link>
+            </NavbarBrand>
+
+            {/* Hamburger Button */}
+            <Button
+              variant="light"
+              className="p-2 min-w-0"
+              onPress={() => setMobileMenuOpen(!mobileMenuOpen)}
+            >
+              <svg
+                className="w-6 h-6 text-textLight"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                {mobileMenuOpen ? (
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
                   />
-                  <div className="font-heading text-xl font-bold">
-                    <span className="text-primary">VOYAGER</span>
-                  </div>
-                </Link>
-              </NavbarBrand>
-
-              <div className="flex items-center gap-2">
-                <NavbarItem>
-                  <Button
-                    as={Link}
-                    href="/waitlist"
-                    onPress={(e) => {
-                      e.preventDefault();
-                      navigateWithLoading('waitlist', '/waitlist');
-                    }}
-                    className="bg-primary text-textLight font-medium px-3 py-1 text-sm rounded-md hover:bg-accent transition-all duration-300"
-                    isDisabled={loadingStates.waitlist}
-                    startContent={
-                      loadingStates.waitlist ? (
-                        <LoadingSpinner size={12} />
-                      ) : null
-                    }
-                  >
-                    Join!
-                  </Button>
-                </NavbarItem>
-              </div>
-            </div>
-
-            {/* Bottom Row: Navigation Links */}
-            <div className="flex justify-center border-t border-gray-700 px-4 py-2">
-              <div className="flex gap-4 flex-wrap justify-center">
-                <NavbarItem>
-                  <NavLink
-                    href="/about-us"
-                    className="text-base"
-                    isActive={pathname === '/about-us'}
-                    loadingKey="about"
-                  >
-                    About
-                  </NavLink>
-                </NavbarItem>
-
-                <NavbarItem>
-                  <BrandsDropdown isMobile={true} />
-                </NavbarItem>
-
-                <NavbarItem>
-                  <NavLink
-                    href="/how"
-                    className="text-base"
-                    isActive={pathname === '/how'}
-                    loadingKey="how"
-                  >
-                    How
-                  </NavLink>
-                </NavbarItem>
-
-                <NavbarItem>
-                  <PartnersDropdown isMobile={true} />
-                </NavbarItem>
-
-                <NavbarItem>
-                  <NavLink
-                    href="/blog"
-                    className="text-base"
-                    isActive={pathname === '/blog'}
-                    loadingKey="blog"
-                  >
-                    Blog
-                  </NavLink>
-                </NavbarItem>
-              </div>
-            </div>
+                ) : (
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4 6h16M4 12h16M4 18h16"
+                  />
+                )}
+              </svg>
+            </Button>
           </div>
 
           {/* DESKTOP LAYOUT (>=1024px) */}
@@ -493,11 +546,12 @@ export default function VoyagerNavbar() {
                     About
                   </NavLink>
                 </NavbarItem>
-
                 <NavbarItem>
                   <BrandsDropdown />
                 </NavbarItem>
-
+                <NavbarItem>
+                  <IndustriesDropdown />
+                </NavbarItem>
                 <NavbarItem>
                   <NavLink
                     href="/how"
@@ -508,11 +562,9 @@ export default function VoyagerNavbar() {
                     How
                   </NavLink>
                 </NavbarItem>
-
                 <NavbarItem>
                   <PartnersDropdown />
                 </NavbarItem>
-
                 <NavbarItem>
                   <NavLink
                     href="/blog"
@@ -539,9 +591,12 @@ export default function VoyagerNavbar() {
                     }}
                     className={`font-medium px-6 py-2 transition-all duration-300 ${
                       pathname === '/partner'
-                        ? 'text-accent hover:text-primary'
-                        : 'text-primary hover:text-accent'
+                        ? 'bg-primary text-textLight'
+                        : 'text-accent hover:text-primary'
                     }`}
+                    variant={
+                      pathname === '/partner' ? 'solid' : 'light'
+                    }
                     isDisabled={loadingStates.partnerLogin}
                     startContent={
                       loadingStates.partnerLogin ? (
@@ -575,11 +630,112 @@ export default function VoyagerNavbar() {
             </div>
           </div>
         </Navbar>
+
+        {/* MOBILE MENU OVERLAY */}
+        <AnimatePresence>
+          {mobileMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.2 }}
+              className="lg:hidden absolute top-full left-0 right-0 bg-darkBg/98 backdrop-blur-md border-b border-primary/20 shadow-xl z-50"
+            >
+              <div className="px-4 py-6 space-y-4">
+                {/* Navigation Links */}
+                <div className="space-y-3">
+                  <NavLink
+                    href="/about-us"
+                    className="block text-lg py-2"
+                    isActive={pathname === '/about-us'}
+                    loadingKey="about"
+                  >
+                    About
+                  </NavLink>
+
+                  <div className="py-2">
+                    <BrandsDropdown isMobile={true} />
+                  </div>
+
+                  <div className="py-2">
+                    <IndustriesDropdown isMobile={true} />
+                  </div>
+
+                  <NavLink
+                    href="/how"
+                    className="block text-lg py-2"
+                    isActive={pathname === '/how'}
+                    loadingKey="how"
+                  >
+                    How
+                  </NavLink>
+
+                  <div className="py-2">
+                    <PartnersDropdown isMobile={true} />
+                  </div>
+
+                  <NavLink
+                    href="/blog"
+                    className="block text-lg py-2"
+                    isActive={pathname === '/blog'}
+                    loadingKey="blog"
+                  >
+                    Blog
+                  </NavLink>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="pt-4 border-t border-gray-700 space-y-3">
+                  <Button
+                    as={Link}
+                    href="/partner"
+                    onPress={(e) => {
+                      e.preventDefault();
+                      navigateWithLoading('partnerLogin', '/partner');
+                    }}
+                    className={`w-full font-medium px-6 py-3 transition-all duration-300 ${
+                      pathname === '/partner'
+                        ? 'bg-primary text-textLight'
+                        : 'text-accent hover:text-primary'
+                    }`}
+                    variant={
+                      pathname === '/partner' ? 'solid' : 'light'
+                    }
+                    isDisabled={loadingStates.partnerLogin}
+                    startContent={
+                      loadingStates.partnerLogin ? (
+                        <LoadingSpinner size={14} />
+                      ) : null
+                    }
+                  >
+                    Partner Login
+                  </Button>
+                  <Button
+                    as={Link}
+                    href="/waitlist"
+                    onPress={(e) => {
+                      e.preventDefault();
+                      navigateWithLoading('waitlist', '/waitlist');
+                    }}
+                    className="w-full bg-primary text-textLight font-medium px-6 py-3 rounded-md hover:bg-accent transition-all duration-300"
+                    isDisabled={loadingStates.waitlist}
+                    startContent={
+                      loadingStates.waitlist ? (
+                        <LoadingSpinner size={12} />
+                      ) : null
+                    }
+                  >
+                    Join!
+                  </Button>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </motion.div>
 
       {/* Spacer to push page content below the navbar */}
-      <div className="block lg:hidden h-24"></div>
-      <div className="hidden lg:block h-16"></div>
+      <div className="h-16"></div>
     </>
   );
 }

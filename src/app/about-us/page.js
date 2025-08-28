@@ -9,12 +9,13 @@ import Navbar from '@/src/app/components/Navbar';
 import Footer from '@/src/app/components/Footer';
 import TeamSection from '@/src/app/components/for-partner-page/TeamSection';
 import { Button } from '@heroui/react';
+import ReviewPopup from '@/src/app/components/ReviewPopup';
 
 export default function AboutUsPage() {
   return (
     <main className="min-h-screen bg-darkBg text-textLight overflow-hidden">
       <Navbar />
-
+      <ReviewPopup />
       <div className="relative py-4">
         {/* Floating particles/elements for depth */}
         {[...Array(12)].map((_, i) => (

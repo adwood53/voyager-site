@@ -149,7 +149,7 @@ export default function SportFitnessSection({ onClose }) {
             size="lg"
             className="bg-primary text-darkBg hover:bg-accent"
           >
-            Start Your Sport & Fitness Project
+            Start Your Sport Project
           </Button>
         </Link>
         <Link href="/industries/case-studies">

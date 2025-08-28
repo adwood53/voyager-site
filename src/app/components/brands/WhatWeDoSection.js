@@ -9,26 +9,31 @@
  * - Interactive service grid with 3D flip animations on click only
  * - 9:16 aspect ratio cards with responsive centered layout
  * - Single card flip state management (only one card flipped at a time)
+ * - Lazy video loading with Intersection Observer to prevent browser limits
+ * - Loading states with spinner for better UX
  * - Video playback on card flip (back side)
  * - Detailed service information with darkened background images (front side)
  * - Animated question mark emoji that flips with the cards
  * - Scroll-based parallax animations using Framer Motion
  * - Hover scale effects (no flip on hover)
  *
- * @author Voyager Development Team
- * @version 2.1.0 - Fixed state management, centering, and hover behavior
- * @since 2024
+ * @author Anthony Woodward
+ * @version 2.1.0 - Added lazy video loading
+ * @since 2025
  */
 
 'use client';
 
-import { Card, CardBody, Chip } from '@heroui/react';
+import { Card, CardBody, Chip, Spinner } from '@heroui/react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 
 export default function WhatWeDoSection() {
   const sectionRef = useRef(null);
+  const videoRefs = useRef({});
+  const observerRef = useRef(null);
+
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ['start end', 'end start'],
@@ -47,6 +52,11 @@ export default function WhatWeDoSection() {
 
   // State to track which card is currently flipped (only one at a time)
   const [flippedCard, setFlippedCard] = useState(null);
+
+  // Lazy loading states
+  const [loadingVideos, setLoadingVideos] = useState(new Set());
+  const [loadedVideos, setLoadedVideos] = useState(new Set());
+  const [failedVideos, setFailedVideos] = useState(new Set());
 
   /**
    * Service data with enhanced information for detailed front cards
@@ -67,7 +77,7 @@ export default function WhatWeDoSection() {
         'Transform physical materials into interactive digital gateways. Perfect for product launches, marketing campaigns, and customer engagement.',
       icon: '📱',
       backgroundImage: '/hyrox2.jpg',
-      videoSrc: '/videos/drift.mp4',
+      videoSrc: '/industries/Sports/Hyrox AR.mp4',
       color: 'primary',
       benefits: [
         'No app downloads',
@@ -103,7 +113,7 @@ export default function WhatWeDoSection() {
         'Bring remote audiences into your physical spaces. Perfect for real estate, retail, museums, and venue showcasing.',
       icon: '🌐',
       backgroundImage: '/virtualworlds.jpg',
-      videoSrc: '/videos/drift.mp4',
+      videoSrc: '/industries/Property/property1.mp4',
       color: 'success',
       benefits: [
         'Remote accessibility',
@@ -121,7 +131,7 @@ export default function WhatWeDoSection() {
         'Revolutionize learning with interactive, engaging educational experiences that boost completion rates and knowledge retention.',
       icon: '🎓',
       backgroundImage: '/team.webp',
-      videoSrc: '/videos/drift.mp4',
+      videoSrc: '/videos/icons.mp4',
       color: 'warning',
       benefits: [
         'Gamified learning',
@@ -139,7 +149,7 @@ export default function WhatWeDoSection() {
         'Boost engagement through game mechanics, rewards, and interactive storytelling that drives sustained audience participation.',
       icon: '🎮',
       backgroundImage: '/play/sugarskullfrenzy.png',
-      videoSrc: '/videos/drift.mp4',
+      videoSrc: '/videos/DayOfTheDead.mp4',
       color: 'danger',
       benefits: [
         'Increased retention',
@@ -151,11 +161,170 @@ export default function WhatWeDoSection() {
   ];
 
   /**
-   * Handles card click/touch events
+   * Load video source and handle loading states
+   */
+  const loadVideo = useCallback(
+    async (videoElement, index, videoSrc) => {
+      if (loadedVideos.has(index) || loadingVideos.has(index)) {
+        return; // Already loaded or loading
+      }
+
+      setLoadingVideos((prev) => new Set([...prev, index]));
+      setFailedVideos((prev) => {
+        const newSet = new Set(prev);
+        newSet.delete(index);
+        return newSet;
+      });
+
+      try {
+        // Set the video source
+        const sources = videoElement.querySelectorAll('source');
+        sources.forEach((source) => {
+          source.src = videoSrc;
+        });
+
+        // Set up event listeners
+        const handleLoadSuccess = () => {
+          setLoadingVideos((prev) => {
+            const newSet = new Set(prev);
+            newSet.delete(index);
+            return newSet;
+          });
+          setLoadedVideos((prev) => new Set([...prev, index]));
+
+          // Try to play the video
+          videoElement.play().catch((error) => {
+            console.log(
+              `Autoplay blocked for video ${index}:`,
+              error
+            );
+          });
+
+          cleanup();
+        };
+
+        const handleLoadError = (error) => {
+          console.error(`Video load error for card ${index}:`, error);
+          setLoadingVideos((prev) => {
+            const newSet = new Set(prev);
+            newSet.delete(index);
+            return newSet;
+          });
+          setFailedVideos((prev) => new Set([...prev, index]));
+          cleanup();
+        };
+
+        const cleanup = () => {
+          videoElement.removeEventListener(
+            'loadeddata',
+            handleLoadSuccess
+          );
+          videoElement.removeEventListener('error', handleLoadError);
+        };
+
+        videoElement.addEventListener(
+          'loadeddata',
+          handleLoadSuccess
+        );
+        videoElement.addEventListener('error', handleLoadError);
+
+        // Trigger video load
+        videoElement.load();
+
+        // Fallback timeout
+        setTimeout(() => {
+          if (loadingVideos.has(index)) {
+            handleLoadError('Timeout');
+          }
+        }, 10000);
+      } catch (error) {
+        console.error(
+          `Failed to load video for card ${index}:`,
+          error
+        );
+        setLoadingVideos((prev) => {
+          const newSet = new Set(prev);
+          newSet.delete(index);
+          return newSet;
+        });
+        setFailedVideos((prev) => new Set([...prev, index]));
+      }
+    },
+    [loadedVideos, loadingVideos]
+  );
+
+  /**
+   * Initialize Intersection Observer for lazy loading
+   */
+  const initializeVideoLazyLoading = useCallback(() => {
+    if (observerRef.current) {
+      observerRef.current.disconnect();
+    }
+
+    observerRef.current = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const videoElement = entry.target;
+            const index = parseInt(videoElement.dataset.index, 10);
+
+            // Only load if card is flipped
+            if (
+              flippedCard === index &&
+              !loadedVideos.has(index) &&
+              !loadingVideos.has(index)
+            ) {
+              const service = services[index];
+              loadVideo(videoElement, index, service.videoSrc);
+            }
+          }
+        });
+      },
+      {
+        root: null,
+        rootMargin: '50px',
+        threshold: 0.1,
+      }
+    );
+
+    // Observe all video elements
+    Object.values(videoRefs.current).forEach((videoElement) => {
+      if (videoElement) {
+        observerRef.current.observe(videoElement);
+      }
+    });
+  }, [flippedCard, loadedVideos, loadingVideos, loadVideo, services]);
+
+  /**
+   * Handles card click/touch events with lazy loading
    * Only allows one card to be flipped at a time
    */
   const handleCardClick = (index) => {
-    setFlippedCard(flippedCard === index ? null : index);
+    const newFlippedCard = flippedCard === index ? null : index;
+    setFlippedCard(newFlippedCard);
+
+    // If flipping to show video, trigger lazy loading if in viewport
+    if (newFlippedCard === index) {
+      const videoElement = videoRefs.current[index];
+      if (
+        videoElement &&
+        !loadedVideos.has(index) &&
+        !loadingVideos.has(index)
+      ) {
+        // Check if video is in viewport
+        const rect = videoElement.getBoundingClientRect();
+        const isInViewport =
+          rect.top < window.innerHeight &&
+          rect.bottom > 0 &&
+          rect.left < window.innerWidth &&
+          rect.right > 0;
+
+        if (isInViewport) {
+          const service = services[index];
+          loadVideo(videoElement, index, service.videoSrc);
+        }
+      }
+    }
   };
 
   /**
@@ -165,6 +334,20 @@ export default function WhatWeDoSection() {
   const isFlipped = (index) => {
     return flippedCard === index;
   };
+
+  // Initialize intersection observer when flipped card changes
+  useEffect(() => {
+    initializeVideoLazyLoading();
+  }, [initializeVideoLazyLoading]);
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (observerRef.current) {
+        observerRef.current.disconnect();
+      }
+    };
+  }, []);
 
   const container = {
     hidden: { opacity: 0 },
@@ -412,7 +595,7 @@ export default function WhatWeDoSection() {
                     </Card>
                   </div>
 
-                  {/* Back Side - Video */}
+                  {/* Back Side - Video with Lazy Loading */}
                   <div
                     className="flip-card-back absolute w-full h-full"
                     style={{
@@ -439,8 +622,39 @@ export default function WhatWeDoSection() {
                       </motion.div>
 
                       <CardBody className="h-full p-0 relative">
-                        {/* Video element */}
+                        {/* Loading State */}
+                        {loadingVideos.has(index) && (
+                          <div className="absolute inset-0 z-30 flex items-center justify-center bg-black/80">
+                            <div className="text-center">
+                              <Spinner size="lg" color="primary" />
+                              <p className="text-textLight mt-4 text-sm">
+                                Loading video...
+                              </p>
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Error State */}
+                        {failedVideos.has(index) && (
+                          <div className="absolute inset-0 z-30 flex items-center justify-center bg-black/80">
+                            <div className="text-center">
+                              <div className="text-4xl mb-4">⚠️</div>
+                              <p className="text-textLight text-sm">
+                                Video unavailable
+                              </p>
+                              <p className="text-textLight opacity-60 text-xs mt-2">
+                                Click to try again
+                              </p>
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Video element - starts without source for lazy loading */}
                         <video
+                          ref={(el) =>
+                            (videoRefs.current[index] = el)
+                          }
+                          data-index={index}
                           className="w-full h-full object-cover"
                           autoPlay
                           loop
@@ -448,31 +662,34 @@ export default function WhatWeDoSection() {
                           playsInline
                           poster="/placeholder.jpg"
                         >
-                          <source
-                            src={service.videoSrc}
-                            type="video/mp4"
-                          />
+                          {/* Sources will be added dynamically by lazy loading */}
+                          <source type="video/mp4" />
                           Your browser does not support the video tag.
                         </video>
 
                         {/* Video overlay with service name - Optimized for 9:16 */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex items-end justify-center p-4 md:p-6">
-                          <div className="text-center">
-                            <h4 className="text-textLight font-semibold text-base md:text-lg mb-2">
-                              {service.title}
-                            </h4>
-                            <p className="text-textLight/80 text-sm">
-                              Demo Experience
-                            </p>
+                        {loadedVideos.has(index) && (
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex items-end justify-center p-4 md:p-6">
+                            <div className="text-center">
+                              <h4 className="text-textLight font-semibold text-base md:text-lg mb-2">
+                                {service.title}
+                              </h4>
+                              <p className="text-textLight/80 text-sm">
+                                Demo Experience
+                              </p>
+                            </div>
                           </div>
-                        </div>
+                        )}
 
                         {/* Click to return indicator */}
-                        <div className="absolute top-4 left-4 bg-black/50 rounded-full px-3 py-2">
-                          <span className="text-textLight text-xs font-medium">
-                            Click to return
-                          </span>
-                        </div>
+                        {(loadedVideos.has(index) ||
+                          failedVideos.has(index)) && (
+                          <div className="absolute top-4 left-4 bg-black/50 rounded-full px-3 py-2">
+                            <span className="text-textLight text-xs font-medium">
+                              Click to return
+                            </span>
+                          </div>
+                        )}
                       </CardBody>
                     </Card>
                   </div>

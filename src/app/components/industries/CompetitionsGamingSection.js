@@ -139,7 +139,7 @@ export default function CompetitionsGamingSection({ onClose }) {
             size="lg"
             className="bg-primary text-darkBg hover:bg-accent"
           >
-            Start Your Competitions & Gaming Project
+            Start Your Gaming Project
           </Button>
         </Link>
         <Link href="/industries/case-studies">

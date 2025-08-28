@@ -12,6 +12,7 @@ import ContactSection from '@/src/app/components/ContactSection';
 import Footer from '@/src/app/components/Footer';
 import PartnerLogoCarousel from '@/src/app/components/PartnerLogoCarousel';
 import ChatbotComponent from '@/src/app/components/ChatbotComponent';
+import ReviewPopup from '@/src/app/components/ReviewPopup';
 
 export default function ForPartnersPage() {
   /**
@@ -67,6 +68,7 @@ export default function ForPartnersPage() {
       <ChatbotComponent />
       <div className="parallax-container">
         <Navbar />
+        <ReviewPopup />
         <HeroSection />
         <BenefitsSection />
         <ServicesSection />
