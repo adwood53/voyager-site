@@ -593,7 +593,7 @@ export default function ServicesPanel() {
                             </Button>
                             <Button
                               as={Link}
-                              href="mailto:connect@voyagervrlab.co.uk"
+                              href="mailto:connect@voyagerstudio.co.uk"
                               className="flex items-center justify-center gap-2"
                               style={{
                                 backgroundColor:

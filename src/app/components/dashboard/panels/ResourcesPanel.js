@@ -506,16 +506,17 @@ export default function ResourcesPanel() {
           name: '360 Studio Explainer',
           type: 'standalone',
           demoUrl:
-            'https://immerse.voyagervrlab.co.uk/VOY/3D-Model-VR',
+            'https://immerse.voyagerstudio.co.uk/VOY/3D-Model-VR',
           description:
             'Explore our virtual studio in 360°. Works best on mobile devices or desktop with webcam.',
         },
         {
           name: 'Music Banner',
           type: 'tracked',
-          demoUrl: 'https://immerse.voyagervrlab.co.uk/VOY/Automatom',
+          demoUrl:
+            'https://immerse.voyagerstudio.co.uk/VOY/Automatom',
           imageUrl:
-            'https://immerse.voyagervrlab.co.uk/VOY/brand/images/voyager-banner.png',
+            'https://immerse.voyagerstudio.co.uk/VOY/brand/images/voyager-banner.png',
           description:
             'Interactive AR experience triggered by scanning the music banner image.',
         },
@@ -523,9 +524,9 @@ export default function ResourcesPanel() {
           name: 'AR Business Card',
           type: 'tracked',
           demoUrl:
-            'https://immerse.voyagervrlab.co.uk/VOY/Business-Card/Demo',
+            'https://immerse.voyagerstudio.co.uk/VOY/Business-Card/Demo',
           imageUrl:
-            'https://immerse.voyagervrlab.co.uk/VOY/brand/images/business-card/front.png',
+            'https://immerse.voyagerstudio.co.uk/VOY/brand/images/business-card/front.png',
           description:
             'Virtual content that appears when scanning our business card design.',
         },
@@ -533,7 +534,7 @@ export default function ResourcesPanel() {
           name: 'Voyager Lens',
           type: 'standalone',
           demoUrl:
-            'https://immerse.voyagervrlab.co.uk/VOY/Face-Tracking',
+            'https://immerse.voyagerstudio.co.uk/VOY/Face-Tracking',
           description:
             'AR face filter experience. Works best on mobile devices or desktop with webcam.',
         },

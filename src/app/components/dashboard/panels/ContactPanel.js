@@ -356,10 +356,10 @@ export default function ContactPanel() {
                 Direct to partner team
               </p>
               <a
-                href="mailto:connect@voyagervrlab.co.uk"
+                href="mailto:connect@voyagerstudio.co.uk"
                 className="text-primary hover:text-accent transition-colors"
               >
-                connect@voyagervrlab.co.uk
+                connect@voyagerstudio.co.uk
               </a>
             </div>
 

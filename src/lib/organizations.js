@@ -12,12 +12,12 @@ export async function getOrgDetails() {
     // Get the hostname from the request
     const hostname = window.location.hostname;
 
-    // Parse the subdomain (e.g., everythingbranded from everythingbranded.voyagervrlab.co.uk)
+    // Parse the subdomain (e.g., everythingbranded from everythingbranded.voyagerstudio.co.uk)
     const subdomain = hostname.split('.')[0];
 
     if (
       subdomain === 'localhost' ||
-      subdomain === 'voyagervrlab' ||
+      subdomain === 'voyagerstudio' ||
       !subdomain
     ) {
       // Default Voyager branding if no specific org

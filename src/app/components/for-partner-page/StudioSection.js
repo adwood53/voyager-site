@@ -182,7 +182,7 @@ export default function StudioSection() {
               >
                 <Button
                   as={Link}
-                  href="https://immerse.voyagervrlab.co.uk/VOY/3D-Model-VR"
+                  href="https://immerse.voyagerstudio.co.uk/VOY/3D-Model-VR"
                   target="_blank"
                   className="bg-primary text-textLight font-medium hover:bg-accent px-6 py-3 rounded-md transition-all hover:shadow-glow glitch-effect"
                 >

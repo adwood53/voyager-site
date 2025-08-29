@@ -41,7 +41,7 @@ export const metadata = {
   description:
     'Expand your services, elevate your brand, and earn more with our white label immersive technology solutions. Specialists in AR, VR, and interactive experiences.',
   keywords:
-    'white label, immersive technology, AR, VR, virtual events, partner program, studio access, voyager vr lab',
+    'white label, immersive technology, AR, VR, virtual events, partner program, studio access, voyager studio',
   metadataBase: new URL(BASE_URL),
   robots: {
     index: true,
@@ -94,7 +94,7 @@ export default function RootLayout({ children }) {
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Organization',
-    name: 'Voyager VR Lab',
+    name: 'Voyager Studio',
     url: 'https://www.voyagervrlab.co.uk',
     logo: 'https://www.voyagervrlab.co.uk/Voyager-Box-Logo.png',
     description:
@@ -107,7 +107,7 @@ export default function RootLayout({ children }) {
       addressCountry: 'UK',
     },
     telephone: '+447470361585',
-    email: 'connect@voyagervrlab.co.uk',
+    email: 'connect@voyagerstudio.co.uk',
   };
 
   return (

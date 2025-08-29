@@ -106,10 +106,10 @@ export default function ProductionsPanel() {
             please include details in the form or contact us directly
             at{' '}
             <a
-              href="mailto:connect@voyagervrlab.co.uk"
+              href="mailto:connect@voyagerstudio.co.uk"
               className="text-primary hover:text-accent transition-colors"
             >
-              connect@voyagervrlab.co.uk
+              connect@voyagerstudio.co.uk
             </a>
             .
           </p>

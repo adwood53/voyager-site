@@ -183,10 +183,10 @@ export default function ContactSection() {
                             📧
                           </span>
                           <a
-                            href="mailto:connect@voyagervrlab.co.uk"
+                            href="mailto:connect@voyagerstudio.co.uk"
                             className="hover:underline transition-all break-words overflow-hidden"
                           >
-                            connect@voyagervrlab.co.uk
+                            connect@voyagerstudio.co.uk
                           </a>
                         </div>
                         <div className="flex items-start">

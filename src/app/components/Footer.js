@@ -65,34 +65,34 @@ export default function Footer() {
                 </li>
                 <li>
                   <Link
-                    href="/#benefits"
+                    href="/for-brands"
                     className="text-textLight opacity-60 hover:text-primary hover:opacity-100 transition-colors hover:translate-x-1 transform inline-block"
                   >
-                    Benefits
+                    Brands
                   </Link>
                 </li>
                 <li>
                   <Link
-                    href="/#services"
+                    href="/for-partners"
                     className="text-textLight opacity-60 hover:text-primary hover:opacity-100 transition-colors hover:translate-x-1 transform inline-block"
                   >
-                    Services
+                    Partners
                   </Link>
                 </li>
                 <li>
                   <Link
-                    href="/#studio"
+                    href="/industries"
                     className="text-textLight opacity-60 hover:text-primary hover:opacity-100 transition-colors hover:translate-x-1 transform inline-block"
                   >
-                    Studio Access
+                    Industries
                   </Link>
                 </li>
                 <li>
                   <Link
-                    href="/#plans"
+                    href="/industries/case-studies"
                     className="text-textLight opacity-60 hover:text-primary hover:opacity-100 transition-colors hover:translate-x-1 transform inline-block"
                   >
-                    Plans
+                    Case Studies
                   </Link>
                 </li>
                 <li>
@@ -130,10 +130,10 @@ export default function Footer() {
                 <li className="text-textLight opacity-60 hover:opacity-100 transition-opacity">
                   <span className="block">Email:</span>
                   <Link
-                    href="mailto:connect@voyagervrlab.co.uk"
+                    href="mailto:connect@voyagerstudio.co.uk"
                     className="text-primary hover:text-accent transition-colors hover:translate-x-1 transform inline-block"
                   >
-                    connect@voyagervrlab.co.uk
+                    connect@voyagerstudio.co.uk
                   </Link>
                 </li>
                 <li className="text-textLight opacity-60 hover:opacity-100 transition-opacity">
