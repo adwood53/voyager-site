@@ -142,12 +142,6 @@ export default function VoyagerNavbar() {
       description: 'Discover our immersive solutions',
     },
     {
-      key: 'products',
-      label: 'Products',
-      href: '/for-brands#products',
-      description: 'Explore our product offerings',
-    },
-    {
       key: 'experiences',
       label: 'Experiences',
       href: '/for-brands#experiences',
@@ -158,12 +152,6 @@ export default function VoyagerNavbar() {
       label: 'Why Voyager',
       href: '/for-brands#why-voyager',
       description: 'Learn what makes us different',
-    },
-    {
-      key: 'faq',
-      label: 'FAQ',
-      href: '/for-brands#faq',
-      description: 'Get answers to common questions',
     },
     {
       key: 'signup',

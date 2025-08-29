@@ -197,23 +197,23 @@ export default function HyroxCorbySection({ onClose }) {
                 experience for your sport or fitness brand.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link href="/industries#signup">
-                  <Button
-                    size="lg"
-                    className="bg-primary text-darkBg hover:bg-accent"
-                  >
-                    Start Your Sport Project
-                  </Button>
-                </Link>
-                <Link href="/industries/case-studies">
-                  <Button
-                    size="lg"
-                    variant="bordered"
-                    className="border-primary text-primary hover:bg-primary/10"
-                  >
-                    View More Case Studies
-                  </Button>
-                </Link>
+                <Button
+                  as={Link}
+                  href="/industries#signup"
+                  size="lg"
+                  className="bg-primary text-darkBg hover:bg-accent"
+                >
+                  Start Your Beauty Project
+                </Button>
+                <Button
+                  as={Link}
+                  href="/industries/case-studies"
+                  size="lg"
+                  variant="bordered"
+                  className="border-primary text-primary hover:bg-primary/10"
+                >
+                  View More Case Studies
+                </Button>
               </div>
             </div>
           </motion.div>

@@ -88,14 +88,15 @@ export default function SharedStudyHero({
           transition={{ duration: 0.5 }}
           className="mb-8"
         >
-          <Link href="/industries/case-studies">
-            <Button
-              variant="light"
-              className="text-primary hover:text-textLight"
-            >
-              ← Back to Case Studies
-            </Button>
-          </Link>
+          <Button
+            as={Link}
+            href="/industries/case-studies"
+            variant="light"
+            className="text-primary active:text-textLight transition-colors p-2 min-h-[44px]"
+            onPress={(e) => {}}
+          >
+            ← Back to Case Studies
+          </Button>
         </motion.div>
 
         {/* Header Content */}
@@ -130,14 +131,14 @@ export default function SharedStudyHero({
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
           >
-            <Link href={ctaLink}>
-              <Button
-                size="lg"
-                className="bg-primary text-darkBg hover:bg-accent transition-colors"
-              >
-                {ctaText}
-              </Button>
-            </Link>
+            <Button
+              as={Link}
+              href="/industries#signup"
+              size="lg"
+              className="bg-primary text-darkBg hover:bg-accent transition-colors"
+            >
+              {ctaText}
+            </Button>
           </motion.div>
 
           <motion.div

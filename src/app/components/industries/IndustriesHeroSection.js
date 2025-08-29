@@ -87,7 +87,7 @@ export default function IndustriesHeroSection() {
           className="text-xl text-textLight/90 mb-12 max-w-3xl mx-auto"
         >
           From entertainment to education, we create immersive
-          experiences that revolutionize how industries engage with
+          experiences that revolutionise how industries engage with
           their audiences.
         </motion.p>
 
