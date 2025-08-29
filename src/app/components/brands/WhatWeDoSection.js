@@ -77,7 +77,7 @@ export default function WhatWeDoSection() {
         'Transform physical materials into interactive digital gateways. Perfect for product launches, marketing campaigns, and customer engagement.',
       icon: '📱',
       backgroundImage: '/hyrox2.jpg',
-      videoSrc: '/industries/Sports/Hyrox AR.mp4',
+      videoSrc: '/industries/sports/Hyrox AR.mp4',
       color: 'primary',
       benefits: [
         'No app downloads',
@@ -113,7 +113,7 @@ export default function WhatWeDoSection() {
         'Bring remote audiences into your physical spaces. Perfect for real estate, retail, museums, and venue showcasing.',
       icon: '🌐',
       backgroundImage: '/virtualworlds.jpg',
-      videoSrc: '/industries/Property/property1.mp4',
+      videoSrc: '/industries/property/property1.mp4',
       color: 'success',
       benefits: [
         'Remote accessibility',

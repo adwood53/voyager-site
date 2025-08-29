@@ -123,7 +123,7 @@ export default function HyroxCorbySection({ onClose }) {
                 <CardBody className="p-8">
                   <div className="bg-blue-500/10 rounded-lg p-12 text-center mb-4 h-[750px]">
                     <Image
-                      src="/industries/Sports/bottles-3.jpg"
+                      src="/industries/sports/bottles-3.jpg"
                       alt={`Hyrox Corby Bottles`}
                       fill
                       style={{ objectFit: 'cover' }}

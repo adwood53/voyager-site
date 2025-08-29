@@ -60,7 +60,7 @@ export default function IndustriesSection() {
       icon: '',
       description:
         'Transform live events and digital content with immersive experiences that create deeper fan connections and community moments.',
-      image: '/industries/Music/thumb.jpg',
+      image: '/industries/music/thumb.jpg',
     },
     {
       id: 'sport-fitness',
@@ -68,7 +68,7 @@ export default function IndustriesSection() {
       icon: '',
       description:
         'Track performance, boost loyalty, and give sponsors measurable proof through interactive bibs, wristbands, and gamified experiences.',
-      image: '/industries/Sports/bottles-4.webp',
+      image: '/industries/sports/bottles-4.webp',
     },
     {
       id: 'beauty-aesthetics',
@@ -76,7 +76,7 @@ export default function IndustriesSection() {
       icon: '',
       description:
         'Build trust and personalisation with interactive tutorials, aftercare guides, and authenticity checks delivered through packaging.',
-      image: '/industries/Beauty/thumb.png',
+      image: '/industries/beauty/thumb.png',
     },
     {
       id: 'events-hospitality',
@@ -84,7 +84,7 @@ export default function IndustriesSection() {
       icon: '',
       description:
         'Guide, delight, and capture guest data seamlessly with interactive lanyards, menus, and digital experiences.',
-      image: '/industries/Events/thumb.png',
+      image: '/industries/events/thumb.png',
     },
     {
       id: 'education-training',
@@ -92,7 +92,7 @@ export default function IndustriesSection() {
       icon: '',
       description:
         'Turn learning into an immersive journey with interactive textbooks, training kits, and progress tracking systems.',
-      image: '/industries/Education/thumb.png',
+      image: '/industries/education/thumb.png',
     },
     {
       id: 'content-creators-influencers',
@@ -100,7 +100,7 @@ export default function IndustriesSection() {
       icon: '',
       description:
         'Build lasting communities and capture audience data with interactive merch, limited drops, and unlockable content.',
-      image: '/industries/Creators/thumb.png',
+      image: '/industries/creators/thumb.png',
     },
     {
       id: 'property-construction',
@@ -108,7 +108,7 @@ export default function IndustriesSection() {
       icon: '',
       description:
         'Show properties with instant 360° tours, floorplans, and booking systems accessible through brochures and signage.',
-      image: '/industries/Property/thumb.png',
+      image: '/industries/property/thumb.png',
     },
     {
       id: 'food-beverage',
@@ -116,7 +116,7 @@ export default function IndustriesSection() {
       icon: '',
       description:
         'Share recipes, stories, and build loyalty through interactive packaging and menus that connect customers to your brand.',
-      image: '/industries/Food/thumb.png',
+      image: '/industries/food/thumb.png',
     },
     {
       id: 'marketing-publications',
@@ -124,7 +124,7 @@ export default function IndustriesSection() {
       icon: '',
       description:
         'Bring print to life with videos, AR, and live updates that prove ROI and create memorable campaign experiences.',
-      image: '/industries/Marketing/thumb.jpg',
+      image: '/industries/marketing/thumb.jpg',
     },
     {
       id: 'fashion-apparel',
@@ -132,7 +132,7 @@ export default function IndustriesSection() {
       icon: '',
       description:
         'Turn style into story with interactive garments, packaging, and displays that build authenticity and community.',
-      image: '/industries/Fashion/thumb.png',
+      image: '/industries/fashion/thumb.png',
     },
     {
       id: 'mental-health-wellness',
@@ -140,7 +140,7 @@ export default function IndustriesSection() {
       icon: '',
       description:
         'Support wellness initiatives with therapeutic and mindful immersive experiences that promote mental health.',
-      image: '/industries/Wellness/thumb.png',
+      image: '/industries/wellness/thumb.png',
     },
     {
       id: 'competitions-gaming',
@@ -148,7 +148,7 @@ export default function IndustriesSection() {
       icon: '',
       description:
         'Create engaging competitive experiences and gaming platforms that connect players in innovative ways.',
-      image: '/industries/Gaming/thumb.png',
+      image: '/industries/gaming/thumb.png',
     },
   ];
 
