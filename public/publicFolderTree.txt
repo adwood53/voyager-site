@@ -8,7 +8,7 @@ D:\Work\AlphaX\Codebase\Voyager Website\voyager-site\public
 -----------------------------------------------------
 
 Folder PATH listing for volume Tertiary Drive
-Volume serial number is 00000096 4257:C030
+Volume serial number is 00000031 4257:C030
 D:\WORK\ALPHAX\CODEBASE\VOYAGER WEBSITE\VOYAGER-SITE\PUBLIC
 |   generatePublicTree.bat
 |   hyrox2.jpg
@@ -22,6 +22,7 @@ D:\WORK\ALPHAX\CODEBASE\VOYAGER WEBSITE\VOYAGER-SITE\PUBLIC
 |   studiobackground.jpeg
 |   studioimage.jpg
 |   team.webp
+|   vip-logo.jpg
 |   virtualworlds.jpg
 |   Voyager Logo V1.png
 |   Voyager-Box-Logo-192.png
@@ -36,7 +37,144 @@ D:\WORK\ALPHAX\CODEBASE\VOYAGER WEBSITE\VOYAGER-SITE\PUBLIC
 |       Labora-Regular.otf
 |       Labora-Regular.ttf
 |       
++---games
+|   +---dropout
+|   |   |   index.html
+|   |   |   
+|   |   +---Build
+|   |   |       v2.data
+|   |   |       v2.framework.js
+|   |   |       v2.loader.js
+|   |   |       v2.wasm
+|   |   |       
+|   |   +---Screenshots
+|   |   |       1.png
+|   |   |       2.png
+|   |   |       3.png
+|   |   |       4.png
+|   |   |       cover.png
+|   |   |       
+|   |   \---TemplateData
+|   |           favicon.ico
+|   |           fullscreen-button.png
+|   |           MemoryProfiler.png
+|   |           progress-bar-empty-dark.png
+|   |           progress-bar-empty-light.png
+|   |           progress-bar-full-dark.png
+|   |           progress-bar-full-light.png
+|   |           style.css
+|   |           unity-logo-dark.png
+|   |           unity-logo-light.png
+|   |           unity-logo-title-footer.png
+|   |           webmemd-icon.png
+|   |           
+|   \---thor
+|       |   index.html
+|       |   
+|       +---Build
+|       |       WebGL.data.br
+|       |       WebGL.framework.js.br
+|       |       WebGL.loader.js
+|       |       WebGL.wasm.br
+|       |       
+|       +---Screenshots
+|       |       1.png
+|       |       2.png
+|       |       3.png
+|       |       4.png
+|       |       cover.png
+|       |       
+|       \---TemplateData
+|               favicon.ico
+|               fullscreen-button.png
+|               MemoryProfiler.png
+|               progress-bar-empty-dark.png
+|               progress-bar-empty-light.png
+|               progress-bar-full-dark.png
+|               progress-bar-full-light.png
+|               style.css
+|               unity-logo-dark.png
+|               unity-logo-light.png
+|               unity-logo-title-footer.png
+|               webmemd-icon.png
+|               
++---ideas
+|       360countdown.webp
+|       albumjukebox.webp
+|       albumstemplayer.webp
+|       animatedstreetart.webp
+|       arseasontickets.webp
+|       augmenteddigitalsignage.webp
+|       augmentedsignage.webp
+|       augmentedtrophies.webp
+|       barndoorbottle.webp
+|       headweartryon.webp
+|       holeinwall.webp
+|       hollowcan.webp
+|       immersivealbum.webp
+|       immersivemenu.webp
+|       immersivemusicmerch.webp
+|       immersivepos.webp
+|       immersivesonglyrics.webp
+|       immersivestorefront.webp
+|       immersivevenue.webp
+|       openaugmentedgallery.webp
+|       submit-idea.png
+|       treasurehunt.webp
+|       tryathome.webp
+|       
++---industries
+|   +---beauty
+|   |       thumb.png
+|   |       
+|   +---creators
+|   +---educations
+|   +---events
+|   +---fashion
+|   |       ar-tshirt.mp4
+|   |       thumb.png
+|   |       
+|   +---food
+|   |       thumb.png
+|   |       
+|   +---gaming
+|   |       thumb.png
+|   |       
+|   +---marketing
+|   |       niche.mp4
+|   |       thumb.jpg
+|   |       
+|   +---music
+|   |       thumb.jpg
+|   |       tom-album.jpg
+|   |       tom-back.png
+|   |       tom-front.png
+|   |       tom-nfc.mp4
+|   |       tom-thank.mp4
+|   |       
+|   +---property
+|   |       property1.mp4
+|   |       thumb.png
+|   |       
+|   +---sports
+|   |       bottle-used.mp4
+|   |       bottles-1.jpg
+|   |       bottles-2.jpg
+|   |       bottles-3.jpg
+|   |       bottles-4.webp
+|   |       bottles-5.webp
+|   |       Hyrox AR.mp4
+|   |       Hyrox.png
+|   |       shoot1.mp4
+|   |       shoot2.mp4
+|   |       shoot3.mp4
+|   |       
+|   \---wellness
++---models
+|       logo.glb
+|       
 +---partners
+|       CC-Main.png
 |       cc.png
 |       cross_productions_limited_logo.jpeg
 |       cross_productions_limited_logo.png
@@ -55,38 +193,86 @@ D:\WORK\ALPHAX\CODEBASE\VOYAGER WEBSITE\VOYAGER-SITE\PUBLIC
 |       Voyager-VR-Studio-Safety-Procedure.pdf
 |       Voyager-VR-Studio-Terms-and-Conditions.pdf
 |       
-\---vcards
-        1000.webp
-        1001.webp
-        1002.webp
-        1003.webp
-        1004.webp
-        1005.webp
-        1006.webp
-        1007.webp
-        1008.webp
-        1009.webp
-        1010.webp
-        1011.webp
-        1034.webp
-        1035.webp
-        1036.webp
-        1037.webp
-        1038.webp
-        1039.webp
-        1040.webp
-        1041.webp
-        1042.webp
-        1043.png
-        1043.webp
-        1044.webp
-        1045.webp
-        1046.webp
-        1047.webp
-        1048.webp
-        1049.webp
-        1050.webp
-        1051.webp
-        1052.webp
-        1053.webp
++---play
+|       aj.png
+|       automatom.jpg
+|       bikepackingaus.png
+|       comp360.png
+|       property1.png
+|       stacey.jpg
+|       sugarskullfrenzy.png
+|       
++---products
+|       20250314_170934.jpg
+|       bottle.webp
+|       bundle.webp
+|       flier.webp
+|       hoodie.webp
+|       mousemat.webp
+|       mug.webp
+|       notebook.webp
+|       poster.webp
+|       roller-banner.webp
+|       tshirt.webp
+|       vcard.webp
+|       vinyl.webp
+|       
++---reviews
+|       reviewimage-lee-jeffries.jpg
+|       reviewimage-tyler-clarke.jpg
+|       reviews.json
+|       
++---services
+|       360.png
+|       3d-brand.png
+|       3d-design.webp
+|       3d-render.png
+|       3d-render.webp
+|       crm.png
+|       game-dev.png
+|       game-dev.webp
+|       mobile-apps.png
+|       service.png
+|       web-apps.png
+|       website.png
+|       
++---vcards
+|       1000.webp
+|       1001.webp
+|       1002.webp
+|       1003.webp
+|       1004.webp
+|       1005.webp
+|       1006.webp
+|       1007.webp
+|       1008.webp
+|       1009.webp
+|       1010.webp
+|       1011.webp
+|       1034.webp
+|       1035.webp
+|       1036.webp
+|       1037.webp
+|       1038.webp
+|       1039.webp
+|       1040.webp
+|       1041.webp
+|       1042.webp
+|       1043.png
+|       1043.webp
+|       1044.webp
+|       1045.webp
+|       1046.webp
+|       1047.webp
+|       1048.webp
+|       1049.webp
+|       1050.webp
+|       1051.webp
+|       1052.webp
+|       1053.webp
+|       
+\---videos
+        DayOfTheDead.mp4
+        drift.mp4
+        icons.mp4
         
