@@ -51,7 +51,7 @@ export default function EducationTrainingSection({ onClose }) {
             Industry Overview
           </h4>
           <p className="text-textLight/80 leading-relaxed mb-6">
-            Education thrives when it's engaging and accessible.
+            Education thrives when it&apos;s engaging and accessible.
             Interactive textbooks, training kits, and ID cards unlock
             resources, track progress, and turn learning into an
             immersive journey.

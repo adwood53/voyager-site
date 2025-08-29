@@ -51,8 +51,8 @@ export default function EventsHospitalitySection({ onClose }) {
             Industry Overview
           </h4>
           <p className="text-textLight/80 leading-relaxed mb-6">
-            Great events don't just happen in the moment - they live
-            on in memory. With interactive lanyards, menus, and
+            Great events don&apos;t just happen in the moment - they
+            live on in memory. With interactive lanyards, menus, and
             invites, organisers can guide, delight, and capture data
             from guests seamlessly.
           </p>

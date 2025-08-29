@@ -51,11 +51,12 @@ export default function FashionApparelSection({ onClose }) {
             Industry Overview
           </h4>
           <p className="text-textLight/80 leading-relaxed mb-6">
-            Fashion is about more than clothes - it's about identity,
-            storytelling, and status. With interactive garments,
-            packaging, and point-of-sale, every collection can live
-            beyond the runway or the rack. Immersive tech turns style
-            into story, and customers into loyal communities.
+            Fashion is about more than clothes - it&apos;s about
+            identity, storytelling, and status. With interactive
+            garments, packaging, and point-of-sale, every collection
+            can live beyond the runway or the rack. Immersive tech
+            turns style into story, and customers into loyal
+            communities.
           </p>
 
           <h5 className="text-lg font-bold text-primary mb-4">

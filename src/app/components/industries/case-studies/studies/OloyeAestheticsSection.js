@@ -194,8 +194,8 @@ export default function OloyeAestheticsSection({ onClose }) {
                 Transform Your Beauty Business?
               </h2>
               <p className="text-textLight/70 mb-8 max-w-2xl mx-auto">
-                Let's discuss how we can build a comprehensive digital
-                platform that drives growth for your beauty or
+                Let&apos;s discuss how we can build a comprehensive
+                digital platform that drives growth for your beauty or
                 aesthetics business.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">

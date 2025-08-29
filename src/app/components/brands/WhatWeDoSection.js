@@ -713,8 +713,8 @@ export default function WhatWeDoSection() {
                 Ready to Create Something Amazing?
               </h3>
               <p className="text-textLight opacity-80 mb-6 text-lg">
-                Let's discuss how we can bring your vision to life
-                with immersive technology.
+                Let&apos;s discuss how we can bring your vision to
+                life with immersive technology.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <motion.a

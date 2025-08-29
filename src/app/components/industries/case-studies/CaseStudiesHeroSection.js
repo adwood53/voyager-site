@@ -82,7 +82,7 @@ export default function CaseStudiesHeroSection() {
               <strong className="text-primary">
                 proprietary technology
               </strong>
-              , meaning we don't shoehorn you into a pre-built
+              , meaning we don&apos;t shoehorn you into a pre-built
               template. Instead, we build your experience your way -
               flexibly, creatively, and without licensing constraints.
             </p>

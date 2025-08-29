@@ -183,7 +183,7 @@ export default function CaseStudiesGridSection() {
               Ready to Create Your Own Success Story?
             </h2>
             <p className="text-textLight/70 mb-8 text-lg">
-              From concept to deployment, we'll help you build
+              From concept to deployment, we&apos;ll help you build
               immersive experiences that engage your audience and
               drive real results.
             </p>

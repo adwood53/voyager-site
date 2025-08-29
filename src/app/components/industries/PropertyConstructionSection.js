@@ -51,9 +51,9 @@ export default function PropertyConstructionSection({ onClose }) {
             Industry Overview
           </h4>
           <p className="text-textLight/80 leading-relaxed mb-6">
-            Selling property is about more than square footage - it's
-            about vision. Interactive brochures, signage, and
-            hoardings give buyers instant access to 360° tours,
+            Selling property is about more than square footage -
+            it&apos;s about vision. Interactive brochures, signage,
+            and hoardings give buyers instant access to 360° tours,
             floorplans, and bookings.
           </p>
 

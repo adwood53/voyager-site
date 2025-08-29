@@ -168,7 +168,7 @@ export default function HyroxCorbySection({ onClose }) {
                         Client Testimonial
                       </p>
                       <p className="text-textLight/60 italic">
-                        "Quote from Alex" -{' '}
+                        &quot;Quote from Alex&quot; -{' '}
                         <span className="text-textLight/40 text-sm">
                           [Awaiting testimonial content]
                         </span>
@@ -193,8 +193,8 @@ export default function HyroxCorbySection({ onClose }) {
                 Inspired by This Project?
               </h2>
               <p className="text-textLight/70 mb-8 max-w-2xl mx-auto">
-                Let's discuss how we can create a similar immersive
-                experience for your sport or fitness brand.
+                Let&apos;s discuss how we can create a similar
+                immersive experience for your sport or fitness brand.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button

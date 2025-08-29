@@ -77,7 +77,7 @@ export default function TomMeighanSection({ onClose }) {
               <Card className="bg-darkCard border border-primary/20">
                 <CardBody className="p-8">
                   <h3 className="text-2xl font-bold text-primary mb-6">
-                    In addition, we supported Tom's wider brand
+                    In addition, we supported Tom&apos;s wider brand
                     promotion with:
                   </h3>
                   <ul className="space-y-4">
@@ -149,9 +149,9 @@ export default function TomMeighanSection({ onClose }) {
                         connected digital experience
                       </strong>
                       . Fans gained exclusive content and seamless
-                      access to Tom's world, while press and media
-                      received a professional, instant way to engage
-                      with his latest work.
+                      access to Tom&apos;s world, while press and
+                      media received a professional, instant way to
+                      engage with his latest work.
                     </p>
                   </div>
                 </CardBody>
@@ -172,7 +172,7 @@ export default function TomMeighanSection({ onClose }) {
                 Ready to Transform Your Music Release?
               </h2>
               <p className="text-textLight/70 mb-8 max-w-2xl mx-auto">
-                Let's discuss how we can create an interactive
+                Let&apos;s discuss how we can create an interactive
                 experience that connects your fans directly to your
                 music.
               </p>

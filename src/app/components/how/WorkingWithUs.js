@@ -466,7 +466,7 @@ export default function WhatWeDoSection() {
                 Ready to Make Your Brand Immersive?
               </h3>
               <p className="text-textLight opacity-80 mb-6 text-lg">
-                Let's create something extraordinary with Vcode
+                Let&apos;s create something extraordinary with Vcode
                 technology.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">

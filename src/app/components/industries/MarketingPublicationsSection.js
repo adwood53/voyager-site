@@ -51,9 +51,9 @@ export default function MarketingPublicationsSection({ onClose }) {
             Industry Overview
           </h4>
           <p className="text-textLight/80 leading-relaxed mb-6">
-            Print isn't dead - it's evolving. Brochures, magazines,
-            and business cards come alive with videos, AR, and live
-            updates that prove value and extend reach.
+            Print isn&apos;t dead - it&apos;s evolving. Brochures,
+            magazines, and business cards come alive with videos, AR,
+            and live updates that prove value and extend reach.
           </p>
 
           <h5 className="text-lg font-bold text-primary mb-4">

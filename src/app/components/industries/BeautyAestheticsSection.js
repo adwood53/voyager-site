@@ -54,7 +54,7 @@ export default function BeautyAestheticsSection({ onClose }) {
             From product packaging to salon experiences, beauty is
             about trust, education, and personalisation. Interactive
             touchpoints deliver tutorials, aftercare, and authenticity
-            checks that keep customers engaged long after they've
+            checks that keep customers engaged long after they&apos;ve
             purchased.
           </p>
 

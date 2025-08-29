@@ -52,10 +52,10 @@ export default function MusicEntertainmentSection({ onClose }) {
             Industry Overview
           </h4>
           <p className="text-textLight/80 leading-relaxed mb-6">
-            Music is about more than sound - it's about belonging.
-            With immersive merch, interactive posters, and digital
-            drops, every fan gets closer to the artist and every
-            release becomes a community moment.
+            Music is about more than sound - it&apos;s about
+            belonging. With immersive merch, interactive posters, and
+            digital drops, every fan gets closer to the artist and
+            every release becomes a community moment.
           </p>
 
           <h5 className="text-lg font-bold text-primary mb-4">

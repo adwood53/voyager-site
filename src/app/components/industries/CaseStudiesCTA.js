@@ -79,7 +79,7 @@ export default function CaseStudiesCTA() {
             viewport={{ once: true }}
             className="text-lg text-textLight/80 mb-8 leading-relaxed"
           >
-            Explore detailed case studies showcasing how we've
+            Explore detailed case studies showcasing how we&apos;ve
             transformed businesses across industries with immersive
             technology solutions.
           </motion.p>
