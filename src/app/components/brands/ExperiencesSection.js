@@ -96,6 +96,44 @@ const experiences = [
     color: 'from-accent/20 to-accent/5',
     borderColor: 'border-accent',
   },
+  {
+    title: 'Tig Bitties',
+    icon: '🥽',
+    description:
+      'Transport your audience into a fully digital world built around your story.',
+    features: [
+      'Step inside a 3D experience with a headset',
+      'Look around freely and explore environments',
+      'Use hand tracking or controllers to interact',
+      'Trigger animations, sounds, or quests',
+      'Navigate guided stories or free-roam spaces',
+      'Participate in multiplayer or social environments (if enabled)',
+    ],
+    perfectFor:
+      'Premium events, brand launches, product training, museum or educational exhibits',
+    compatibility: [{ device: 'VR Headsets', icon: '🥽' }],
+    color: 'from-accent/20 to-accent/5',
+    borderColor: 'border-accent',
+  },
+  {
+    title: 'Biggus Dickus',
+    icon: '🥽',
+    description:
+      'Transport your audience into a fully digital world built around your story.',
+    features: [
+      'Step inside a 3D experience with a headset',
+      'Look around freely and explore environments',
+      'Use hand tracking or controllers to interact',
+      'Trigger animations, sounds, or quests',
+      'Navigate guided stories or free-roam spaces',
+      'Participate in multiplayer or social environments (if enabled)',
+    ],
+    perfectFor:
+      'Premium events, brand launches, product training, museum or educational exhibits',
+    compatibility: [{ device: 'VR Headsets', icon: '🥽' }],
+    color: 'from-accent/20 to-accent/5',
+    borderColor: 'border-accent',
+  },
 ];
 
 export default function ExperiencesSection() {

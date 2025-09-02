@@ -24,6 +24,7 @@ export default function VoyagerNavbar() {
     partners: false,
     industries: false,
     how: false,
+    vip: false,
     about: false,
     blog: false,
     partnerLogin: false,
@@ -68,6 +69,7 @@ export default function VoyagerNavbar() {
       partners: false,
       industries: false,
       how: false,
+      vip: false,
       about: false,
       blog: false,
       partnerLogin: false,
@@ -539,6 +541,18 @@ export default function VoyagerNavbar() {
                 </NavbarItem>
                 <NavbarItem>
                   <IndustriesDropdown />
+                </NavbarItem>
+                <NavbarItem>
+                  <NavLink
+                    href="http://192.168.11.22:3001"
+                    className="text-lg"
+                    isActive={
+                      pathname === 'http://192.168.11.22:3001'
+                    }
+                    loadingKey="about"
+                  >
+                    V-IP
+                  </NavLink>
                 </NavbarItem>
                 <NavbarItem>
                   <NavLink
