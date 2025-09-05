@@ -1,5 +1,6 @@
 'use client';
 
+import { Card, CardBody, Chip } from '@heroui/react';
 import { Button, Link } from '@heroui/react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useRef } from 'react';
@@ -160,20 +161,10 @@ export default function HowHeroSection() {
               }}
               transition={{ duration: 4, repeat: Infinity }}
             >
-              Ideas
+              Ideas <span className="text-textLight">Into </span>
             </motion.span>
           </motion.div>
-
           <br />
-
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 1.3 }}
-          >
-            Into{' '}
-          </motion.div>
-
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -188,7 +179,7 @@ export default function HowHeroSection() {
                   '0 0 20px rgba(116, 102, 226, 0.5)',
                 ],
               }}
-              transition={{ duration: 4, repeat: Infinity, delay: 2 }}
+              transition={{ duration: 4, repeat: Infinity, delay: 1 }}
             >
               Immersive Experiences
             </motion.span>
@@ -206,8 +197,7 @@ export default function HowHeroSection() {
             animate={{ opacity: [0.9, 1, 0.9] }}
             transition={{ duration: 3, repeat: Infinity }}
           >
-            We offer more than tech. We offer the tools, talent, and
-            strategy to turn ideas into unforgettable experiences.
+            We don&apos;t just build tech.
             <br />
             <motion.span
               className="text-primary font-medium"
@@ -224,156 +214,76 @@ export default function HowHeroSection() {
                 delay: 1,
               }}
             >
-              Choose your path and discover how we can amplify your
-              vision.
+              We help you tell stories, capture attention, and drive
+              results.
             </motion.span>
           </motion.p>
         </motion.div>
 
-        {/* Enhanced navigation buttons */}
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 2.5 }}
-          className="flex flex-col md:flex-row gap-6 justify-center items-center max-w-2xl mx-auto"
-        >
-          {/* For Brands Button */}
-          <motion.div
-            whileHover={{
-              scale: 1.05,
-              transition: { duration: 0.2 },
-            }}
-            whileTap={{ scale: 0.95 }}
-            className="relative group w-full md:w-auto"
-          >
-            <motion.div
-              className="absolute inset-0 bg-gradient-to-r from-primary to-accent rounded-lg blur opacity-40"
-              animate={{
-                opacity: [0.4, 0.6, 0.4],
-              }}
-              transition={{
-                duration: 3,
-                repeat: Infinity,
-              }}
-            />
-            <Button
-              as={Link}
-              href="/for-brands"
-              className="relative bg-primary text-textLight font-bold px-12 py-4 rounded-lg text-lg hover:bg-accent transition-all duration-300 w-full md:w-auto border-2 border-transparent hover:border-primary/50 shadow-lg"
-            >
-              <span className="flex items-center gap-3">
-                <span>🏢</span>
-                For Brands
-                <motion.span className="text-xs opacity-0 group-hover:opacity-100 transition-opacity">
-                  →
-                </motion.span>
-              </span>
-            </Button>
-          </motion.div>
-
-          {/* Animated connector */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5, delay: 3 }}
-            className="hidden md:block text-2xl text-textLight opacity-40"
-          >
-            <motion.span
-              animate={{
-                opacity: [0.4, 0.7, 0.4],
-              }}
-              transition={{
-                duration: 4,
-                repeat: Infinity,
-              }}
-            >
-              or
-            </motion.span>
-          </motion.div>
-
-          {/* For Partners Button */}
-          <motion.div
-            whileHover={{
-              scale: 1.05,
-              transition: { duration: 0.2 },
-            }}
-            whileTap={{ scale: 0.95 }}
-            className="relative group w-full md:w-auto"
-          >
-            <motion.div
-              className="absolute inset-0 bg-gradient-to-r from-altPrimary to-purple-500 rounded-lg blur opacity-40"
-              animate={{
-                opacity: [0.4, 0.6, 0.4],
-              }}
-              transition={{
-                duration: 3,
-                repeat: Infinity,
-                delay: 1,
-              }}
-            />
-            <Button
-              as={Link}
-              href="/for-partners"
-              className="relative bg-transparent border-2 border-altPrimary text-altPrimary font-bold px-12 py-4 rounded-lg text-lg hover:bg-altPrimary hover:text-textLight transition-all duration-300 w-full md:w-auto shadow-lg"
-            >
-              <span className="flex items-center gap-3">
-                <span>🤝</span>
-                For Partners
-                <motion.span className="text-xs opacity-0 group-hover:opacity-100 transition-opacity">
-                  →
-                </motion.span>
-              </span>
-            </Button>
-          </motion.div>
-        </motion.div>
-
-        {/* Enhanced context indicators */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 3.5 }}
-          className="mt-12 flex flex-col md:flex-row justify-center items-center gap-8 text-sm text-textLight opacity-60"
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 2.5 }}
+          viewport={{ once: true }}
+          className="max-w-xl mx-auto mb-12"
         >
-          <motion.div
-            className="flex items-center gap-2"
-            animate={{ opacity: [0.6, 0.8, 0.6] }}
-            transition={{ duration: 4, repeat: Infinity }}
-          >
-            <motion.span
-              className="w-2 h-2 bg-primary rounded-full"
-              animate={{
-                boxShadow: [
-                  '0 0 5px rgba(231, 144, 35, 0.5)',
-                  '0 0 10px rgba(231, 144, 35, 0.8)',
-                  '0 0 5px rgba(231, 144, 35, 0.5)',
-                ],
-              }}
-              transition={{ duration: 3, repeat: Infinity }}
-            />
-            Brands: End-to-end immersive campaigns
-          </motion.div>
-          <motion.div
-            className="flex items-center gap-2"
-            animate={{ opacity: [0.6, 0.8, 0.6] }}
-            transition={{ duration: 4, repeat: Infinity, delay: 2 }}
-          >
-            <motion.span
-              className="w-2 h-2 bg-altPrimary rounded-full"
-              animate={{
-                boxShadow: [
-                  '0 0 5px rgba(116, 102, 226, 0.5)',
-                  '0 0 10px rgba(116, 102, 226, 0.8)',
-                  '0 0 5px rgba(116, 102, 226, 0.5)',
-                ],
-              }}
-              transition={{
-                duration: 3,
-                repeat: Infinity,
-                delay: 1.5,
-              }}
-            />
-            Partners: White-label solutions & collaboration
-          </motion.div>
+          <Card className="card-voyager opacity-70 bg-gradient-to-r from-primary/10 to-altPrimary/10 border hover:opacity-100 border-primary border-opacity-30">
+            <CardBody className="p-8 md:p-8">
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 2.5 }}
+                className="space-y-4 max-w-2xl mx-auto text-center"
+              >
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.6, delay: 2.7 }}
+                  className="text-lg md:text-xl text-textLight"
+                >
+                  <strong className="text-altPrimary">
+                    Experiences people remember{' '}
+                  </strong>
+                  <br />
+                  <span className="text-sm">
+                    <strong>AR, VR, 360, Games,</strong> and more.
+                  </span>
+                </motion.div>
+
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.6, delay: 2.9 }}
+                  className="text-lg md:text-xl text-textLight"
+                >
+                  <strong className="text-altPrimary">
+                    Data you can act on{' '}
+                  </strong>
+                  <br />
+                  <span className="text-sm">
+                    Every <strong>tap, scan,</strong> and{' '}
+                    <strong>view</strong> tracked in real time.
+                  </span>
+                </motion.div>
+
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.6, delay: 3.1 }}
+                  className="text-lg md:text-xl text-textLight"
+                >
+                  <strong className="text-altPrimary">
+                    Flexibility without limits{' '}
+                  </strong>
+                  <br />
+                  <span className="text-sm">
+                    <strong>Merch, Packaging, Print,</strong> or{' '}
+                    <strong>Spaces</strong>, we make it immersive.
+                  </span>
+                </motion.div>
+              </motion.div>
+            </CardBody>
+          </Card>
         </motion.div>
       </motion.div>
     </section>

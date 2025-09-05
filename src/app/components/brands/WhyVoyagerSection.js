@@ -23,54 +23,23 @@ export default function WhyVoyagerSection() {
     [100, 0, 0, -100]
   );
 
-  const audienceTypes = [
-    {
-      title: 'For Brands',
-      icon: '🎯',
-      description:
-        'Create emotional connections, track engagement, and stand out from the crowd.',
-      benefits: [
-        'Memorable brand experiences',
-        'Detailed engagement analytics',
-        'Competitive advantage',
-        'Increased customer loyalty',
-      ],
-      color: 'from-primary/20 to-primary/5',
-      borderColor: 'border-primary',
-    },
-    {
-      title: 'For Partners',
-      icon: '🤝',
-      description:
-        'White-label solutions, CRM integrations, and co-branded experiences available.',
-      benefits: [
-        'White-label options',
-        'CRM integration',
-        'Co-branded experiences',
-        'Revenue sharing opportunities',
-      ],
-      color: 'from-altPrimary/20 to-altPrimary/5',
-      borderColor: 'border-altPrimary',
-    },
-  ];
-
   const keyFeatures = [
     {
-      title: 'Entertainment First',
+      title: 'Built for Visionaries, Not Templates',
       description:
-        'We create campaigns that entertain, engage, and convert.',
-      icon: '🎭',
-    },
-    {
-      title: 'Full-Service Support',
-      description:
-        "Whether you're a bold brand or a creative partner, we help you craft immersive experiences that people remember.",
+        'Most tech agencies box you into pre-set platforms. We don’t. With our proprietary tech, we design around imagination, not limitations - giving you the freedom to create experiences that nobody else can replicate.',
       icon: '🛠️',
     },
     {
-      title: 'End-to-End Process',
+      title: 'Creatives Who Understand Business',
       description:
-        'Guiding you through the process from start to finish.',
+        'We’re not just coders or designers. We’re entrepreneurs, strategists, and storytellers. That means we care about outcomes - sales, engagement, loyalty - as much as we care about the craft. We guide you through the process, making complex tech simple, clear, and effective.',
+      icon: '🎭',
+    },
+    {
+      title: 'An Ecosystem That Delivers',
+      description:
+        'Through our partner network, we can take any idea - a product, a launch, a campaign - from concept to market. Everything stays under one roof, so you get speed, consistency, and a team that flexes with you, whether it’s a rapid activation or a long-term brand build.',
       icon: '🎯',
     },
   ];
@@ -196,81 +165,6 @@ export default function WhyVoyagerSection() {
             ))}
           </motion.div>
         </motion.div>
-
-        {/* Audience Types */}
-        <div className="mb-16">
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            viewport={{ once: true }}
-            className="text-lg text-textLight opacity-80 text-center mb-12 max-w-4xl mx-auto"
-          >
-            Whether you&apos;re a bold brand or a creative partner, we
-            help you craft immersive experiences that people remember
-            - guiding you through the process from start to finish.
-          </motion.p>
-
-          <FlexGrid
-            columns={{ sm: 1, md: 2, lg: 2 }}
-            gap="8"
-            animate={true}
-            container={container}
-            item={item}
-            equalHeight={true}
-          >
-            {audienceTypes.map((audience, index) => (
-              <motion.div
-                key={index}
-                whileHover={{
-                  y: -10,
-                  transition: { duration: 0.3 },
-                }}
-                className="h-full"
-              >
-                <Card
-                  className={`card-voyager h-full bg-gradient-to-br ${audience.color} border ${audience.borderColor} border-opacity-30 hover:border-opacity-60 transition-all duration-300 hover:shadow-glow-sm group`}
-                >
-                  <CardBody className="p-8">
-                    {/* Header */}
-                    <div className="flex items-center mb-6">
-                      <div className="text-4xl mr-4 group-hover:scale-110 transition-transform duration-300">
-                        {audience.icon}
-                      </div>
-                      <h3 className="font-heading text-2xl text-textLight">
-                        {audience.title}
-                      </h3>
-                    </div>
-
-                    {/* Description */}
-                    <p className="text-textLight opacity-80 mb-6">
-                      {audience.description}
-                    </p>
-
-                    {/* Benefits */}
-                    <ul className="space-y-3">
-                      {audience.benefits.map(
-                        (benefit, benefitIndex) => (
-                          <li
-                            key={benefitIndex}
-                            className="flex items-start"
-                          >
-                            <span className="text-primary mr-3 mt-1">
-                              ✓
-                            </span>
-                            <span className="text-textLight opacity-75">
-                              {benefit}
-                            </span>
-                          </li>
-                        )
-                      )}
-                    </ul>
-                  </CardBody>
-                </Card>
-              </motion.div>
-            ))}
-          </FlexGrid>
-        </div>
 
         {/* Call to Action */}
         <motion.div

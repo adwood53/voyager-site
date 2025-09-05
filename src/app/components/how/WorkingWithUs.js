@@ -237,14 +237,13 @@ export default function WhatWeDoSection() {
             <Card className="card-voyager bg-gradient-to-r from-primary/10 to-altPrimary/10 border border-primary border-opacity-30">
               <CardBody className="p-8 md:p-12">
                 <p className="text-xl md:text-2xl text-textLight leading-relaxed">
-                  We use our own{' '}
+                  Our{' '}
                   <span className="text-primary font-bold">
                     proprietary technology (Vcode)
                   </span>
-                  , which means you are not shoehorned into a
-                  pre-built template. We build your experience your
-                  way- flexibly, creatively, and without licensing
-                  constraints.
+                  powers every activation. No apps. No subscriptions.
+                  No barriers. Just instant, interactive connection
+                  between your brand and your audience.
                 </p>
               </CardBody>
             </Card>
@@ -261,26 +260,33 @@ export default function WhatWeDoSection() {
         >
           <div className="text-center mb-12">
             <h3 className="heading-voyager text-3xl md:text-4xl text-primary mb-6">
-              What is Vcode
+              What is Vcode?
             </h3>
             <p className="text-lg text-textLight opacity-80 max-w-4xl mx-auto leading-relaxed">
-              Vcode is our proprietary framework that makes any NFC/QR
-              activation flexible, updatable, and brandable without
-              the limits of off-the-shelf platforms. These experiences
-              can include -
+              Vcode is our proprietary technology that makes any
+              NFC/QR{' '}
+              <strong>
+                {' '}
+                activation flexible, updatable, and brandable{' '}
+              </strong>{' '}
+              - without the limits of off-the-shelf platforms.
             </p>
           </div>
 
-          {/* Experience Types Grid */}
+          {/* Experience Types Grid - Centered Layout */}
           <motion.div
-            className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6"
+            className="flex flex-wrap justify-center gap-6 max-w-5xl mx-auto"
             variants={container}
             initial="hidden"
             whileInView="show"
             viewport={{ once: true }}
           >
             {experiences.map((experience, index) => (
-              <motion.div key={index} variants={item}>
+              <motion.div
+                key={index}
+                variants={item}
+                className="w-full sm:w-72 md:w-80 lg:w-72 max-w-sm"
+              >
                 <Card className="card-voyager h-full bg-darkCard border border-primary border-opacity-20 hover:border-opacity-50 transition-all duration-300 hover:shadow-glow-sm group">
                   <CardBody className="text-center p-6">
                     <motion.div

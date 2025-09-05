@@ -58,8 +58,8 @@ export default function IndustriesHeroSection() {
           <div
             className="rounded-full blur-sm"
             style={{
-              width: `${Math.random() * 8 + 3}px`,
-              height: `${Math.random() * 8 + 3}px`,
+              width: `${Math.random() * 250 + 3}px`,
+              height: `${Math.random() * 250 + 3}px`,
               background: i % 2 === 0 ? '#e79023' : '#7466e2',
             }}
           />

@@ -41,15 +41,14 @@ const experiences = [
     title: '360° Experiences',
     icon: '🌐',
     description:
-      'Put your audience inside the moment with an immersive story, sound, and visuals.',
+      'Lets people step inside the scene, explore in 360, and watch clips — on phone, desktop, or VR.',
     features: [
-      'Look around in all directions',
-      'Tap to switch scenes or settings',
-      'Watch embedded videos or story clips',
-      'Click hotspots for info, links, or games',
+      'A band takes fans on a backstage tour',
+      'An agent shows a home without a viewing',
+      'A venue lets bookers walk the space from anywhere',
     ],
     perfectFor:
-      'Immersive storytelling, venue tours, artist campaigns, brand showcases',
+      'People don’t just watch, they explore. That means longer dwell time, deeper emotional connection, and measurable insights into what they looked at most.',
     compatibility: [
       { device: 'Phone', icon: '📱' },
       { device: 'Desktop', icon: '💻' },
@@ -62,17 +61,14 @@ const experiences = [
     title: 'Augmented Reality (AR)',
     icon: '📲',
     description:
-      "Make posters, packaging, or products come to life through your customer's phone.",
+      'Brings the digital world to life — characters, offers, and 3D animations on packaging, posters, or merch. No apps, no fuss.',
     features: [
-      'Scan real-world items to trigger digital content',
-      'See characters, visuals, or products in their space',
-      'Tap objects for info, animations, or offers',
-      'Trigger sound, music, or voiceovers',
-      'Capture photos or videos with AR effects',
-      'Access links, discounts, or next steps',
+      'A drink can tells its brand story',
+      'A festival poster plays a teaser video',
+      'A product box reveals how-to tips or offers',
     ],
     perfectFor:
-      'Retail packaging, street marketing, flyer campaigns, experiential product launches',
+      'AR turns everyday items into interactive sales tools. It’s fun, shareable, and trackable - you’ll know who engaged, what they clicked, and when.',
     compatibility: [{ device: 'Phones', icon: '📱' }],
     color: 'from-altPrimary/20 to-altPrimary/5',
     borderColor: 'border-altPrimary',
@@ -81,56 +77,55 @@ const experiences = [
     title: 'Virtual Reality (VR)',
     icon: '🥽',
     description:
-      'Transport your audience into a fully digital world built around your story.',
+      'Full 3D immersion with headsets. Explore, interact, even train together in shared spaces.',
     features: [
-      'Step inside a 3D experience with a headset',
-      'Look around freely and explore environments',
-      'Use hand tracking or controllers to interact',
-      'Trigger animations, sounds, or quests',
-      'Navigate guided stories or free-roam spaces',
-      'Participate in multiplayer or social environments (if enabled)',
+      'Launching a new car in a virtual showroom',
+      'Training staff on complex equipment safely',
+      'Creating an exhibition that can travel worldwide',
     ],
     perfectFor:
-      'Premium events, brand launches, product training, museum or educational exhibits',
+      'VR leaves a lasting impression. It builds confidence, reduces training risk and costs, and positions your brand as premium - all while giving you real data on how people move, choose, and interact.',
     compatibility: [{ device: 'VR Headsets', icon: '🥽' }],
     color: 'from-accent/20 to-accent/5',
     borderColor: 'border-accent',
   },
   {
-    title: 'Tig Bitties',
-    icon: '🥽',
+    title: 'Learning Management Systems (LMS)',
+    icon: '🎓',
     description:
-      'Transport your audience into a fully digital world built around your story.',
+      'Gamified modules, video lessons, quizzes, and certificates — all in your branded academy.',
     features: [
-      'Step inside a 3D experience with a headset',
-      'Look around freely and explore environments',
-      'Use hand tracking or controllers to interact',
-      'Trigger animations, sounds, or quests',
-      'Navigate guided stories or free-roam spaces',
-      'Participate in multiplayer or social environments (if enabled)',
+      'Training staff across multiple sites',
+      'Beauty brands launching accredited academies',
+      'Alternative Provision Education providing Immersive Learning Resources',
     ],
     perfectFor:
-      'Premium events, brand launches, product training, museum or educational exhibits',
-    compatibility: [{ device: 'VR Headsets', icon: '🥽' }],
+      'When learning feels like playing, people complete it. That means consistent knowledge, lower training costs, and insights into progress across teams or customers.',
+    compatibility: [
+      { device: 'Phones', icon: '📱' },
+      { device: 'Desktop', icon: '💻' },
+      { device: 'VR Headsets', icon: '🥽' },
+    ],
     color: 'from-accent/20 to-accent/5',
     borderColor: 'border-accent',
   },
   {
-    title: 'Biggus Dickus',
-    icon: '🥽',
+    title: 'Gamified Experiences',
+    icon: '🎮',
     description:
-      'Transport your audience into a fully digital world built around your story.',
+      'Points, rewards, challenges and leaderboards - built into your campaign.',
     features: [
-      'Step inside a 3D experience with a headset',
-      'Look around freely and explore environments',
-      'Use hand tracking or controllers to interact',
-      'Trigger animations, sounds, or quests',
-      'Navigate guided stories or free-roam spaces',
-      'Participate in multiplayer or social environments (if enabled)',
+      'Loyalty schemes that unlock perks',
+      'Competitions that collect data and create a buzz',
+      'Live events where interactive games attract and engage crowds',
     ],
     perfectFor:
-      'Premium events, brand launches, product training, museum or educational exhibits',
-    compatibility: [{ device: 'VR Headsets', icon: '🥽' }],
+      'Play keeps people coming back. Gamification drives repeat engagement, data capture, and social sharing - turning one-off interactions into long-term loyalty.',
+    compatibility: [
+      { device: 'Phones', icon: '📱' },
+      { device: 'Desktop', icon: '💻' },
+      { device: 'VR Headsets', icon: '🥽' },
+    ],
     color: 'from-accent/20 to-accent/5',
     borderColor: 'border-accent',
   },
@@ -413,7 +408,7 @@ export default function ExperiencesSection() {
             }
             className="bg-primary text-textLight font-semibold px-8 py-4 rounded-md hover:bg-accent transition-all hover:scale-105 transform hover:shadow-glow-lg text-lg"
           >
-            Start Creating Your Experience →
+            Build your Brands Immersive Experience Now
           </Button>
         </motion.div>
       </motion.div>

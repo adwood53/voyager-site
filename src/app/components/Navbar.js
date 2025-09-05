@@ -606,7 +606,7 @@ export default function VoyagerNavbar() {
                       ) : null
                     }
                   >
-                    Partner Login
+                    Partner Portal
                   </Button>
                 </NavbarItem>
                 <NavbarItem>
@@ -710,7 +710,7 @@ export default function VoyagerNavbar() {
                       ) : null
                     }
                   >
-                    Partner Login
+                    Partner Portal
                   </Button>
                   <Button
                     as={Link}

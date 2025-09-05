@@ -282,16 +282,14 @@ const NavigationButtons = () => {
       href: '/for-brands',
       variant: 'primary',
       type: 'internal',
-      description:
-        'Transform your brand with immersive experiences that captivate customers through AR, VR, and 360° content',
+      description: 'End-to-end immersive campaigns',
     },
     {
       label: 'For Partners',
       href: '/for-partners',
       variant: 'secondary',
       type: 'internal',
-      description:
-        'Join our network of creative professionals and access white-label solutions that add new layers of value and income to grow your business',
+      description: 'White-label solutions & collaboration',
     },
     {
       label: 'Play',

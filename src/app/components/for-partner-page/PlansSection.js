@@ -148,9 +148,7 @@ export default function PlansSection() {
                   </li>
                   <li className="flex items-start">
                     <span className="mr-2 text-confirm">✓</span>
-                    <span>
-                      Minium 20% Commission on all products sold.
-                    </span>
+                    <span>20% Commission on referrals.</span>
                   </li>
                 </ul>
               </CardBody>
@@ -206,11 +204,11 @@ export default function PlansSection() {
                     <span className="mr-2 text-confirm">✓</span>
                     <div>
                       <span className="font-medium text-primary">
-                        1 Interactive Business Card
+                        Custom Branding
                       </span>
                       <p className="text-sm text-textLight opacity-60">
-                        Tap-to-access digital portfolio & contact info
-                        for your brand
+                        For Partner Dashboard and Experience Loading
+                        Screen
                       </p>
                     </div>
                   </li>
@@ -218,11 +216,10 @@ export default function PlansSection() {
                     <span className="mr-2 text-confirm">✓</span>
                     <div>
                       <span className="font-medium text-primary">
-                        5 Interactive Posters & 100 leaflets
+                        Custom Domain
                       </span>
                       <p className="text-sm text-textLight opacity-60">
-                        Clients scan to engage with your brands
-                        immersive work
+                        Your brands URL attached to client experiences
                       </p>
                     </div>
                   </li>
@@ -230,10 +227,11 @@ export default function PlansSection() {
                     <span className="mr-2 text-confirm">✓</span>
                     <div>
                       <span className="font-medium text-primary">
-                        Branded Experience Portal
+                        Up to 5 V-cards
                       </span>
                       <p className="text-sm text-textLight opacity-60">
-                        Display your brand logo within our experiences
+                        To get you started with your own immersive
+                        marketing
                       </p>
                     </div>
                   </li>

@@ -410,7 +410,8 @@ export default function WhatWeDoSection() {
             viewport={{ once: true }}
             className="heading-voyager text-4xl md:text-5xl text-textLight mb-6"
           >
-            What <span className="text-primary">We Do</span>
+            The <span className="text-primary">Experiences</span> We
+            Create
           </motion.h2>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
@@ -428,16 +429,7 @@ export default function WhatWeDoSection() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.3 }}
             viewport={{ once: true }}
-            className="text-sm text-primary max-w-2xl mx-auto mb-4"
-          >
-            Our core services:
-          </motion.p>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.4 }}
-            viewport={{ once: true }}
-            className="text-xs text-textLight opacity-60 max-w-2xl mx-auto"
+            className="text-m text-primary max-w-2xl mx-auto mb-4"
           >
             Click to watch demo videos
           </motion.p>
@@ -710,7 +702,8 @@ export default function WhatWeDoSection() {
           <Card className="card-voyager bg-gradient-to-r from-primary/10 to-altPrimary/10 border border-primary border-opacity-30 max-w-4xl mx-auto">
             <CardBody className="p-8">
               <h3 className="text-2xl md:text-3xl font-heading text-primary mb-4">
-                Ready to Create Something Amazing?
+                Want to see how we can bring your story to life with
+                immersive technology?
               </h3>
               <p className="text-textLight opacity-80 mb-6 text-lg">
                 Let&apos;s discuss how we can bring your vision to
