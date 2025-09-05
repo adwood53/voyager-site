@@ -485,7 +485,7 @@ export default function WhatWeDoSection() {
                   Start Your Project
                 </motion.a>
                 <motion.a
-                  href="#contact"
+                  href="#signup"
                   className="inline-block px-8 py-3 border border-primary text-primary rounded-lg font-medium hover:bg-primary/10 transition-colors duration-300"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}

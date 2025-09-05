@@ -184,7 +184,7 @@ export default function WhyVoyagerSection() {
             </Button>
             <Button
               as={Link}
-              href="/partner"
+              href="/for-partners"
               className="bg-transparent border-2 border-altPrimary text-altPrimary font-semibold px-8 py-4 rounded-md hover:bg-altPrimary hover:text-textLight transition-all hover:scale-105 transform text-lg"
             >
               Become a Partner

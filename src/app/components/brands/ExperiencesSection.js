@@ -183,8 +183,18 @@ export default function ExperiencesSection() {
     <section
       id="experiences"
       ref={sectionRef}
-      className="py-24 bg-gradient-to-b from-darkCard to-darkBg relative"
+      className="bg-gradient-to-b from-darkCard to-darkBg relative"
     >
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 0.6 }}
+        className="text-lg md:text-xl lg:text-2xl text-textLight text-center opacity-90 max-w-4xl mx-auto mb-12 leading-relaxed"
+      >
+        From property to retail, training to live events, immersive
+        experiences deliver what every business needs: more attention,
+        deeper engagement, and higher conversions.
+      </motion.div>
       <motion.div
         className="container-voyager relative z-10"
         style={{ opacity, y }}
@@ -319,16 +329,6 @@ export default function ExperiencesSection() {
                         </div>
                       </div>
                     </CardBody>
-                    <CardFooter className="pt-0 pb-6 px-6">
-                      <Button
-                        as={Link}
-                        href="#signup"
-                        size="sm"
-                        className="w-full bg-primary text-textLight font-semibold hover:bg-accent transition-all"
-                      >
-                        Learn More
-                      </Button>
-                    </CardFooter>
                   </Card>
                 </motion.div>
               );
