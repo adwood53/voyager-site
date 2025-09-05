@@ -646,17 +646,18 @@ export default function WhatWeDoSection() {
                           ref={(el) =>
                             (videoRefs.current[index] = el)
                           }
-                          data-index={index}
                           className="w-full h-full object-cover"
-                          autoPlay
-                          loop
+                          autoPlay={flippedCard === index} // Only autoplay when flipped
                           muted
+                          loop
                           playsInline
-                          poster="/placeholder.jpg"
+                          preload="metadata" // Change from "none" to "metadata"
+                          poster={service.backgroundImage}
                         >
-                          {/* Sources will be added dynamically by lazy loading */}
-                          <source type="video/mp4" />
-                          Your browser does not support the video tag.
+                          <source
+                            src={service.videoPath}
+                            type="video/mp4"
+                          />
                         </video>
 
                         {/* Video overlay with service name - Optimized for 9:16 */}

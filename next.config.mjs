@@ -2,10 +2,21 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
+    // Disable image optimization for GIFs
+    dangerouslyAllowSVG: true,
+    contentDispositionType: 'attachment',
+    contentSecurityPolicy:
+      "default-src 'self'; script-src 'none'; sandbox;",
+
+    // Add unoptimized for production debugging
+    unoptimized: process.env.NODE_ENV === 'production' ? true : false,
+
     domains: [
       'cdn.sanity.io',
       'firebasestorage.googleapis.com',
       'img.clerk.com',
+      'immerse.voyagervrlab.co.uk',
+      'immerse.voyagerstudio.co.uk',
     ],
     remotePatterns: [
       {
@@ -28,17 +39,87 @@ const nextConfig = {
         hostname: 'i.ytimg.com',
         pathname: '/vi/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'immerse.voyagervrlab.co.uk',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'immerse.voyagerstudio.co.uk',
+        pathname: '/**',
+      },
     ],
   },
 
-  // React-PDF needs the `canvas` alias disabled in Next’s webpack
-  webpack(config) {
+  // React-PDF needs the `canvas` alias disabled in Next's webpack
+  webpack(config, { isServer }) {
     config.resolve.alias.canvas = false;
+
+    // Add file loader for images in production
+    if (!isServer) {
+      config.module.rules.push({
+        test: /\.(png|jpg|jpeg|gif|webp|svg)$/i,
+        type: 'asset',
+        parser: {
+          dataUrlCondition: {
+            maxSize: 8 * 1024, // 8kb
+          },
+        },
+      });
+    }
+
     return config;
   },
 
   async headers() {
     return [
+      // CORS headers for external resources
+      {
+        source: '/:path*',
+        headers: [
+          {
+            key: 'Access-Control-Allow-Origin',
+            value: '*',
+          },
+          {
+            key: 'Access-Control-Allow-Methods',
+            value: 'GET, POST, PUT, DELETE, OPTIONS',
+          },
+          {
+            key: 'Access-Control-Allow-Headers',
+            value: 'X-Requested-With, Content-Type, Authorization',
+          },
+        ],
+      },
+      // Image caching headers
+      {
+        source: '/images/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        source: '/services/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        source: '/industries/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
       // Unity WebGL Brotli-compressed files
       {
         source: '/games/:path*/:file.data.br',
@@ -150,6 +231,11 @@ const nextConfig = {
         permanent: true,
       },
     ];
+  },
+
+  // Production-specific settings
+  experimental: {
+    optimizePackageImports: ['@heroui/react'],
   },
 };
 
