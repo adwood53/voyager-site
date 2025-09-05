@@ -301,60 +301,59 @@ export default function WhatWeDoSection() {
    */
   const handleCardClick = (index) => {
     if (flippedCard === index) {
-      // Flipping back to front
+      // Flip back, pause + reset
       setFlippedCard(null);
-      // Pause the video
       if (videoRefs.current[index]) {
         videoRefs.current[index].pause();
         videoRefs.current[index].currentTime = 0;
       }
     } else {
-      // Flipping to show video
       const previousCard = flippedCard;
       setFlippedCard(index);
 
-      // Pause previous video if any
+      // Stop previous video
       if (previousCard !== null && videoRefs.current[previousCard]) {
         videoRefs.current[previousCard].pause();
         videoRefs.current[previousCard].currentTime = 0;
       }
 
-      // Load and play the new video
-      setTimeout(() => {
-        if (videoRefs.current[index]) {
-          const video = videoRefs.current[index];
+      // PRIORITY: load clicked card video first
+      const video = videoRefs.current[index];
+      if (video) {
+        const service = services[index];
+        setLoadingVideos((prev) => new Set([...prev, index]));
 
-          // Set loading state
-          setLoadingVideos((prev) => new Set([...prev, index]));
-
-          // Ensure video is loaded and try to play
-          video.load();
-
-          const playPromise = video.play();
-          if (playPromise !== undefined) {
-            playPromise
-              .then(() => {
-                // Success
-                setLoadedVideos((prev) => new Set([...prev, index]));
-                setLoadingVideos((prev) => {
-                  const newSet = new Set(prev);
-                  newSet.delete(index);
-                  return newSet;
-                });
-              })
-              .catch((error) => {
-                console.log('Autoplay prevented:', error);
-                // Set as failed to show play button
-                setFailedVideos((prev) => new Set([...prev, index]));
-                setLoadingVideos((prev) => {
-                  const newSet = new Set(prev);
-                  newSet.delete(index);
-                  return newSet;
-                });
-              });
-          }
+        // Attach source dynamically
+        if (!video.querySelector('source')) {
+          const source = document.createElement('source');
+          source.src = service.videoSrc;
+          source.type = 'video/mp4';
+          video.appendChild(source);
+        } else {
+          video.querySelector('source').src = service.videoSrc;
         }
-      }, 300); // Small delay to ensure flip animation has started
+
+        // Load and try play
+        video.load();
+        video
+          .play()
+          .then(() => {
+            setLoadedVideos((prev) => new Set([...prev, index]));
+            setLoadingVideos((prev) => {
+              const newSet = new Set(prev);
+              newSet.delete(index);
+              return newSet;
+            });
+          })
+          .catch(() => {
+            setFailedVideos((prev) => new Set([...prev, index]));
+            setLoadingVideos((prev) => {
+              const newSet = new Set(prev);
+              newSet.delete(index);
+              return newSet;
+            });
+          });
+      }
     }
   };
 
@@ -681,17 +680,9 @@ export default function WhatWeDoSection() {
                           muted
                           loop
                           playsInline
-                          preload="metadata" // Changed from "none"
-                          poster={
-                            service.backgroundImage ||
-                            `/services/${service.shortTitle.toLowerCase()}-thumbnail.jpg`
-                          }
-                        >
-                          <source
-                            src={service.videoSrc}
-                            type="video/mp4"
-                          />
-                        </video>
+                          preload="none"
+                          poster={service.backgroundImage}
+                        />
 
                         {/* Video overlay with service name - Optimized for 9:16 */}
                         {loadedVideos.has(index) && (
