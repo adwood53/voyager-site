@@ -121,15 +121,15 @@ export default function TomMeighanSection({ onClose }) {
                 <CardBody className="p-8">
                   <div className="bg-blue-500/10 rounded-lg p-12 text-center mb-4 h-[750px]">
                     <Image
-                      src="/industries/sports/bottles-3.jpg"
-                      alt={`Hyrox Corby Bottles`}
+                      src="/industries/music/thumb.jpg"
+                      alt={`Tom Meighan - The Past, The Present, The Raw - Album Art`}
                       fill
                       style={{ objectFit: 'cover' }}
                     />
                   </div>
                   <p className="text-textLight/60 text-sm text-center">
-                    Visual content showcasing the NFC bottles and
-                    competitor experience
+                    Visual augmented reality content showcasing the
+                    exclusive music video for Tom's new album.
                   </p>
                 </CardBody>
               </Card>
