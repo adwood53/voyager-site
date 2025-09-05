@@ -206,14 +206,14 @@ export default function ExperiencesSection() {
         >
           <div className="relative w-full h-full flex items-center justify-center">
             {experiences.map((experience, index) => {
-              const offset = index - currentIndex;
+              // Calculate circular offset (so it wraps around properly)
+              const offset =
+                (index - currentIndex + experiences.length) %
+                experiences.length;
+
               const isCenter = offset === 0;
-              const isLeft =
-                offset === -1 ||
-                (offset === 2 && experiences.length === 3);
-              const isRight =
-                offset === 1 ||
-                (offset === -2 && experiences.length === 3);
+              const isRight = offset === 1; // immediate next
+              const isLeft = offset === experiences.length - 1; // immediate previous
               if (!isCenter && !isLeft && !isRight) return null;
 
               let scale = 0.7;
