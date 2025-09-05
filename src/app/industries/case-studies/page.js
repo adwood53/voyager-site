@@ -10,17 +10,20 @@ import CaseStudiesGridSection from '../../components/industries/case-studies/Cas
 import ChatbotComponent from '../../components/ChatbotComponent';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
+import { ModalProvider } from '../../components/modal/core/ModalEngine';
 
 export default function CaseStudiesPage() {
   return (
     <main className="min-h-screen bg-darkBg text-textLight overflow-hidden">
-      <ChatbotComponent />
-      <div className="parallax-container">
-        <Navbar />
-        <CaseStudiesHeroSection />
-        <CaseStudiesGridSection />
-        <Footer />
-      </div>
+      <ModalProvider config={{ baseZIndex: 1000 }}>
+        <ChatbotComponent />
+        <div className="parallax-container">
+          <Navbar />
+          <CaseStudiesHeroSection />
+          <CaseStudiesGridSection />
+          <Footer />
+        </div>
+      </ModalProvider>
     </main>
   );
 }

@@ -6,7 +6,12 @@
  */
 
 import OloyeAestheticsSection from '../../../components/industries/case-studies/studies/OloyeAestheticsSection';
+import { ModalProvider } from '../../../components/modal/core/ModalEngine';
 
 export default function OloyeAestheticsPage() {
-  return <OloyeAestheticsSection />;
+  return (
+    <ModalProvider config={{ baseZIndex: 1000 }}>
+      <OloyeAestheticsSection />
+    </ModalProvider>
+  );
 }

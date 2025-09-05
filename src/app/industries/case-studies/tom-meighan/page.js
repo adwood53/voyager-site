@@ -6,7 +6,12 @@
  */
 
 import TomMeighanSection from '../../../components/industries/case-studies/studies/TomMeighanSection';
+import { ModalProvider } from '../../../components/modal/core/ModalEngine';
 
 export default function TomMeighanPage() {
-  return <TomMeighanSection />;
+  return (
+    <ModalProvider config={{ baseZIndex: 1000 }}>
+      <TomMeighanSection />
+    </ModalProvider>
+  );
 }

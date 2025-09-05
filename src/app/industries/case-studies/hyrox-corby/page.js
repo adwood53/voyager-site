@@ -6,7 +6,12 @@
  */
 
 import HyroxCorbySection from '../../../components/industries/case-studies/studies/HyroxCorbySection';
+import { ModalProvider } from '../../../components/modal/core/ModalEngine';
 
 export default function HyroxCorbyPage() {
-  return <HyroxCorbySection />;
+  return (
+    <ModalProvider config={{ baseZIndex: 1000 }}>
+      <HyroxCorbySection />
+    </ModalProvider>
+  );
 }

@@ -13,8 +13,12 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 import Image from 'next/image';
 import SharedStudyHero from '../SharedStudyHero';
+import { useModal } from '../../../modal/core/ModalEngine';
+import { JotFormModal } from '../../../modal/types/ModalTypes';
 
 export default function HyroxCorbySection({ onClose }) {
+  const { openModal } = useModal();
+
   return (
     <div className="bg-darkBg min-h-screen">
       {/* Hero Section */}
@@ -211,12 +215,20 @@ export default function HyroxCorbySection({ onClose }) {
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button
-                  as={Link}
-                  href="/industries#signup"
+                  onPress={() =>
+                    openModal(JotFormModal, {
+                      isOpen: true,
+                      formId: '251762903523052',
+                      title: 'Build your Custom Experience!',
+                      onSubmit: (data) => {
+                        console.log('Form submitted:', data);
+                      },
+                    })
+                  }
                   size="lg"
                   className="bg-primary text-darkBg hover:bg-accent"
                 >
-                  Start Your Beauty Project
+                  Start Your Project
                 </Button>
                 <Button
                   as={Link}

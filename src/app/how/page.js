@@ -8,20 +8,23 @@ import WorkingWithUs from '../components/how/WorkingWithUs';
 import FAQSection from '../components/how/FAQSection';
 import ContactSection from '@/src/app/components/ContactSection';
 import ReviewPopup from '@/src/app/components/ReviewPopup';
+import { ModalProvider } from '../components/modal/core/ModalEngine';
 
 export default function ForBrandsPage() {
   return (
     <main className="min-h-screen bg-darkBg text-textLight overflow-hidden">
-      <ChatbotComponent />
-      <div className="parallax-container">
-        <Navbar />
-        <ReviewPopup />
-        <HowHeroSection />
-        <WorkingWithUs />
-        <FAQSection />
-        <ContactSection />
-        <Footer />
-      </div>
+      <ModalProvider>
+        <ChatbotComponent />
+        <div className="parallax-container">
+          <Navbar />
+          <ReviewPopup />
+          <HowHeroSection />
+          <WorkingWithUs />
+          <FAQSection />
+          <ContactSection />
+          <Footer />
+        </div>
+      </ModalProvider>
     </main>
   );
 }
