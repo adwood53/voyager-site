@@ -11,6 +11,7 @@
 import { Card, CardBody, Button } from '@heroui/react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import Image from 'next/image';
 import SharedStudyHero from '../SharedStudyHero';
 
 export default function OloyeAestheticsSection({ onClose }) {
@@ -122,7 +123,7 @@ export default function OloyeAestheticsSection({ onClose }) {
                 <CardBody className="p-8">
                   <div className="bg-blue-500/10 rounded-lg p-12 text-center mb-4 h-[750px]">
                     <Image
-                      src="/industries/sports/bottles-3.jpg"
+                      src="/industries/beauty/bottles-3.jpg"
                       alt={`Hyrox Corby Bottles`}
                       fill
                       style={{ objectFit: 'cover' }}
