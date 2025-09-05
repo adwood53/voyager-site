@@ -77,7 +77,7 @@ export default function WhatWeDoSection() {
         'Transform physical materials into interactive digital gateways. Perfect for product launches, marketing campaigns, and customer engagement.',
       icon: '📱',
       backgroundImage: '/hyrox2.jpg',
-      videoSrc: '/industries/sports/Hyrox AR.mp4',
+      videoSrc: '/videos/experiences/Hyrox AR.mp4',
       color: 'primary',
       benefits: [
         'No app downloads',
@@ -95,7 +95,7 @@ export default function WhatWeDoSection() {
         'Create immersive digital environments that fully engage your audience. Ideal for premium experiences and memorable brand moments.',
       icon: '🥽',
       backgroundImage: '/lfd-stall.webp',
-      videoSrc: '/videos/drift.mp4',
+      videoSrc: '/videos/experiences/drift.mp4',
       color: 'secondary',
       benefits: [
         'Full immersion',
@@ -113,7 +113,7 @@ export default function WhatWeDoSection() {
         'Bring remote audiences into your physical spaces. Perfect for real estate, retail, museums, and venue showcasing.',
       icon: '🌐',
       backgroundImage: '/virtualworlds.jpg',
-      videoSrc: '/industries/property/property1.mp4',
+      videoSrc: '/videos/experiences/property1.mp4',
       color: 'success',
       benefits: [
         'Remote accessibility',
@@ -131,7 +131,7 @@ export default function WhatWeDoSection() {
         'Revolutionize learning with interactive, engaging educational experiences that boost completion rates and knowledge retention.',
       icon: '🎓',
       backgroundImage: '/team.webp',
-      videoSrc: '/videos/icons.mp4',
+      videoSrc: '/videos/experiences/icons.mp4',
       color: 'warning',
       benefits: [
         'Gamified learning',
@@ -149,7 +149,7 @@ export default function WhatWeDoSection() {
         'Boost engagement through game mechanics, rewards, and interactive storytelling that drives sustained audience participation.',
       icon: '🎮',
       backgroundImage: '/play/sugarskullfrenzy.png',
-      videoSrc: '/videos/DayOfTheDead.mp4',
+      videoSrc: '/videos/experiences/DayOfTheDead.mp4',
       color: 'danger',
       benefits: [
         'Increased retention',
