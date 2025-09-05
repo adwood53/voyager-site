@@ -84,7 +84,7 @@ export default function IndustriesSection() {
       icon: '',
       description:
         'Guide, delight, and capture guest data seamlessly with interactive lanyards, menus, and digital experiences.',
-      image: '/industries/events/thumb.png',
+      image: '/industries/events/thumb.jpg',
     },
     {
       id: 'education-training',
@@ -92,7 +92,7 @@ export default function IndustriesSection() {
       icon: '',
       description:
         'Turn learning into an immersive journey with interactive textbooks, training kits, and progress tracking systems.',
-      image: '/industries/education/thumb.png',
+      image: '/industries/educations/thumb.jpg',
     },
     {
       id: 'content-creators-influencers',
@@ -140,7 +140,7 @@ export default function IndustriesSection() {
       icon: '',
       description:
         'Support wellness initiatives with therapeutic and mindful immersive experiences that promote mental health.',
-      image: '/industries/wellness/thumb.png',
+      image: '/industries/wellness/thumb.jpg',
     },
     {
       id: 'competitions-gaming',
