@@ -11,6 +11,7 @@
 import { Card, CardBody, Button } from '@heroui/react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import Image from 'next/image';
 import SharedStudyHero from '../SharedStudyHero';
 
 export default function TomMeighanSection({ onClose }) {
@@ -116,20 +117,19 @@ export default function TomMeighanSection({ onClose }) {
               viewport={{ once: true }}
             >
               {/* Media Placeholder */}
-              <Card className="bg-darkCard border border-purple-500/20 mb-8">
+              <Card className="bg-darkCard border border-blue-500/20 mb-8 h-[750px]">
                 <CardBody className="p-8">
-                  <div className="bg-purple-500/10 rounded-lg p-12 text-center mb-4">
-                    <div className="text-6xl mb-4">🎬</div>
-                    <p className="text-textLight/60 mb-2">
-                      Project imagery and videos
-                    </p>
-                    <p className="text-textLight/40 text-sm">
-                      Path: /images/case-studies/tom-meighan/
-                    </p>
+                  <div className="bg-blue-500/10 rounded-lg p-12 text-center mb-4 h-[750px]">
+                    <Image
+                      src="/industries/sports/bottles-3.jpg"
+                      alt={`Hyrox Corby Bottles`}
+                      fill
+                      style={{ objectFit: 'cover' }}
+                    />
                   </div>
                   <p className="text-textLight/60 text-sm text-center">
-                    Visual content showcasing the vinyl, VCards, and
-                    recording session
+                    Visual content showcasing the NFC bottles and
+                    competitor experience
                   </p>
                 </CardBody>
               </Card>

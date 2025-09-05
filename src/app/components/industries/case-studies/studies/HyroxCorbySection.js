@@ -168,9 +168,22 @@ export default function HyroxCorbySection({ onClose }) {
                         Client Testimonial
                       </p>
                       <p className="text-textLight/60 italic">
-                        &quot;Quote from Alex&quot; -{' '}
+                        &quot;Alex Mcconnell&quot; -{' '}
                         <span className="text-textLight/40 text-sm">
-                          [Awaiting testimonial content]
+                          We began working with Voyager in 2024 to
+                          promote our Hyrox events business, and the
+                          experience has been outstanding. The team
+                          consistently go above and beyond, bringing
+                          fresh ideas and innovative technology that
+                          truly set us apart in a competitive
+                          industry. Their &quot;outside-the-box&quot;
+                          thinking has not only shown us what&apos;s
+                          possible but also helped us deliver
+                          experiences that wow our customers. The
+                          feedback has been incredible - everyone
+                          who&apos;s seen the new technology has been
+                          blown away - and it&apos;s played a big role
+                          in helping us grow our business.
                         </span>
                       </p>
                     </div>

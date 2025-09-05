@@ -542,18 +542,20 @@ export default function VoyagerNavbar() {
                 <NavbarItem>
                   <IndustriesDropdown />
                 </NavbarItem>
+                {/*
                 <NavbarItem>
                   <NavLink
-                    href="http://192.168.11.22:3001"
+                    href="https://www.v-ipmerch.co.uk/"
                     className="text-lg"
                     isActive={
-                      pathname === 'http://192.168.11.22:3001'
+                      pathname === 'https://www.v-ipmerch.co.uk/'
                     }
                     loadingKey="about"
                   >
                     V-IP
                   </NavLink>
                 </NavbarItem>
+                */}
                 <NavbarItem>
                   <NavLink
                     href="/how"

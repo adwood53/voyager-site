@@ -100,9 +100,13 @@ export default function BrandsHeroSection() {
             .
             <br />
             <span className="text-white font-medium">
-              But most brands are still pushing the same tired
-              playbook - cookie-cutter campaigns that disappear in the
-              scroll. <br /> <br className="hidden md:inline" />{' '}
+              But most brands are still pushing the same playbook -
+              generic{' '}
+              <strong className="text-altPrimary">
+                &quot;BS&quot;{' '}
+              </strong>
+              that disappears in the scroll. <br />{' '}
+              <br className="hidden md:inline" />{' '}
               <strong className="text-white hidden md:inline">
                 We don&apos;t do that.
               </strong>{' '}

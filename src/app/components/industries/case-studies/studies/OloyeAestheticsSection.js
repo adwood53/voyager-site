@@ -118,20 +118,19 @@ export default function OloyeAestheticsSection({ onClose }) {
               viewport={{ once: true }}
             >
               {/* Media Placeholder */}
-              <Card className="bg-darkCard border border-pink-500/20 mb-8">
+              <Card className="bg-darkCard border border-blue-500/20 mb-8 h-[750px]">
                 <CardBody className="p-8">
-                  <div className="bg-pink-500/10 rounded-lg p-12 text-center mb-4">
-                    <div className="text-6xl mb-4">🖥️</div>
-                    <p className="text-textLight/60 mb-2">
-                      Project screenshots and demos
-                    </p>
-                    <p className="text-textLight/40 text-sm">
-                      Path: /images/case-studies/oloye-aesthetics/
-                    </p>
+                  <div className="bg-blue-500/10 rounded-lg p-12 text-center mb-4 h-[750px]">
+                    <Image
+                      src="/industries/sports/bottles-3.jpg"
+                      alt={`Hyrox Corby Bottles`}
+                      fill
+                      style={{ objectFit: 'cover' }}
+                    />
                   </div>
                   <p className="text-textLight/60 text-sm text-center">
-                    Visual content showcasing the platform, booking
-                    system, and learning management features
+                    Visual content showcasing the NFC bottles and
+                    competitor experience
                   </p>
                 </CardBody>
               </Card>
