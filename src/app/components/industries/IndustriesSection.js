@@ -304,7 +304,7 @@ export default function IndustriesSection() {
                 onPress={() => handleIndustryClick(industry.id)}
               >
                 <div className="relative h-56 overflow-hidden">
-                  <Image
+                  <img
                     src={industry.image}
                     alt={`${industry.name} industry`}
                     fill
