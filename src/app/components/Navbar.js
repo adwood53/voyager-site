@@ -677,10 +677,23 @@ export default function VoyagerNavbar() {
                   <div className="py-2">
                     <BrandsDropdown isMobile={true} />
                   </div>
+                  <NavLink
+                    href="/industries"
+                    className="block text-lg py-2"
+                    isActive={pathname === '/industries'}
+                    loadingKey="industries"
+                  >
+                    Industries
+                  </NavLink>
 
-                  <div className="py-2">
-                    <IndustriesDropdown isMobile={true} />
-                  </div>
+                  <NavLink
+                    href="/industries/case-studies"
+                    className="block text-lg py-2"
+                    isActive={pathname === '/industries/case-studies'}
+                    loadingKey="caseStudies"
+                  >
+                    Case Studies
+                  </NavLink>
 
                   <NavLink
                     href="/how"

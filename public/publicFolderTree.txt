@@ -8,7 +8,7 @@ D:\Work\AlphaX\Codebase\Voyager Website\voyager-site\public
 -----------------------------------------------------
 
 Folder PATH listing for volume Tertiary Drive
-Volume serial number is 000000F3 4257:C030
+Volume serial number is 00000091 4257:C030
 D:\WORK\ALPHAX\CODEBASE\VOYAGER WEBSITE\VOYAGER-SITE\PUBLIC
 |   generatePublicTree.bat
 |   hyrox2.jpg
@@ -31,6 +31,15 @@ D:\WORK\ALPHAX\CODEBASE\VOYAGER WEBSITE\VOYAGER-SITE\PUBLIC
 +---apple-splash
 |       apple-splash-2048-2732.png
 |       
++---brand-services
+|       hyrox2.webp
+|       lfd-stall.webp
+|       re.webp
+|       studiobackground.webp
+|       studioimage.webp
+|       team.webp
+|       virtualworlds.webp
+|       
 +---fonts
 |       Labora-Italic.otf
 |       Labora-Italic.ttf
@@ -48,11 +57,11 @@ D:\WORK\ALPHAX\CODEBASE\VOYAGER WEBSITE\VOYAGER-SITE\PUBLIC
 |   |   |       v2.wasm
 |   |   |       
 |   |   +---Screenshots
-|   |   |       1.png
-|   |   |       2.png
-|   |   |       3.png
-|   |   |       4.png
-|   |   |       cover.png
+|   |   |       1.webp
+|   |   |       2.webp
+|   |   |       3.webp
+|   |   |       4.webp
+|   |   |       cover.webp
 |   |   |       
 |   |   \---TemplateData
 |   |           favicon.ico
@@ -78,11 +87,11 @@ D:\WORK\ALPHAX\CODEBASE\VOYAGER WEBSITE\VOYAGER-SITE\PUBLIC
 |       |       WebGL.wasm.br
 |       |       
 |       +---Screenshots
-|       |       1.png
-|       |       2.png
-|       |       3.png
-|       |       4.png
-|       |       cover.png
+|       |       1.webp
+|       |       2.webp
+|       |       3.webp
+|       |       4.webp
+|       |       cover.webp
 |       |       
 |       \---TemplateData
 |               favicon.ico
@@ -98,7 +107,6 @@ D:\WORK\ALPHAX\CODEBASE\VOYAGER WEBSITE\VOYAGER-SITE\PUBLIC
 |               unity-logo-title-footer.png
 |               webmemd-icon.png
 |               
-+---gifs
 +---ideas
 |       360countdown.webp
 |       albumjukebox.webp
@@ -120,80 +128,82 @@ D:\WORK\ALPHAX\CODEBASE\VOYAGER WEBSITE\VOYAGER-SITE\PUBLIC
 |       immersivestorefront.webp
 |       immersivevenue.webp
 |       openaugmentedgallery.webp
-|       submit-idea.png
+|       submit-idea.webp
 |       treasurehunt.webp
 |       tryathome.webp
 |       
 +---industries
 |   +---beauty
-|   |       thumb.png
+|   |       thumb.webp
 |   |       
 |   +---creators
-|   |       thumb.png
+|   |       thumb.webp
 |   |       
 |   +---educations
-|   |       thumb.jpg
+|   |       thumb.webp
 |   |       
 |   +---events
-|   |       thumb.jpg
+|   |       thumb.webp
 |   |       
 |   +---fashion
 |   |       ar-tshirt.mp4
-|   |       thumb.png
+|   |       thumb.webp
 |   |       
 |   +---food
-|   |       thumb.png
+|   |       thumb.webp
 |   |       
 |   +---gaming
-|   |       thumb.png
+|   |       thumb.webp
 |   |       
 |   +---marketing
 |   |       niche.mp4
-|   |       thumb.jpg
+|   |       thumb.webp
 |   |       
 |   +---music
-|   |       thumb.jpg
-|   |       tom-album.jpg
-|   |       tom-back.png
-|   |       tom-front.png
+|   |       thumb.webp
+|   |       tom-album.webp
+|   |       tom-back.webp
+|   |       tom-front.webp
 |   |       tom-nfc.mp4
 |   |       tom-thank.mp4
 |   |       
 |   +---property
 |   |       property1.mp4
 |   |       thumb.png
+|   |       thumb.webp
 |   |       
 |   +---sports
 |   |       bottle-used.mp4
-|   |       bottles-1.jpg
-|   |       bottles-2.jpg
-|   |       bottles-3.jpg
+|   |       bottles-1.webp
+|   |       bottles-2.webp
+|   |       bottles-3.webp
 |   |       bottles-4.webp
 |   |       bottles-5.webp
 |   |       Hyrox AR.mp4
-|   |       Hyrox.png
+|   |       Hyrox.webp
 |   |       shoot1.mp4
 |   |       shoot2.mp4
 |   |       shoot3.mp4
 |   |       
 |   \---wellness
-|           thumb.jpg
+|           thumb.webp
 |           
 +---models
 |       logo.glb
 |       
 +---partners
-|       CC-Main.png
-|       cc.png
-|       cross_productions_limited_logo.jpeg
-|       cross_productions_limited_logo.png
-|       eb.jpeg
-|       eb.png
-|       lps.png
-|       smartwaymedia_logo.jpeg
-|       smartwaymedia_logo.png
+|       CC-Main.webp
+|       cc.webp
+|       cross_productions_limited_logo.webp
+|       cross_productions_limited_logo_clear.webp
+|       eb-white.webp
+|       eb.webp
+|       lps.webp
+|       smartwaymedia_logo.webp
+|       smartwaymedia_logo_clear.webp
 |       tp.png
-|       White-Clean-Marketing-Manager-Business-Card-7-e1735902806609.png
+|       tp.webp
+|       White-Clean-Marketing-Manager-Business-Card-7-e1735902806609.webp
 |       
 +---PDFs
 |       A-Simple-Guide-to-Immersive-Tech.pdf
@@ -203,16 +213,15 @@ D:\WORK\ALPHAX\CODEBASE\VOYAGER WEBSITE\VOYAGER-SITE\PUBLIC
 |       Voyager-VR-Studio-Terms-and-Conditions.pdf
 |       
 +---play
-|       aj.png
-|       automatom.jpg
-|       bikepackingaus.png
-|       comp360.png
-|       property1.png
-|       stacey.jpg
-|       sugarskullfrenzy.png
+|       aj.webp
+|       automatom.webp
+|       bikepackingaus.webp
+|       comp360.webp
+|       property1.webp
+|       stacey.webp
+|       sugarskullfrenzy.webp
 |       
 +---products
-|       20250314_170934.jpg
 |       bottle.webp
 |       bundle.webp
 |       flier.webp
@@ -232,18 +241,16 @@ D:\WORK\ALPHAX\CODEBASE\VOYAGER WEBSITE\VOYAGER-SITE\PUBLIC
 |       reviews.json
 |       
 +---services
-|       360.png
-|       3d-brand.png
+|       360.webp
+|       3d-brand.webp
 |       3d-design.webp
-|       3d-render.png
 |       3d-render.webp
-|       crm.png
-|       game-dev.png
+|       crm.webp
 |       game-dev.webp
-|       mobile-apps.png
-|       service.png
-|       web-apps.png
-|       website.png
+|       mobile-apps.webp
+|       service.webp
+|       web-apps.webp
+|       website.webp
 |       
 +---vcards
 |       1000.webp

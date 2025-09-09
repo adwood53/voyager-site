@@ -111,15 +111,15 @@ const nextConfig = {
           },
         ],
       },
-      {
-        source: '/industries/:path*',
-        headers: [
-          {
-            key: 'Cache-Control',
-            value: 'public, max-age=31536000, immutable',
-          },
-        ],
-      },
+      //{
+      //  source: '/industries/:path*',
+      //  headers: [
+      //    {
+      //      key: 'Cache-Control',
+      //      value: 'public, max-age=31536000, immutable',
+      //    },
+      //  ],
+      //},
       // Unity WebGL Brotli-compressed files
       {
         source: '/games/:path*/:file.data.br',
