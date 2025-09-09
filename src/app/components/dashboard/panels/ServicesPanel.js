@@ -64,7 +64,7 @@ export default function ServicesPanel() {
           title: 'Mobile App Development',
           description:
             'Create beautiful and functional mobile apps for iOS and Android.',
-          image: '/services/mobile-apps.png',
+          image: '/services/mobile-apps.webp',
           category: 'software',
           features: [
             'Custom app design and development',
@@ -80,7 +80,7 @@ export default function ServicesPanel() {
           title: 'Web Application Development',
           description:
             'Build powerful web applications tailored to your business needs.',
-          image: '/services/web-apps.png',
+          image: '/services/web-apps.webp',
           category: 'software',
           features: [
             'Custom web app design and development',
@@ -94,7 +94,7 @@ export default function ServicesPanel() {
         {
           id: 'websites',
           title: 'Website Development',
-          image: '/services/website.png',
+          image: '/services/website.webp',
           description:
             'Create stunning websites that are fast, responsive, and SEO-friendly.',
           category: 'software',
@@ -110,7 +110,7 @@ export default function ServicesPanel() {
         {
           id: 'crm',
           title: 'CRM Development and Setup',
-          image: '/services/crm.png',
+          image: '/services/crm.webp',
           description:
             'Custom CRM solutions to manage your customer relationships effectively.',
           category: 'software',
@@ -171,7 +171,7 @@ export default function ServicesPanel() {
         {
           id: '3d-brand',
           title: '3D Brand Services',
-          image: '/services/3d-brand.png',
+          image: '/services/3d-brand.webp',
           description:
             'Create stunning 3D Brand Assets for use in Animation, Games, Software and Video from a PNG or SVG file.',
           category: '3d',
@@ -226,7 +226,7 @@ export default function ServicesPanel() {
     title: 'Suggest a Service',
     description:
       'Have an idea for a service we should offer? Let us know!',
-    image: '/services/service.png', // You'll need to create this image
+    image: '/services/service.webp', // You'll need to create this image
     category: 'all', // This makes it visible in all categories
     categoryName: 'Feedback',
     categoryColor: '#9333EA', // Purple color
@@ -292,7 +292,7 @@ export default function ServicesPanel() {
             Provided by:
           </span>
           <Image
-            src="/partners/CC-Main.png"
+            src="/partners/CC-Main.webp"
             alt="Creative Collaborators Logo"
             width={153}
             height={40}

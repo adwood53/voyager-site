@@ -22,19 +22,19 @@ export default function ForPartnersPage() {
     {
       id: 'partner1',
       name: 'Smartway Media',
-      logo: '/partners/smartwaymedia_logo.png',
+      logo: '/partners/smartwaymedia_logo.webp',
       url: 'https://www.smartwaymedia.co.uk/',
     },
     {
       id: 'partner2',
       name: 'Leicester Podcast Studio',
-      logo: '/partners/lps.png',
+      logo: '/partners/lps.webp',
       url: 'https://leicesterpodcaststudio.co.uk/',
     },
     {
       id: 'partner3',
       name: 'Cross Productions',
-      logo: '/partners/cross_productions_limited_logo.png',
+      logo: '/partners/cross_productions_limited_logo.webp',
       url: 'https://crossproductions.co.uk/',
     },
     {
@@ -52,13 +52,13 @@ export default function ForPartnersPage() {
     {
       id: 'partner6',
       name: 'Creative Collaborators',
-      logo: '/partners/cc.png',
+      logo: '/partners/cc.webp',
       url: 'https://www.creativecollaborators.co.uk/',
     },
     {
       id: 'partner7',
       name: 'Twin Planets',
-      logo: '/partners/tp.png',
+      logo: '/partners/tp.webp',
       url: 'https://twinplanets.co.uk/',
     },
   ];

@@ -8,7 +8,7 @@ D:\Work\AlphaX\Codebase\Voyager Website\voyager-site\public
 -----------------------------------------------------
 
 Folder PATH listing for volume Tertiary Drive
-Volume serial number is 0000006D 4257:C030
+Volume serial number is 000000F3 4257:C030
 D:\WORK\ALPHAX\CODEBASE\VOYAGER WEBSITE\VOYAGER-SITE\PUBLIC
 |   generatePublicTree.bat
 |   hyrox2.jpg
@@ -98,6 +98,7 @@ D:\WORK\ALPHAX\CODEBASE\VOYAGER WEBSITE\VOYAGER-SITE\PUBLIC
 |               unity-logo-title-footer.png
 |               webmemd-icon.png
 |               
++---gifs
 +---ideas
 |       360countdown.webp
 |       albumjukebox.webp
@@ -128,8 +129,14 @@ D:\WORK\ALPHAX\CODEBASE\VOYAGER WEBSITE\VOYAGER-SITE\PUBLIC
 |   |       thumb.png
 |   |       
 |   +---creators
+|   |       thumb.png
+|   |       
 |   +---educations
+|   |       thumb.jpg
+|   |       
 |   +---events
+|   |       thumb.jpg
+|   |       
 |   +---fashion
 |   |       ar-tshirt.mp4
 |   |       thumb.png
@@ -170,6 +177,8 @@ D:\WORK\ALPHAX\CODEBASE\VOYAGER WEBSITE\VOYAGER-SITE\PUBLIC
 |   |       shoot3.mp4
 |   |       
 |   \---wellness
+|           thumb.jpg
+|           
 +---models
 |       logo.glb
 |       
@@ -272,7 +281,13 @@ D:\WORK\ALPHAX\CODEBASE\VOYAGER WEBSITE\VOYAGER-SITE\PUBLIC
 |       1053.webp
 |       
 \---videos
-        DayOfTheDead.mp4
-        drift.mp4
-        icons.mp4
-        
+    |   DayOfTheDead.mp4
+    |   drift.mp4
+    |   
+    \---experiences
+            DayOfTheDead.mp4
+            drift.mp4
+            Hyrox AR.mp4
+            icons.mp4
+            property1.mp4
+            

@@ -36,32 +36,32 @@ export default function ServicesSection() {
       icon: '🔍',
       description:
         'Blending digital and real-world for unforgettable brand activations.',
-      image: '/hyrox2.jpg',
+      image: '/brand-services/hyrox2.webp',
     },
     {
       title: 'Virtual Worlds & Interactive Spaces',
       icon: '🏙',
       description: 'Create fully immersive brand environments.',
-      image: '/virtualworlds.jpg',
+      image: '/brand-services/virtualworlds.webp',
     },
     {
       title: 'Gamified Customer Experiences',
       icon: '🎮',
       description: 'Engagement that keeps audiences coming back.',
-      image: '/lfd-stall.webp',
+      image: '/brand-services/lfd-stall.webp',
     },
     {
       title: 'Live Events & Virtual Productions',
       icon: '🎤',
       description: 'Hybrid experiences that drive real results.',
-      image: '/re.jpg',
+      image: '/brand-services/re.webp',
     },
     {
       title: 'Exclusive Studio Access',
       icon: '🎥',
       description:
         'Your private greenscreen studio, fully equipped for pro productions.',
-      image: '/studioimage.jpg',
+      image: '/brand-services/studioimage.webp',
     },
   ];
 

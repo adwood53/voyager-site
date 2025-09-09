@@ -179,7 +179,7 @@ export default function ResourcesPanel() {
           description:
             'Have a great immersive tech idea? Share it with the community!',
           author: 'Voyager Team',
-          image: '/ideas/submit-idea.png',
+          image: '/ideas/submit-idea.webp',
           isSuggestCard: true,
           formId: '251312979017054', // Replace the jotformUrl property with formId
         },

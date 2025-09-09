@@ -127,7 +127,7 @@ export default function OloyeAestheticsSection({ onClose }) {
                 <CardBody className="p-8">
                   <div className="bg-blue-500/10 rounded-lg p-12 text-center mb-4 h-[750px]">
                     <Image
-                      src="/industries/beauty/thumb.png"
+                      src="/industries/beauty/thumb.webp"
                       alt={`Oloye Aesthetics Academy`}
                       fill
                       style={{ objectFit: 'cover' }}

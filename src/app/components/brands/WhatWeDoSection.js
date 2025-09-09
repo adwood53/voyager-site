@@ -76,7 +76,7 @@ export default function WhatWeDoSection() {
       detailedDescription:
         'Transform physical materials into interactive digital gateways. Perfect for product launches, marketing campaigns, and customer engagement.',
       icon: '📱',
-      backgroundImage: '/hyrox2.jpg',
+      backgroundImage: '/brand-services/hyrox2.webp',
       videoSrc: '/videos/experiences/Hyrox AR.mp4',
       color: 'primary',
       benefits: [
@@ -94,7 +94,7 @@ export default function WhatWeDoSection() {
       detailedDescription:
         'Create immersive digital environments that fully engage your audience. Ideal for premium experiences and memorable brand moments.',
       icon: '🥽',
-      backgroundImage: '/lfd-stall.webp',
+      backgroundImage: '/brand-services/lfd-stall.webp',
       videoSrc: '/videos/experiences/drift.mp4',
       color: 'secondary',
       benefits: [
@@ -112,7 +112,7 @@ export default function WhatWeDoSection() {
       detailedDescription:
         'Bring remote audiences into your physical spaces. Perfect for real estate, retail, museums, and venue showcasing.',
       icon: '🌐',
-      backgroundImage: '/virtualworlds.jpg',
+      backgroundImage: '/brand-services/virtualworlds.webp',
       videoSrc: '/videos/experiences/property1.mp4',
       color: 'success',
       benefits: [
@@ -148,7 +148,7 @@ export default function WhatWeDoSection() {
       detailedDescription:
         'Boost engagement through game mechanics, rewards, and interactive storytelling that drives sustained audience participation.',
       icon: '🎮',
-      backgroundImage: '/play/sugarskullfrenzy.png',
+      backgroundImage: '/play/sugarskullfrenzy.webp',
       videoSrc: '/videos/experiences/DayOfTheDead.mp4',
       color: 'danger',
       benefits: [

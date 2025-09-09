@@ -60,7 +60,7 @@ export default function IndustriesSection() {
       icon: '',
       description:
         'Transform live events and digital content with immersive experiences that create deeper fan connections and community moments.',
-      image: '/industries/music/thumb.jpg',
+      image: '/industries/music/thumb.webp',
     },
     {
       id: 'sport-fitness',
@@ -76,7 +76,7 @@ export default function IndustriesSection() {
       icon: '',
       description:
         'Build trust and personalisation with interactive tutorials, aftercare guides, and authenticity checks delivered through packaging.',
-      image: '/industries/beauty/thumb.png',
+      image: '/industries/beauty/thumb.webp',
     },
     {
       id: 'events-hospitality',
@@ -84,7 +84,7 @@ export default function IndustriesSection() {
       icon: '',
       description:
         'Guide, delight, and capture guest data seamlessly with interactive lanyards, menus, and digital experiences.',
-      image: '/industries/events/thumb.jpg',
+      image: '/industries/events/thumb.webp',
     },
     {
       id: 'education-training',
@@ -92,7 +92,7 @@ export default function IndustriesSection() {
       icon: '',
       description:
         'Turn learning into an immersive journey with interactive textbooks, training kits, and progress tracking systems.',
-      image: '/industries/educations/thumb.jpg',
+      image: '/industries/educations/thumb.webp',
     },
     {
       id: 'content-creators-influencers',
@@ -100,7 +100,7 @@ export default function IndustriesSection() {
       icon: '',
       description:
         'Build lasting communities and capture audience data with interactive merch, limited drops, and unlockable content.',
-      image: '/industries/creators/thumb.png',
+      image: '/industries/creators/thumb.webp',
     },
     {
       id: 'property-construction',
@@ -108,7 +108,7 @@ export default function IndustriesSection() {
       icon: '',
       description:
         'Show properties with instant 360° tours, floorplans, and booking systems accessible through brochures and signage.',
-      image: '/industries/property/thumb.png',
+      image: '/industries/property/thumb.webp',
     },
     {
       id: 'food-beverage',
@@ -116,7 +116,7 @@ export default function IndustriesSection() {
       icon: '',
       description:
         'Share recipes, stories, and build loyalty through interactive packaging and menus that connect customers to your brand.',
-      image: '/industries/food/thumb.png',
+      image: '/industries/food/thumb.webp',
     },
     {
       id: 'marketing-publications',
@@ -124,7 +124,7 @@ export default function IndustriesSection() {
       icon: '',
       description:
         'Bring print to life with videos, AR, and live updates that prove ROI and create memorable campaign experiences.',
-      image: '/industries/marketing/thumb.jpg',
+      image: '/industries/marketing/thumb.webp',
     },
   ];
   {
@@ -135,7 +135,7 @@ export default function IndustriesSection() {
       icon: '',
       description:
         'Turn style into story with interactive garments, packaging, and displays that build authenticity and community.',
-      image: '/industries/fashion/thumb.png',
+      image: '/industries/fashion/thumb.webp',
     },
     {
       id: 'mental-health-wellness',
@@ -143,7 +143,7 @@ export default function IndustriesSection() {
       icon: '',
       description:
         'Support wellness initiatives with therapeutic and mindful immersive experiences that promote mental health.',
-      image: '/industries/wellness/thumb.jpg',
+      image: '/industries/wellness/thumb.webp',
     },
     {
       id: 'competitions-gaming',
@@ -151,7 +151,7 @@ export default function IndustriesSection() {
       icon: '',
       description:
         'Create engaging competitive experiences and gaming platforms that connect players in innovative ways.',
-      image: '/industries/gaming/thumb.png',
+      image: '/industries/gaming/thumb.webp',
     },
     */
   }

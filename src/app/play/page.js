@@ -241,7 +241,7 @@ export default function PlayPage() {
       type: 'game', // Using 'game' instead of 'unity'
       category: 'games',
       platforms: ['desktop', 'mobile'],
-      thumbnail: '/games/thor/Screenshots/cover.png', // Using your cover image
+      thumbnail: '/games/thor/Screenshots/cover.webp', // Using your cover image
       url: '/play/thor-to-the-rescue', // Internal route, not external URL
       trackingImage: null,
       featured: true,
@@ -263,7 +263,7 @@ export default function PlayPage() {
       type: 'game',
       category: 'games',
       platforms: ['desktop', 'mobile'],
-      thumbnail: '/games/dropout/Screenshots/cover.png', // Using your cover image
+      thumbnail: '/games/dropout/Screenshots/cover.webp', // Using your cover image
       url: '/play/dropout',
       trackingImage: null,
       featured: true,
@@ -278,7 +278,7 @@ export default function PlayPage() {
       type: '360',
       category: 'tours',
       platforms: ['mobile', 'desktop'],
-      thumbnail: '/play/property1.png',
+      thumbnail: '/play/property1.webp',
       url: 'https://immerse.voyagerstudio.co.uk/VOY/Voyager/Property1',
       trackingImage: null,
       featured: true,
@@ -293,7 +293,7 @@ export default function PlayPage() {
       type: 'ar',
       category: 'games',
       platforms: ['mobile'],
-      thumbnail: '/play/sugarskullfrenzy.png',
+      thumbnail: '/play/sugarskullfrenzy.webp',
       url: 'https://immerse.voyagerstudio.co.uk/VOY/Voyager/SugarSkullFrenzy',
       trackingImage: null,
       featured: true,
@@ -314,7 +314,7 @@ export default function PlayPage() {
       type: '360',
       category: 'experiences',
       platforms: ['mobile', 'desktop', 'vr'],
-      thumbnail: '/play/bikepackingaus.png',
+      thumbnail: '/play/bikepackingaus.webp',
       url: 'https://immerse.voyagerstudio.co.uk/VOY/C2D/BikepackingAus',
       trackingImage: null,
       featured: true,
@@ -329,7 +329,7 @@ export default function PlayPage() {
       type: '360',
       category: 'sites',
       platforms: ['mobile', 'desktop', 'vr'],
-      thumbnail: '/play/comp360.png',
+      thumbnail: '/play/comp360.webp',
       url: 'https://immerse.voyagerstudio.co.uk/VOY/NitrousCompetitions/Comp360',
       trackingImage: null,
       featured: false,
@@ -344,7 +344,7 @@ export default function PlayPage() {
       type: 'ar',
       category: 'experiences',
       platforms: ['mobile'],
-      thumbnail: '/play/automatom.jpg',
+      thumbnail: '/play/automatom.webp',
       url: 'https://immerse.voyagerstudio.co.uk/VOY/Automatom',
       trackingImage:
         'https://immerse.voyagerstudio.co.uk/VOY/brand/images/voyager-banner.png',
@@ -360,7 +360,7 @@ export default function PlayPage() {
       type: 'ar',
       category: 'games',
       platforms: ['mobile'],
-      thumbnail: '/play/stacey.jpg',
+      thumbnail: '/play/stacey.webp',
       url: 'https://immerse.voyagerstudio.co.uk/VOY/Voyager/Team/Stacey',
       trackingImage:
         'https://immerse.voyagerstudio.co.uk/VOY/brand/images/business-card/front.png',
@@ -376,7 +376,7 @@ export default function PlayPage() {
       type: '360',
       category: 'experiences',
       platforms: ['mobile', 'desktop', 'vr'],
-      thumbnail: '/play/aj.png',
+      thumbnail: '/play/aj.webp',
       url: 'https://immerse.voyagerstudio.co.uk/VOY/Voyager/Team/Aj/360',
       trackingImage: null,
       featured: false,

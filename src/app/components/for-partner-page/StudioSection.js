@@ -87,7 +87,7 @@ export default function StudioSection() {
       <div className="absolute inset-0">
         <div className="has-tooltip">
           <Image
-            src="/studiobackground.jpeg"
+            src="/brand-services/studiobackground.webp"
             alt="Studio background"
             fill
             className="object-cover opacity-90"
@@ -203,7 +203,7 @@ export default function StudioSection() {
             <div className="relative overflow-hidden rounded-lg aspect-video hover-3d shadow-glow-sm border border-primary border-opacity-20">
               <div className="has-tooltip">
                 <Image
-                  src="/studioimage.jpg"
+                  src="/brand-services/studioimage.webp"
                   alt="Voyager Studio"
                   fill
                   className="object-cover"

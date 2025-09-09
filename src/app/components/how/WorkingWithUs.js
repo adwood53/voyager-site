@@ -90,7 +90,7 @@ export default function WhatWeDoSection() {
       title: 'We design and code your experience',
       description: 'Based on your story, your goals and imagination!',
       icon: '💡',
-      image: '/ideas/submit-idea.png',
+      image: '/ideas/submit-idea.webp',
     },
     {
       step: '2',
@@ -115,7 +115,7 @@ export default function WhatWeDoSection() {
       description:
         'No app download needed - works on all modern smartphones.',
       icon: '📱',
-      image: '/hyrox2.jpg',
+      image: '/brand-services/hyrox2.webp',
     },
     {
       step: '5',
@@ -123,7 +123,7 @@ export default function WhatWeDoSection() {
       description:
         'Right there, in their hands - 360° videos, AR magic, interactive content.',
       icon: '✨',
-      image: '/virtualworlds.jpg',
+      image: '/brand-services/virtualworlds.webp',
     },
   ];
 
