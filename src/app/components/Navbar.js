@@ -540,7 +540,24 @@ export default function VoyagerNavbar() {
                   <BrandsDropdown />
                 </NavbarItem>
                 <NavbarItem>
-                  <IndustriesDropdown />
+                  <NavLink
+                    href="/industries"
+                    className="text-lg"
+                    isActive={pathname === '/industries'}
+                    loadingKey="industries"
+                  >
+                    Industries
+                  </NavLink>
+                </NavbarItem>
+                <NavbarItem>
+                  <NavLink
+                    href="/industries/case-studies"
+                    className="text-lg"
+                    isActive={pathname === '/industries/case-studies'}
+                    loadingKey="case-studies"
+                  >
+                    Case Studies
+                  </NavLink>
                 </NavbarItem>
                 {/*
                 <NavbarItem>

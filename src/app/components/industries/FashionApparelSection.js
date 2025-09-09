@@ -12,6 +12,7 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 
 export default function FashionApparelSection({ onClose }) {
+  const { openModal } = useModal();
   return (
     <div className="bg-darkCard border border-primary/20 rounded-2xl p-8 overflow-hidden">
       {/* Header with close button */}
