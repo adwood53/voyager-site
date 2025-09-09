@@ -74,32 +74,46 @@ export default function IndustriesHeroSection() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="heading-voyager text-5xl md:text-6xl text-textLight mb-8"
+          className="heading-voyager text-6xl md:text-8xl text-textLight mb-8"
         >
-          Industries We{' '}
-          <span className="text-primary">Transform</span>
+          <span className="text-primary">Industries</span>
+          <span className="text-4xl px-4 text-bold">
+            {'   '}We{'   '}
+          </span>
+          <span className="text-altPrimary">Elevate</span>
         </motion.h1>
 
         <motion.p
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
-          className="text-xl text-textLight/90 mb-12 max-w-3xl mx-auto"
+          className="text-xl font-medium text-textLight/90 mb-12 max-w-3xl mx-auto"
         >
-          From entertainment to education, we create immersive
-          experiences that revolutionise how industries engage with
-          their audiences.
+          <strong className="font-bold">
+            <span className="text-primary text-3xl">Voyager</span> is{' '}
+            your{' '}
+            <span className="text-primary text-3xl">
+              creative technology partner
+            </span>
+          </strong>
+          <br />
+          <br />
+          The engine behind immersive campaigns that don&apos;t just
+          get seen, they get remembered. Whatever the industry, we
+          give you the tools to grab attention, collect real insights,
+          and turn passive audiences into active participants.
         </motion.p>
 
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.6 }}
+          transition={{ duration: 0.8, delay: 0.8 }}
+          className="flex flex-row gap-4 justify-center items-center"
         >
           <Button
             size="lg"
-            className="bg-primary text-darkBg hover:bg-accent"
-            onClick={() => {
+            className="bg-transparent border-2 border-primary text-primary font-semibold px-8 py-4 rounded-md hover:bg-primary hover:text-textLight transition-all hover:scale-105 transform !text-xs !md:text-lg"
+            onPress={() => {
               document
                 .getElementById('industries')
                 .scrollIntoView({ behavior: 'smooth' });

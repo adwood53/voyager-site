@@ -15,22 +15,25 @@ import IndustriesSection from '../components/industries/IndustriesSection';
 import CaseStudiesCTA from '../components/industries/CaseStudiesCTA';
 import ContactSection from '@/src/app/components/ContactSection';
 import ReviewPopup from '@/src/app/components/ReviewPopup';
+import { ModalProvider } from '../components/modal/core/ModalEngine';
 
 export default function IndustriesPage() {
   return (
     <main className="min-h-screen bg-darkBg text-textLight overflow-hidden">
-      <ChatbotComponent />
-      <div className="parallax-container">
-        <Navbar />
-        <ReviewPopup />
-        <IndustriesHeroSection />
-        <div className="isolate" style={{ isolation: 'isolate' }}>
-          <IndustriesSection />
+      <ModalProvider config={{ baseZIndex: 1000 }}>
+        <ChatbotComponent />
+        <div className="parallax-container">
+          <Navbar />
+          <ReviewPopup />
+          <IndustriesHeroSection />
+          <div className="isolate" style={{ isolation: 'isolate' }}>
+            <IndustriesSection />
+          </div>
+          <CaseStudiesCTA />
+          <ContactSection />
+          <Footer />
         </div>
-        <CaseStudiesCTA />
-        <ContactSection />
-        <Footer />
-      </div>
+      </ModalProvider>
     </main>
   );
 }

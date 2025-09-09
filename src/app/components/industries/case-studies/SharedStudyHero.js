@@ -11,6 +11,8 @@ import { Button, Chip } from '@heroui/react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useModal } from '../../modal/core/ModalEngine';
+import { JotFormModal } from '../../modal/types/ModalTypes';
 
 export default function SharedStudyHero({
   icon,
@@ -25,6 +27,7 @@ export default function SharedStudyHero({
   ctaLink = '/industries#signup',
   onClose,
 }) {
+  const { openModal } = useModal();
   return (
     <section className="relative py-16 lg:py-20 overflow-hidden">
       {/* Background Media */}
@@ -132,8 +135,16 @@ export default function SharedStudyHero({
             transition={{ duration: 0.6, delay: 0.3 }}
           >
             <Button
-              as={Link}
-              href="/industries#signup"
+              onPress={() =>
+                openModal(JotFormModal, {
+                  isOpen: true,
+                  formId: '251762903523052',
+                  title: 'Build your Custom Experience!',
+                  onSubmit: (data) => {
+                    console.log('Form submitted:', data);
+                  },
+                })
+              }
               size="lg"
               className="bg-primary text-darkBg hover:bg-accent transition-colors"
             >

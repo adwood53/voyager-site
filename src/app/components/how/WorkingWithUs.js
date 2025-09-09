@@ -20,10 +20,12 @@
 
 'use client';
 
-import { Card, CardBody, Chip } from '@heroui/react';
+import { Card, CardBody, Chip, Button } from '@heroui/react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useRef } from 'react';
 import Image from 'next/image';
+import { useModal } from '../modal/core/ModalEngine';
+import { JotFormModal } from '../modal/types/ModalTypes';
 
 export default function WhatWeDoSection() {
   const sectionRef = useRef(null);
@@ -31,7 +33,7 @@ export default function WhatWeDoSection() {
     target: sectionRef,
     offset: ['start end', 'end start'],
   });
-
+  const { openModal } = useModal();
   const opacity = useTransform(
     scrollYProgress,
     [0, 0.2, 0.8, 1],
@@ -226,28 +228,6 @@ export default function WhatWeDoSection() {
             <br />
             Just tap and experience.
           </motion.h2>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            viewport={{ once: true }}
-            className="max-w-4xl mx-auto mb-12"
-          >
-            <Card className="card-voyager bg-gradient-to-r from-primary/10 to-altPrimary/10 border border-primary border-opacity-30">
-              <CardBody className="p-8 md:p-12">
-                <p className="text-xl md:text-2xl text-textLight leading-relaxed">
-                  Our{' '}
-                  <span className="text-primary font-bold">
-                    proprietary technology (Vcode)
-                  </span>
-                  powers every activation. No apps. No subscriptions.
-                  No barriers. Just instant, interactive connection
-                  between your brand and your audience.
-                </p>
-              </CardBody>
-            </Card>
-          </motion.div>
         </div>
 
         {/* What is Vcode Section */}
@@ -259,20 +239,28 @@ export default function WhatWeDoSection() {
           className="mb-20"
         >
           <div className="text-center mb-12">
-            <h3 className="heading-voyager text-3xl md:text-4xl text-primary mb-6">
-              What is Vcode?
-            </h3>
-            <p className="text-lg text-textLight opacity-80 max-w-4xl mx-auto leading-relaxed">
-              Vcode is our proprietary technology that makes any
-              NFC/QR{' '}
-              <strong>
-                {' '}
-                activation flexible, updatable, and brandable{' '}
-              </strong>{' '}
-              - without the limits of off-the-shelf platforms.
-            </p>
+            <Card className="card-voyager bg-gradient-to-r from-primary/10 to-altPrimary/10 border border-primary border-opacity-30">
+              <CardBody className="p-8 md:p-12">
+                <h3 className="heading-voyager text-3xl md:text-4xl text-center text-primary mb-6">
+                  What is Vcode?
+                </h3>
+                <p className="text-xl md:text-2xl text-textLight leading-relaxed">
+                  Our{' '}
+                  <span className="text-primary font-bold">
+                    proprietary technology (Vcode) {''}
+                  </span>
+                  powers every activation. No apps. No subscriptions.
+                  No barriers. Just instant, interactive connection
+                  between your brand and your audience.
+                </p>
+              </CardBody>
+            </Card>
           </div>
-
+          <div className="text-center mb-12">
+            <h3 className="heading-voyager text-3xl md:text-4xl text-altPrimary mb-6">
+              What does Vcode Activate?
+            </h3>
+          </div>
           {/* Experience Types Grid - Centered Layout */}
           <motion.div
             className="flex flex-wrap justify-center gap-6 max-w-5xl mx-auto"
@@ -476,22 +464,27 @@ export default function WhatWeDoSection() {
                 technology.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <motion.a
-                  href="#signup"
-                  className="inline-block px-8 py-3 bg-primary text-white rounded-lg font-medium hover:bg-accent transition-colors duration-300"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
+                <Button
+                  onPress={() =>
+                    openModal(JotFormModal, {
+                      isOpen: true,
+                      formId: '251762903523052',
+                      title: 'Build your Custom Experience!',
+                      onSubmit: (data) => {
+                        console.log('Form submitted:', data);
+                      },
+                    })
+                  }
+                  className=" px-8 py-3 bg-primary text-white rounded-lg font-medium hover:bg-accent transition-colors duration-300"
                 >
                   Start Your Project
-                </motion.a>
-                <motion.a
+                </Button>
+                <Button
                   href="#signup"
-                  className="inline-block px-8 py-3 border border-primary text-primary rounded-lg font-medium hover:bg-primary/10 transition-colors duration-300"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
+                  className=" px-8 py-3 border border-primary text-primary rounded-lg font-medium hover:bg-primary/10 transition-colors duration-300"
                 >
                   Learn More About Vcode
-                </motion.a>
+                </Button>
               </div>
             </CardBody>
           </Card>

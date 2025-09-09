@@ -11,8 +11,11 @@
 import { Button, Chip } from '@heroui/react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import { useModal } from '../modal/core/ModalEngine';
+import { JotFormModal } from '../modal/types/ModalTypes';
 
 export default function MentalHealthWellnessSection({ onClose }) {
+  const { openModal } = useModal();
   return (
     <div className="bg-darkCard border border-primary/20 rounded-2xl p-8 overflow-hidden">
       {/* Header with close button */}
@@ -133,14 +136,22 @@ export default function MentalHealthWellnessSection({ onClose }) {
         transition={{ duration: 0.6, delay: 0.4 }}
         className="flex flex-col sm:flex-row gap-4 justify-center mt-12 pt-8 border-t border-primary/20"
       >
-        <Link href="#signup">
-          <Button
-            size="lg"
-            className="bg-primary text-darkBg hover:bg-accent"
-          >
-            Start Your Wellness Project
-          </Button>
-        </Link>
+        <Button
+          size="lg"
+          className="bg-primary text-darkBg hover:bg-accent"
+          onPress={() =>
+            openModal(JotFormModal, {
+              isOpen: true,
+              formId: '251762903523052',
+              title: 'Build your Custom Experience!',
+              onSubmit: (data) => {
+                console.log('Form submitted:', data);
+              },
+            })
+          }
+        >
+          Start Your Wellness Project
+        </Button>
         <Link href="/industries/case-studies">
           <Button
             size="lg"

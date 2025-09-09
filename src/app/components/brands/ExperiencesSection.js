@@ -269,7 +269,7 @@ export default function ExperiencesSection() {
                       </p>
                       <div className="mb-4 flex-grow">
                         <h4 className="text-primary font-semibold mb-3 text-sm">
-                          Users can:
+                          Use Cases:
                         </h4>
                         <ul className="space-y-2">
                           {experience.features

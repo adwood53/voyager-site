@@ -126,7 +126,10 @@ export default function IndustriesSection() {
         'Bring print to life with videos, AR, and live updates that prove ROI and create memorable campaign experiences.',
       image: '/industries/marketing/thumb.jpg',
     },
-    {
+  ];
+  {
+    /* 
+        {
       id: 'fashion-apparel',
       name: 'Fashion & Apparel',
       icon: '',
@@ -150,8 +153,8 @@ export default function IndustriesSection() {
         'Create engaging competitive experiences and gaming platforms that connect players in innovative ways.',
       image: '/industries/gaming/thumb.png',
     },
-  ];
-
+    */
+  }
   // Handle industry card click
   const handleIndustryClick = (industryId) => {
     console.log('Industry clicked:', industryId); // Debug log

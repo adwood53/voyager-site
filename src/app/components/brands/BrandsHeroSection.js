@@ -127,14 +127,14 @@ export default function BrandsHeroSection() {
           >
             <Button
               as={Link}
-              href="/play"
+              href="/about-us"
               className="bg-transparent border-2 border-primary text-primary font-semibold px-8 py-4 rounded-md hover:bg-primary hover:text-textLight transition-all hover:scale-105 transform !text-xs !md:text-lg"
             >
-              Explore Experiences
+              Explore Voyager
             </Button>
             <Button
               as={Link}
-              href="#signup"
+              href="https://calendly.com/staceylwragg/voyager"
               className="bg-altPrimary text-textLight font-semibold px-8 py-4 rounded-md hover:bg-altAccent transition-all hover:scale-105 transform !text-xs !md:text-lg"
             >
               Book a Discovery Call

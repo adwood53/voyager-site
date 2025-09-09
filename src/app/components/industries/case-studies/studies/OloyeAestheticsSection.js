@@ -11,9 +11,14 @@
 import { Card, CardBody, Button } from '@heroui/react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import Image from 'next/image';
 import SharedStudyHero from '../SharedStudyHero';
+import { useModal } from '../../../modal/core/ModalEngine';
+import { JotFormModal } from '../../../modal/types/ModalTypes';
 
 export default function OloyeAestheticsSection({ onClose }) {
+  const { openModal } = useModal();
+
   return (
     <div className="bg-darkBg min-h-screen">
       {/* Hero Section */}
@@ -122,15 +127,14 @@ export default function OloyeAestheticsSection({ onClose }) {
                 <CardBody className="p-8">
                   <div className="bg-blue-500/10 rounded-lg p-12 text-center mb-4 h-[750px]">
                     <Image
-                      src="/industries/sports/bottles-3.jpg"
-                      alt={`Hyrox Corby Bottles`}
+                      src="/industries/beauty/thumb.png"
+                      alt={`Oloye Aesthetics Academy`}
                       fill
                       style={{ objectFit: 'cover' }}
                     />
                   </div>
                   <p className="text-textLight/60 text-sm text-center">
-                    Visual content showcasing the NFC bottles and
-                    competitor experience
+                    The Landing Page for Oloye Aesthetics Academy
                   </p>
                 </CardBody>
               </Card>
@@ -199,12 +203,20 @@ export default function OloyeAestheticsSection({ onClose }) {
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button
-                  as={Link}
-                  href="/industries#signup"
+                  onPress={() =>
+                    openModal(JotFormModal, {
+                      isOpen: true,
+                      formId: '251762903523052',
+                      title: 'Build your Custom Experience!',
+                      onSubmit: (data) => {
+                        console.log('Form submitted:', data);
+                      },
+                    })
+                  }
                   size="lg"
                   className="bg-primary text-darkBg hover:bg-accent"
                 >
-                  Start Your Beauty Project
+                  Start Your Project
                 </Button>
                 <Button
                   as={Link}
